@@ -1,0 +1,10 @@
+{
+  "textures": {
+    "earth": {
+      "file": "earthtile.png",
+      "wrapU": "repeated",
+      "wrapV": "repeated"
+    },
+    "barrier": "barrier.png"
+  }
+}

@@ -67,6 +67,9 @@ public abstract class Obstacle {
 	/** A cache value for when the user wants to access the drawing scale */
 	protected Vector2 scaleCache = new Vector2();
 
+	/** Whether the obstacle can be grappled by the cephalonaut. */
+	private boolean canGrapple = false;
+
 
 	/// BodyDef Methods
 	/**
@@ -998,5 +1001,13 @@ public abstract class Obstacle {
 	 * @param canvas Drawing context
 	 */
 	public abstract void drawDebug(GameCanvas canvas);
+
+	public boolean canGrapple() {
+		return canGrapple;
+	}
+
+	public void setGrapple(boolean canGrapple) {
+		this.canGrapple = canGrapple;
+	}
 
 }

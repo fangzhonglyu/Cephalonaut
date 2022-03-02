@@ -52,8 +52,13 @@ public class GDXRoot extends Game {
 	public void create() {
 		canvas  = new GameCanvas();
 
+		directory = new AssetDirectory("assets.json");
+		directory.loadAssets();
+		directory.finishLoading();
+
 		// Initialize the game world
 		sandboxController = new SandboxController();
+		sandboxController.gatherAssets(directory);
 		sandboxController.setCanvas(canvas);
 		sandboxController.reset();
 		setScreen(sandboxController);

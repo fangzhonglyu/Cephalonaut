@@ -11,7 +11,10 @@
 package edu.cornell.lilbiggames.cephalonaut.engine;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -25,9 +28,6 @@ import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
  * Player avatar for the gameplay prototype.
  */
 public class CephalonautModel extends WheelObstacle {
-	/** The physics shape of this object */
-	private PolygonShape sensorShape;
-
 	/** Cache for internal force calculations */
 	private final Vector2 forceCache = new Vector2();
 
@@ -79,12 +79,21 @@ public class CephalonautModel extends WheelObstacle {
 	 *
 	 * @param radius	The object radius in physics units
 	 */
-	public CephalonautModel(float radius) {
+	public CephalonautModel(float x, float y, Vector2 drawScale) {
 		// The shrink factors fit the image to a tigher hitbox
-		super(0, 0, radius);
+		super(x, y, 0.5f);
+		setDrawScale(drawScale);
 		setDensity(1);
 		setFriction(0);
+		setRestitution(1);
 		setFixedRotation(true);
+
+		int pixDiameter = (int) (getRadius() * 2 * drawScale.x);
+		Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.WHITE);
+		pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
+		texture = new TextureRegion(new Texture(pixmap));
+		origin.set(pixDiameter / 2, pixDiameter / 2);
 
 		setName("Cephalonaut");
 	}
@@ -156,6 +165,6 @@ public class CephalonautModel extends WheelObstacle {
 	 */
 	public void drawDebug(GameCanvas canvas) {
 		super.drawDebug(canvas);
-		canvas.drawPhysics(sensorShape, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
+		canvas.drawPhysics(shape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
 	}
 }

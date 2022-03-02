@@ -20,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
+import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.PolygonObstacle;
@@ -34,6 +35,8 @@ public class SandboxController extends WorldController {
 
 	/** Mouse selector to move the cephalonaut */
 	private ObstacleSelector selector;
+
+	private Texture earthTexture;
 
 	/**
 	 * Creates and initialize a new instance of the sandbox
@@ -51,7 +54,7 @@ public class SandboxController extends WorldController {
 	 * This method disposes of the world and creates a new one.
 	 */
 	public void reset() {
-		Vector2 gravity = new Vector2(world.getGravity() );
+		Vector2 gravity = new Vector2(world.getGravity());
 		
 		for(Obstacle obj : objects) {
 			obj.deactivatePhysics(world);
@@ -66,18 +69,73 @@ public class SandboxController extends WorldController {
 		populateLevel();
 	}
 
+	private void addWall(float x, float y, float angle, String name) {
+		final float boxSize = earthTile.getRegionHeight() / scale.y;
+		BoxObstacle wall = new BoxObstacle(boxSize * x + boxSize / 2, boxSize * y + boxSize / 2, boxSize, boxSize);
+		wall.setAngle(angle);
+		wall.setGrapple(true);
+		wall.setBodyType(BodyDef.BodyType.StaticBody);
+		wall.setDensity(0);
+		wall.setFriction(0);
+		wall.setRestitution(1);
+		wall.setDrawScale(scale);
+		wall.setTexture(earthTile);
+		wall.setName(name);
+		addObject(wall);
+	}
+
 	/**
 	 * Lays out the game geography.
 	 */
 	private void populateLevel() {
 		// Make the cephalonaut
-		cephalonaut = new CephalonautModel(2);
-		cephalonaut.setDrawScale(scale.x,scale.y);
+		cephalonaut = new CephalonautModel(10, 10, scale);
+		cephalonaut.setVX(5);
+
 		addObject(cephalonaut);
 
 		selector = new ObstacleSelector(world);
 		selector.setDrawScale(scale);
 		world.setGravity(Vector2.Zero);
+
+		final float boxSize = earthTile.getRegionHeight() / scale.y;
+		final int boxesY = (int) (bounds.getHeight() / boxSize);
+		final int boxesX = (int) (bounds.getWidth() / boxSize);
+		// Left and right walls
+		for (int i = 0; i <= boxesY; i++) {
+			addWall(0, i, 0, "border_left" + i);
+			addWall(boxesX, i, 0, "border_right" + i);
+		}
+		// Bottom and top walls
+		for (int i = 0; i <= boxesX; i++) {
+			addWall(i, 0, 0, "border_bottom" + i);
+			addWall(i, boxesY, 0, "border_top" + i);
+		}
+		// U shape
+		for (int i = 20; i < 25; i++) {
+			addWall(i, 4, 0, "u_bottom" + i);
+			addWall(i, 9, 0, "u_top" + i);
+		}
+		for (int i = 5; i < 9; i++) {
+			addWall(24, i, 0, "u_right" + i);
+		}
+
+		// Random boxes
+		addWall(15, 14, 0, "box1");
+		addWall(16, 14, 0, "box2");
+
+		// Thick box on bottom left
+		addWall(8, 8, 0, "box_thicc1");
+		addWall(7, 8, 0, "box_thicc2");
+		addWall(8, 7, 0, "box_thicc3");
+		addWall(7, 7, 0, "box_thicc4");
+
+		// Diagonal wall on top right
+		addWall(27, 14, (float) Math.toRadians(45), "box4");
+		addWall(26.5f, 14.5f, (float) Math.toRadians(45), "box5");
+		addWall(27.5f, 13.5f, (float) Math.toRadians(45), "box6");
+		addWall(28f, 13f, (float) Math.toRadians(45), "box7");
+
 	}
 
 	/**
