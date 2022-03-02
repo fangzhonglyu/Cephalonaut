@@ -95,7 +95,7 @@ public class SandboxController extends WorldController {
 		cephalonaut.setVX(5);
 
 		addObject(cephalonaut);
-		System.out.println(canvas.getSize());
+		setDebug(true);
 
 		selector = new ObstacleSelector(world);
 		selector.setDrawScale(scale);

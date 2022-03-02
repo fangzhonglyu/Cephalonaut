@@ -88,7 +88,7 @@ public class CephalonautModel extends WheelObstacle {
 		setRestitution(1);
 		setFixedRotation(true);
 
-		int pixDiameter = (int) (getRadius() * 2 * drawScale.x);
+		int pixDiameter = (int) (getRadius() * 2 * Math.max(drawScale.x, drawScale.y));
 		Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.WHITE);
 		pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
@@ -152,7 +152,7 @@ public class CephalonautModel extends WheelObstacle {
 	 */
 	public void draw(GameCanvas canvas) {
 		canvas.draw(texture, Color.ORANGE, origin.x, origin.y,
-				getX() * drawScale.x, getY() * drawScale.x,
+				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 1, 1);
 	}
 	
