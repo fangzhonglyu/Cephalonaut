@@ -70,7 +70,7 @@ public class SandboxController extends WorldController {
 	}
 
 	private void addWall(float x, float y, float angle, String name) {
-		final float boxSize = earthTile.getRegionHeight() / scale.y;
+		final float boxSize = 1;
 		BoxObstacle wall = new BoxObstacle(boxSize * x + boxSize / 2, boxSize * y + boxSize / 2, boxSize, boxSize);
 		wall.setAngle(angle);
 		wall.setGrapple(true);
@@ -80,6 +80,8 @@ public class SandboxController extends WorldController {
 		wall.setRestitution(1);
 		wall.setDrawScale(scale);
 		wall.setTexture(earthTile);
+		wall.setTextureScaleX(boxSize * scale.x / earthTile.getRegionWidth());
+		wall.setTextureScaleY(boxSize * scale.y / earthTile.getRegionHeight());
 		wall.setName(name);
 		addObject(wall);
 	}
@@ -93,14 +95,14 @@ public class SandboxController extends WorldController {
 		cephalonaut.setVX(5);
 
 		addObject(cephalonaut);
+		System.out.println(canvas.getSize());
 
 		selector = new ObstacleSelector(world);
 		selector.setDrawScale(scale);
 		world.setGravity(Vector2.Zero);
 
-		final float boxSize = earthTile.getRegionHeight() / scale.y;
-		final int boxesY = (int) (bounds.getHeight() / boxSize);
-		final int boxesX = (int) (bounds.getWidth() / boxSize);
+		final int boxesY = (int) bounds.getHeight() - 1;
+		final int boxesX = (int) bounds.getWidth() - 1;
 		// Left and right walls
 		for (int i = 0; i <= boxesY; i++) {
 			addWall(0, i, 0, "border_left" + i);

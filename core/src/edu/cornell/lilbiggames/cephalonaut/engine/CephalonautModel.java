@@ -93,7 +93,7 @@ public class CephalonautModel extends WheelObstacle {
 		pixmap.setColor(Color.WHITE);
 		pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
 		texture = new TextureRegion(new Texture(pixmap));
-		origin.set(pixDiameter / 2, pixDiameter / 2);
+		origin.set(pixDiameter / 2f, pixDiameter / 2f);
 
 		setName("Cephalonaut");
 	}
