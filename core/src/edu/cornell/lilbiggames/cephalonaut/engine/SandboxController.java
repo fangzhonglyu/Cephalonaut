@@ -152,6 +152,7 @@ public class SandboxController extends WorldController {
 	float min;
 	boolean jointMade = false;
 	DistanceJointDef j;
+	float distance;
 
 	/**
 	 * The core gameplay loop of this world.
@@ -169,10 +170,11 @@ public class SandboxController extends WorldController {
 		if(input.didTertiary()){
 			grappleOut = !grappleOut;
 			if(grappleOut) {
-				float xdiff = Math.abs(cephalonaut.getX()-input.getCrossHair().x);
-				float ydiff = Math.abs(cephalonaut.getY()-input.getCrossHair().y);
-				min = Math.min(xdiff,ydiff);
 				grapple = new GrappleModel(input.getCrossHair().x, input.getCrossHair().y, scale);
+				float xdiff = Math.abs(cephalonaut.getX()-grapple.getX());
+				float ydiff = Math.abs(cephalonaut.getY()-grapple.getY());
+				distance = (float)Math.sqrt(xdiff*xdiff+ydiff*ydiff);
+				min = Math.min(xdiff,ydiff);
 				addObject(grapple);
 				j = new DistanceJointDef();
 				j.bodyA = grapple.getBody();
@@ -184,20 +186,22 @@ public class SandboxController extends WorldController {
 				if(jointMade) {
 					world.destroyJoint(joint);
 					jointMade=false;
+					//grappleOut=false;
 				}
 				objects.remove(grapple);
+				world.destroyBody(grapple.getBody());
 			}
 		}
 		if(grappleOut){
 			float xdiff = Math.abs(cephalonaut.getX()-grapple.getX());
 			float ydiff = Math.abs(cephalonaut.getY()-grapple.getY());
-			System.out.println((float)Math.sqrt(xdiff*xdiff+ydiff*ydiff));
-			System.out.println("min"+min);
-			if((float)Math.sqrt(xdiff*xdiff+ydiff*ydiff)<=min+cephalonaut.getRadius()) {
+			if((float)Math.sqrt(xdiff*xdiff+ydiff*ydiff)>distance&&!jointMade) {
 				System.out.println("fdsafjhdsf");
+				j.length = (float)Math.sqrt(xdiff*xdiff+ydiff*ydiff);
 				joint = world.createJoint(j);
 				jointMade = true;
 			}
+			distance=(float)Math.sqrt(xdiff*xdiff+ydiff*ydiff);
 		}
 		// TODO
 	}

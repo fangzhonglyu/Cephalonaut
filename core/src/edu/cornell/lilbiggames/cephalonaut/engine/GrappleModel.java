@@ -15,7 +15,7 @@ public class GrappleModel extends edu.cornell.lilbiggames.cephalonaut.engine.obs
 
     public GrappleModel(float x, float y, Vector2 drawScale) {
         // The shrink factors fit the image to a tigher hitbox
-        super(x, y, 0.5f);
+        super(x, y, 0.1f);
         setDrawScale(drawScale);
         setDensity(1);
         setFriction(0);
