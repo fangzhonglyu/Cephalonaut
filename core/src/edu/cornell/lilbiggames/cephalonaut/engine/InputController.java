@@ -52,23 +52,17 @@ public class InputController {
 	/** Whether the reset button was pressed. */
 	private boolean resetPressed;
 	private boolean resetPrevious;
-	/** Whether the button to advanced worlds was pressed. */
-	private boolean nextPressed;
-	private boolean nextPrevious;
-	/** Whether the button to step back worlds was pressed. */
-	private boolean prevPressed;
-	private boolean prevPrevious;
 	/** Whether the primary action button was pressed. */
 	private boolean primePressed;
 	private boolean primePrevious;
 	/** Whether the secondary action button was pressed. */
-	private boolean secondPressed;
-	private boolean secondPrevious;
-	/** Whether the teritiary action button was pressed. */
-	private boolean tertiaryPressed;
-	/** Whether the debug toggle was pressed. */
-	private boolean debugPressed;
-	private boolean debugPrevious;
+	private boolean secondaryPressed;
+	private boolean secondaryPrevious;
+//	/** Whether the teritiary action button was pressed. */
+//	private boolean tertiaryPressed;
+//	/** Whether the debug toggle was pressed. */
+//	private boolean debugPressed;
+//	private boolean debugPrevious;
 	/** Whether the exit button was pressed. */
 	private boolean exitPressed;
 	private boolean exitPrevious;
@@ -92,7 +86,7 @@ public class InputController {
 	 *
 	 * -1 = left, 1 = right, 0 = still
 	 *
-	 * @return the amount of sideways movement. 
+	 * @return the amount of sideways movement. This should probably be used for rotation
 	 */
 	public float getHorizontal() {
 		return horizontal;
@@ -103,7 +97,7 @@ public class InputController {
 	 *
 	 * -1 = down, 1 = up, 0 = still
 	 *
-	 * @return the amount of vertical movement. 
+	 * @return the amount of vertical movement. This should probably not be used
 	 */
 	public float getVertical() {
 		return vertical;
@@ -118,7 +112,7 @@ public class InputController {
 	 * each time.  So if you modify the object, the object will be reset in a
 	 * subsequent call to this getter.
 	 *
-	 * @return the current position of the crosshairs on the screen.
+	 * @return the current position of the crosshairs on the screen. This should probably be used to help grapple.
 	 */
 	public Vector2 getCrossHair() {
 		return crosscache.set(crosshair);
@@ -130,7 +124,7 @@ public class InputController {
 	 * This is a one-press button. It only returns true at the moment it was
 	 * pressed, and returns false at any frame afterwards.
 	 *
-	 * @return true if the primary action button was pressed.
+	 * @return true if the primary action button was pressed. This should be used for thrusting.
 	 */
 	public boolean didPrimary() {
 		return primePressed && !primePrevious;
@@ -142,22 +136,10 @@ public class InputController {
 	 * This is a one-press button. It only returns true at the moment it was
 	 * pressed, and returns false at any frame afterwards.
 	 *
-	 * @return true if the secondary action button was pressed.
+	 * @return true if the secondary action button was pressed. This should be used for grappling.
 	 */
 	public boolean didSecondary() {
-		return secondPressed && !secondPrevious;
-	}
-
-	/**
-	 * Returns true if the tertiary action button was pressed.
-	 *
-	 * This is a sustained button. It will returns true as long as the player
-	 * holds it down.
-	 *
-	 * @return true if the secondary action button was pressed.
-	 */
-	public boolean didTertiary() {
-		return tertiaryPressed;
+		return secondaryPressed && !secondaryPrevious;
 	}
 
 	/**
@@ -168,33 +150,15 @@ public class InputController {
 	public boolean didReset() {
 		return resetPressed && !resetPrevious;
 	}
-
-	/**
-	 * Returns true if the player wants to go to the next level.
-	 *
-	 * @return true if the player wants to go to the next level.
-	 */
-	public boolean didAdvance() {
-		return nextPressed && !nextPrevious;
-	}
 	
-	/**
-	 * Returns true if the player wants to go to the previous level.
-	 *
-	 * @return true if the player wants to go to the previous level.
-	 */
-	public boolean didRetreat() {
-		return prevPressed && !prevPrevious;
-	}
-	
-	/**
-	 * Returns true if the player wants to go toggle the debug mode.
-	 *
-	 * @return true if the player wants to go toggle the debug mode.
-	 */
-	public boolean didDebug() {
-		return debugPressed && !debugPrevious;
-	}
+//	/**
+//	 * Returns true if the player wants to go toggle the debug mode.
+//	 *
+//	 * @return true if the player wants to go toggle the debug mode.
+//	 */
+//	public boolean didDebug() {
+//		return debugPressed && !debugPrevious;
+//	}
 	
 	/**
 	 * Returns true if the exit button was pressed.
@@ -236,13 +200,12 @@ public class InputController {
 	public void readInput(Rectangle bounds, Vector2 scale) {
 		// Copy state from last animation frame
 		// Helps us ignore buttons that are held down
-		primePrevious  = primePressed;
-		secondPrevious = secondPressed;
+//		primePrevious  = primePressed;
+		primePrevious = primePressed;
+		secondaryPrevious = secondaryPressed;
 		resetPrevious  = resetPressed;
-		debugPrevious  = debugPressed;
+//		debugPrevious  = debugPressed;
 		exitPrevious = exitPressed;
-		nextPrevious = nextPressed;
-		prevPrevious = prevPressed;
 		
 		// Check to see if a GamePad is connected
 		if (xbox != null && xbox.isConnected()) {
@@ -266,19 +229,17 @@ public class InputController {
 	private void readGamepad(Rectangle bounds, Vector2 scale) {
 		resetPressed = xbox.getStart();
 		exitPressed  = xbox.getBack();
-		nextPressed  = xbox.getRBumper();
-		prevPressed  = xbox.getLBumper();
-		primePressed = xbox.getA();
-		debugPressed  = xbox.getY();
+//		debugPressed  = xbox.getY();
 
 		// Increase animation frame, but only if trying to move
 		horizontal = xbox.getLeftX();
 		vertical   = xbox.getLeftY();
-		secondPressed = xbox.getRightTrigger() > 0.6f;
+		primePressed = xbox.getRightTrigger() > 0.6f;
+		secondaryPressed = xbox.getLeftTrigger() > 0.6f;
 		
 		// Move the crosshairs with the right stick.
-		tertiaryPressed = xbox.getA();
-		crosscache.set(xbox.getLeftX(), xbox.getLeftY());
+//		tertiaryPressed = xbox.getA();
+		crosscache.set(xbox.getRightX(), xbox.getRightY());
 		if (crosscache.len2() > GP_THRESHOLD) {
 			momentum += GP_ACCELERATE;
 			momentum = Math.min(momentum, GP_MAX_SPEED);
@@ -303,32 +264,31 @@ public class InputController {
 	private void readKeyboard(Rectangle bounds, Vector2 scale, boolean secondary) {
 		// Give priority to gamepad results
 		resetPressed = (secondary && resetPressed) || (Gdx.input.isKeyPressed(Input.Keys.R));
-		debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.D));
-		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.UP));
-		secondPressed = (secondary && secondPressed) || (Gdx.input.isKeyPressed(Input.Keys.SPACE));
-		prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
-		nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
+//		debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.D));
+//		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
+		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
+		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonPressed(Input.Buttons.LEFT));
 		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
 		
 		// Directional controls
 		horizontal = (secondary ? horizontal : 0.0f);
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.D)) {
 			horizontal += 1.0f;
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
 			horizontal -= 1.0f;
 		}
 		
-		vertical = (secondary ? vertical : 0.0f);
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			vertical += 1.0f;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			vertical -= 1.0f;
-		}
+//		vertical = (secondary ? vertical : 0.0f);
+//		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+//			vertical += 1.0f;
+//		}
+//		if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+//			vertical -= 1.0f;
+//		}
 		
 		// Mouse results
-        tertiaryPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+//        tertiaryPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 		crosshair.set(Gdx.input.getX(), Gdx.input.getY());
 		crosshair.scl(1/scale.x,-1/scale.y);
 		crosshair.y += bounds.height;
