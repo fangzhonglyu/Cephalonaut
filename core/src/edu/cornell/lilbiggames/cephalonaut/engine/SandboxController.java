@@ -43,6 +43,10 @@ public class SandboxController extends WorldController {
 
 	private Texture earthTexture;
 
+	private boolean grappleOut = false;
+
+	private Joint joint;
+
 	/**
 	 * Creates and initialize a new instance of the sandbox
 	 */
@@ -145,6 +149,10 @@ public class SandboxController extends WorldController {
 
 	}
 
+	float min;
+	boolean jointMade = false;
+	DistanceJointDef j;
+
 	/**
 	 * The core gameplay loop of this world.
 	 *
@@ -159,13 +167,37 @@ public class SandboxController extends WorldController {
 	    // Move an object if touched
 		InputController input = InputController.getInstance();
 		if(input.didTertiary()){
-			grapple =  new GrappleModel(input.getCrossHair().x,input.getCrossHair().y,scale);
-			addObject(grapple);
-			DistanceJointDef j = new DistanceJointDef();
-			j.bodyA = grapple.getBody();
-			j.bodyB = cephalonaut.getBody();
-			j.length = 2;
-			Joint jj = world.createJoint(j);
+			grappleOut = !grappleOut;
+			if(grappleOut) {
+				float xdiff = Math.abs(cephalonaut.getX()-input.getCrossHair().x);
+				float ydiff = Math.abs(cephalonaut.getY()-input.getCrossHair().y);
+				min = Math.min(xdiff,ydiff);
+				grapple = new GrappleModel(input.getCrossHair().x, input.getCrossHair().y, scale);
+				addObject(grapple);
+				j = new DistanceJointDef();
+				j.bodyA = grapple.getBody();
+				j.bodyB = cephalonaut.getBody();
+				j.length = min;
+				//joint = world.createJoint(j);
+			}
+			else{
+				if(jointMade) {
+					world.destroyJoint(joint);
+					jointMade=false;
+				}
+				objects.remove(grapple);
+			}
+		}
+		if(grappleOut){
+			float xdiff = Math.abs(cephalonaut.getX()-grapple.getX());
+			float ydiff = Math.abs(cephalonaut.getY()-grapple.getY());
+			System.out.println((float)Math.sqrt(xdiff*xdiff+ydiff*ydiff));
+			System.out.println("min"+min);
+			if((float)Math.sqrt(xdiff*xdiff+ydiff*ydiff)<=min+cephalonaut.getRadius()) {
+				System.out.println("fdsafjhdsf");
+				joint = world.createJoint(j);
+				jointMade = true;
+			}
 		}
 		// TODO
 	}

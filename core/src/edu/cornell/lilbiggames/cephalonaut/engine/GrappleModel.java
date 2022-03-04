@@ -56,5 +56,4 @@ public class GrappleModel extends edu.cornell.lilbiggames.cephalonaut.engine.obs
         canvas.drawPhysics(shape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
     }
 
-
 }
