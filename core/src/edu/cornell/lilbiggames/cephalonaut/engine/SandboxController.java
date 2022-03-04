@@ -17,7 +17,10 @@ import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
@@ -35,6 +38,8 @@ public class SandboxController extends WorldController {
 
 	/** Mouse selector to move the cephalonaut */
 	private ObstacleSelector selector;
+
+	private GrappleModel grapple;
 
 	private Texture earthTexture;
 
@@ -153,7 +158,15 @@ public class SandboxController extends WorldController {
 	public void update(float dt) {
 	    // Move an object if touched
 		InputController input = InputController.getInstance();
-
+		if(input.didTertiary()){
+			grapple =  new GrappleModel(input.getCrossHair().x,input.getCrossHair().y,scale);
+			addObject(grapple);
+			DistanceJointDef j = new DistanceJointDef();
+			j.bodyA = grapple.getBody();
+			j.bodyB = cephalonaut.getBody();
+			j.length = 2;
+			Joint jj = world.createJoint(j);
+		}
 		// TODO
 	}
 	
@@ -166,7 +179,6 @@ public class SandboxController extends WorldController {
 	 */
 	public void draw(float dt) {
 		canvas.clear();
-
 		canvas.begin();
 		for(Obstacle obj : objects) {
 			obj.draw(canvas);
