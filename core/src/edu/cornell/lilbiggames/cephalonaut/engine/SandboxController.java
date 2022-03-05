@@ -142,7 +142,6 @@ public class SandboxController extends WorldController {
 		addWall(26.5f, 14.5f, (float) Math.toRadians(45), "box5");
 		addWall(27.5f, 13.5f, (float) Math.toRadians(45), "box6");
 		addWall(28f, 13f, (float) Math.toRadians(45), "box7");
-
 	}
 
 	/**
@@ -173,6 +172,7 @@ public class SandboxController extends WorldController {
 				DistanceJointDef anchor = new DistanceJointDef();
 				anchor.bodyA = grapple.getBody();
 				anchor.bodyB = cephalonaut.getBody();
+				anchor.collideConnected = false;
 				grapple.setAnchor(anchor);
 			}
 			else {
