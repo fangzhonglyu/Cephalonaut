@@ -29,7 +29,7 @@ public class GrappleModel extends WheelObstacle {
         setDrawScale(drawScale);
         setDensity(1);
         setFriction(0);
-        setRestitution(1);
+        setRestitution(0);
         setFixedRotation(true);
         setActive(false);
         setBodyType(BodyDef.BodyType.StaticBody);
