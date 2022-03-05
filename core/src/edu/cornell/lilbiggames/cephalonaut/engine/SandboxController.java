@@ -162,6 +162,7 @@ public class SandboxController extends WorldController {
 		GrappleModel grapple = cephalonaut.getGrapple();
 		if (input.didTertiary()) {
 			grapple.setGrappling(!grapple.isGrappling());
+			// grapple is still in the process of extending
 			if (grapple.isGrappling()) {
 				float x = Math.abs(cephalonaut.getX() - input.getCrossHair().x);
 				float y = Math.abs(cephalonaut.getY() - input.getCrossHair().y);
@@ -175,6 +176,7 @@ public class SandboxController extends WorldController {
 				grapple.setAnchor(anchor);
 			}
 			else {
+				// grapple is no longer active but is anchored
 				if (grapple.isAnchored()) {
 					world.destroyJoint(joint);
 					grapple.setAnchored(false);
@@ -184,9 +186,10 @@ public class SandboxController extends WorldController {
 		}
 
 		if (grapple.isGrappling()) {
-			float x = Math.abs(cephalonaut.getX()-grapple.getX());
-			float y = Math.abs(cephalonaut.getY()-grapple.getY());
+			float x = Math.abs(cephalonaut.getX() - grapple.getX());
+			float y = Math.abs(cephalonaut.getY() - grapple.getY());
 			float distance = (float) Math.sqrt(x * x + y * y);
+			// cephalonaut is moving away from desired anchor point, start rotating
 			if (distance > grapple.getExtensionLength() && !grapple.isAnchored()) {
 				DistanceJointDef anchor = grapple.getAnchor();
 				anchor.length = distance;
@@ -195,7 +198,6 @@ public class SandboxController extends WorldController {
 			}
 			grapple.setExtensionLength(distance);
 		}
-		// TODO
 	}
 	
 	/**
