@@ -31,6 +31,8 @@ public class CephalonautModel extends WheelObstacle {
 	/** Cache for internal force calculations */
 	private final Vector2 forceCache = new Vector2();
 
+	/** The cephalonaut's grapple tentacle */
+	private GrappleModel grapple;
 
 	/**
 	 * Returns true if the cephalonaut is actively inking.
@@ -52,36 +54,17 @@ public class CephalonautModel extends WheelObstacle {
 	}
 
 	/**
-	 * Returns true if the cephalonaut is actively grappling.
-	 *
-	 * @return true if the cephalonaut is actively grappling.
-	 */
-	public boolean isGrappling() {
-		// TODO: Implement
-		return false;
-	}
-
-	/**
-	 * Sets whether the cephalonaut is actively grappling.
-	 *
-	 * @param grappling whether the cephalonaut is actively grappling.
-	 */
-	public void setGrappling(boolean grappling) {
-		// TODO: Implement
-	}
-
-	/**
 	 * Creates a new cephalonaut with the given physics data
 	 *
 	 * The size is expressed in physics units NOT pixels.  In order for
 	 * drawing to work properly, you MUST set the drawScale. The drawScale
 	 * converts the physics units to pixels.
 	 *
-	 * @param radius	The object radius in physics units
 	 */
 	public CephalonautModel(float x, float y, Vector2 drawScale) {
 		// The shrink factors fit the image to a tigher hitbox
 		super(x, y, 0.5f);
+		setName("michael");
 		setDrawScale(drawScale);
 		setDensity(1);
 		setFriction(0);
@@ -95,7 +78,16 @@ public class CephalonautModel extends WheelObstacle {
 		texture = new TextureRegion(new Texture(pixmap));
 		origin.set(pixDiameter / 2f, pixDiameter / 2f);
 
-		setName("Cephalonaut");
+		grapple = new GrappleModel(100000000, 100000000, drawScale);
+	}
+
+	/**
+	 * Returns the cephalonaut's grapple tentacle.
+	 *
+	 * @return the cephalonaut's grapple tentacle.
+	 */
+	public GrappleModel getGrapple() {
+		return grapple;
 	}
 
 	/**

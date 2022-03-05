@@ -39,11 +39,7 @@ public class SandboxController extends WorldController {
 	/** Mouse selector to move the cephalonaut */
 	private ObstacleSelector selector;
 
-	private GrappleModel grapple;
-
 	private Texture earthTexture;
-
-	private boolean grappleOut = false;
 
 	private Joint joint;
 
@@ -102,8 +98,8 @@ public class SandboxController extends WorldController {
 		// Make the cephalonaut
 		cephalonaut = new CephalonautModel(10, 10, scale);
 		cephalonaut.setVX(5);
-
 		addObject(cephalonaut);
+		addObject(cephalonaut.getGrapple());
 		setDebug(true);
 
 		selector = new ObstacleSelector(world);
@@ -149,11 +145,6 @@ public class SandboxController extends WorldController {
 
 	}
 
-	float min;
-	boolean jointMade = false;
-	DistanceJointDef j;
-	float distance;
-
 	/**
 	 * The core gameplay loop of this world.
 	 *
@@ -167,41 +158,42 @@ public class SandboxController extends WorldController {
 	public void update(float dt) {
 	    // Move an object if touched
 		InputController input = InputController.getInstance();
-		if(input.didTertiary()){
-			grappleOut = !grappleOut;
-			if(grappleOut) {
-				grapple = new GrappleModel(input.getCrossHair().x, input.getCrossHair().y, scale);
-				float xdiff = Math.abs(cephalonaut.getX()-grapple.getX());
-				float ydiff = Math.abs(cephalonaut.getY()-grapple.getY());
-				distance = (float)Math.sqrt(xdiff*xdiff+ydiff*ydiff);
-				min = Math.min(xdiff,ydiff);
-				addObject(grapple);
-				j = new DistanceJointDef();
-				j.bodyA = grapple.getBody();
-				j.bodyB = cephalonaut.getBody();
-				j.length = min;
-				//joint = world.createJoint(j);
+
+		GrappleModel grapple = cephalonaut.getGrapple();
+		if (input.didTertiary()) {
+			grapple.setGrappling(!grapple.isGrappling());
+			if (grapple.isGrappling()) {
+				float x = Math.abs(cephalonaut.getX() - input.getCrossHair().x);
+				float y = Math.abs(cephalonaut.getY() - input.getCrossHair().y);
+				grapple.setX(input.getCrossHair().x);
+				grapple.setY(input.getCrossHair().y);
+				grapple.setActive(true);
+				grapple.setExtensionLength((float) Math.sqrt(x * x + y * y));
+				DistanceJointDef anchor = new DistanceJointDef();
+				anchor.bodyA = grapple.getBody();
+				anchor.bodyB = cephalonaut.getBody();
+				grapple.setAnchor(anchor);
 			}
-			else{
-				if(jointMade) {
+			else {
+				if (grapple.isAnchored()) {
 					world.destroyJoint(joint);
-					jointMade=false;
-					//grappleOut=false;
+					grapple.setAnchored(false);
 				}
-				objects.remove(grapple);
-				world.destroyBody(grapple.getBody());
+				grapple.setActive(false);
 			}
 		}
-		if(grappleOut){
-			float xdiff = Math.abs(cephalonaut.getX()-grapple.getX());
-			float ydiff = Math.abs(cephalonaut.getY()-grapple.getY());
-			if((float)Math.sqrt(xdiff*xdiff+ydiff*ydiff)>distance&&!jointMade) {
-				System.out.println("fdsafjhdsf");
-				j.length = (float)Math.sqrt(xdiff*xdiff+ydiff*ydiff);
-				joint = world.createJoint(j);
-				jointMade = true;
+
+		if (grapple.isGrappling()) {
+			float x = Math.abs(cephalonaut.getX()-grapple.getX());
+			float y = Math.abs(cephalonaut.getY()-grapple.getY());
+			float distance = (float) Math.sqrt(x * x + y * y);
+			if (distance > grapple.getExtensionLength() && !grapple.isAnchored()) {
+				DistanceJointDef anchor = grapple.getAnchor();
+				anchor.length = distance;
+				joint = world.createJoint(anchor);
+				grapple.setAnchored(true);
 			}
-			distance=(float)Math.sqrt(xdiff*xdiff+ydiff*ydiff);
+			grapple.setExtensionLength(distance);
 		}
 		// TODO
 	}

@@ -7,31 +7,39 @@ import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.CapsuleObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
 
-public class GrappleModel extends edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle {
+public class GrappleModel extends WheelObstacle {
+    /** Whether the grapple is actively extending */
+    private boolean isGrappling;
+    /** Whether the grapple is anchored */
+    private boolean isAnchored;
+    /** The joint anchor for the grapple */
+    private DistanceJointDef anchor;
+    /** The extension length of the grapple */
+    private float extensionLength;
 
     public GrappleModel(float x, float y, Vector2 drawScale) {
         // The shrink factors fit the image to a tigher hitbox
         super(x, y, 0.1f);
+        setName("hook");
         setDrawScale(drawScale);
         setDensity(1);
         setFriction(0);
         setRestitution(1);
         setFixedRotation(true);
+        setActive(false);
         setBodyType(BodyDef.BodyType.StaticBody);
-        setActive(true);
-        setName("hook");
+
         int pixDiameter = (int) (getRadius() * 2);
         Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
         texture = new TextureRegion(new Texture(pixmap));
         origin.set(pixDiameter / 2f, pixDiameter / 2f);
-
-        setName("Hook");
     }
 
     public boolean activatePhysics(World world) {
@@ -45,15 +53,90 @@ public class GrappleModel extends edu.cornell.lilbiggames.cephalonaut.engine.obs
         return true;
     }
 
+    /**
+     * Returns true if the grapple is actively extending.
+     *
+     * @return true if the grapple is actively extending.
+     */
+    public boolean isGrappling() {
+        return isGrappling;
+    }
+
+    /**
+     * Sets whether the grapple is actively extending.
+     *
+     * @param grappling whether the grapple is actively extending.
+     */
+    public void setGrappling(boolean grappling) {
+        isGrappling = grappling;
+    }
+
+    /**
+     * Returns true if the grapple is anchored.
+     *
+     * @return true if the grapple is anchored
+     */
+    public boolean isAnchored() {
+        return isAnchored;
+    }
+
+    /**
+     * Sets whether the grapple is anchored.
+     *
+     * @param anchored whether the grapple is anchored.
+     */
+    public void setAnchored(boolean anchored) {
+        isAnchored = anchored;
+    }
+
+    /**
+     * Sets the grapple's anchor.
+     *
+     * @param anchor the distance joint definition for the grapple.
+     */
+    public void setAnchor(DistanceJointDef anchor) {
+        this.anchor = anchor;
+    }
+
+    /**
+     * Returns the grapple's anchor.
+     *
+     * @return the grapple's anchor.
+     */
+    public DistanceJointDef getAnchor() {
+        return anchor;
+    }
+
+    /**
+     * Sets the grapple's extension length.
+     *
+     * @param length the distance the grapple has extended from the cephalonaut.
+     */
+    public void setExtensionLength(float length) {
+        extensionLength = length;
+    }
+
+    /**
+     * Returns the grapple's extension length.
+     *
+     * @return the grapple's extension length.
+     */
+    public float getExtensionLength() {
+        return extensionLength;
+    }
+
     public void draw(GameCanvas canvas) {
-        canvas.draw(texture, Color.ORANGE, origin.x, origin.y,
-                getX() * drawScale.x, getY() * drawScale.y,
-                getAngle(), 1, 1);
+        if (isGrappling || isAnchored) {
+            canvas.draw(texture, Color.ORANGE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
+                    getAngle(), 1, 1);
+        }
     }
 
     public void drawDebug(GameCanvas canvas) {
-        super.drawDebug(canvas);
-        canvas.drawPhysics(shape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
+        if (isGrappling || isAnchored) {
+            super.drawDebug(canvas);
+            canvas.drawPhysics(shape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
+        }
     }
 
 }
