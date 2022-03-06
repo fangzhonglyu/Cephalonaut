@@ -5,6 +5,8 @@
       "wrapU": "repeated",
       "wrapV": "repeated"
     },
-    "barrier": "barrier.png"
+    "barrier": "barrier.png",
+    "octopus": "octopus.png",
+    "crosshair": "crosshair.png"
   }
 }

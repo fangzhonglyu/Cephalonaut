@@ -22,12 +22,13 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.CapsuleObstacle;
+import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.OctopusObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
 
 /**
  * Player avatar for the gameplay prototype.
  */
-public class CephalonautModel extends WheelObstacle {
+public class CephalonautModel extends OctopusObstacle {
 	/** Cache for internal force calculations */
 	private final Vector2 forceCache = new Vector2();
 
@@ -79,21 +80,22 @@ public class CephalonautModel extends WheelObstacle {
 	 *
 	 * @param radius	The object radius in physics units
 	 */
-	public CephalonautModel(float x, float y, Vector2 drawScale) {
+	public CephalonautModel(float x, float y, float width, float height, Vector2 drawScale) {
 		// The shrink factors fit the image to a tigher hitbox
-		super(x, y, 0.5f);
+		super(x, y, width, height);
 		setDrawScale(drawScale);
 		setDensity(1);
 		setFriction(0);
 		setRestitution(1);
 		setFixedRotation(true);
 
-		int pixDiameter = (int) (getRadius() * 2 * Math.max(drawScale.x, drawScale.y));
-		Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.WHITE);
-		pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
-		texture = new TextureRegion(new Texture(pixmap));
-		origin.set(pixDiameter / 2f, pixDiameter / 2f);
+//		int pixDiameter = (int) (getRadius() * 2 * Math.max(drawScale.x, drawScale.y));
+//		Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
+//		pixmap.setColor(Color.WHITE);
+//		pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
+//		texture = new TextureRegion(new Texture(pixmap));
+		origin.set(width / 2f, height / 2f);
+//		texture = new TextureRegion();
 
 		setName("Cephalonaut");
 	}
@@ -165,6 +167,7 @@ public class CephalonautModel extends WheelObstacle {
 	 */
 	public void drawDebug(GameCanvas canvas) {
 		super.drawDebug(canvas);
-		canvas.drawPhysics(shape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
+//		canvas.drawPhysics(circleShape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
+//		canvas.drawPhysics(triangleShape, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
 	}
 }

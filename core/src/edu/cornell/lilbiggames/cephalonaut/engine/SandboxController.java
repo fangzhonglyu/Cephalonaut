@@ -38,6 +38,10 @@ public class SandboxController extends WorldController {
 
 	private Texture earthTexture;
 
+	private TextureRegion octopusTexture;
+	/** Texture asset for mouse crosshairs */
+	private TextureRegion crosshairTexture;
+
 	/**
 	 * Creates and initialize a new instance of the sandbox
 	 */
@@ -87,18 +91,38 @@ public class SandboxController extends WorldController {
 	}
 
 	/**
+	 * Gather the assets for this controller.
+	 *
+	 * This method extracts the asset variables from the given asset directory. It
+	 * should only be called after the asset directory is completed.
+	 *
+	 * @param directory	Reference to global asset manager.
+	 */
+	public void gatherAssets(AssetDirectory directory) {
+		// Allocate the tiles
+		earthTile = new TextureRegion(directory.getEntry( "earth", Texture.class ));
+		octopusTexture = new TextureRegion(directory.getEntry( "octopus", Texture.class ));
+		crosshairTexture  = new TextureRegion(directory.getEntry( "crosshair", Texture.class ));
+//		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
+	}
+
+	/**
 	 * Lays out the game geography.
 	 */
 	private void populateLevel() {
 		// Make the cephalonaut
-		cephalonaut = new CephalonautModel(10, 10, scale);
+		float dwidth  = octopusTexture.getRegionWidth()/scale.x;
+		float dheight = octopusTexture.getRegionHeight()/scale.y;
+		cephalonaut = new CephalonautModel(10, 10, dwidth, dheight, scale);
 		cephalonaut.setVX(5);
+		cephalonaut.setTexture(octopusTexture);
 
 		addObject(cephalonaut);
 		setDebug(true);
 
 		selector = new ObstacleSelector(world);
 		selector.setDrawScale(scale);
+		selector.setTexture(crosshairTexture);
 		world.setGravity(Vector2.Zero);
 
 		final int boxesY = (int) bounds.getHeight() - 1;
@@ -154,6 +178,8 @@ public class SandboxController extends WorldController {
 	    // Move an object if touched
 		InputController input = InputController.getInstance();
 
+		selector.moveTo(input.getCrossHair().x,input.getCrossHair().y);
+
 		// TODO
 	}
 	
@@ -171,6 +197,7 @@ public class SandboxController extends WorldController {
 		for(Obstacle obj : objects) {
 			obj.draw(canvas);
 		}
+		selector.draw(canvas);
 		canvas.end();
 		
 		if (isDebug()) {
