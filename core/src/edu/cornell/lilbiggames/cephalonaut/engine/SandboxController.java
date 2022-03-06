@@ -27,7 +27,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
  * Gameplay specific controller for the gameplay prototype.
  */
 public class SandboxController extends WorldController {
-	/** Reference to the cephalonaut's model */a
+	/** Reference to the cephalonaut's model */
 	private CephalonautModel cephalonaut;
 
 	/** Reference to the player's thruster controller */
