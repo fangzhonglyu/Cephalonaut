@@ -23,15 +23,13 @@ public class GrappleModel extends WheelObstacle {
     private float extensionLength;
 
     public GrappleModel(float x, float y, Vector2 drawScale) {
-        // The shrink factors fit the image to a tigher hitbox
+        // The shrink factors fit the image to a tighter hitbox
         super(x, y, 0.1f);
         setName("hook");
         setDrawScale(drawScale);
-        setDensity(1);
-        setFriction(0);
-        setRestitution(0);
         setFixedRotation(true);
         setActive(false);
+        setSensor(true);
         setBodyType(BodyDef.BodyType.StaticBody);
 
         int pixDiameter = (int) (getRadius() * 2);

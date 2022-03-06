@@ -34,6 +34,9 @@ public class CephalonautModel extends WheelObstacle {
 	/** The cephalonaut's grapple tentacle */
 	private GrappleModel grapple;
 
+	/** The tentacle's texture */
+	private Texture tentacleTexture;
+
 	/**
 	 * Returns true if the cephalonaut is actively inking.
 	 *
@@ -143,6 +146,15 @@ public class CephalonautModel extends WheelObstacle {
 	 * @param canvas Drawing context
 	 */
 	public void draw(GameCanvas canvas) {
+		if (grapple.isGrappling()) {
+			float distance = getPosition().dst(grapple.getPosition());
+			float angle = getPosition().cpy().sub(grapple.getPosition()).angleRad() + (float) Math.PI / 2f;
+			Vector2 middle = getPosition().cpy().add(grapple.getPosition()).scl(0.5f);
+			Color tint = grapple.isAnchored() ? Color.RED : Color.GREEN;
+			canvas.draw(texture, tint, origin.x, origin.y, middle.x * drawScale.x, middle.y * drawScale.y,
+					angle, 0.2f, distance);
+		}
+
 		canvas.draw(texture, Color.ORANGE, origin.x, origin.y,
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 1, 1);

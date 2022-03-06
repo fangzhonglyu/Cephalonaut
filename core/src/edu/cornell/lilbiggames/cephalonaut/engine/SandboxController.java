@@ -163,12 +163,10 @@ public class SandboxController extends WorldController {
 			grapple.setGrappling(!grapple.isGrappling());
 			// grapple is still in the process of extending
 			if (grapple.isGrappling()) {
-				float x = Math.abs(cephalonaut.getX() - input.getCrossHair().x);
-				float y = Math.abs(cephalonaut.getY() - input.getCrossHair().y);
-				grapple.setX(input.getCrossHair().x);
-				grapple.setY(input.getCrossHair().y);
+				grapple.setPosition(input.getCrossHair());
+				Vector2 normal = cephalonaut.getPosition().cpy().sub(grapple.getPosition());
+				grapple.setExtensionLength(normal.len());
 				grapple.setActive(true);
-				grapple.setExtensionLength((float) Math.sqrt(x * x + y * y));
 				DistanceJointDef anchor = new DistanceJointDef();
 				anchor.bodyA = grapple.getBody();
 				anchor.bodyB = cephalonaut.getBody();
@@ -186,15 +184,22 @@ public class SandboxController extends WorldController {
 		}
 
 		if (grapple.isGrappling()) {
-			float x = Math.abs(cephalonaut.getX() - grapple.getX());
-			float y = Math.abs(cephalonaut.getY() - grapple.getY());
-			float distance = (float) Math.sqrt(x * x + y * y);
+			float distance = cephalonaut.getPosition().dst(grapple.getPosition());;
 			// cephalonaut is moving away from desired anchor point, start rotating
 			if (distance > grapple.getExtensionLength() && !grapple.isAnchored()) {
-				DistanceJointDef anchor = grapple.getAnchor();
-				anchor.length = distance;
-				joint = world.createJoint(anchor);
-				grapple.setAnchored(true);
+				Vector2 swing = cephalonaut.getPosition().cpy().sub(grapple.getPosition()).rotate90(0);
+
+				float dot = swing.dot(cephalonaut.getLinearVelocity());
+				if (dot != 0) {
+					// Experimental: Conserve velocity when rotating around point behind cephalonaut
+					float newAngle = swing.angleRad() + (dot < 0 ? (float) Math.PI : 0);
+					cephalonaut.setLinearVelocity(cephalonaut.getLinearVelocity().setAngleRad(newAngle));
+
+					DistanceJointDef anchor = grapple.getAnchor();
+					anchor.length = distance;
+					joint = world.createJoint(anchor);
+					grapple.setAnchored(true);
+				}
 			}
 			grapple.setExtensionLength(distance);
 		}
