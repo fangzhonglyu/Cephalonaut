@@ -35,10 +35,10 @@ public class CephalonautModel extends WheelObstacle {
 	/** Cache object for transforming the force according the object angle */
 	private final Affine2 affineCache = new Affine2();
 
-	private final float MAX_SPEED = 6.0f;
+	private final float MAX_SPEED = 8.0f;
 
 	/** Magnitude of force to apply */
-	private final float force = 2.0f;
+	private final float force = 4.0f;
 
 	/** The direction of rotation */
 	private float rotation;
@@ -142,7 +142,7 @@ public class CephalonautModel extends WheelObstacle {
 	 */
 	public void applyRotation(){
 		Vector2 position = getPosition();
-		body.applyAngularImpulse(-0.005f*rotation,true);
+		body.setAngularVelocity(10.0f*rotation);
 	}
 	
 
