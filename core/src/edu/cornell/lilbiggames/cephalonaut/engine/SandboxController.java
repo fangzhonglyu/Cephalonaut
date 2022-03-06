@@ -102,7 +102,6 @@ public class SandboxController extends WorldController {
 		// Allocate the tiles
 		earthTile = new TextureRegion(directory.getEntry( "earth", Texture.class ));
 		octopusTexture = new TextureRegion(directory.getEntry( "octopus", Texture.class ));
-		crosshairTexture  = new TextureRegion(directory.getEntry( "crosshair", Texture.class ));
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
 	}
 
@@ -122,7 +121,6 @@ public class SandboxController extends WorldController {
 
 		selector = new ObstacleSelector(world);
 		selector.setDrawScale(scale);
-		selector.setTexture(crosshairTexture);
 		world.setGravity(Vector2.Zero);
 
 		final int boxesY = (int) bounds.getHeight() - 1;
@@ -178,7 +176,6 @@ public class SandboxController extends WorldController {
 	    // Move an object if touched
 		InputController input = InputController.getInstance();
 
-		selector.moveTo(input.getCrossHair().x,input.getCrossHair().y);
 
 		// TODO
 	}
