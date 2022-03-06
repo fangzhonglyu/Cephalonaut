@@ -354,9 +354,9 @@ public abstract class WorldController implements Screen {
 		}
 
 		// Toggle debug
-		if (input.didDebug()) {
-			debug = !debug;
-		}
+//		if (input.didDebug()) {
+//			debug = !debug;
+//		}
 		
 		// Handle resets
 		if (input.didReset()) {
@@ -368,15 +368,16 @@ public abstract class WorldController implements Screen {
 			pause();
 			listener.exitScreen(this, EXIT_QUIT);
 			return false;
-		} else if (input.didAdvance()) {
-			pause();
-			listener.exitScreen(this, EXIT_NEXT);
-			return false;
-		} else if (input.didRetreat()) {
-			pause();
-			listener.exitScreen(this, EXIT_PREV);
-			return false;
-		} else if (countdown > 0) {
+		}
+//		} else if (input.didAdvance()) {
+//			pause();
+//			listener.exitScreen(this, EXIT_NEXT);
+//			return false;
+//		} else if (input.didRetreat()) {
+//			pause();
+//			listener.exitScreen(this, EXIT_PREV);
+//			return false;
+		else if (countdown > 0) {
 			countdown--;
 		} else if (countdown == 0) {
 			if (failed) {

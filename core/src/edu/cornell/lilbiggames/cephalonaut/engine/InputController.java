@@ -267,7 +267,7 @@ public class InputController {
 //		debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.D));
 //		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
 		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
-		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonPressed(Input.Buttons.LEFT));
+		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT));
 		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
 		
 		// Directional controls
@@ -288,7 +288,6 @@ public class InputController {
 //		}
 		
 		// Mouse results
-//        tertiaryPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 		crosshair.set(Gdx.input.getX(), Gdx.input.getY());
 		crosshair.scl(1/scale.x,-1/scale.y);
 		crosshair.y += bounds.height;
