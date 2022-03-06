@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -31,6 +32,20 @@ public class CephalonautModel extends WheelObstacle {
 	/** Cache for internal force calculations */
 	private final Vector2 forceCache = new Vector2();
 
+	/** Cache object for transforming the force according the object angle */
+	private final Affine2 affineCache = new Affine2();
+
+	private final float MAX_SPEED = 6.0f;
+
+	/** Magnitude of force to apply */
+	private final float force = 2.0f;
+
+	/** The direction of rotation */
+	private float rotation;
+
+	/** Whether or not the octopus is ink-thrusting */
+	private boolean inking;
+
 
 	/**
 	 * Returns true if the cephalonaut is actively inking.
@@ -38,8 +53,7 @@ public class CephalonautModel extends WheelObstacle {
 	 * @return true if the cephalonaut is actively inking.
 	 */
 	public boolean isInking() {
-		// TODO: Implement
-		return false;
+		return inking;
 	}
 
 	/**
@@ -48,7 +62,8 @@ public class CephalonautModel extends WheelObstacle {
 	 * @param inking whether the cephalonaut is actively inking.
 	 */
 	public void setInking(boolean inking) {
-		// TODO: Implement
+		this.inking = inking;
+		this.forceCache.y = inking ? force : 0.0f;
 	}
 
 	/**
@@ -79,21 +94,23 @@ public class CephalonautModel extends WheelObstacle {
 	 *
 	 * @param radius	The object radius in physics units
 	 */
-	public CephalonautModel(float x, float y, Vector2 drawScale) {
+	public CephalonautModel(float x, float y, Vector2 drawScale, TextureRegion texture) {
 		// The shrink factors fit the image to a tigher hitbox
 		super(x, y, 0.5f);
 		setDrawScale(drawScale);
 		setDensity(1);
 		setFriction(0);
-		setRestitution(1);
-		setFixedRotation(true);
+		setRestitution(0.1f);
+		setFixedRotation(false);
 
 		int pixDiameter = (int) (getRadius() * 2 * Math.max(drawScale.x, drawScale.y));
-		Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
+		/*Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.WHITE);
 		pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
-		texture = new TextureRegion(new Texture(pixmap));
+		texture = new TextureRegion(new Texture(pixmap));*/
+		this.texture = texture;
 		origin.set(pixDiameter / 2f, pixDiameter / 2f);
+
 
 		setName("Cephalonaut");
 	}
@@ -117,6 +134,16 @@ public class CephalonautModel extends WheelObstacle {
 
 		return true;
 	}
+
+	/**
+	 * Applies rotation to the octopus
+	 *
+	 * This method should be called after the rotation attribute is set.
+	 */
+	public void applyRotation(){
+		Vector2 position = getPosition();
+		body.applyAngularImpulse(-0.005f*rotation,true);
+	}
 	
 
 	/**
@@ -129,7 +156,23 @@ public class CephalonautModel extends WheelObstacle {
 			return;
 		}
 
-		// TODO: Stuff here probably
+		float speed = (float)Math.sqrt((body.getLinearVelocity().x*body.getLinearVelocity().x) + (body.getLinearVelocity().y*body.getLinearVelocity().y));
+		if(speed < MAX_SPEED){
+			// Orient the force with rotation and apply ink-thrust.
+			affineCache.setToRotationRad(getAngle());
+			affineCache.applyTo(forceCache);
+
+			body.applyForce(forceCache,getPosition(),true);
+		}
+	}
+
+	/**
+	 * Sets rotational force
+	 *
+	 * @param rotation The direction (clockwise or counterclockwise to rotate)
+	 */
+	public void setRotationalDirection(float rotation){
+		this.rotation = rotation;
 	}
 	
 	/**

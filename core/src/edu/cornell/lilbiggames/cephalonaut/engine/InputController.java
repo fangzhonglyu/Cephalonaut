@@ -77,6 +77,11 @@ public class InputController {
 	private Vector2 crosscache;
 	/** For the gamepad crosshair control */
 	private float momentum;
+
+	/** Forward thrust applied */
+	private boolean thrusterApplied;
+	/** Rotation applied (-1 for counterclockwise, 0 for no rotation, 1 for clockwise */
+	private float rotation;
 	
 	/** An X-Box controller (if it is connected) */
 	XBoxController xbox;
@@ -168,7 +173,26 @@ public class InputController {
 	public boolean didExit() {
 		return exitPressed && !exitPrevious;
 	}
-	
+
+	/**
+	 * Returns true if the player is currently using thruster ink sacs
+	 *
+	 * @return true if the add thrust button was pressed
+	 */
+	public boolean isThrusterApplied(){
+		return thrusterApplied;
+	}
+
+	/**
+	 * Gets the rotation of the octopus
+	 * Returns 1.0 for clockwise rotation, 0 for no rotation, and -1.0 for counterclockwise rotation
+	 *
+	 * @returns a float representing rotation direction
+	 */
+	public float getRotation(){
+		return rotation;
+	}
+
 	/**
 	 * Creates a new input controller
 	 * 
@@ -206,6 +230,7 @@ public class InputController {
 		resetPrevious  = resetPressed;
 //		debugPrevious  = debugPressed;
 		exitPrevious = exitPressed;
+		thrusterApplied = thrusterApplied;
 		
 		// Check to see if a GamePad is connected
 		if (xbox != null && xbox.isConnected()) {
@@ -271,21 +296,17 @@ public class InputController {
 		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
 		
 		// Directional controls
-		horizontal = (secondary ? horizontal : 0.0f);
+		rotation = (secondary ? rotation : 0.0f);
 		if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-			horizontal += 1.0f;
+			rotation += 1.0f;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-			horizontal -= 1.0f;
+			rotation -= 1.0f;
 		}
-		
-//		vertical = (secondary ? vertical : 0.0f);
-//		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-//			vertical += 1.0f;
-//		}
-//		if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-//			vertical -= 1.0f;
-//		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+			thrusterApplied = true;
+		}
 		
 		// Mouse results
 //        tertiaryPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
@@ -305,4 +326,6 @@ public class InputController {
 		crosshair.x = Math.max(bounds.x, Math.min(bounds.x+bounds.width, crosshair.x));
 		crosshair.y = Math.max(bounds.y, Math.min(bounds.y+bounds.height, crosshair.y));
 	}
+
+
 }

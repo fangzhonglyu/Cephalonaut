@@ -10,21 +10,13 @@
  */
 package edu.cornell.lilbiggames.cephalonaut.engine;
 
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PolygonRegion;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.JsonValue;
-import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.PolygonObstacle;
-import edu.cornell.lilbiggames.cephalonaut.util.RandomController;
 
 /**
  * Gameplay specific controller for the gameplay prototype.
@@ -32,6 +24,9 @@ import edu.cornell.lilbiggames.cephalonaut.util.RandomController;
 public class SandboxController extends WorldController {
 	/** Reference to the cephalonaut's model */
 	private CephalonautModel cephalonaut;
+
+	/** Reference to the player's thruster controller */
+	private ThrusterController thrusterController;
 
 	/** Mouse selector to move the cephalonaut */
 	private ObstacleSelector selector;
@@ -46,6 +41,7 @@ public class SandboxController extends WorldController {
 		setDebug(false);
 		setComplete(false);
 		setFailure(false);
+
 	}
 
 	/**
@@ -91,7 +87,8 @@ public class SandboxController extends WorldController {
 	 */
 	private void populateLevel() {
 		// Make the cephalonaut
-		cephalonaut = new CephalonautModel(10, 10, scale);
+		cephalonaut = new CephalonautModel(10, 10, scale, squidTexture);
+		thrusterController = new ThrusterController(cephalonaut);
 		cephalonaut.setVX(5);
 
 		addObject(cephalonaut);
@@ -154,7 +151,15 @@ public class SandboxController extends WorldController {
 	    // Move an object if touched
 		InputController input = InputController.getInstance();
 
-		// TODO
+		if(input.isThrusterApplied()){
+			thrusterController.startInking();
+		} else {
+			thrusterController.stopInking();
+		}
+
+		thrusterController.setRotation(input.getRotation());
+		cephalonaut.applyRotation();
+		cephalonaut.applyForce();
 	}
 	
 	/**
