@@ -48,6 +48,8 @@ public abstract class WorldController implements Screen {
 	protected TextureRegion earthTile;
 	/** The texture for the barriers */
 	protected TextureRegion barrierTile;
+	/** Texture for the squid */
+	protected TextureRegion squidTexture;
 	/** The font for giving messages to the player */
 	protected BitmapFont displayFont;
 	
@@ -285,6 +287,8 @@ public abstract class WorldController implements Screen {
 		// Allocate the tiles
 		earthTile = new TextureRegion(directory.getEntry( "earth", Texture.class ));
 		barrierTile  = new TextureRegion(directory.getEntry( "barrier", Texture.class ));
+		squidTexture = new TextureRegion(directory.getEntry("squid", Texture.class));
+
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
 	}
 
@@ -364,6 +368,7 @@ public abstract class WorldController implements Screen {
 		if (listener == null) {
 			return true;
 		}
+
 		
 		// Now it is time to maybe switch screens.
 		if (input.didExit()) {
@@ -371,6 +376,7 @@ public abstract class WorldController implements Screen {
 			listener.exitScreen(this, EXIT_QUIT);
 			return false;
 		}
+
 		return true;
 	}
 	

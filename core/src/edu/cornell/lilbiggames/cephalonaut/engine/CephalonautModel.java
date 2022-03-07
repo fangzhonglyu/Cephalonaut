@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -37,14 +38,27 @@ public class CephalonautModel extends WheelObstacle {
 	/** The tentacle's texture */
 	private Texture tentacleTexture;
 
+	/** Cache object for transforming the force according the object angle */
+	private final Affine2 affineCache = new Affine2();
+
+	private final float MAX_SPEED = 8.0f;
+
+	/** Magnitude of force to apply */
+	private final float force = 4.0f;
+
+	/** The direction of rotation */
+	private float rotation;
+
+	/** Whether or not the octopus is ink-thrusting */
+	private boolean inking;
+
 	/**
 	 * Returns true if the cephalonaut is actively inking.
 	 *
 	 * @return true if the cephalonaut is actively inking.
 	 */
 	public boolean isInking() {
-		// TODO: Implement
-		return false;
+		return inking;
 	}
 
 	/**
@@ -53,7 +67,8 @@ public class CephalonautModel extends WheelObstacle {
 	 * @param inking whether the cephalonaut is actively inking.
 	 */
 	public void setInking(boolean inking) {
-		// TODO: Implement
+		this.inking = inking;
+		this.forceCache.y = inking ? force : 0.0f;
 	}
 
 	/**
@@ -64,22 +79,23 @@ public class CephalonautModel extends WheelObstacle {
 	 * converts the physics units to pixels.
 	 *
 	 */
-	public CephalonautModel(float x, float y, Vector2 drawScale) {
-		// The shrink factors fit the image to a tigher hitbox
+	public CephalonautModel(float x, float y, Vector2 drawScale, TextureRegion texture) {
+		// The shrink factors fit the image to a tighter hitbox
 		super(x, y, 0.5f);
 		setName("michael");
 		setDrawScale(drawScale);
 		setDensity(1);
 		setFriction(0);
-		setRestitution(1);
-		setFixedRotation(true);
+		setRestitution(0.1f);
+		setFixedRotation(false);
 
 		int pixDiameter = (int) (getRadius() * 2 * Math.max(drawScale.x, drawScale.y));
-		Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
+		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.WHITE);
-		pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
-		texture = new TextureRegion(new Texture(pixmap));
-		origin.set(pixDiameter / 2f, pixDiameter / 2f);
+		pixmap.fillRectangle(0, 0, 1, 1);
+		tentacleTexture = new Texture(pixmap);
+
+		setTexture(texture);
 
 		grapple = new GrappleModel(100000000, 100000000, drawScale);
 	}
@@ -112,6 +128,15 @@ public class CephalonautModel extends WheelObstacle {
 
 		return true;
 	}
+
+	/**
+	 * Applies rotation to the octopus
+	 *
+	 * This method should be called after the rotation attribute is set.
+	 */
+	public void applyRotation(){
+		body.setAngularVelocity(-10.0f * rotation);
+	}
 	
 
 	/**
@@ -124,7 +149,25 @@ public class CephalonautModel extends WheelObstacle {
 			return;
 		}
 
-		// TODO: Stuff here probably
+		float speed = (float)Math.sqrt((body.getLinearVelocity().x*body.getLinearVelocity().x) + (body.getLinearVelocity().y*body.getLinearVelocity().y));
+		if(speed < MAX_SPEED){
+			// Orient the force with rotation and apply ink-thrust.
+			System.out.println(getAngle());
+			Vector2 temp = forceCache.cpy();
+			affineCache.setToRotationRad(getAngle());
+			affineCache.applyTo(forceCache);
+			body.applyForce(forceCache,getPosition(),true);
+			forceCache.set(temp);
+		}
+	}
+
+	/**
+	 * Sets rotational force
+	 *
+	 * @param rotation The direction (clockwise or counterclockwise to rotate)
+	 */
+	public void setRotationalDirection(float rotation){
+		this.rotation = rotation;
 	}
 	
 	/**
@@ -151,8 +194,8 @@ public class CephalonautModel extends WheelObstacle {
 			float angle = getPosition().cpy().sub(grapple.getPosition()).angleRad() + (float) Math.PI / 2f;
 			Vector2 middle = getPosition().cpy().add(grapple.getPosition()).scl(0.5f);
 			Color tint = grapple.isAnchored() ? Color.RED : Color.GREEN;
-			canvas.draw(texture, tint, origin.x, origin.y, middle.x * drawScale.x, middle.y * drawScale.y,
-					angle, 0.2f, distance);
+			canvas.draw(tentacleTexture, tint, 0.5f, 0.5f, middle.x * drawScale.x, middle.y * drawScale.y,
+					angle, 5, distance * drawScale.x);
 		}
 
 		canvas.draw(texture, Color.ORANGE, origin.x, origin.y,
