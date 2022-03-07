@@ -304,9 +304,7 @@ public class InputController {
 			rotation -= 1.0f;
 		}
 
-		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-			thrusterApplied = true;
-		}
+		thrusterApplied = Gdx.input.isKeyPressed(Input.Keys.W);
 		
 		// Mouse results
 		crosshair.set(Gdx.input.getX(), Gdx.input.getY());
