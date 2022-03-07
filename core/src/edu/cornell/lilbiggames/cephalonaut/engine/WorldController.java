@@ -358,10 +358,9 @@ public abstract class WorldController implements Screen {
 		if (input.didDebug()) {
 			debug = !debug;
 		}
-		
+
 		// Handle resets
 		if (input.didReset()) {
-			System.out.println("Reset");
 			reset();
 		}
 
@@ -369,7 +368,6 @@ public abstract class WorldController implements Screen {
 			return true;
 		}
 
-		
 		// Now it is time to maybe switch screens.
 		if (input.didExit()) {
 			pause();
@@ -519,7 +517,8 @@ public abstract class WorldController implements Screen {
 	 * @param height The new height in pixels
 	 */
 	public void resize(int width, int height) {
-		// IGNORE FOR NOW
+		scale.x = canvas.getWidth()/bounds.getWidth();
+		scale.y = canvas.getHeight()/bounds.getHeight();
 	}
 
 	/**

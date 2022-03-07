@@ -11,6 +11,7 @@
 package edu.cornell.lilbiggames.cephalonaut.engine;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Joint;
@@ -38,7 +39,11 @@ public class SandboxController extends WorldController {
 
 	private Texture earthTexture;
 
-	private Joint joint;
+	Joint joint;
+
+	private TextureRegion octopusTexture;
+	/** Texture asset for mouse crosshairs */
+	private TextureRegion crosshairTexture;
 
 	/**
 	 * Creates and initialize a new instance of the sandbox
@@ -90,13 +95,32 @@ public class SandboxController extends WorldController {
 	}
 
 	/**
+	 * Gather the assets for this controller.
+	 *
+	 * This method extracts the asset variables from the given asset directory. It
+	 * should only be called after the asset directory is completed.
+	 *
+	 * @param directory	Reference to global asset manager.
+	 */
+	public void gatherAssets(AssetDirectory directory) {
+		// Allocate the tiles
+		earthTile = new TextureRegion(directory.getEntry( "earth", Texture.class ));
+		octopusTexture = new TextureRegion(directory.getEntry( "octopus", Texture.class ));
+//		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
+	}
+
+	/**
 	 * Lays out the game geography.
 	 */
 	private void populateLevel() {
 		// Make the cephalonaut
-		cephalonaut = new CephalonautModel(10, 10, scale, squidTexture);
+		float dwidth  = octopusTexture.getRegionWidth()/scale.x;
+		float dheight = octopusTexture.getRegionHeight()/scale.y;
+		cephalonaut = new CephalonautModel(10, 10, dwidth, dheight, scale);
 		thrusterController = new ThrusterController(cephalonaut);
 		cephalonaut.setVX(5);
+		cephalonaut.setTexture(octopusTexture);
+
 		addObject(cephalonaut);
 		addObject(cephalonaut.getGrapple());
 		setDebug(true);
@@ -203,7 +227,7 @@ public class SandboxController extends WorldController {
 			grapple.setExtensionLength(distance);
 		}
 
-		if(input.isThrusterApplied()){
+		if (input.isThrusterApplied()){
 			thrusterController.startInking();
 		} else {
 			thrusterController.stopInking();
@@ -227,6 +251,7 @@ public class SandboxController extends WorldController {
 		for(Obstacle obj : objects) {
 			obj.draw(canvas);
 		}
+		selector.draw(canvas);
 		canvas.end();
 		
 		if (isDebug()) {

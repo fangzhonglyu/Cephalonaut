@@ -23,12 +23,13 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.CapsuleObstacle;
+import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.OctopusObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
 
 /**
  * Player avatar for the gameplay prototype.
  */
-public class CephalonautModel extends WheelObstacle {
+public class CephalonautModel extends OctopusObstacle {
 	/** Cache for internal force calculations */
 	private final Vector2 forceCache = new Vector2();
 
@@ -79,9 +80,9 @@ public class CephalonautModel extends WheelObstacle {
 	 * converts the physics units to pixels.
 	 *
 	 */
-	public CephalonautModel(float x, float y, Vector2 drawScale, TextureRegion texture) {
+	public CephalonautModel(float x, float y, float width, float height, Vector2 drawScale) {
 		// The shrink factors fit the image to a tighter hitbox
-		super(x, y, 0.5f);
+		super(x, y, width, height);
 		setName("michael");
 		setDrawScale(drawScale);
 		setDensity(1);
@@ -89,13 +90,14 @@ public class CephalonautModel extends WheelObstacle {
 		setRestitution(0.1f);
 		setFixedRotation(false);
 
-		int pixDiameter = (int) (getRadius() * 2 * Math.max(drawScale.x, drawScale.y));
 		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.WHITE);
 		pixmap.fillRectangle(0, 0, 1, 1);
 		tentacleTexture = new Texture(pixmap);
 
-		setTexture(texture);
+		// Matias: I don't think this line of code matters bc it's being overwritten by the setTexture call
+		// in the SandboxController.
+		origin.set(width / 2f, height / 2f);
 
 		grapple = new GrappleModel(100000000, 100000000, drawScale);
 	}
@@ -152,7 +154,6 @@ public class CephalonautModel extends WheelObstacle {
 		float speed = (float)Math.sqrt((body.getLinearVelocity().x*body.getLinearVelocity().x) + (body.getLinearVelocity().y*body.getLinearVelocity().y));
 		if(speed < MAX_SPEED){
 			// Orient the force with rotation and apply ink-thrust.
-			System.out.println(getAngle());
 			Vector2 temp = forceCache.cpy();
 			affineCache.setToRotationRad(getAngle());
 			affineCache.applyTo(forceCache);
@@ -198,7 +199,14 @@ public class CephalonautModel extends WheelObstacle {
 					angle, 5, distance * drawScale.x);
 		}
 
-		canvas.draw(texture, Color.ORANGE, origin.x, origin.y,
+		if (isInking()) {
+			Vector2 behind = new Vector2();
+			behind.set(0, getHeight()).setAngleRad(getAngle() - (float) Math.PI / 2f).add(getPosition());
+			canvas.draw(tentacleTexture, Color.PURPLE, 0.5f, 0.5f, behind.x * drawScale.x, behind.y * drawScale.y,
+					getAngle(), 10, 50);
+		}
+
+		canvas.draw(texture, Color.WHITE, origin.x, origin.y,
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 1, 1);
 	}
@@ -212,6 +220,7 @@ public class CephalonautModel extends WheelObstacle {
 	 */
 	public void drawDebug(GameCanvas canvas) {
 		super.drawDebug(canvas);
-		canvas.drawPhysics(shape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
+//		canvas.drawPhysics(circleShape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
+//		canvas.drawPhysics(triangleShape, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
 	}
 }
