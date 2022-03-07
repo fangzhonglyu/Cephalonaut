@@ -92,7 +92,6 @@ public class CephalonautModel extends WheelObstacle {
 	 * drawing to work properly, you MUST set the drawScale. The drawScale
 	 * converts the physics units to pixels.
 	 *
-	 * @param radius	The object radius in physics units
 	 */
 	public CephalonautModel(float x, float y, Vector2 drawScale, TextureRegion texture) {
 		// The shrink factors fit the image to a tigher hitbox
@@ -159,10 +158,12 @@ public class CephalonautModel extends WheelObstacle {
 		float speed = (float)Math.sqrt((body.getLinearVelocity().x*body.getLinearVelocity().x) + (body.getLinearVelocity().y*body.getLinearVelocity().y));
 		if(speed < MAX_SPEED){
 			// Orient the force with rotation and apply ink-thrust.
+			System.out.println(getAngle());
+			Vector2 temp = forceCache.cpy();
 			affineCache.setToRotationRad(getAngle());
 			affineCache.applyTo(forceCache);
-
 			body.applyForce(forceCache,getPosition(),true);
+			forceCache.set(temp);
 		}
 	}
 

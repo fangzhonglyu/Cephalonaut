@@ -73,7 +73,7 @@ public class SandboxController extends WorldController {
 		wall.setBodyType(BodyDef.BodyType.StaticBody);
 		wall.setDensity(0);
 		wall.setFriction(0);
-		wall.setRestitution(1);
+		wall.setRestitution(0.3f);
 		wall.setDrawScale(scale);
 		wall.setTexture(earthTile);
 		wall.setTextureScaleX(boxSize * scale.x / earthTile.getRegionWidth());
