@@ -10,6 +10,7 @@
  */
 package edu.cornell.lilbiggames.cephalonaut.engine;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -87,6 +88,7 @@ public class SandboxController extends WorldController {
 		wall.setFriction(0);
 		wall.setRestitution(0.3f);
 		wall.setDrawScale(scale);
+		wall.setTint(new Color(0.5f, 0.4f, 0.4f, 1));
 		wall.setTexture(earthTile);
 		wall.setTextureScaleX(boxSize * scale.x / earthTile.getRegionWidth());
 		wall.setTextureScaleY(boxSize * scale.y / earthTile.getRegionHeight());
@@ -118,7 +120,6 @@ public class SandboxController extends WorldController {
 		float dheight = octopusTexture.getRegionHeight()/scale.y;
 		cephalonaut = new CephalonautModel(10, 10, dwidth, dheight, scale);
 		thrusterController = new ThrusterController(cephalonaut);
-		cephalonaut.setVX(5);
 		cephalonaut.setTexture(octopusTexture);
 
 		addObject(cephalonaut);

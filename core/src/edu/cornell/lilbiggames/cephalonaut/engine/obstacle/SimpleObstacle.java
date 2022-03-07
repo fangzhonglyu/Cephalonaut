@@ -42,13 +42,22 @@ public abstract class SimpleObstacle extends Obstacle {
 	/** The texture origin for drawing */
 	protected Vector2 origin;
 
+	protected Color tint = Color.WHITE;
 	protected float sx = 1, sy = 1;
 
 	public float getTextureScaleX() { return sx; }
 	public float getTextureScaleY() { return sy; }
 	public void setTextureScaleX(float sx) { this.sx = sx; }
 	public void setTextureScaleY(float sy) { this.sy = sy; }
-	
+
+	public Color getTint() {
+		return tint;
+	}
+
+	public void setTint(Color tint) {
+		this.tint = tint;
+	}
+
 	/// BodyDef Methods
 	/**
 	 * Returns the body type for Box2D physics
@@ -783,7 +792,7 @@ public abstract class SimpleObstacle extends Obstacle {
 	 */
 	public void draw(GameCanvas canvas) {
 		if (texture != null) {
-			canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),sx,sy);
+			canvas.draw(texture,tint,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),sx,sy);
 		}
 	}
 	

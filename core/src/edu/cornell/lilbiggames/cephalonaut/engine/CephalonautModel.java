@@ -137,7 +137,7 @@ public class CephalonautModel extends OctopusObstacle {
 	 * This method should be called after the rotation attribute is set.
 	 */
 	public void applyRotation(){
-		body.setAngularVelocity(-10.0f * rotation);
+		body.setAngularVelocity(-5f * rotation);
 	}
 	
 
@@ -151,15 +151,13 @@ public class CephalonautModel extends OctopusObstacle {
 			return;
 		}
 
-		float speed = (float)Math.sqrt((body.getLinearVelocity().x*body.getLinearVelocity().x) + (body.getLinearVelocity().y*body.getLinearVelocity().y));
-		if(speed < MAX_SPEED){
-			// Orient the force with rotation and apply ink-thrust.
-			Vector2 temp = forceCache.cpy();
-			affineCache.setToRotationRad(getAngle());
-			affineCache.applyTo(forceCache);
-			body.applyForce(forceCache,getPosition(),true);
-			forceCache.set(temp);
-		}
+		// Orient the force with rotation and apply ink-thrust.
+		Vector2 temp = forceCache.cpy();
+		affineCache.setToRotationRad(getAngle());
+		affineCache.applyTo(forceCache);
+		body.applyForce(forceCache,getPosition(),true);
+		forceCache.set(temp);
+		setLinearVelocity(getLinearVelocity().clamp(0, MAX_SPEED));
 	}
 
 	/**
