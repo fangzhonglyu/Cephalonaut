@@ -151,15 +151,16 @@ public class CephalonautModel extends OctopusObstacle {
 			return;
 		}
 
+		Vector2 temp = forceCache.cpy();
+		affineCache.setToRotationRad(getAngle());
+		affineCache.applyTo(forceCache);
+		body.applyForce(forceCache,getPosition(),true);
 		float speed = (float)Math.sqrt((body.getLinearVelocity().x*body.getLinearVelocity().x) + (body.getLinearVelocity().y*body.getLinearVelocity().y));
-		if(speed < MAX_SPEED){
-			// Orient the force with rotation and apply ink-thrust.
-			Vector2 temp = forceCache.cpy();
-			affineCache.setToRotationRad(getAngle());
-			affineCache.applyTo(forceCache);
-			body.applyForce(forceCache,getPosition(),true);
-			forceCache.set(temp);
+		if(speed > MAX_SPEED) {
+			float reduction_factor = MAX_SPEED / speed;
+			body.setLinearVelocity(body.getLinearVelocity().x * reduction_factor, body.getLinearVelocity().y * reduction_factor);
 		}
+		forceCache.set(temp);
 	}
 
 	/**
