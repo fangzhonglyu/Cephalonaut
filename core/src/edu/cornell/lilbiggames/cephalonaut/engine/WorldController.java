@@ -358,30 +358,21 @@ public abstract class WorldController implements Screen {
 		}
 
 		// Toggle debug
-		/*if (input.didDebug()) {
-			debug = !debug;
-		}
-		
+//		if (input.didDebug()) {
+//			debug = !debug;
+//		}
+
 		// Handle resets
 		if (input.didReset()) {
 			reset();
-		}*/
-		
+		}
+
 		// Now it is time to maybe switch screens.
-		/*if (input.didExit()) {
+		if (input.didExit()) {
 			pause();
 			listener.exitScreen(this, EXIT_QUIT);
 			return false;
-		}
-//		} else if (input.didAdvance()) {
-//			pause();
-//			listener.exitScreen(this, EXIT_NEXT);
-//			return false;
-//		} else if (input.didRetreat()) {
-//			pause();
-//			listener.exitScreen(this, EXIT_PREV);
-//			return false;
-		else if (countdown > 0) {
+		} else if (countdown > 0) {
 			countdown--;
 		} else if (countdown == 0) {
 			if (failed) {
@@ -391,7 +382,7 @@ public abstract class WorldController implements Screen {
 				listener.exitScreen(this, EXIT_NEXT);
 				return false;
 			}
-		}*/
+		}
 		return true;
 	}
 	

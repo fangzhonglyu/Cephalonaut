@@ -6,6 +6,8 @@
       "wrapV": "repeated"
     },
     "barrier": "barrier.png",
-    "squid": "squid.png"
+    "squid": "squid.png",
+    "octopus": "octopus.png",
+    "crosshair": "crosshair.png"
   }
 }

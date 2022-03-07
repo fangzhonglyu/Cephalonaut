@@ -23,12 +23,13 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.CapsuleObstacle;
+import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.OctopusObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
 
 /**
  * Player avatar for the gameplay prototype.
  */
-public class CephalonautModel extends WheelObstacle {
+public class CephalonautModel extends OctopusObstacle {
 	/** Cache for internal force calculations */
 	private final Vector2 forceCache = new Vector2();
 
@@ -79,9 +80,9 @@ public class CephalonautModel extends WheelObstacle {
 	 * converts the physics units to pixels.
 	 *
 	 */
-	public CephalonautModel(float x, float y, Vector2 drawScale, TextureRegion texture) {
+	public CephalonautModel(float x, float y, float width, float height, Vector2 drawScale) {
 		// The shrink factors fit the image to a tigher hitbox
-		super(x, y, 0.5f);
+		super(x, y, width, height);
 		setName("michael");
 		setDrawScale(drawScale);
 		setDensity(1);
@@ -89,13 +90,7 @@ public class CephalonautModel extends WheelObstacle {
 		setRestitution(0.1f);
 		setFixedRotation(false);
 
-		int pixDiameter = (int) (getRadius() * 2 * Math.max(drawScale.x, drawScale.y));
-		/*Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.WHITE);
-		pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
-		texture = new TextureRegion(new Texture(pixmap));*/
-		this.texture = texture;
-		origin.set(pixDiameter / 2f, pixDiameter / 2f);
+		origin.set(width / 2f, height / 2f);
 
 		grapple = new GrappleModel(100000000, 100000000, drawScale);
 	}
@@ -193,7 +188,7 @@ public class CephalonautModel extends WheelObstacle {
 			float angle = getPosition().cpy().sub(grapple.getPosition()).angleRad() + (float) Math.PI / 2f;
 			Vector2 middle = getPosition().cpy().add(grapple.getPosition()).scl(0.5f);
 			Color tint = grapple.isAnchored() ? Color.RED : Color.GREEN;
-			int pixDiameter = (int) (getRadius() * 2 * Math.max(drawScale.x, drawScale.y));
+			int pixDiameter = (int) (getWidth() * Math.max(drawScale.x, drawScale.y));
 			Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
 		    pixmap.setColor(Color.WHITE);
 		    pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
@@ -216,6 +211,7 @@ public class CephalonautModel extends WheelObstacle {
 	 */
 	public void drawDebug(GameCanvas canvas) {
 		super.drawDebug(canvas);
-		canvas.drawPhysics(shape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
+//		canvas.drawPhysics(circleShape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
+//		canvas.drawPhysics(triangleShape, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
 	}
 }
