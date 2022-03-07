@@ -31,6 +31,11 @@ public class CephalonautModel extends WheelObstacle {
 	/** Cache for internal force calculations */
 	private final Vector2 forceCache = new Vector2();
 
+	/** The cephalonaut's grapple tentacle */
+	private GrappleModel grapple;
+
+	/** The tentacle's texture */
+	private Texture tentacleTexture;
 
 	/**
 	 * Returns true if the cephalonaut is actively inking.
@@ -52,36 +57,17 @@ public class CephalonautModel extends WheelObstacle {
 	}
 
 	/**
-	 * Returns true if the cephalonaut is actively grappling.
-	 *
-	 * @return true if the cephalonaut is actively grappling.
-	 */
-	public boolean isGrappling() {
-		// TODO: Implement
-		return false;
-	}
-
-	/**
-	 * Sets whether the cephalonaut is actively grappling.
-	 *
-	 * @param grappling whether the cephalonaut is actively grappling.
-	 */
-	public void setGrappling(boolean grappling) {
-		// TODO: Implement
-	}
-
-	/**
 	 * Creates a new cephalonaut with the given physics data
 	 *
 	 * The size is expressed in physics units NOT pixels.  In order for
 	 * drawing to work properly, you MUST set the drawScale. The drawScale
 	 * converts the physics units to pixels.
 	 *
-	 * @param radius	The object radius in physics units
 	 */
 	public CephalonautModel(float x, float y, Vector2 drawScale) {
 		// The shrink factors fit the image to a tigher hitbox
 		super(x, y, 0.5f);
+		setName("michael");
 		setDrawScale(drawScale);
 		setDensity(1);
 		setFriction(0);
@@ -95,7 +81,16 @@ public class CephalonautModel extends WheelObstacle {
 		texture = new TextureRegion(new Texture(pixmap));
 		origin.set(pixDiameter / 2f, pixDiameter / 2f);
 
-		setName("Cephalonaut");
+		grapple = new GrappleModel(100000000, 100000000, drawScale);
+	}
+
+	/**
+	 * Returns the cephalonaut's grapple tentacle.
+	 *
+	 * @return the cephalonaut's grapple tentacle.
+	 */
+	public GrappleModel getGrapple() {
+		return grapple;
 	}
 
 	/**
@@ -151,6 +146,15 @@ public class CephalonautModel extends WheelObstacle {
 	 * @param canvas Drawing context
 	 */
 	public void draw(GameCanvas canvas) {
+		if (grapple.isGrappling()) {
+			float distance = getPosition().dst(grapple.getPosition());
+			float angle = getPosition().cpy().sub(grapple.getPosition()).angleRad() + (float) Math.PI / 2f;
+			Vector2 middle = getPosition().cpy().add(grapple.getPosition()).scl(0.5f);
+			Color tint = grapple.isAnchored() ? Color.RED : Color.GREEN;
+			canvas.draw(texture, tint, origin.x, origin.y, middle.x * drawScale.x, middle.y * drawScale.y,
+					angle, 0.2f, distance);
+		}
+
 		canvas.draw(texture, Color.ORANGE, origin.x, origin.y,
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 1, 1);

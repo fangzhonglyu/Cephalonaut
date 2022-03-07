@@ -17,7 +17,10 @@ import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
@@ -37,6 +40,8 @@ public class SandboxController extends WorldController {
 	private ObstacleSelector selector;
 
 	private Texture earthTexture;
+
+	private Joint joint;
 
 	/**
 	 * Creates and initialize a new instance of the sandbox
@@ -93,8 +98,8 @@ public class SandboxController extends WorldController {
 		// Make the cephalonaut
 		cephalonaut = new CephalonautModel(10, 10, scale);
 		cephalonaut.setVX(5);
-
 		addObject(cephalonaut);
+		addObject(cephalonaut.getGrapple());
 		setDebug(true);
 
 		selector = new ObstacleSelector(world);
@@ -137,7 +142,6 @@ public class SandboxController extends WorldController {
 		addWall(26.5f, 14.5f, (float) Math.toRadians(45), "box5");
 		addWall(27.5f, 13.5f, (float) Math.toRadians(45), "box6");
 		addWall(28f, 13f, (float) Math.toRadians(45), "box7");
-
 	}
 
 	/**
@@ -154,7 +158,51 @@ public class SandboxController extends WorldController {
 	    // Move an object if touched
 		InputController input = InputController.getInstance();
 
-		// TODO
+		GrappleModel grapple = cephalonaut.getGrapple();
+		if (input.didSecondary()) {
+			grapple.setGrappling(!grapple.isGrappling());
+			// grapple is still in the process of extending
+			if (grapple.isGrappling()) {
+				grapple.setPosition(input.getCrossHair());
+				Vector2 normal = cephalonaut.getPosition().cpy().sub(grapple.getPosition());
+				grapple.setExtensionLength(normal.len());
+				grapple.setActive(true);
+				DistanceJointDef anchor = new DistanceJointDef();
+				anchor.bodyA = grapple.getBody();
+				anchor.bodyB = cephalonaut.getBody();
+				anchor.collideConnected = false;
+				grapple.setAnchor(anchor);
+			}
+			else {
+				// grapple is no longer active but is anchored
+				if (grapple.isAnchored()) {
+					world.destroyJoint(joint);
+					grapple.setAnchored(false);
+				}
+				grapple.setActive(false);
+			}
+		}
+
+		if (grapple.isGrappling()) {
+			float distance = cephalonaut.getPosition().dst(grapple.getPosition());;
+			// cephalonaut is moving away from desired anchor point, start rotating
+			if (distance > grapple.getExtensionLength() && !grapple.isAnchored()) {
+				Vector2 swing = cephalonaut.getPosition().cpy().sub(grapple.getPosition()).rotate90(0);
+
+				float dot = swing.dot(cephalonaut.getLinearVelocity());
+				if (dot != 0) {
+					// Experimental: Conserve velocity when rotating around point behind cephalonaut
+					float newAngle = swing.angleRad() + (dot < 0 ? (float) Math.PI : 0);
+					cephalonaut.setLinearVelocity(cephalonaut.getLinearVelocity().setAngleRad(newAngle));
+
+					DistanceJointDef anchor = grapple.getAnchor();
+					anchor.length = distance;
+					joint = world.createJoint(anchor);
+					grapple.setAnchored(true);
+				}
+			}
+			grapple.setExtensionLength(distance);
+		}
 	}
 	
 	/**
@@ -166,7 +214,6 @@ public class SandboxController extends WorldController {
 	 */
 	public void draw(float dt) {
 		canvas.clear();
-
 		canvas.begin();
 		for(Obstacle obj : objects) {
 			obj.draw(canvas);

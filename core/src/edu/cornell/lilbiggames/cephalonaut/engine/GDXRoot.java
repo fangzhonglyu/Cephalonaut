@@ -78,7 +78,6 @@ public class GDXRoot extends Game {
 		canvas = null;
 	
 		// Unload all of the resources
-		// Unload all of the resources
 		if (directory != null) {
 			directory.unloadAssets();
 			directory.dispose();

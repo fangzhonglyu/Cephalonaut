@@ -60,9 +60,9 @@ public class InputController {
 	private boolean secondaryPrevious;
 //	/** Whether the teritiary action button was pressed. */
 //	private boolean tertiaryPressed;
-//	/** Whether the debug toggle was pressed. */
-//	private boolean debugPressed;
-//	private boolean debugPrevious;
+	/** Whether the debug toggle was pressed. */
+	private boolean debugPressed;
+	private boolean debugPrevious;
 	/** Whether the exit button was pressed. */
 	private boolean exitPressed;
 	private boolean exitPrevious;
@@ -151,14 +151,14 @@ public class InputController {
 		return resetPressed && !resetPrevious;
 	}
 	
-//	/**
-//	 * Returns true if the player wants to go toggle the debug mode.
-//	 *
-//	 * @return true if the player wants to go toggle the debug mode.
-//	 */
-//	public boolean didDebug() {
-//		return debugPressed && !debugPrevious;
-//	}
+	/**
+	 * Returns true if the player wants to go toggle the debug mode.
+	 *
+	 * @return true if the player wants to go toggle the debug mode.
+	 */
+	public boolean didDebug() {
+		return debugPressed && !debugPrevious;
+	}
 	
 	/**
 	 * Returns true if the exit button was pressed.
@@ -200,11 +200,10 @@ public class InputController {
 	public void readInput(Rectangle bounds, Vector2 scale) {
 		// Copy state from last animation frame
 		// Helps us ignore buttons that are held down
-//		primePrevious  = primePressed;
 		primePrevious = primePressed;
 		secondaryPrevious = secondaryPressed;
 		resetPrevious  = resetPressed;
-//		debugPrevious  = debugPressed;
+		debugPrevious  = debugPressed;
 		exitPrevious = exitPressed;
 		
 		// Check to see if a GamePad is connected
@@ -229,7 +228,7 @@ public class InputController {
 	private void readGamepad(Rectangle bounds, Vector2 scale) {
 		resetPressed = xbox.getStart();
 		exitPressed  = xbox.getBack();
-//		debugPressed  = xbox.getY();
+		debugPressed  = xbox.getY();
 
 		// Increase animation frame, but only if trying to move
 		horizontal = xbox.getLeftX();
@@ -264,12 +263,11 @@ public class InputController {
 	private void readKeyboard(Rectangle bounds, Vector2 scale, boolean secondary) {
 		// Give priority to gamepad results
 		resetPressed = (secondary && resetPressed) || (Gdx.input.isKeyPressed(Input.Keys.R));
-//		debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.D));
-//		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
+		debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
 		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
 		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonPressed(Input.Buttons.LEFT));
 		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
-		
+
 		// Directional controls
 		horizontal = (secondary ? horizontal : 0.0f);
 		if (Gdx.input.isKeyPressed(Input.Keys.D)) {
@@ -288,7 +286,6 @@ public class InputController {
 //		}
 		
 		// Mouse results
-//        tertiaryPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 		crosshair.set(Gdx.input.getX(), Gdx.input.getY());
 		crosshair.scl(1/scale.x,-1/scale.y);
 		crosshair.y += bounds.height;
