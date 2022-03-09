@@ -3,16 +3,15 @@ package edu.cornell.lilbiggames.cephalonaut.engine;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import com.badlogic.gdx.utils.JsonValue;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.CapsuleObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
 
 public class GrappleModel extends WheelObstacle {
+    /** Whether the grapple is out */
+    private boolean isOut;
     /** Whether the grapple is actively extending */
     private boolean isGrappling;
     /** Whether the grapple is anchored */
@@ -25,12 +24,11 @@ public class GrappleModel extends WheelObstacle {
     public GrappleModel(float x, float y, Vector2 drawScale) {
         // The shrink factors fit the image to a tighter hitbox
         super(x, y, 0.1f);
-        setName("hook");
+        setName("grapple");
         setDrawScale(drawScale);
         setFixedRotation(true);
         setActive(false);
         setSensor(true);
-        setBodyType(BodyDef.BodyType.StaticBody);
 
         int pixDiameter = (int) (getRadius() * 2);
         Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
@@ -38,6 +36,21 @@ public class GrappleModel extends WheelObstacle {
         pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
         texture = new TextureRegion(new Texture(pixmap));
         origin.set(pixDiameter / 2f, pixDiameter / 2f);
+
+        isOut = false;
+        isGrappling = true;
+        isAnchored = false;
+        extensionLength = 1;
+    }
+
+    public void reset() {
+        setActive(false);
+        setLinearVelocity(new Vector2());
+        setBodyType(BodyDef.BodyType.DynamicBody);
+        isOut = false;
+        isGrappling = false;
+        isAnchored = false;
+        extensionLength = 1;
     }
 
     public boolean activatePhysics(World world) {
@@ -49,6 +62,24 @@ public class GrappleModel extends WheelObstacle {
         // TODO: Stuff here probably
 
         return true;
+    }
+
+    /**
+     * Returns true if the grapple is out.
+     *
+     * @return true if the grapple is out.
+     */
+    public boolean isOut() {
+        return isOut;
+    }
+
+    /**
+     * Sets whether the grapple is out.
+     *
+     * @param out whether the grapple is out.
+     */
+    public void setOut(boolean out) {
+        isOut = out;
     }
 
     /**
@@ -124,14 +155,14 @@ public class GrappleModel extends WheelObstacle {
     }
 
     public void draw(GameCanvas canvas) {
-        if (isGrappling || isAnchored) {
+        if (isOut) {
             canvas.draw(texture, Color.ORANGE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
                     getAngle(), 1, 1);
         }
     }
 
     public void drawDebug(GameCanvas canvas) {
-        if (isGrappling || isAnchored) {
+        if (isOut) {
             super.drawDebug(canvas);
             canvas.drawPhysics(shape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
         }

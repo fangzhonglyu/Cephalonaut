@@ -14,10 +14,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Joint;
-import com.badlogic.gdx.physics.box2d.JointDef;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
@@ -28,7 +25,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
 /**
  * Gameplay specific controller for the gameplay prototype.
  */
-public class SandboxController extends WorldController {
+public class SandboxController extends WorldController implements ContactListener {
 	/** Reference to the cephalonaut's model */
 	private CephalonautModel cephalonaut;
 
@@ -54,7 +51,7 @@ public class SandboxController extends WorldController {
 		setDebug(false);
 		setComplete(false);
 		setFailure(false);
-
+		world.setContactListener(this);
 	}
 
 	/**
@@ -73,6 +70,7 @@ public class SandboxController extends WorldController {
 		world.dispose();
 		
 		world = new World(gravity,false);
+		world.setContactListener(this);
 		setComplete(false);
 		setFailure(false);
 		populateLevel();
@@ -184,49 +182,66 @@ public class SandboxController extends WorldController {
 
 		GrappleModel grapple = cephalonaut.getGrapple();
 		if (input.didSecondary()) {
-			grapple.setGrappling(!grapple.isGrappling());
+			grapple.setOut(!grapple.isOut());
 			// grapple is still in the process of extending
-			if (grapple.isGrappling()) {
-				grapple.setPosition(input.getCrossHair());
-				Vector2 normal = cephalonaut.getPosition().cpy().sub(grapple.getPosition());
-				grapple.setExtensionLength(normal.len());
+			if (grapple.isOut()) {
+				grapple.setPosition(cephalonaut.getPosition().cpy());
+				// grapple travels 5 units/time in direction of mouse
+				grapple.setLinearVelocity(input.getCrossHair().cpy().sub(grapple.getPosition().cpy()).nor().scl(5));
 				grapple.setActive(true);
+			}
+			else {
+				// joint is only created when anchor
+				if (joint != null) {
+					world.destroyJoint(joint);
+					joint = null;
+				}
+				grapple.reset();
+
+			}
+		}
+
+		float distance = cephalonaut.getPosition().cpy().dst(grapple.getPosition());
+		if (grapple.isAnchored()) {
+			if (distance > grapple.getExtensionLength()) {
+				grapple.setBodyType(BodyDef.BodyType.StaticBody);
 				DistanceJointDef anchor = new DistanceJointDef();
 				anchor.bodyA = grapple.getBody();
 				anchor.bodyB = cephalonaut.getBody();
 				anchor.collideConnected = false;
-				grapple.setAnchor(anchor);
-			}
-			else {
-				// grapple is no longer active but is anchored
-				if (grapple.isAnchored()) {
-					world.destroyJoint(joint);
-					grapple.setAnchored(false);
-				}
-				grapple.setActive(false);
-			}
-		}
-
-		if (grapple.isGrappling()) {
-			float distance = cephalonaut.getPosition().dst(grapple.getPosition());;
-			// cephalonaut is moving away from desired anchor point, start rotating
-			if (distance > grapple.getExtensionLength() && !grapple.isAnchored()) {
-				Vector2 swing = cephalonaut.getPosition().cpy().sub(grapple.getPosition()).rotate90(0);
-
-				float dot = swing.dot(cephalonaut.getLinearVelocity());
-				if (dot != 0) {
-					// Experimental: Conserve velocity when rotating around point behind cephalonaut
-					float newAngle = swing.angleRad() + (dot < 0 ? (float) Math.PI : 0);
-					cephalonaut.setLinearVelocity(cephalonaut.getLinearVelocity().setAngleRad(newAngle));
-
-					DistanceJointDef anchor = grapple.getAnchor();
-					anchor.length = distance;
-					joint = world.createJoint(anchor);
-					grapple.setAnchored(true);
-				}
+				anchor.length = distance;
+				joint = world.createJoint(anchor);
 			}
 			grapple.setExtensionLength(distance);
 		}
+
+//		if (grapple.isOut()) {
+//			if (grapple.isAnchored()) {
+//				// cephalonaut is moving away from desired anchor point, start rotating
+//				grapple.setBodyType(BodyDef.BodyType.StaticBody);
+//
+//				if (distance > grapple.getExtensionLength()) {
+//					Vector2 swing = cephalonaut.getPosition().cpy().sub(grapple.getPosition()).rotate90(0);
+//
+//					float dot = swing.dot(cephalonaut.getLinearVelocity());
+//					if (dot != 0) {
+//						// Experimental: Conserve velocity when rotating around point behind cephalonaut
+//						float newAngle = swing.angleRad() + (dot < 0 ? (float) Math.PI : 0);
+//						cephalonaut.setLinearVelocity(cephalonaut.getLinearVelocity().setAngleRad(newAngle));
+//					}
+//
+//
+//					DistanceJointDef anchor = new DistanceJointDef();
+//					anchor.bodyA = grapple.getBody();
+//					anchor.bodyB = cephalonaut.getBody();
+//					anchor.collideConnected = false;
+//					anchor.length = distance;
+//					joint = world.createJoint(anchor);
+//				}
+//
+//				grapple.setExtensionLength(distance);
+//			}
+//		}
 
 		if (input.isThrusterApplied()){
 			thrusterController.startInking();
@@ -238,7 +253,46 @@ public class SandboxController extends WorldController {
 		cephalonaut.applyRotation();
 		cephalonaut.applyForce();
 	}
-	
+
+	/**
+	 * Callback method for the start of a collision
+	 *
+	 * This method is called when we first get a collision between two objects.  We use
+	 * this method to test if it is the "right" kind of collision.
+	 *
+	 * @param contact The two bodies that collided
+	 */
+	public void beginContact(Contact contact) {
+		Body body1 = contact.getFixtureA().getBody();
+		Body body2 = contact.getFixtureB().getBody();
+
+		Obstacle bd1 = (Obstacle)body1.getUserData();
+		Obstacle bd2 = (Obstacle)body2.getUserData();
+
+		try {
+			GrappleModel grapple = cephalonaut.getGrapple();
+			if (bd1.getName().equals("grapple") && !bd2.getName().equals("michael")) {
+				grapple.setAnchored(true);
+				grapple.setExtensionLength(cephalonaut.getPosition().dst(bd2.getPosition()));
+			}
+			if (bd2.getName().equals("grapple") && !bd1.getName().equals("michael")) {
+				grapple.setAnchored(true);
+				grapple.setExtensionLength(cephalonaut.getPosition().dst(bd1.getPosition()));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void endContact(Contact contact) { }
+
+	@Override
+	public void preSolve(Contact contact, Manifold oldManifold) { }
+
+	@Override
+	public void postSolve(Contact contact, ContactImpulse impulse) { }
+
 	/**
 	 * Draw the physics objects together with foreground and background
 	 *

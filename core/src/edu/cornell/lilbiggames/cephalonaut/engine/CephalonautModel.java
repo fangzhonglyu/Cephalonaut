@@ -188,7 +188,7 @@ public class CephalonautModel extends OctopusObstacle {
 	 * @param canvas Drawing context
 	 */
 	public void draw(GameCanvas canvas) {
-		if (grapple.isGrappling()) {
+		if (grapple.isOut()) {
 			float distance = getPosition().dst(grapple.getPosition());
 			float angle = getPosition().cpy().sub(grapple.getPosition()).angleRad() + (float) Math.PI / 2f;
 			Vector2 middle = getPosition().cpy().add(grapple.getPosition()).scl(0.5f);
