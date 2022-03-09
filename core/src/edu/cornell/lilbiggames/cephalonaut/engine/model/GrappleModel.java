@@ -1,4 +1,4 @@
-package edu.cornell.lilbiggames.cephalonaut.engine;
+package edu.cornell.lilbiggames.cephalonaut.engine.model;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.CapsuleObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
 

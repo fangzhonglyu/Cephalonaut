@@ -14,7 +14,7 @@
  * Based on original PhysicsDemo Lab by Don Holden, 2007
  * LibGDX version, 2/6/2015
  */
-package edu.cornell.lilbiggames.cephalonaut.engine;
+package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
 import java.util.Iterator;
 
@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
+import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
