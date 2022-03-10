@@ -17,6 +17,8 @@ import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SandboxController;
 
+import java.util.logging.Level;
+
 /**
  * Root class for a LibGDX.  
  * 
@@ -56,6 +58,9 @@ public class GDXRoot extends Game {
 		directory = new AssetDirectory("assets.json");
 		directory.loadAssets();
 		directory.finishLoading();
+
+		// Load in level
+		LevelLoader level = new LevelLoader();
 
 		// Initialize the game world
 		sandboxController = new SandboxController();
