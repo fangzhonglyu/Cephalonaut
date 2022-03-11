@@ -157,9 +157,9 @@ public class GrappleModel extends WheelObstacle {
         return extensionLength;
     }
 
-    public void closestAnchor(PooledList<Obstacle> objects ) {
+    public void closestAnchor(PooledList<Obstacle> objects) {
         Vector2 closest = new Vector2(Float.MAX_VALUE, Float.MAX_VALUE);
-        for( Obstacle o : objects) {
+        for (Obstacle o : objects) {
             float distance = getPosition().dst(o.getPosition());
             if (!o.getName().equals("michael") && !o.getName().equals("grapple") &&
                     distance < getPosition().dst(closest)) {
