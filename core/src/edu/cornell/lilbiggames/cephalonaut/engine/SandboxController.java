@@ -74,6 +74,8 @@ public class SandboxController extends WorldController implements ContactListene
 		setComplete(false);
 		setFailure(false);
 		populateLevel();
+		GrappleModel grapple = cephalonaut.getGrapple();
+		grapple.reset();
 	}
 
 	private void addWall(float x, float y, float angle, String name) {
@@ -187,7 +189,7 @@ public class SandboxController extends WorldController implements ContactListene
 			if (grapple.isOut()) {
 				grapple.setPosition(cephalonaut.getPosition().cpy());
 				// grapple travels 5 units/time in direction of mouse
-				grapple.setLinearVelocity(input.getCrossHair().cpy().sub(grapple.getPosition().cpy()).nor().scl(5));
+				grapple.setLinearVelocity(input.getCrossHair().cpy().sub(grapple.getPosition().cpy()).nor().scl(15));
 				grapple.setActive(true);
 			}
 			else {
@@ -203,45 +205,28 @@ public class SandboxController extends WorldController implements ContactListene
 
 		float distance = cephalonaut.getPosition().cpy().dst(grapple.getPosition());
 		if (grapple.isAnchored()) {
-			if (distance > grapple.getExtensionLength()) {
-				grapple.setBodyType(BodyDef.BodyType.StaticBody);
+			grapple.setBodyType(BodyDef.BodyType.StaticBody);
+			if (distance > grapple.getExtensionLength() && !grapple.isGrappling()) {
+				Vector2 swing = cephalonaut.getPosition().cpy().sub(grapple.getPosition()).rotate90(0);
+
+				float dot = swing.dot(cephalonaut.getLinearVelocity());
+				if (dot != 0) {
+					// Experimental: Conserve velocity when rotating around point behind cephalonaut
+					float newAngle = swing.angleRad() + (dot < 0 ? (float) Math.PI : 0);
+					cephalonaut.setLinearVelocity(cephalonaut.getLinearVelocity().setAngleRad(newAngle));
+				}
+
 				DistanceJointDef anchor = new DistanceJointDef();
 				anchor.bodyA = grapple.getBody();
 				anchor.bodyB = cephalonaut.getBody();
 				anchor.collideConnected = false;
 				anchor.length = distance;
 				joint = world.createJoint(anchor);
+				grapple.setGrappling(true);
+
 			}
 			grapple.setExtensionLength(distance);
 		}
-
-//		if (grapple.isOut()) {
-//			if (grapple.isAnchored()) {
-//				// cephalonaut is moving away from desired anchor point, start rotating
-//				grapple.setBodyType(BodyDef.BodyType.StaticBody);
-//
-//				if (distance > grapple.getExtensionLength()) {
-//					Vector2 swing = cephalonaut.getPosition().cpy().sub(grapple.getPosition()).rotate90(0);
-//
-//					float dot = swing.dot(cephalonaut.getLinearVelocity());
-//					if (dot != 0) {
-//						// Experimental: Conserve velocity when rotating around point behind cephalonaut
-//						float newAngle = swing.angleRad() + (dot < 0 ? (float) Math.PI : 0);
-//						cephalonaut.setLinearVelocity(cephalonaut.getLinearVelocity().setAngleRad(newAngle));
-//					}
-//
-//
-//					DistanceJointDef anchor = new DistanceJointDef();
-//					anchor.bodyA = grapple.getBody();
-//					anchor.bodyB = cephalonaut.getBody();
-//					anchor.collideConnected = false;
-//					anchor.length = distance;
-//					joint = world.createJoint(anchor);
-//				}
-//
-//				grapple.setExtensionLength(distance);
-//			}
-//		}
 
 		if (input.isThrusterApplied()){
 			thrusterController.startInking();
