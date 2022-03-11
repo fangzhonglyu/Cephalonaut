@@ -177,6 +177,11 @@ public class GrappleModel extends WheelObstacle {
         setLinearVelocity(closest.cpy().sub(getPosition().cpy()).nor().scl(15));
     }
 
+    /**
+     * Draws the physics object.
+     *
+     * @param canvas Drawing context
+     */
     public void draw(GameCanvas canvas) {
         if (isOut) {
             canvas.draw(texture, Color.ORANGE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
@@ -184,6 +189,13 @@ public class GrappleModel extends WheelObstacle {
         }
     }
 
+    /**
+     * Draws the outline of the physics body.
+     *
+     * This method can be helpful for understanding issues with collisions.
+     *
+     * @param canvas Drawing context
+     */
     public void drawDebug(GameCanvas canvas) {
         if (isOut) {
             super.drawDebug(canvas);
