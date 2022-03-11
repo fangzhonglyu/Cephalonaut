@@ -60,7 +60,7 @@ public class GDXRoot extends Game {
 		directory.finishLoading();
 
 		// Load in level
-		LevelLoader level = new LevelLoader();
+		LevelLoader level = new LevelLoader("Test.tmx");
 
 		// Initialize the game world
 		sandboxController = new SandboxController();
