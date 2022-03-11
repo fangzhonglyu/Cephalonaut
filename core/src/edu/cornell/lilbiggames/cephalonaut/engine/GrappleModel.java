@@ -7,17 +7,19 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
+import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
 
 public class GrappleModel extends WheelObstacle {
     /** Whether the grapple is out */
     private boolean isOut;
-    /** Whether the grapple is actively extending */
+    /** Whether the grapple is tout */
     private boolean isGrappling;
     /** Whether the grapple is anchored */
     private boolean isAnchored;
-    /** The joint anchor for the grapple */
-    private DistanceJointDef anchor;
+    /** The anchor location of the grapple */
+    private String anchorLocation;
     /** The extension length of the grapple */
     private float extensionLength;
 
@@ -29,6 +31,7 @@ public class GrappleModel extends WheelObstacle {
         setFixedRotation(true);
         setActive(false);
         setSensor(true);
+        setBullet(true);
 
         int pixDiameter = (int) (getRadius() * 2);
         Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
@@ -40,7 +43,8 @@ public class GrappleModel extends WheelObstacle {
         isOut = false;
         isGrappling = true;
         isAnchored = false;
-        extensionLength = 1;
+        anchorLocation = "";
+        extensionLength = 0;
     }
 
     public void reset() {
@@ -50,7 +54,8 @@ public class GrappleModel extends WheelObstacle {
         isOut = false;
         isGrappling = false;
         isAnchored = false;
-        extensionLength = 1;
+        anchorLocation = "";
+        extensionLength = 0;
     }
 
     public boolean activatePhysics(World world) {
@@ -83,18 +88,18 @@ public class GrappleModel extends WheelObstacle {
     }
 
     /**
-     * Returns true if the grapple is actively extending.
+     * Returns true if the grapple is tout.
      *
-     * @return true if the grapple is actively extending.
+     * @return true if the grapple is tout.
      */
     public boolean isGrappling() {
         return isGrappling;
     }
 
     /**
-     * Sets whether the grapple is actively extending.
+     * Sets whether the grapple is tout.
      *
-     * @param grappling whether the grapple is actively extending.
+     * @param grappling whether the grapple is tout.
      */
     public void setGrappling(boolean grappling) {
         isGrappling = grappling;
@@ -119,22 +124,20 @@ public class GrappleModel extends WheelObstacle {
     }
 
     /**
-     * Sets the grapple's anchor.
+     * Sets the grapple's anchor location.
      *
-     * @param anchor the distance joint definition for the grapple.
+     * @param location the distance joint definition for the grapple.
      */
-    public void setAnchor(DistanceJointDef anchor) {
-        this.anchor = anchor;
+    public void setAnchorLocation(String location) {
+        this.anchorLocation = location;
     }
 
     /**
-     * Returns the grapple's anchor.
+     * Returns the grapple's anchor location.
      *
-     * @return the grapple's anchor.
+     * @return the grapple's anchor location.
      */
-    public DistanceJointDef getAnchor() {
-        return anchor;
-    }
+    public String getAnchorLocation() { return anchorLocation; }
 
     /**
      * Sets the grapple's extension length.
@@ -152,6 +155,18 @@ public class GrappleModel extends WheelObstacle {
      */
     public float getExtensionLength() {
         return extensionLength;
+    }
+
+    public void closestAnchor(PooledList<Obstacle> objects ) {
+        Vector2 closest = new Vector2(Float.MAX_VALUE, Float.MAX_VALUE);
+        for( Obstacle o : objects) {
+            float distance = getPosition().dst(o.getPosition());
+            if (!o.getName().equals("michael") && !o.getName().equals("grapple") &&
+                    distance < getPosition().dst(closest)) {
+                closest = o.getPosition();
+            }
+        }
+        setLinearVelocity(closest.cpy().sub(getPosition().cpy()).nor().scl(15));
     }
 
     public void draw(GameCanvas canvas) {

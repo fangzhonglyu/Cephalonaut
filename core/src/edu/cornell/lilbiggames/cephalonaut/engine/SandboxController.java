@@ -39,6 +39,8 @@ public class SandboxController extends WorldController implements ContactListene
 
 	Joint joint;
 
+	private boolean directionalGrapple;
+
 	private TextureRegion octopusTexture;
 	/** Texture asset for mouse crosshairs */
 	private TextureRegion crosshairTexture;
@@ -52,6 +54,7 @@ public class SandboxController extends WorldController implements ContactListene
 		setComplete(false);
 		setFailure(false);
 		world.setContactListener(this);
+		directionalGrapple = true;
 	}
 
 	/**
@@ -181,6 +184,9 @@ public class SandboxController extends WorldController implements ContactListene
 	public void update(float dt) {
 	    // Move an object if touched
 		InputController input = InputController.getInstance();
+		if (input.didTertiary()) {
+			directionalGrapple = !directionalGrapple;
+		}
 
 		GrappleModel grapple = cephalonaut.getGrapple();
 		if (input.didSecondary()) {
@@ -189,7 +195,11 @@ public class SandboxController extends WorldController implements ContactListene
 			if (grapple.isOut()) {
 				grapple.setPosition(cephalonaut.getPosition().cpy());
 				// grapple travels 5 units/time in direction of mouse
-				grapple.setLinearVelocity(input.getCrossHair().cpy().sub(grapple.getPosition().cpy()).nor().scl(15));
+				if (directionalGrapple) {
+					grapple.setLinearVelocity(input.getCrossHair().cpy().sub(grapple.getPosition().cpy()).nor().scl(15));
+				} else {
+					grapple.closestAnchor(objects);
+				}
 				grapple.setActive(true);
 			}
 			else {
@@ -199,7 +209,6 @@ public class SandboxController extends WorldController implements ContactListene
 					joint = null;
 				}
 				grapple.reset();
-
 			}
 		}
 
@@ -223,7 +232,6 @@ public class SandboxController extends WorldController implements ContactListene
 				anchor.length = distance;
 				joint = world.createJoint(anchor);
 				grapple.setGrappling(true);
-
 			}
 			grapple.setExtensionLength(distance);
 		}
@@ -259,10 +267,14 @@ public class SandboxController extends WorldController implements ContactListene
 			if (bd1.getName().equals("grapple") && !bd2.getName().equals("michael")) {
 				grapple.setAnchored(true);
 				grapple.setExtensionLength(cephalonaut.getPosition().dst(bd2.getPosition()));
+				grapple.setAnchorLocation(bd2.getName());
+				System.out.println(bd2.getName());
 			}
 			if (bd2.getName().equals("grapple") && !bd1.getName().equals("michael")) {
 				grapple.setAnchored(true);
 				grapple.setExtensionLength(cephalonaut.getPosition().dst(bd1.getPosition()));
+				grapple.setAnchorLocation(bd1.getName());
+				System.out.println(bd1.getName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
