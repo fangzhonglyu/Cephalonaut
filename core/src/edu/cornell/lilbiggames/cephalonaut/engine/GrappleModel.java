@@ -47,6 +47,10 @@ public class GrappleModel extends WheelObstacle {
         extensionLength = 0;
     }
 
+    /**
+     * Resets grapple to constructor values.
+     *
+     */
     public void reset() {
         setActive(false);
         setLinearVelocity(new Vector2());
@@ -157,6 +161,10 @@ public class GrappleModel extends WheelObstacle {
         return extensionLength;
     }
 
+    /**
+     * Sets the grapple's linear velocity closest towards anchoring point.
+     *
+     */
     public void closestAnchor(PooledList<Obstacle> objects) {
         Vector2 closest = new Vector2(Float.MAX_VALUE, Float.MAX_VALUE);
         for (Obstacle o : objects) {
