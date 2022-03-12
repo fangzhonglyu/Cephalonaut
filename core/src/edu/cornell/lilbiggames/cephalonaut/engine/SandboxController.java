@@ -37,11 +37,13 @@ public class SandboxController extends WorldController implements ContactListene
 
 	private Texture earthTexture;
 
+	/** The joint of the grapple */
 	Joint joint;
 
 	private boolean directionalGrapple;
 
 	private TextureRegion octopusTexture;
+
 	/** Texture asset for mouse crosshairs */
 	private TextureRegion crosshairTexture;
 
