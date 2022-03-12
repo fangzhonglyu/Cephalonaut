@@ -99,7 +99,7 @@ public class CephalonautModel extends OctopusObstacle {
 		// in the SandboxController.
 		origin.set(width / 2f, height / 2f);
 
-		grapple = new GrappleModel(100000000, 100000000, drawScale);
+		grapple = new GrappleModel(x, y, drawScale);
 	}
 
 	/**

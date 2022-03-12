@@ -22,6 +22,8 @@ public class GrappleModel extends WheelObstacle {
     private String anchorLocation;
     /** The extension length of the grapple */
     private float extensionLength;
+    /** The max extension length of the grapple */
+    private float maxLength;
 
     public GrappleModel(float x, float y, Vector2 drawScale) {
         // The shrink factors fit the image to a tighter hitbox
@@ -175,6 +177,33 @@ public class GrappleModel extends WheelObstacle {
             }
         }
         setLinearVelocity(closest.cpy().sub(getPosition().cpy()).nor().scl(15));
+    }
+
+    /**
+     * Set the grapple's max length.
+     *
+     * @param length the grapple's max length.
+     */
+    public void setMaxLength(float length) {
+        maxLength = length;
+    }
+
+    /**
+     * Get the grapple's max length.
+     *
+     * @return the grapple's max length.
+     */
+    public float getMaxLength() {
+        return maxLength;
+    }
+
+    /**
+     * Whether the grapple's is fully extended.
+     *
+     * @return whether the grapple's is fully extended.
+     */
+    public boolean isFullyExtended() {
+        return extensionLength >= maxLength;
     }
 
     /**

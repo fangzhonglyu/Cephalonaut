@@ -126,7 +126,9 @@ public class SandboxController extends WorldController implements ContactListene
 		cephalonaut.setTexture(octopusTexture);
 
 		addObject(cephalonaut);
-		addObject(cephalonaut.getGrapple());
+		GrappleModel grapple = cephalonaut.getGrapple();
+		grapple.setMaxLength(7.0f);
+		addObject(grapple);
 		setDebug(true);
 
 		selector = new ObstacleSelector(world);
@@ -201,15 +203,23 @@ public class SandboxController extends WorldController implements ContactListene
 					grapple.closestAnchor(objects);
 				}
 				grapple.setActive(true);
-			}
-			else {
-				// joint is only created when anchor
+			} else {
 				if (joint != null) {
 					world.destroyJoint(joint);
 					joint = null;
 				}
 				grapple.reset();
+				grapple.setPosition(cephalonaut.getPosition());
 			}
+		}
+
+		if (grapple.isOut() && grapple.isFullyExtended() && !grapple.isAnchored()) {
+			if (joint != null) {
+				world.destroyJoint(joint);
+				joint = null;
+			}
+			grapple.reset();
+			grapple.setPosition(cephalonaut.getPosition());
 		}
 
 		float distance = cephalonaut.getPosition().cpy().dst(grapple.getPosition());
@@ -233,8 +243,8 @@ public class SandboxController extends WorldController implements ContactListene
 				joint = world.createJoint(anchor);
 				grapple.setGrappling(true);
 			}
-			grapple.setExtensionLength(distance);
 		}
+		grapple.setExtensionLength(distance);
 
 		if (input.isThrusterApplied()){
 			thrusterController.startInking();
@@ -264,15 +274,17 @@ public class SandboxController extends WorldController implements ContactListene
 
 		try {
 			GrappleModel grapple = cephalonaut.getGrapple();
-			if (bd1.getName().equals("grapple") && !bd2.getName().equals("michael")) {
-				grapple.setAnchored(true);
-				grapple.setExtensionLength(cephalonaut.getPosition().dst(bd2.getPosition()));
-				grapple.setAnchorLocation(bd2.getName());
-			}
-			if (bd2.getName().equals("grapple") && !bd1.getName().equals("michael")) {
-				grapple.setAnchored(true);
-				grapple.setExtensionLength(cephalonaut.getPosition().dst(bd1.getPosition()));
-				grapple.setAnchorLocation(bd1.getName());
+			if (!grapple.isAnchored()) {
+				if (bd1.getName().equals("grapple") && !bd2.getName().equals("michael")) {
+					grapple.setAnchored(true);
+					grapple.setExtensionLength(cephalonaut.getPosition().dst(bd2.getPosition()));
+					grapple.setAnchorLocation(bd2.getName());
+				}
+				if (bd2.getName().equals("grapple") && !bd1.getName().equals("michael")) {
+					grapple.setAnchored(true);
+					grapple.setExtensionLength(cephalonaut.getPosition().dst(bd1.getPosition()));
+					grapple.setAnchorLocation(bd1.getName());
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
