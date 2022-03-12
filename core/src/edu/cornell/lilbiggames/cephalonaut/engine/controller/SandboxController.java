@@ -21,6 +21,7 @@ import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
+import edu.cornell.lilbiggames.cephalonaut.engine.model.LevelModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
@@ -43,6 +44,8 @@ public class SandboxController extends WorldController {
 
 	private CephalonautController cephalonautController;
 
+	private LevelModel level;
+
 	/**
 	 * Creates and initialize a new instance of the sandbox
 	 */
@@ -52,6 +55,14 @@ public class SandboxController extends WorldController {
 		setComplete(false);
 		setFailure(false);
 
+	}
+
+	/**
+	 * Sets the current level
+	 * @param LevelModel level
+	 */
+	public void setLevel(LevelModel level){
+		this.level = level;
 	}
 
 	/**

@@ -16,7 +16,9 @@
 import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SandboxController;
+import edu.cornell.lilbiggames.cephalonaut.engine.model.LevelModel;
 
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -37,6 +39,10 @@ public class GDXRoot extends Game {
 
 	/** Sandbox controller **/
 	private SandboxController sandboxController;
+
+	private LevelLoader levelLoader;
+	private final String[] levelNames = {"Test"};
+	private Map<String,LevelModel> levels;
 	
 	/**
 	 * Creates a new game from the configuration settings.
@@ -44,7 +50,9 @@ public class GDXRoot extends Game {
 	 * This method configures the asset manager, but does not load any assets
 	 * or assign any screen.
 	 */
-	public GDXRoot() { }
+	public GDXRoot() {
+		levelLoader = new LevelLoader();
+	}
 
 	/** 
 	 * Called when the Application is first created.
@@ -59,10 +67,16 @@ public class GDXRoot extends Game {
 		directory.loadAssets();
 		directory.finishLoading();
 
-		// Load in level
-		LevelLoader level = new LevelLoader("Test.tmx");
+		// Load in levels
+		try{
+			levels = levelLoader.loadLevels(levelNames);
+		} catch(Exception e){
+			System.out.println(e);
+		}
 
 		// Initialize the game world
+		LevelModel defaultLevel = levels.get("Test");
+		sandboxController.setLevel(defaultLevel);
 		sandboxController = new SandboxController();
 		sandboxController.gatherAssets(directory);
 		sandboxController.setCanvas(canvas);

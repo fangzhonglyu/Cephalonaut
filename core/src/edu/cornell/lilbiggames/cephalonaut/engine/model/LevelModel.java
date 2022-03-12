@@ -1,17 +1,22 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.model;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 public class LevelModel {
 
     protected TiledMapTileLayer tiles;
+    protected MapLayer gameElementLayer;
     protected int width;
     protected int height;
 
-    public LevelModel(TiledMapTileLayer tiles) {
+    public LevelModel(TiledMapTileLayer tiles, MapLayer gameElementLayer) {
         this.tiles = tiles;
+        this.gameElementLayer = gameElementLayer;
         this.width = tiles.getWidth();
         this.height = tiles.getHeight();
     }
@@ -96,5 +101,10 @@ public class LevelModel {
         System.out.println("    width: " + getObjectWidth(tile) + ",");
         System.out.println("    height: " + getObjectHeight(tile));
         System.out.println("}");
+    }
+
+    public MapObjects getGameElements(){
+        MapObjects objects = gameElementLayer.getObjects();
+        return objects;
     }
 }

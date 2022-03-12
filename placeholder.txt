@@ -1,0 +1,42 @@
+// OVERVIEW
+Level {
+    tileLayer: {
+        rocks: list Rock,
+        boundaries: list Rock
+    }
+    gameElementLayer: {
+        cephalonaut : Cephalonaut,
+        gameObjects : list GameObject
+        ...
+    }
+    environment: {
+        initialInk: int  
+    }
+}
+
+// TILE LAYER OBJECTS
+Rock {
+    x: int,
+    y: int,
+    isGrappleable: boolean
+}
+
+
+
+GameState {
+    levelProgress: list LevelProgress
+}
+
+LevelProgress {
+    name: string,
+    path: string,
+    unlocked: boolean,
+    completed: boolean,
+    statistics: LevelStat
+}
+
+LevelStat {
+    time: float,
+    remainingInk: int,
+    coinsCollected: int
+}
