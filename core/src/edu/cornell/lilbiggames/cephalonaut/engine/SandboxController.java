@@ -193,33 +193,16 @@ public class SandboxController extends WorldController implements ContactListene
 		GrappleModel grapple = cephalonaut.getGrapple();
 		if (input.didSecondary()) {
 			grapple.setOut(!grapple.isOut());
-			// grapple is still in the process of extending
 			if (grapple.isOut()) {
 				grapple.setPosition(cephalonaut.getPosition().cpy());
-				// grapple travels 5 units/time in direction of mouse
+				// grapple travels 15 units/time in direction of mouse
 				if (directionalGrapple) {
 					grapple.setLinearVelocity(input.getCrossHair().cpy().sub(grapple.getPosition().cpy()).nor().scl(15));
 				} else {
 					grapple.closestAnchor(objects);
 				}
 				grapple.setActive(true);
-			} else {
-				if (joint != null) {
-					world.destroyJoint(joint);
-					joint = null;
-				}
-				grapple.reset();
-				grapple.setPosition(cephalonaut.getPosition());
 			}
-		}
-
-		if (grapple.isOut() && grapple.isFullyExtended() && !grapple.isAnchored()) {
-			if (joint != null) {
-				world.destroyJoint(joint);
-				joint = null;
-			}
-			grapple.reset();
-			grapple.setPosition(cephalonaut.getPosition());
 		}
 
 		float distance = cephalonaut.getPosition().cpy().dst(grapple.getPosition());
@@ -245,6 +228,18 @@ public class SandboxController extends WorldController implements ContactListene
 			}
 		}
 		grapple.setExtensionLength(distance);
+
+		// "pull in" the grapple if requested, or if it has stretched its max length
+		// and still hasn't anchored
+		if ((input.didSecondary() && !grapple.isOut()) ||
+				(grapple.isOut() && grapple.isFullyExtended() && !grapple.isAnchored())) {
+			if (joint != null) {
+				world.destroyJoint(joint);
+				joint = null;
+			}
+			grapple.reset();
+			grapple.setPosition(cephalonaut.getPosition().cpy());
+		}
 
 		if (input.isThrusterApplied()){
 			thrusterController.startInking();

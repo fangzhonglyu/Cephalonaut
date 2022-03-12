@@ -43,7 +43,7 @@ public class GrappleModel extends WheelObstacle {
         origin.set(pixDiameter / 2f, pixDiameter / 2f);
 
         isOut = false;
-        isGrappling = true;
+        isGrappling = false;
         isAnchored = false;
         anchorLocation = "";
         extensionLength = 0;
