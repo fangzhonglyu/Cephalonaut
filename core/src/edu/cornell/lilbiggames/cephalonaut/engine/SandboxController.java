@@ -311,6 +311,7 @@ public class SandboxController extends WorldController implements ContactListene
 			obj.draw(canvas);
 		}
 		selector.draw(canvas);
+		cephalonaut.draw(canvas);
 		canvas.end();
 		
 		if (isDebug()) {

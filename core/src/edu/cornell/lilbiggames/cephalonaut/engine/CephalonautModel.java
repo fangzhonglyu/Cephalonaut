@@ -53,6 +53,11 @@ public class CephalonautModel extends OctopusObstacle {
 	/** Whether or not the octopus is ink-thrusting */
 	private boolean inking;
 
+	/** How much ink the cephalonaut has left */
+	private float ink;
+
+	/** Get how much ink the cephalonaut has left*/
+
 	/**
 	 * Returns true if the cephalonaut is actively inking.
 	 *
@@ -69,7 +74,7 @@ public class CephalonautModel extends OctopusObstacle {
 	 */
 	public void setInking(boolean inking) {
 		this.inking = inking;
-		this.forceCache.y = inking ? force : 0.0f;
+		this.forceCache.y = (inking && ink > 0) ? force : 0.0f;
 	}
 
 	/**
@@ -98,7 +103,7 @@ public class CephalonautModel extends OctopusObstacle {
 		// Matias: I don't think this line of code matters bc it's being overwritten by the setTexture call
 		// in the SandboxController.
 		origin.set(width / 2f, height / 2f);
-
+		ink = 1f;
 		grapple = new GrappleModel(x, y, drawScale);
 	}
 
@@ -177,9 +182,12 @@ public class CephalonautModel extends OctopusObstacle {
 	 * @param dt	Number of seconds since last animation frame
 	 */
 	public void update(float dt) {
-		// TODO: Stuff here probably
-		
 		super.update(dt);
+		if (inking && ink > 0)
+			ink-=0.006;
+		else if(!inking && ink < 0.996f)
+			ink+=0.004;
+		System.out.println(ink);
 	}
 
 	/**
@@ -197,7 +205,7 @@ public class CephalonautModel extends OctopusObstacle {
 					angle, 5, distance * drawScale.x);
 		}
 
-		if (isInking()) {
+		if (isInking()&&ink>0) {
 			Vector2 behind = new Vector2();
 			behind.set(0, getHeight()).setAngleRad(getAngle() - (float) Math.PI / 2f).add(getPosition());
 			canvas.draw(tentacleTexture, Color.PURPLE, 0.5f, 0.5f, behind.x * drawScale.x, behind.y * drawScale.y,
@@ -207,6 +215,8 @@ public class CephalonautModel extends OctopusObstacle {
 		canvas.draw(texture, Color.WHITE, origin.x, origin.y,
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 1, 1);
+
+		canvas.drawSimpleFuelBar(ink,100, 50);
 	}
 	
 	/**
