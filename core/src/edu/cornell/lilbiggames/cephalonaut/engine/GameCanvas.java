@@ -656,22 +656,13 @@ public class GameCanvas {
 	}
 
 	public void drawSimpleFuelBar(float ink, float x, float y){
-		x-=50;
-		y-=10;
-		ShapeRenderer shapeRen = new ShapeRenderer();
 		spriteBatch.end();
+		ShapeRenderer shapeRen = new ShapeRenderer();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(Color.WHITE);
 		shapeRen.rect(x, y, 100, 12);
-		shapeRen.end();
-		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
-		if(ink>0.6)
-			shapeRen.setColor(Color.CYAN);
-		else if(ink>0.3)
-			shapeRen.setColor(Color.ORANGE);
-		else
-			shapeRen.setColor(Color.RED);
-		shapeRen.rect(x+2, y+1, ink*96f, 10);
+		shapeRen.setColor(ink > 0.6  ? Color.CYAN : ink > 0.3 ? Color.ORANGE : Color.RED);
+		shapeRen.rect(x + 2, y + 1, ink * 96.0f, 10);
 		shapeRen.end();
 		spriteBatch.begin();
 	}

@@ -184,9 +184,9 @@ public class CephalonautModel extends OctopusObstacle {
 	public void update(float dt) {
 		super.update(dt);
 		if (inking && ink > 0)
-			ink-=0.006;
+			ink -= 0.006;
 		else if(!inking && ink < 0.996f)
-			ink+=0.004;
+			ink += 0.004;
 		System.out.println(ink);
 	}
 
@@ -205,7 +205,7 @@ public class CephalonautModel extends OctopusObstacle {
 					angle, 5, distance * drawScale.x);
 		}
 
-		if (isInking()&&ink>0) {
+		if (isInking() && ink > 0) {
 			Vector2 behind = new Vector2();
 			behind.set(0, getHeight()).setAngleRad(getAngle() - (float) Math.PI / 2f).add(getPosition());
 			canvas.draw(tentacleTexture, Color.PURPLE, 0.5f, 0.5f, behind.x * drawScale.x, behind.y * drawScale.y,
@@ -216,7 +216,7 @@ public class CephalonautModel extends OctopusObstacle {
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 1, 1);
 
-		canvas.drawSimpleFuelBar(ink,100, 50);
+		canvas.drawSimpleFuelBar(ink, canvas.getWidth() - 150, canvas.getHeight() - 70);
 	}
 	
 	/**

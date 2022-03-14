@@ -40,6 +40,7 @@ public class SandboxController extends WorldController implements ContactListene
 	/** The joint of the grapple */
 	Joint joint;
 
+	/** The grapple mechanic mode */
 	private boolean directionalGrapple;
 
 	private TextureRegion octopusTexture;
