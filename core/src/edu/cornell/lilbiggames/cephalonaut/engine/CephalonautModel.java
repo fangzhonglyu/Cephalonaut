@@ -185,7 +185,7 @@ public class CephalonautModel extends OctopusObstacle {
 		super.update(dt);
 		if (inking && ink > 0)
 			ink -= 0.006f;
-		else if(!inking && ink <= 0.996f)
+		else if(!inking && ink <= 0.9996f)
 			ink += 0.0004f;
 		System.out.println(ink);
 	}
