@@ -2,19 +2,18 @@ package edu.cornell.lilbiggames.cephalonaut.engine.model;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
-public class LevelModel {
+public class PlayMode {
 
     protected TiledMapTileLayer tiles;
     protected MapLayer gameElementLayer;
     protected int width;
     protected int height;
 
-    public LevelModel(TiledMapTileLayer tiles, MapLayer gameElementLayer) {
+    public PlayMode(TiledMapTileLayer tiles, MapLayer gameElementLayer) {
         this.tiles = tiles;
         this.gameElementLayer = gameElementLayer;
         this.width = tiles.getWidth();

@@ -15,13 +15,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
-import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
-import edu.cornell.lilbiggames.cephalonaut.engine.model.LevelModel;
+import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
@@ -44,7 +41,7 @@ public class SandboxController extends WorldController {
 
 	private CephalonautController cephalonautController;
 
-	private LevelModel level;
+	private PlayMode level;
 
 	/**
 	 * Creates and initialize a new instance of the sandbox
@@ -61,7 +58,7 @@ public class SandboxController extends WorldController {
 	 * Sets the current level
 	 * @param LevelModel level
 	 */
-	public void setLevel(LevelModel level){
+	public void setLevel(PlayMode level){
 		this.level = level;
 	}
 

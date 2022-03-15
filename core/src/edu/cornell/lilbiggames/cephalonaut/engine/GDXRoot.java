@@ -16,10 +16,9 @@
 import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SandboxController;
-import edu.cornell.lilbiggames.cephalonaut.engine.model.LevelModel;
+import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
 
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * Root class for a LibGDX.  
@@ -42,7 +41,7 @@ public class GDXRoot extends Game {
 
 	private LevelLoader levelLoader;
 	private final String[] levelNames = {"Test"};
-	private Map<String,LevelModel> levels;
+	private Map<String, PlayMode> levels;
 	
 	/**
 	 * Creates a new game from the configuration settings.
@@ -75,7 +74,7 @@ public class GDXRoot extends Game {
 		}
 
 		// Initialize the game world
-		LevelModel defaultLevel = levels.get("Test");
+		PlayMode defaultLevel = levels.get("Test");
 		sandboxController.setLevel(defaultLevel);
 		sandboxController = new SandboxController();
 		sandboxController.gatherAssets(directory);
