@@ -8,7 +8,7 @@
  * Based on original PhysicsDemo Lab by Don Holden, 2007
  * Updated asset version, 2/6/2021
  */
-package edu.cornell.lilbiggames.cephalonaut.engine;
+package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,8 +16,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
+import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
+import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
@@ -28,9 +29,6 @@ import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
 public class SandboxController extends WorldController implements ContactListener {
 	/** Reference to the cephalonaut's model */
 	private CephalonautModel cephalonaut;
-
-	/** Reference to the player's thruster controller */
-	private ThrusterController thrusterController;
 
 	/** Mouse selector to move the cephalonaut */
 	private ObstacleSelector selector;
@@ -47,6 +45,8 @@ public class SandboxController extends WorldController implements ContactListene
 
 	/** Texture asset for mouse crosshairs */
 	private TextureRegion crosshairTexture;
+
+	private CephalonautController cephalonautController;
 
 	/**
 	 * Creates and initialize a new instance of the sandbox
@@ -125,8 +125,8 @@ public class SandboxController extends WorldController implements ContactListene
 		float dwidth  = octopusTexture.getRegionWidth()/scale.x;
 		float dheight = octopusTexture.getRegionHeight()/scale.y;
 		cephalonaut = new CephalonautModel(10, 10, dwidth, dheight, scale);
-		thrusterController = new ThrusterController(cephalonaut);
 		cephalonaut.setTexture(octopusTexture);
+		cephalonautController = new CephalonautController(world, cephalonaut);
 
 		addObject(cephalonaut);
 		GrappleModel grapple = cephalonaut.getGrapple();
@@ -193,66 +193,12 @@ public class SandboxController extends WorldController implements ContactListene
 			directionalGrapple = !directionalGrapple;
 		}
 
-		GrappleModel grapple = cephalonaut.getGrapple();
-		if (input.didSecondary()) {
-			grapple.setOut(!grapple.isOut());
-			if (grapple.isOut()) {
-				grapple.setPosition(cephalonaut.getPosition().cpy());
-				// grapple travels 15 units/time in direction of mouse
-				if (directionalGrapple) {
-					grapple.setLinearVelocity(input.getCrossHair().cpy().sub(grapple.getPosition().cpy()).nor().scl(15));
-				} else {
-					grapple.closestAnchor(objects);
-				}
-				grapple.setActive(true);
-			}
-		}
+		boolean grappleButton = input.didSecondary();
+		Vector2 crossHair = input.getCrossHair();
+		boolean inking = input.isThrusterApplied();
+		float rotation = input.getRotation();
 
-		float distance = cephalonaut.getPosition().cpy().dst(grapple.getPosition());
-		if (grapple.isAnchored()) {
-			grapple.setBodyType(BodyDef.BodyType.StaticBody);
-			if (distance > grapple.getExtensionLength() && !grapple.isGrappling()) {
-				Vector2 swing = cephalonaut.getPosition().cpy().sub(grapple.getPosition()).rotate90(0);
-
-				float dot = swing.dot(cephalonaut.getLinearVelocity());
-				if (dot != 0) {
-					// Experimental: Conserve velocity when rotating around point behind cephalonaut
-					float newAngle = swing.angleRad() + (dot < 0 ? (float) Math.PI : 0);
-					cephalonaut.setLinearVelocity(cephalonaut.getLinearVelocity().setAngleRad(newAngle));
-				}
-
-				DistanceJointDef anchor = new DistanceJointDef();
-				anchor.bodyA = grapple.getBody();
-				anchor.bodyB = cephalonaut.getBody();
-				anchor.collideConnected = false;
-				anchor.length = distance;
-				joint = world.createJoint(anchor);
-				grapple.setGrappling(true);
-			}
-		}
-		grapple.setExtensionLength(distance);
-
-		// "pull in" the grapple if requested, or if it has stretched its max length
-		// and still hasn't anchored
-		if ((input.didSecondary() && !grapple.isOut()) ||
-				(grapple.isOut() && grapple.isFullyExtended() && !grapple.isAnchored())) {
-			if (joint != null) {
-				world.destroyJoint(joint);
-				joint = null;
-			}
-			grapple.reset();
-			grapple.setPosition(cephalonaut.getPosition().cpy());
-		}
-
-		if (input.isThrusterApplied()){
-			thrusterController.startInking();
-		} else {
-			thrusterController.stopInking();
-		}
-
-		thrusterController.setRotation(input.getRotation());
-		cephalonaut.applyRotation();
-		cephalonaut.applyForce();
+		cephalonautController.update(grappleButton, directionalGrapple, objects, crossHair, inking, rotation);
 	}
 
 	/**

@@ -8,23 +8,16 @@
  * Based on original PhysicsDemo Lab by Don Holden, 2007
  * Updated asset version, 2/6/2021
  */
-package edu.cornell.lilbiggames.cephalonaut.engine;
+package edu.cornell.lilbiggames.cephalonaut.engine.model;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PolygonRegion;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.JsonValue;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.CapsuleObstacle;
+import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.OctopusObstacle;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
 
 /**
  * Player avatar for the gameplay prototype.
@@ -189,7 +182,6 @@ public class CephalonautModel extends OctopusObstacle {
 			ink += 0.0004f;
 		}
 		ink = Math.min(ink, 1.0f);
-		System.out.println(ink);
 	}
 
 	/**
