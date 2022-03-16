@@ -9,5 +9,9 @@
     "squid": "squid.png",
     "octopus": "octopus.png",
     "crosshair": "crosshair.png"
-  }
+  },
+  "jsons": {
+    "tileset": "jb-32-Tileset..tsj",
+    "level_1": "Test..tmj"
+  },
 }

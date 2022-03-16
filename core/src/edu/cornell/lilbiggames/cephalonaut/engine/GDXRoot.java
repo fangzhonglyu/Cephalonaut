@@ -40,7 +40,7 @@ public class GDXRoot extends Game {
 	private SandboxController sandboxController;
 
 	private LevelLoader levelLoader;
-	private final String[] levelNames = {"Test"};
+	private final String[] levelNames = {"level_1"};
 	private Map<String, PlayMode> levels;
 	
 	/**
@@ -50,7 +50,7 @@ public class GDXRoot extends Game {
 	 * or assign any screen.
 	 */
 	public GDXRoot() {
-		levelLoader = new LevelLoader();
+
 	}
 
 	/** 
@@ -61,10 +61,8 @@ public class GDXRoot extends Game {
 	 */
 	public void create() {
 		canvas  = new GameCanvas();
-
-		directory = new AssetDirectory("assets.json");
-		directory.loadAssets();
-		directory.finishLoading();
+		levelLoader = new LevelLoader();
+		directory = levelLoader.getAssetDirectory();
 
 		// Load in levels
 		try{
@@ -74,8 +72,8 @@ public class GDXRoot extends Game {
 		}
 
 		// Initialize the game world
-		PlayMode defaultLevel = levels.get("Test");
-		sandboxController.setLevel(defaultLevel);
+		PlayMode defaultLevel = levels.get("level_1");
+//		sandboxController.setLevel(defaultLevel);
 		sandboxController = new SandboxController();
 		sandboxController.gatherAssets(directory);
 		sandboxController.setCanvas(canvas);
