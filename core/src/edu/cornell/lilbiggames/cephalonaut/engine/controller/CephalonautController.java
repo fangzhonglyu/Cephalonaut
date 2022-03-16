@@ -11,9 +11,13 @@ import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
 
 public class CephalonautController {
+    /** The box2d world **/
     private World world;
+
+    /** Reference to the cephalonaut's model */
     private CephalonautModel cephalonaut;
 
+    /** The joint of the grapple */
     private Joint grappleJoint;
 
     public CephalonautController(World world, CephalonautModel cephalonaut) {
