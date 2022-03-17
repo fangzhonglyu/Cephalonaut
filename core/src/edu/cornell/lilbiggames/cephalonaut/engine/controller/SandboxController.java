@@ -16,12 +16,18 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
+import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.SimpleObstacle;
+
+import java.util.Iterator;
 
 /**
  * Gameplay specific controller for the gameplay prototype.
@@ -29,6 +35,9 @@ import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
 public class SandboxController extends WorldController {
 	/** Reference to the cephalonaut's model */
 	private CephalonautModel cephalonaut;
+
+
+	private Queue<GameObject> gameObjectQueue;
 
 	/** Mouse selector to move the cephalonaut */
 	private ObstacleSelector selector;
@@ -116,11 +125,26 @@ public class SandboxController extends WorldController {
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
 	}
 
+
+	/**
+	 * Parses the game objects from the
+	 */
+	private void initializeLevelInfo(){
+		Queue <JsonValue> gameObjectJsons = level.getGameObjectQueue();
+		Iterator<JsonValue> it = gameObjectJsons.iterator();
+		while(it.hasNext()){
+			JsonValue objectJson = it.next();
+			System.out.println(objectJson.get("name"));
+		}
+	}
+
 	/**
 	 * Lays out the game geography.
 	 */
 	private void populateLevel() {
 		// Make the cephalonaut
+		initializeLevelInfo();
+
 		float dwidth  = octopusTexture.getRegionWidth()/scale.x;
 		float dheight = octopusTexture.getRegionHeight()/scale.y;
 		cephalonaut = new CephalonautModel(10, 10, dwidth, dheight, scale);

@@ -73,10 +73,11 @@ public class GDXRoot extends Game {
 
 		// Initialize the game world
 		PlayMode defaultLevel = levels.get("level_1");
-//		sandboxController.setLevel(defaultLevel);
+
 		sandboxController = new SandboxController();
 		sandboxController.gatherAssets(directory);
 		sandboxController.setCanvas(canvas);
+		sandboxController.setLevel(defaultLevel);
 		sandboxController.reset();
 		setScreen(sandboxController);
 	}
