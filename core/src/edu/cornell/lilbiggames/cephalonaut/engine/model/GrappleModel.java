@@ -14,7 +14,7 @@ import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
 public class GrappleModel extends WheelObstacle {
     /** Whether the grapple is out */
     private boolean isOut;
-    /** Whether the grapple is tout */
+    /** Whether the grapple is taut */
     private boolean isGrappling;
     /** Whether the grapple is anchored */
     private boolean isAnchored;
@@ -94,18 +94,18 @@ public class GrappleModel extends WheelObstacle {
     }
 
     /**
-     * Returns true if the grapple is tout.
+     * Returns true if the grapple is taut.
      *
-     * @return true if the grapple is tout.
+     * @return true if the grapple is taut.
      */
     public boolean isGrappling() {
         return isGrappling;
     }
 
     /**
-     * Sets whether the grapple is tout.
+     * Sets whether the grapple is taut.
      *
-     * @param grappling whether the grapple is tout.
+     * @param grappling whether the grapple is taut.
      */
     public void setGrappling(boolean grappling) {
         isGrappling = grappling;

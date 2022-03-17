@@ -45,6 +45,7 @@ public class CephalonautController {
                 grapple.setPosition(cephalonaut.getPosition().cpy());
                 // grapple travels 15 units/time in direction of mouse
                 if (directionalGrapple) {
+                    // maybe set velocity is a parameter
                     grapple.setLinearVelocity(crossHair.cpy().sub(grapple.getPosition().cpy()).nor().scl(15));
                 } else {
                     grapple.closestAnchor(anchoringPoints);
