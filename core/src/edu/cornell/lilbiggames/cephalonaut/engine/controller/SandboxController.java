@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObjectJson;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
@@ -29,6 +30,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Gameplay specific controller for the gameplay prototype.
@@ -40,7 +42,7 @@ public class SandboxController extends WorldController {
 
 	private Queue<GameObject> gameObjectQueue;
 	private List<BoxObstacle> boxObstacles;
-	private TextureRegion[] textures;
+	private Map<Integer, TextureRegion> textures;
 
 	/** Mouse selector to move the cephalonaut */
 	private ObstacleSelector selector;
@@ -95,24 +97,6 @@ public class SandboxController extends WorldController {
 		populateLevel();
 	}
 
-	private void addWall(float x, float y, float angle, String name) {
-		final float boxSize = 1;
-		BoxObstacle wall = new BoxObstacle(boxSize * x + boxSize / 2, boxSize * y + boxSize / 2, boxSize, boxSize);
-		wall.setAngle(angle);
-		wall.setGrapple(true);
-		wall.setBodyType(BodyDef.BodyType.StaticBody);
-		wall.setDensity(0);
-		wall.setFriction(0);
-		wall.setRestitution(0.3f);
-		wall.setDrawScale(scale);
-		wall.setTint(new Color(0.5f, 0.4f, 0.4f, 1));
-		wall.setTexture(earthTile);
-		wall.setTextureScaleX(boxSize * scale.x / earthTile.getRegionWidth());
-		wall.setTextureScaleY(boxSize * scale.y / earthTile.getRegionHeight());
-		wall.setName(name);
-		addObject(wall);
-	}
-
 	/**
 	 * Gather the assets for this controller.
 	 *
@@ -133,21 +117,22 @@ public class SandboxController extends WorldController {
 	 * @param objectJson
 	 * @return BoxObstacle representing created object
 	 */
-	private BoxObstacle initializeObjectFromJson(JsonValue objectJson){
+	private BoxObstacle initializeObjectFromJson(JsonValue objectJson, int tileID){
 		// just to show what I'm currently thinking for object initialization based on json
 		// question: how to deal with location relative to tile?
 		float width = objectJson.getFloat("width");
 		float height = objectJson.getFloat("height");
 		float x = objectJson.getFloat("x");
 		float y = objectJson.getFloat("y");
-		BoxObstacle cur = new BoxObstacle(x, y, width, height);
-		TextureRegion texture = textures[objectJson.getInt("id")];
+
+		BoxObstacle cur = new BoxObstacle(x, y, width/32, height/32);
+		TextureRegion texture = textures.get(tileID);
 
 		cur.setDrawScale(scale);
 		cur.setTint(new Color(0.5f, 0.4f, 0.4f, 1));
 		cur.setTexture(texture);
-		cur.setTextureScaleX(width * scale.x / texture.getRegionWidth());
-		cur.setTextureScaleY(height * scale.y / texture.getRegionHeight());
+		cur.setTextureScaleX(width * scale.x / (texture.getRegionWidth()*32));
+		cur.setTextureScaleY(height * scale.y / (texture.getRegionHeight()*32));
 
 		for(JsonValue property : objectJson.get("properties")){
 			switch (property.getString("name")) {
@@ -155,7 +140,6 @@ public class SandboxController extends WorldController {
 					cur.setGrapple(property.getBoolean("value"));
 			}
 		}
-
 		return cur;
 	}
 
@@ -164,18 +148,21 @@ public class SandboxController extends WorldController {
 	 * Parses the game objects from the
 	 */
 	private void initializeLevelInfo(){
-		Queue <JsonValue> gameObjectJsons = level.getGameObjectQueue();
+		Queue<GameObjectJson> gameObjectJsons = level.getGameObjectQueue();
 		textures = level.getTextures();
 		boxObstacles = new LinkedList<BoxObstacle>();
 
-		Iterator<JsonValue> it = gameObjectJsons.iterator();
+		Iterator<GameObjectJson> it = gameObjectJsons.iterator();
 		while(it.hasNext()){
-			JsonValue objectJson = it.next();
+			GameObjectJson gameObjectJson = it.next();
+			JsonValue objectJson = gameObjectJson.getJsonObject();
+			int tileID = gameObjectJson.getTileID();
 
-			if(objectJson.get("name").equals("Rock")){
+			String name = (objectJson.get("name") != null) ? objectJson.getString("name") : "";
+
+			if(name.equals("Rock")){
 				// using a BoxObstacle for now, when we merge with Oliver's code we can use gameobjects
-				System.out.println(objectJson.get("name"));
-				objects.add(initializeObjectFromJson(objectJson));
+				addObject(initializeObjectFromJson(objectJson, tileID));
 			}
 		}
 
@@ -201,43 +188,6 @@ public class SandboxController extends WorldController {
 		selector = new ObstacleSelector(world);
 		selector.setDrawScale(scale);
 		world.setGravity(Vector2.Zero);
-		/*
-		final int boxesY = (int) bounds.getHeight() - 1;
-		final int boxesX = (int) bounds.getWidth() - 1;
-		// Left and right walls
-		for (int i = 0; i <= boxesY; i++) {
-			addWall(0, i, 0, "border_left" + i);
-			addWall(boxesX, i, 0, "border_right" + i);
-		}
-		// Bottom and top walls
-		for (int i = 0; i <= boxesX; i++) {
-			addWall(i, 0, 0, "border_bottom" + i);
-			addWall(i, boxesY, 0, "border_top" + i);
-		}
-		// U shape
-		for (int i = 20; i < 25; i++) {
-			addWall(i, 4, 0, "u_bottom" + i);
-			addWall(i, 9, 0, "u_top" + i);
-		}
-		for (int i = 5; i < 9; i++) {
-			addWall(24, i, 0, "u_right" + i);
-		}
-
-		// Random boxes
-		addWall(15, 14, 0, "box1");
-		addWall(16, 14, 0, "box2");
-
-		// Thick box on bottom left
-		addWall(8, 8, 0, "box_thicc1");
-		addWall(7, 8, 0, "box_thicc2");
-		addWall(8, 7, 0, "box_thicc3");
-		addWall(7, 7, 0, "box_thicc4");
-
-		// Diagonal wall on top right
-		addWall(27, 14, (float) Math.toRadians(45), "box4");
-		addWall(26.5f, 14.5f, (float) Math.toRadians(45), "box5");
-		addWall(27.5f, 13.5f, (float) Math.toRadians(45), "box6");
-		addWall(28f, 13f, (float) Math.toRadians(45), "box7");*/
 	}
 
 	/**
@@ -275,6 +225,7 @@ public class SandboxController extends WorldController {
 		for(Obstacle obj : objects) {
 			obj.draw(canvas);
 		}
+
 		selector.draw(canvas);
 		canvas.end();
 		

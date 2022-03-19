@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObjectJson;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
 
 import java.util.HashMap;
@@ -50,33 +51,33 @@ public class LevelLoader {
     }
 
     // NOTE: Might need to be changed to Queue<GameObject>
-    private Queue<JsonValue> getObjectQueue(JsonValue level) {
-        Queue<JsonValue> objects = new Queue<>();
+    private Queue<GameObjectJson> getObjectQueue(JsonValue level) {
+        Queue<GameObjectJson> objects = new Queue<>();
         JsonValue layer = level.get("layers").iterator().next();
         int[] data = layer.get("data").asIntArray();
         // NOTE: ID's in data array is 1-index, so subtract 1 to match tileset 0-index
         for(int id : data) {
             // need to convert to game object, for now, its JsonValue object
             if(map.get(id-1) != null) {
-                objects.addLast(map.get(id-1));
+                objects.addLast(new GameObjectJson(map.get(id-1), id-1));
             }
         }
         return objects;
     }
 
     // This method captures the tile textures for the relevant level by parsing the png
-    private TextureRegion[] getTextures(JsonValue level) {
+    private Map<Integer,TextureRegion> getTextures(JsonValue level) {
         JsonValue layer = level.get("layers").iterator().next();
         int[] data = layer.get("data").asIntArray();
         int tileSize = tileset.getInt("tilewidth");
         int columns = tileset.getInt("columns");
-        TextureRegion[] tiles = new TextureRegion[data.length];
+        Map<Integer, TextureRegion> tiles = new HashMap<Integer, TextureRegion>();
         // NOTE: ID's in data array is 1-index, so subtract 1 to match tileset 0-index
-        for(int i = 0; i < tiles.length; i++) {
+        for(int i = 0; i < data.length; i++) {
             int id = data[i] - 1;
-            int x = id % columns;
-            int y = id / columns;
-            tiles[i] = new TextureRegion(tilesetTexture, x, y, tileSize, tileSize);;
+            int x = (id % columns)*tileSize;
+            int y = (id / columns)*tileSize;
+            tiles.put(id, new TextureRegion(tilesetTexture, x, y, tileSize, tileSize));
         }
         return tiles;
     }
@@ -97,8 +98,8 @@ public class LevelLoader {
         if(!level.get("layers").iterator().hasNext()) {
             throw new RuntimeException("No layer to parse.");
         }
-        Queue<JsonValue> objects = getObjectQueue(level);
-        TextureRegion[] textures = getTextures(level);
+        Queue<GameObjectJson> objects = getObjectQueue(level);
+        Map<Integer, TextureRegion> textures = getTextures(level);
         return new PlayMode(objects, textures);
     }
 }

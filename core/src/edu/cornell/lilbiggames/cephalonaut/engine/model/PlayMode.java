@@ -4,22 +4,25 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 
 import com.badlogic.gdx.utils.Queue;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObjectJson;
+
+import java.util.Map;
 
 public class PlayMode {
 
-    private Queue<JsonValue> gameObjectQueue;
-    private TextureRegion[] textures;
+    private Queue<GameObjectJson> gameObjectQueue;
+    private Map<Integer, TextureRegion> textures;
 
-    public PlayMode(Queue<JsonValue> q, TextureRegion[] t) {
+    public PlayMode(Queue<GameObjectJson> q, Map<Integer, TextureRegion> t) {
        gameObjectQueue = q;
        textures = t;
     }
 
-    public TextureRegion[] getTextures() {
+    public Map<Integer, TextureRegion> getTextures() {
         return textures;
     }
 
-    public Queue<JsonValue> getGameObjectQueue() {
+    public Queue<GameObjectJson> getGameObjectQueue() {
         return gameObjectQueue;
     }
 }
