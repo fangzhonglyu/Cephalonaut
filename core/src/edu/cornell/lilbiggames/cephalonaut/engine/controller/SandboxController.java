@@ -25,9 +25,10 @@ import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.SimpleObstacle;
 
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Gameplay specific controller for the gameplay prototype.
@@ -38,6 +39,8 @@ public class SandboxController extends WorldController {
 
 
 	private Queue<GameObject> gameObjectQueue;
+	private List<BoxObstacle> boxObstacles;
+	private TextureRegion[] textures;
 
 	/** Mouse selector to move the cephalonaut */
 	private ObstacleSelector selector;
@@ -65,7 +68,7 @@ public class SandboxController extends WorldController {
 
 	/**
 	 * Sets the current level
-	 * @param LevelModel level
+	 * @param PlayMode level
 	 */
 	public void setLevel(PlayMode level){
 		this.level = level;
@@ -125,17 +128,57 @@ public class SandboxController extends WorldController {
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
 	}
 
+	/**
+	 *
+	 * @param objectJson
+	 * @return BoxObstacle representing created object
+	 */
+	private BoxObstacle initializeObjectFromJson(JsonValue objectJson){
+		// just to show what I'm currently thinking for object initialization based on json
+		// question: how to deal with location relative to tile?
+		float width = objectJson.getFloat("width");
+		float height = objectJson.getFloat("height");
+		float x = objectJson.getFloat("x");
+		float y = objectJson.getFloat("y");
+		BoxObstacle cur = new BoxObstacle(x, y, width, height);
+		TextureRegion texture = textures[objectJson.getInt("id")];
+
+		cur.setDrawScale(scale);
+		cur.setTint(new Color(0.5f, 0.4f, 0.4f, 1));
+		cur.setTexture(texture);
+		cur.setTextureScaleX(width * scale.x / texture.getRegionWidth());
+		cur.setTextureScaleY(height * scale.y / texture.getRegionHeight());
+
+		for(JsonValue property : objectJson.get("properties")){
+			switch (property.getString("name")) {
+				case "canGrappleOn":
+					cur.setGrapple(property.getBoolean("value"));
+			}
+		}
+
+		return cur;
+	}
+
 
 	/**
 	 * Parses the game objects from the
 	 */
 	private void initializeLevelInfo(){
 		Queue <JsonValue> gameObjectJsons = level.getGameObjectQueue();
+		textures = level.getTextures();
+		boxObstacles = new LinkedList<BoxObstacle>();
+
 		Iterator<JsonValue> it = gameObjectJsons.iterator();
 		while(it.hasNext()){
 			JsonValue objectJson = it.next();
-			System.out.println(objectJson.get("name"));
+
+			if(objectJson.get("name").equals("Rock")){
+				// using a BoxObstacle for now, when we merge with Oliver's code we can use gameobjects
+				System.out.println(objectJson.get("name"));
+				objects.add(initializeObjectFromJson(objectJson));
+			}
 		}
+
 	}
 
 	/**
@@ -158,7 +201,7 @@ public class SandboxController extends WorldController {
 		selector = new ObstacleSelector(world);
 		selector.setDrawScale(scale);
 		world.setGravity(Vector2.Zero);
-
+		/*
 		final int boxesY = (int) bounds.getHeight() - 1;
 		final int boxesX = (int) bounds.getWidth() - 1;
 		// Left and right walls
@@ -194,7 +237,7 @@ public class SandboxController extends WorldController {
 		addWall(27, 14, (float) Math.toRadians(45), "box4");
 		addWall(26.5f, 14.5f, (float) Math.toRadians(45), "box5");
 		addWall(27.5f, 13.5f, (float) Math.toRadians(45), "box6");
-		addWall(28f, 13f, (float) Math.toRadians(45), "box7");
+		addWall(28f, 13f, (float) Math.toRadians(45), "box7");*/
 	}
 
 	/**
