@@ -11,7 +11,7 @@
     "crosshair": "crosshair.png"
   },
   "jsons": {
-    "tileset": "jb-32-Tileset..tsj",
-    "level_1": "Test..tmj"
+    "tileset": "tileset.tsj",
+    "level_0": "level_0.tmj"
   },
 }

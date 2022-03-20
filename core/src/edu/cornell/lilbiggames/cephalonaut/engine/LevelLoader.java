@@ -24,7 +24,7 @@ public class LevelLoader {
         assetDirectory = new AssetDirectory("assets.json");
         assetDirectory.loadAssets();
         assetDirectory.finishLoading();
-        tilesetTexture = new Texture("jb-32-Tileset.png");
+        tilesetTexture = new Texture("TS-meteroid-space.png");
         tileset = assetDirectory.getEntry("tileset", JsonValue.class);
         map = getTileMap();
     }

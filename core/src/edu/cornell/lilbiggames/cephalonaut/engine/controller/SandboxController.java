@@ -13,8 +13,10 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
@@ -23,9 +25,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObjectJson;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
+import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -57,6 +57,7 @@ public class SandboxController extends WorldController {
 
 	private PlayMode level;
 
+
 	/**
 	 * Creates and initialize a new instance of the sandbox
 	 */
@@ -70,7 +71,7 @@ public class SandboxController extends WorldController {
 
 	/**
 	 * Sets the current level
-	 * @param PlayMode level
+	 * @param  level
 	 */
 	public void setLevel(PlayMode level){
 		this.level = level;
@@ -112,35 +113,63 @@ public class SandboxController extends WorldController {
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
 	}
 
+	private PolygonObstacle createPolygonObstacle(JsonValue objectJson) {
+			float[] vertices = new float[10];
+			Iterator<JsonValue> it = objectJson.get("polygon").iterator();
+			int i = 0;
+			JsonValue curr;
+			while(it.hasNext()) {
+				curr = it.next();
+				vertices[i] = curr.getFloat("x");
+				vertices[i + 1] = curr.getFloat("y");
+				i += 1;
+			}
+			return new PolygonObstacle(vertices);
+	}
+
 	/**
 	 *
 	 * @param objectJson
 	 * @return BoxObstacle representing created object
 	 */
-	private BoxObstacle initializeObjectFromJson(JsonValue objectJson, int tileID){
-		// just to show what I'm currently thinking for object initialization based on json
-		// question: how to deal with location relative to tile?
+	private SimpleObstacle initializeObjectFromJson(JsonValue objectJson, int tileID){
+
+
 		float width = objectJson.getFloat("width");
 		float height = objectJson.getFloat("height");
 		float x = objectJson.getFloat("x");
 		float y = objectJson.getFloat("y");
+		SimpleObstacle obstacle;
 
-		BoxObstacle cur = new BoxObstacle(x, y, width/32, height/32);
+		/** [CURRENT ISSUE]
+		 *  Textures have stopped showing up. They do not render even with a box obstacle.
+		 *  If you run it, you will the box2d shape outline is working. My working hypothesis
+		 *  is that it's the SimpleObstacle that is messing it up. SimpleObstacle was originally
+		 *  BoxObstacle.
+		 *
+		 */
+
+		// check if object is a polygon: turned off for debugging purposes
+		if(false && objectJson.has("polygon")) {
+			obstacle = createPolygonObstacle(objectJson);
+		}
+		else {
+			obstacle = new BoxObstacle(x, y,  1, 1);
+		}
+
 		TextureRegion texture = textures.get(tileID);
-
-		cur.setDrawScale(scale);
-		cur.setTint(new Color(0.5f, 0.4f, 0.4f, 1));
-		cur.setTexture(texture);
-		cur.setTextureScaleX(width * scale.x / (texture.getRegionWidth()*32));
-		cur.setTextureScaleY(height * scale.y / (texture.getRegionHeight()*32));
-
+		obstacle.setDrawScale(scale);
+		obstacle.setTint(new Color(0.5f, 0.4f, 0.4f, 1));
+		obstacle.setTexture(texture);
+		obstacle.setTextureScaleX(width * scale.x / (texture.getRegionWidth()*16));
+		obstacle.setTextureScaleY(height * scale.y / (texture.getRegionHeight()*16));
 		for(JsonValue property : objectJson.get("properties")){
 			switch (property.getString("name")) {
 				case "canGrappleOn":
-					cur.setGrapple(property.getBoolean("value"));
+					obstacle.setGrapple(property.getBoolean("value"));
 			}
 		}
-		return cur;
+		return obstacle;
 	}
 
 
@@ -150,8 +179,7 @@ public class SandboxController extends WorldController {
 	private void initializeLevelInfo(){
 		Queue<GameObjectJson> gameObjectJsons = level.getGameObjectQueue();
 		textures = level.getTextures();
-		boxObstacles = new LinkedList<BoxObstacle>();
-
+		boxObstacles = new LinkedList<>();
 		Iterator<GameObjectJson> it = gameObjectJsons.iterator();
 		while(it.hasNext()){
 			GameObjectJson gameObjectJson = it.next();

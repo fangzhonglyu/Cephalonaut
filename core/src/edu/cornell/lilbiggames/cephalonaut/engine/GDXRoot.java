@@ -40,7 +40,7 @@ public class GDXRoot extends Game {
 	private SandboxController sandboxController;
 
 	private LevelLoader levelLoader;
-	private final String[] levelNames = {"level_1"};
+	private final String[] levelNames = {"level_0"};
 	private Map<String, PlayMode> levels;
 	
 	/**
@@ -72,7 +72,7 @@ public class GDXRoot extends Game {
 		}
 
 		// Initialize the game world
-		PlayMode defaultLevel = levels.get("level_1");
+		PlayMode defaultLevel = levels.get("level_0");
 
 		sandboxController = new SandboxController();
 		sandboxController.gatherAssets(directory);
