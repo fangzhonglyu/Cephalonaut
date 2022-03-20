@@ -31,7 +31,7 @@ public class SoundController {
     }
 
     public static void playBGM(int level){
-        if(bgmPlaying!=null||locked)
+        if(bgmPlaying!=null||locked||level>=musicCache.length||level<=0)
             pauseBGM();
         bgmPlaying = musicCache[level];
         bgmPlaying.setLooping(true);
@@ -40,7 +40,7 @@ public class SoundController {
 
     }
 
-    public static void playBGMDelay(final int level, final float delay){
+    private static void playBGMDelay(final int level, final float delay){
         if(locked)
             return;
         Timer.schedule(new Timer.Task(){
