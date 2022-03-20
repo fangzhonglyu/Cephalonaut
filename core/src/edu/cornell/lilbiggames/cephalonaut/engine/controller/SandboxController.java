@@ -45,6 +45,9 @@ public class SandboxController extends WorldController implements ContactListene
 
 	private CephalonautController cephalonautController;
 
+	/** Sound Controller */
+	private SoundController soundController;
+
 	/**
 	 * Creates and initialize a new instance of the sandbox
 	 */
@@ -55,6 +58,7 @@ public class SandboxController extends WorldController implements ContactListene
 		setFailure(false);
 		world.setContactListener(this);
 		directionalGrapple = true;
+
 	}
 
 	/**
@@ -64,6 +68,7 @@ public class SandboxController extends WorldController implements ContactListene
 	 */
 	public void reset() {
 		Vector2 gravity = new Vector2(world.getGravity());
+
 		
 		for(Obstacle obj : objects) {
 			obj.deactivatePhysics(world);
@@ -79,6 +84,7 @@ public class SandboxController extends WorldController implements ContactListene
 		populateLevel();
 		GrappleModel grapple = cephalonaut.getGrapple();
 		grapple.reset();
+		SoundController.switchTrack(1);
 	}
 
 	private void addWall(float x, float y, float angle, String name) {

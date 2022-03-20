@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.OctopusObstacle;
 
 /**
@@ -68,6 +69,7 @@ public class CephalonautModel extends OctopusObstacle {
 	public void setInking(boolean inking) {
 		this.inking = inking;
 		this.forceCache.y = (inking && ink > 0) ? force : 0.0f;
+		SoundController.setInkSound(inking && ink > 0);
 	}
 
 	/**

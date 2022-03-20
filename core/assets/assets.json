@@ -9,5 +9,11 @@
     "squid": "squid.png",
     "octopus": "octopus.png",
     "crosshair": "crosshair.png"
+  },
+  "music": {
+    "level1": "CephalonautLevel1Mix1.mp3"
+  },
+  "sounds":{
+    "ink": "sample ink.mp3"
   }
 }

@@ -16,6 +16,7 @@
 import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SandboxController;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
 
 /**
  * Root class for a LibGDX.  
@@ -35,6 +36,8 @@ public class GDXRoot extends Game {
 
 	/** Sandbox controller **/
 	private SandboxController sandboxController;
+
+
 	
 	/**
 	 * Creates a new game from the configuration settings.
@@ -57,12 +60,16 @@ public class GDXRoot extends Game {
 		directory.loadAssets();
 		directory.finishLoading();
 
+		SoundController.gatherSoundAssets(directory);
+
+
 		// Initialize the game world
 		sandboxController = new SandboxController();
 		sandboxController.gatherAssets(directory);
 		sandboxController.setCanvas(canvas);
 		sandboxController.reset();
 		setScreen(sandboxController);
+
 	}
 
 	/** 
