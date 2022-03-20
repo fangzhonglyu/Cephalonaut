@@ -75,6 +75,9 @@ public class GameCanvas {
 	
 	/** Camera for the underlying SpriteBatch */
 	private OrthographicCamera camera;
+
+	/** ShapeRenderer for the fuel bar*/
+	private ShapeRenderer shapeRen;
 	
 	/** Value to cache window width (if we are currently full screen) */
 	int width;
@@ -101,6 +104,7 @@ public class GameCanvas {
 		active = DrawPass.INACTIVE;
 		spriteBatch = new PolygonSpriteBatch();
 		debugRender = new ShapeRenderer();
+		shapeRen = new ShapeRenderer();
 		
 		// Set the projection matrix (for proper scaling)
 		camera = new OrthographicCamera(getWidth(),getHeight());
@@ -653,7 +657,6 @@ public class GameCanvas {
 
 	public void drawSimpleFuelBar(float ink, float x, float y){
 		spriteBatch.end();
-		ShapeRenderer shapeRen = new ShapeRenderer();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(Color.WHITE);
 		shapeRen.rect(x, y, 100, 12);
