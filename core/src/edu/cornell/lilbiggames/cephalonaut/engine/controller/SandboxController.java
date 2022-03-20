@@ -128,37 +128,23 @@ public class SandboxController extends WorldController {
 			return new PolygonObstacle(vertices);
 	}
 
-	/**
-	 *
-	 * @param objectJson
-	 * @return BoxObstacle representing created object
+	/** SHOULD BE DELETED OR REFACTORED FOR LEVEL ELEMENTS
+	 * @param objectJson json of game object
+	 * @param tileID id of game object in reference to texture
+	 * @param x position for rendering
+	 * @param y position for rendering
+	 * @return SimpleObstacle representing created object
 	 */
-	private SimpleObstacle initializeObjectFromJson(JsonValue objectJson, int tileID){
+	private SimpleObstacle initializeObjectFromJson(JsonValue objectJson, int tileID, int x, int y){
 
 
 		float width = objectJson.getFloat("width");
 		float height = objectJson.getFloat("height");
-		float x = objectJson.getFloat("x");
-		float y = objectJson.getFloat("y");
-		SimpleObstacle obstacle;
 
-		/** [CURRENT ISSUE]
-		 *  Textures have stopped showing up. They do not render even with a box obstacle.
-		 *  If you run it, you will the box2d shape outline is working. My working hypothesis
-		 *  is that it's the SimpleObstacle that is messing it up. SimpleObstacle was originally
-		 *  BoxObstacle.
-		 *
-		 */
-
-		// check if object is a polygon: turned off for debugging purposes
-		if(objectJson.has("polygon")) {
-			obstacle = createPolygonObstacle(objectJson);
-		}
-		else {
-			obstacle = new BoxObstacle(x, y,  1, 1);
-		}
+		SimpleObstacle obstacle = new BoxObstacle(x, y,  1, 1);
 
 		TextureRegion texture = textures.get(tileID);
+		System.out.println( x + ":" + y);
 		obstacle.setDrawScale(scale);
 		obstacle.setTint(new Color(0.5f, 0.4f, 0.4f, 1));
 		obstacle.setTexture(texture);
@@ -175,24 +161,64 @@ public class SandboxController extends WorldController {
 
 
 	/**
-	 * Parses the game objects from the
+	 * Parses the game objects from the LevelLoader
 	 */
 	private void initializeLevelInfo(){
+
+		// queue of all the game objects
 		Queue<GameObjectJson> gameObjectJsons = level.getGameObjectQueue();
+
+		// map of all the textures, you use tileID to reference texture given game object
 		textures = level.getTextures();
+
 		boxObstacles = new LinkedList<>();
+
+		// iterate through GameObjectJsons
 		Iterator<GameObjectJson> it = gameObjectJsons.iterator();
 		while(it.hasNext()){
+
 			GameObjectJson gameObjectJson = it.next();
+
+			// get relevant information from object
 			JsonValue objectJson = gameObjectJson.getJsonObject();
 			int tileID = gameObjectJson.getTileID();
+			int x = gameObjectJson.getX();
+			int y = gameObjectJson.getY();
 
+			// MODIFY THE CODE BELOW
+
+
+			// NOTE: There are multiple ways of doing this.
+			/*
+			If we want to see what type of shape the object is, then we need to check the following
+			if(objectJson.has("polygon")) {
+				1. run polygon relevant LevelElement creation
+				2. have access to vertices array, but must be parsed as seen in createPolygonObstacle() above
+			} else if(objectJson.has("ellipse")) {
+				1. run ellipse relevant LevelElement creation
+				2. has width and height property. no radius. width and height can be access like rectangle object.
+			} else {
+				1. run rectangle relevant LevelElement creation
+				2. has width and height property.
+			}
+			*/
+
+			// We can also check the name of the object. Name will allow us to create objects with the
+			// same properties. However, this might be unnecessary since all objects should have the same properties
+			// with different values, so parsing from the object to the LevelElement should be the same regardless.
+
+			// here is where you can determine what type of object it is
+			// there is a name field which allows us to treat the objects equally given they share the same name
 			String name = (objectJson.get("name") != null) ? objectJson.getString("name") : "";
 
 			if(name.equals("Rock")){
-				// using a BoxObstacle for now, when we merge with Oliver's code we can use gameobjects
-				addObject(initializeObjectFromJson(objectJson, tileID));
+				// using a SimpleObstacle for now, when we merge with Oliver's code we can use gameobjects
+				// TO BE CHANGED HERE
+				addObject(initializeObjectFromJson(objectJson, tileID, x, y));
+				// TO BE CHANGED HERE
 			}
+
+			// MODIFY THE CODE ABOVE
 		}
 
 	}

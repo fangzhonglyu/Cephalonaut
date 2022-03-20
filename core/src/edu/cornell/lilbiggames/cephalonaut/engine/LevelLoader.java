@@ -55,11 +55,15 @@ public class LevelLoader {
         Queue<GameObjectJson> objects = new Queue<>();
         JsonValue layer = level.get("layers").iterator().next();
         int[] data = layer.get("data").asIntArray();
+        int width = layer.getInt("width");
         // NOTE: ID's in data array is 1-index, so subtract 1 to match tileset 0-index
-        for(int id : data) {
+        for(int i = 0; i < data.length; i++) {
             // need to convert to game object, for now, its JsonValue object
+            int id = data[i];
             if(map.get(id-1) != null) {
-                objects.addLast(new GameObjectJson(map.get(id-1), id-1));
+                int x = i % width;
+                int y = (data.length - i) / width;
+                objects.addLast(new GameObjectJson(map.get(id-1), id-1, x, y));
             }
         }
         return objects;
