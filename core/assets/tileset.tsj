@@ -10,6 +10,111 @@
  "tileheight":16,
  "tiles":[
         {
+         "id":17,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":16,
+                     "id":1,
+                     "name":"Rock",
+                     "properties":[
+                            {
+                             "name":"angle",
+                             "type":"float",
+                             "value":0
+                            }, 
+                            {
+                             "name":"density",
+                             "type":"float",
+                             "value":0
+                            }, 
+                            {
+                             "name":"restitution",
+                             "type":"float",
+                             "value":0.3
+                            }, 
+                            {
+                             "name":"type",
+                             "type":"string",
+                             "value":"rock"
+                            }],
+                     "rotation":0,
+                     "type":"GameObject",
+                     "visible":true,
+                     "width":16,
+                     "x":0,
+                     "y":0
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }, 
+        {
+         "id":18,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "ellipse":true,
+                     "height":16,
+                     "id":1,
+                     "name":"Rock",
+                     "properties":[
+                            {
+                             "name":"angle",
+                             "type":"float",
+                             "value":0
+                            }, 
+                            {
+                             "name":"canGrappleOn",
+                             "type":"bool",
+                             "value":true
+                            }, 
+                            {
+                             "name":"density",
+                             "type":"float",
+                             "value":0
+                            }, 
+                            {
+                             "name":"isStatic",
+                             "type":"bool",
+                             "value":true
+                            }, 
+                            {
+                             "name":"restitution",
+                             "type":"float",
+                             "value":0.3
+                            }, 
+                            {
+                             "name":"type",
+                             "type":"string",
+                             "value":"rock"
+                            }],
+                     "rotation":0,
+                     "type":"GameObject",
+                     "visible":true,
+                     "width":16,
+                     "x":0,
+                     "y":0
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }, 
+        {
          "id":66,
          "objectgroup":
             {
@@ -173,7 +278,7 @@
                             {
                              "x":0,
                              "y":16
-                            },
+                            }, 
                             {
                              "x":0,
                              "y":0
@@ -247,7 +352,7 @@
                             {
                              "x":0,
                              "y":16
-                            },
+                            }, 
                             {
                              "x":0,
                              "y":0

@@ -122,7 +122,6 @@ public class SandboxController extends WorldController {
 				curr = it.next();
 				vertices[i] = curr.getFloat("x");
 				vertices[i + 1] = curr.getFloat("y");
-				System.out.println(vertices[i] +":" + vertices[i+1]);
 				i += 1;
 			}
 			return new PolygonObstacle(vertices);
@@ -144,7 +143,6 @@ public class SandboxController extends WorldController {
 		SimpleObstacle obstacle = new BoxObstacle(x, y,  1, 1);
 
 		TextureRegion texture = textures.get(tileID);
-		System.out.println( x + ":" + y);
 		obstacle.setDrawScale(scale);
 		obstacle.setTint(new Color(0.5f, 0.4f, 0.4f, 1));
 		obstacle.setTexture(texture);
