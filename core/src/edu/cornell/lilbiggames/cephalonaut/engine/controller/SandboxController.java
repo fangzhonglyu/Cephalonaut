@@ -122,6 +122,7 @@ public class SandboxController extends WorldController {
 				curr = it.next();
 				vertices[i] = curr.getFloat("x");
 				vertices[i + 1] = curr.getFloat("y");
+				System.out.println(vertices[i] +":" + vertices[i+1]);
 				i += 1;
 			}
 			return new PolygonObstacle(vertices);
@@ -150,7 +151,7 @@ public class SandboxController extends WorldController {
 		 */
 
 		// check if object is a polygon: turned off for debugging purposes
-		if(false && objectJson.has("polygon")) {
+		if(objectJson.has("polygon")) {
 			obstacle = createPolygonObstacle(objectJson);
 		}
 		else {
@@ -161,8 +162,8 @@ public class SandboxController extends WorldController {
 		obstacle.setDrawScale(scale);
 		obstacle.setTint(new Color(0.5f, 0.4f, 0.4f, 1));
 		obstacle.setTexture(texture);
-		obstacle.setTextureScaleX(width * scale.x / (texture.getRegionWidth()*16));
-		obstacle.setTextureScaleY(height * scale.y / (texture.getRegionHeight()*16));
+		obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth()*16));
+		obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight()*16));
 		for(JsonValue property : objectJson.get("properties")){
 			switch (property.getString("name")) {
 				case "canGrappleOn":
