@@ -53,6 +53,11 @@ public class SandboxController extends WorldController implements ContactListene
 
 	private PlayMode level;
 
+	private static final float ATTRACT_DIST = 5f;
+	private static final float METEOR_SPEED = 2f;
+	private static final float BOOST_SPEED = 8f;
+	private static final float DOOR_SIZE = 1f;
+
 
 	/**
 	 * Creates and initialize a new instance of the sandbox
@@ -394,6 +399,10 @@ public class SandboxController extends WorldController implements ContactListene
 		}
 	}
 
+	public void finishLevel() {
+
+	}
+
 
 	/**
 	 * Callback method for the start of a collision
@@ -433,9 +442,15 @@ public class SandboxController extends WorldController implements ContactListene
 		try {
 			if (bd1.getClass() == LevelElement.class && bd2.getName().equals("michael")) {
 				((LevelElement) bd1).setInContact(false);
+				if(bd1.getName().equals("finish")) {
+					finishLevel();
+				}
 			}
 			if (bd2.getClass() == LevelElement.class && bd1.getName().equals("michael")) {
 				((LevelElement) bd2).setInContact(false);
+				if(bd2.getName().equals("finish")) {
+					finishLevel();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -458,7 +473,7 @@ public class SandboxController extends WorldController implements ContactListene
 	public void draw(float dt) {
 		canvas.clear();
 		canvas.begin();
-		for(Obstacle obj : objects) {
+		for(GameObject obj : objects) {
 			obj.draw(canvas);
 		}
 
@@ -467,7 +482,7 @@ public class SandboxController extends WorldController implements ContactListene
 		
 		if (isDebug()) {
 			canvas.beginDebug();
-			for(Obstacle obj : objects) {
+			for(GameObject obj : objects) {
 				obj.drawDebug(canvas);
 			}
 			canvas.endDebug();

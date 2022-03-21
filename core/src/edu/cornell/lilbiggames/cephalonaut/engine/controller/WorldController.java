@@ -263,7 +263,7 @@ public abstract class WorldController implements Screen {
 	 * Dispose of all (non-static) resources allocated to this mode.
 	 */
 	public void dispose() {
-		for(Obstacle obj : objects) {
+		for(GameObject obj : objects) {
 			obj.deactivatePhysics(world);
 		}
 		objects.clear();
@@ -413,10 +413,10 @@ public abstract class WorldController implements Screen {
 		// Garbage collect the deleted objects.
 		// Note how we use the linked list nodes to delete O(1) in place.
 		// This is O(n) without copying.
-		Iterator<PooledList<Obstacle>.Entry> iterator = objects.entryIterator();
+		Iterator<PooledList<GameObject>.Entry> iterator = objects.entryIterator();
 		while (iterator.hasNext()) {
-			PooledList<Obstacle>.Entry entry = iterator.next();
-			Obstacle obj = entry.getValue();
+			PooledList<GameObject>.Entry entry = iterator.next();
+			GameObject obj = entry.getValue();
 			if (obj.isRemoved()) {
 				obj.deactivatePhysics(world);
 				entry.remove();
@@ -441,14 +441,14 @@ public abstract class WorldController implements Screen {
 		canvas.clear();
 		
 		canvas.begin();
-		for(Obstacle obj : objects) {
+		for(GameObject obj : objects) {
 			obj.draw(canvas);
 		}
 		canvas.end();
 		
 		if (debug) {
 			canvas.beginDebug();
-			for(Obstacle obj : objects) {
+			for(GameObject obj : objects) {
 				obj.drawDebug(canvas);
 			}
 			canvas.endDebug();
