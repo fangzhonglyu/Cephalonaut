@@ -27,10 +27,8 @@ import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Gameplay specific controller for the gameplay prototype.
@@ -134,7 +132,7 @@ public class SandboxController extends WorldController {
 	 * @param y position for rendering
 	 * @return SimpleObstacle representing created object
 	 */
-	private SimpleObstacle initializeObjectFromJson(JsonValue objectJson, int tileID, int x, int y){
+	private SimpleObstacle initializeObjectFromJsonOrig(JsonValue objectJson, int tileID, int x, int y){
 
 
 		float width = objectJson.getFloat("width");
@@ -155,6 +153,25 @@ public class SandboxController extends WorldController {
 			}
 		}
 		return obstacle;
+	}
+
+	private LevelElement initializeObjectFromJson(JsonValue objectJson, int tileID, int x, int y){
+		if(objectJson.get("polygon") != null) {
+			float[] vertices = new float[2 * objectJson.get("polygon").size];
+			for(int i = 0; i < objectJson.get("polygon").size; i++) {
+				vertices[2 * i] = objectJson.get("polygon").get(i).getFloat("x") / 16;
+				vertices[2 * i + 1] = -objectJson.get("polygon").get(i).getFloat("y") / 16;
+			}
+			LevelElement obstacle = new LevelElement(x, y, vertices, 0, scale, LevelElement.ELEMENT.MISC_POLY);
+
+			TextureRegion texture = textures.get(tileID);
+			obstacle.setTextureBottomLeft(texture);
+			obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth()*16));
+			obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight()*16));
+			return obstacle;
+		}
+		return null;
+
 	}
 
 
@@ -212,7 +229,11 @@ public class SandboxController extends WorldController {
 			if(name.equals("Rock")){
 				// using a SimpleObstacle for now, when we merge with Oliver's code we can use gameobjects
 				// TO BE CHANGED HERE
-				addObject(initializeObjectFromJson(objectJson, tileID, x, y));
+				LevelElement objectToInit = initializeObjectFromJson(objectJson, tileID, x, y);
+				if(objectToInit != null) {
+					addObject(objectToInit);
+				}
+//				addObject(initializeObjectFromJsonOrig(objectJson, tileID, x, y));
 				// TO BE CHANGED HERE
 			}
 

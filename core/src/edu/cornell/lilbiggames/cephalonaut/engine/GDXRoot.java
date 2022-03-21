@@ -17,6 +17,7 @@ import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SandboxController;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
+import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.LevelElement;
 
 import java.util.Map;
 
@@ -75,6 +76,7 @@ public class GDXRoot extends Game {
 		PlayMode defaultLevel = levels.get("level_0");
 
 		sandboxController = new SandboxController();
+		LevelElement.gatherAssets(directory);
 		sandboxController.gatherAssets(directory);
 		sandboxController.setCanvas(canvas);
 		sandboxController.setLevel(defaultLevel);

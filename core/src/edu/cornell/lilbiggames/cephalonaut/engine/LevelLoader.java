@@ -56,6 +56,7 @@ public class LevelLoader {
         JsonValue layer = level.get("layers").iterator().next();
         int[] data = layer.get("data").asIntArray();
         int width = layer.getInt("width");
+        int height = layer.getInt("height");
         // NOTE: ID's in data array is 1-index, so subtract 1 to match tileset 0-index
         for(int i = 0; i < data.length; i++) {
             // need to convert to game object, for now, its JsonValue object
