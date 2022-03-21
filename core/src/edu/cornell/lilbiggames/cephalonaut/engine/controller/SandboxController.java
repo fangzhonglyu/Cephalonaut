@@ -155,24 +155,35 @@ public class SandboxController extends WorldController {
 		return obstacle;
 	}
 
-	private LevelElement initializeObjectFromJson(JsonValue objectJson, int tileID, int x, int y){
-		if(objectJson.get("polygon") != null) {
-			float[] vertices = new float[2 * objectJson.get("polygon").size];
-			for(int i = 0; i < objectJson.get("polygon").size; i++) {
-				vertices[2 * i] = objectJson.get("polygon").get(i).getFloat("x") / 16;
-				vertices[2 * i + 1] = -objectJson.get("polygon").get(i).getFloat("y") / 16;
+	private LevelElement initializeObjectFromJson(JsonValue objectJson, int tileID, int x, int y) {
+		System.out.println(objectJson);
+		if (!objectJson.getString("type").equals("GameObject")) return null;
+//		JsonValue body = objectJson.get("body");
+//		if (body == null) return null;
+
+		JsonValue collisionObject = objectJson.get("objectgroup").get("objects").get(0);
+		JsonValue polygon = collisionObject.get("polygon");
+		if (polygon != null) {
+			// TODO: Replace 16 with less magic number
+
+			float ox = collisionObject.getFloat("x");
+			float oy = collisionObject.getFloat("y");
+			float[] vertices = new float[2 * polygon.size];
+			for (int i = 0; i < polygon.size; i++) {
+				vertices[2 * i] = (ox + polygon.get(i).getFloat("x")) / 16;
+				vertices[2 * i + 1] = 1f - (oy + polygon.get(i).getFloat("y")) / 16;
 			}
 
-			LevelElement obstacle = new LevelElement(x, y, vertices, objectJson.getFloat("rotation"), scale, LevelElement.ELEMENT.MISC_POLY);
+			LevelElement obstacle = new LevelElement(x, y, vertices, 0, scale, LevelElement.ELEMENT.MISC_POLY);
 
 			TextureRegion texture = textures.get(tileID);
 			obstacle.setTextureBottomLeft(texture);
-			obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth()*16));
-			obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight()*16));
+			obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth() * 16));
+			obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight() * 16));
 			return obstacle;
 		} else {
-			LevelElement obstacle = new LevelElement(x, y, objectJson.getFloat("width") / 16,
-					objectJson.getFloat("height") / 16, objectJson.getFloat("rotation"), scale,
+			LevelElement obstacle = new LevelElement(x, y, collisionObject.getFloat("width") / 16,
+					collisionObject.getFloat("height") / 16, collisionObject.getFloat("rotation"), scale,
 					LevelElement.ELEMENT.MISC_POLY);
 
 			TextureRegion texture = textures.get(tileID);
@@ -236,13 +247,15 @@ public class SandboxController extends WorldController {
 			// there is a name field which allows us to treat the objects equally given they share the same name
 			String name = (objectJson.get("name") != null) ? objectJson.getString("name") : "";
 
-			if(name.equals("Rock")){
+//			if(name.equals("Rock")){
 				// using a SimpleObstacle for now, when we merge with Oliver's code we can use gameobjects
 				// TO BE CHANGED HERE
+			System.out.println("proc");
 				LevelElement objectToInit = initializeObjectFromJson(objectJson, tileID, x, y);
 				if(objectToInit != null) {
+					System.out.println("PROC!");
 					addObject(objectToInit);
-				}
+//				}
 //				addObject(initializeObjectFromJsonOrig(objectJson, tileID, x, y));
 				// TO BE CHANGED HERE
 			}
@@ -289,11 +302,15 @@ public class SandboxController extends WorldController {
 		InputController input = InputController.getInstance();
 
 		boolean grappleButton = input.didSecondary();
-		Vector2 crossHair = input.getCrossHair();
+		System.out.println(canvas.getCameraX());
+		Vector2 crossHair = input.getCrossHair().add(
+				(canvas.getCameraX() - canvas.getWidth() / 2f) / scale.x,
+				(canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
 		boolean inking = input.isThrusterApplied();
 		float rotation = input.getRotation();
 
 		cephalonautController.update(grappleButton, crossHair, inking, rotation);
+		canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
 	}
 	
 	/**

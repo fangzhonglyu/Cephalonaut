@@ -12,6 +12,7 @@
   },
   "jsons": {
     "tileset": "tileset.tsj",
-    "level_0": "level_0.tmj"
+    "level_0": "level_0.tmj",
+    "level_1": "level_1.tmj"
   },
 }

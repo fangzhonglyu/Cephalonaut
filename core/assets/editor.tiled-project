@@ -1,0 +1,56 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "extensionsPath": ".",
+    "folders": [
+        "."
+    ],
+    "objectTypesFile": "",
+    "propertyTypes": [
+        {
+            "id": 2,
+            "members": [
+                {
+                    "name": "canGrappleOn",
+                    "type": "bool",
+                    "value": true
+                },
+                {
+                    "name": "density",
+                    "type": "float",
+                    "value": 0
+                },
+                {
+                    "name": "isStatic",
+                    "type": "bool",
+                    "value": true
+                },
+                {
+                    "name": "restitution",
+                    "type": "float",
+                    "value": 0.3
+                },
+                {
+                    "name": "type",
+                    "propertyType": "LevelElementType",
+                    "type": "string",
+                    "value": "Tile"
+                }
+            ],
+            "name": "GameObject",
+            "type": "class"
+        },
+        {
+            "id": 1,
+            "name": "LevelElementType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "Tile",
+                "Black Hole"
+            ],
+            "valuesAsFlags": false
+        }
+    ]
+}
