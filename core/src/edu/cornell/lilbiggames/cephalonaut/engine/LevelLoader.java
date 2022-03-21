@@ -39,13 +39,14 @@ public class LevelLoader {
         JsonValue tiles = tileset.get("tiles");
          // iterate through each tile that has an object
          for(JsonValue t : tiles) {
-             JsonValue objects = t.get("objectgroup").get("objects");
-             // get the first (and only) object on the tile
-             if(objects.iterator().hasNext()) {
-                 map.put(t.getInt("id"), objects.iterator().next());
-             } else {
-                 throw new RuntimeException("Can't find any objects");
-             }
+             map.put(t.getInt("id"), t);
+//             JsonValue objects = t.get("objectgroup").get("objects");
+//             // get the first (and only) object on the tile
+//             if(objects.iterator().hasNext()) {
+//                 map.put(t.getInt("id"), objects.iterator().next());
+//             } else {
+//                 throw new RuntimeException("Can't find any objects");
+//             }
          }
         return map;
     }

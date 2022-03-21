@@ -114,6 +114,20 @@ public class GameCanvas {
 		global = new Matrix4();
 		vertex = new Vector2();
 	}
+
+	public void setCameraPos(float x, float y) {
+		camera.position.x = x;
+		camera.position.y = y;
+		camera.update();
+	}
+
+	public float getCameraX() {
+		return camera.position.x;
+	}
+
+	public float getCameraY() {
+		return camera.position.y;
+	}
 		
     /**
      * Eliminate any resources that should be garbage collected manually.
