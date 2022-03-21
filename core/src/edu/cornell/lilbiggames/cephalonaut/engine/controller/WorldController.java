@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
@@ -80,9 +81,9 @@ public abstract class WorldController implements Screen {
 	/** Reference to the game canvas */
 	protected GameCanvas canvas;
 	/** All the objects in the world. */
-	protected PooledList<Obstacle> objects  = new PooledList<Obstacle>();
+	protected PooledList<GameObject> objects  = new PooledList<GameObject>();
 	/** Queue for adding objects */
-	protected PooledList<Obstacle> addQueue = new PooledList<Obstacle>();
+	protected PooledList<GameObject> addQueue = new PooledList<GameObject>();
 	/** Listener that will update the player mode when we are done */
 	private ScreenListener listener;
 
@@ -262,7 +263,7 @@ public abstract class WorldController implements Screen {
 	 * Dispose of all (non-static) resources allocated to this mode.
 	 */
 	public void dispose() {
-		for(Obstacle obj : objects) {
+		for(GameObject obj : objects) {
 			obj.deactivatePhysics(world);
 		}
 		objects.clear();
@@ -302,7 +303,7 @@ public abstract class WorldController implements Screen {
 	 *
 	 * param obj The object to add
 	 */
-	public void addQueuedObject(Obstacle obj) {
+	public void addQueuedObject(GameObject obj) {
 		assert inBounds(obj) : "Object is not in bounds";
 		addQueue.add(obj);
 	}
@@ -312,7 +313,7 @@ public abstract class WorldController implements Screen {
 	 *
 	 * param obj The object to add
 	 */
-	protected void addObject(Obstacle obj) {
+	protected void addObject(GameObject obj) {
 		assert inBounds(obj) : "Object is not in bounds";
 		objects.add(obj);
 		obj.activatePhysics(world);
@@ -327,7 +328,7 @@ public abstract class WorldController implements Screen {
 	 *
 	 * @return true if the object is in bounds.
 	 */
-	public boolean inBounds(Obstacle obj) {
+	public boolean inBounds(GameObject obj) {
 		boolean horiz = (bounds.x <= obj.getX() && obj.getX() <= bounds.x+bounds.width);
 		boolean vert  = (bounds.y <= obj.getY() && obj.getY() <= bounds.y+bounds.height);
 		return horiz && vert;
@@ -412,10 +413,10 @@ public abstract class WorldController implements Screen {
 		// Garbage collect the deleted objects.
 		// Note how we use the linked list nodes to delete O(1) in place.
 		// This is O(n) without copying.
-		Iterator<PooledList<Obstacle>.Entry> iterator = objects.entryIterator();
+		Iterator<PooledList<GameObject>.Entry> iterator = objects.entryIterator();
 		while (iterator.hasNext()) {
-			PooledList<Obstacle>.Entry entry = iterator.next();
-			Obstacle obj = entry.getValue();
+			PooledList<GameObject>.Entry entry = iterator.next();
+			GameObject obj = entry.getValue();
 			if (obj.isRemoved()) {
 				obj.deactivatePhysics(world);
 				entry.remove();
@@ -440,14 +441,14 @@ public abstract class WorldController implements Screen {
 		canvas.clear();
 		
 		canvas.begin();
-		for(Obstacle obj : objects) {
+		for(GameObject obj : objects) {
 			obj.draw(canvas);
 		}
 		canvas.end();
 		
 		if (debug) {
 			canvas.beginDebug();
-			for(Obstacle obj : objects) {
+			for(GameObject obj : objects) {
 				obj.drawDebug(canvas);
 			}
 			canvas.endDebug();

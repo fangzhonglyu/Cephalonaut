@@ -25,6 +25,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.OctopusObstacle;
 public class CephalonautModel extends OctopusObstacle {
 	/** Cache for internal force calculations */
 	private final Vector2 forceCache = new Vector2();
+	private final Vector2 miscForceCache = new Vector2();
 
 	/** The cephalonaut's grapple tentacle */
 	private GrappleModel grapple;
@@ -63,6 +64,25 @@ public class CephalonautModel extends OctopusObstacle {
 	public void setInking(boolean inking) {
 		this.inking = inking;
 		this.forceCache.y = inking ? force : 0.0f;
+	}
+
+	/**
+	 * Sets whether the cephalonaut is actively inking.
+	 *
+	 * @param new_force whether the cephalonaut is actively inking.
+	 */
+	public void setForce(Vector2 new_force) {
+		miscForceCache.x = new_force.x;
+		miscForceCache.y = new_force.y;
+	}
+	/**
+	 * Sets whether the cephalonaut is actively inking.
+	 *
+	 * @param new_force whether the cephalonaut is actively inking.
+	 */
+	public void addForce(Vector2 new_force) {
+		miscForceCache.x += new_force.x;
+		miscForceCache.y += new_force.y;
 	}
 
 	/**
@@ -148,6 +168,7 @@ public class CephalonautModel extends OctopusObstacle {
 		Vector2 temp = forceCache.cpy();
 		affineCache.setToRotationRad(getAngle());
 		affineCache.applyTo(forceCache);
+		forceCache.add(miscForceCache);
 		body.applyForce(forceCache,getPosition(),true);
 		forceCache.set(temp);
 		setLinearVelocity(getLinearVelocity().clamp(0, MAX_SPEED));

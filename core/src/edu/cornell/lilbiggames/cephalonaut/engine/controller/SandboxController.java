@@ -15,9 +15,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
@@ -33,7 +31,7 @@ import java.util.logging.Level;
 /**
  * Gameplay specific controller for the gameplay prototype.
  */
-public class SandboxController extends WorldController {
+public class SandboxController extends WorldController implements ContactListener {
 	/** Reference to the cephalonaut's model */
 	private CephalonautModel cephalonaut;
 
@@ -54,6 +52,11 @@ public class SandboxController extends WorldController {
 	private CephalonautController cephalonautController;
 
 	private PlayMode level;
+
+	private static final float ATTRACT_DIST = 5f;
+	private static final float METEOR_SPEED = 2f;
+	private static final float BOOST_SPEED = 8f;
+	private static final float DOOR_SIZE = 1f;
 
 
 	/**
@@ -83,7 +86,7 @@ public class SandboxController extends WorldController {
 	public void reset() {
 		Vector2 gravity = new Vector2(world.getGravity());
 		
-		for(Obstacle obj : objects) {
+		for(GameObject obj : objects) {
 			obj.deactivatePhysics(world);
 		}
 		objects.clear();
@@ -93,6 +96,7 @@ public class SandboxController extends WorldController {
 		world = new World(gravity,false);
 		setComplete(false);
 		setFailure(false);
+		world.setContactListener(this);
 		populateLevel();
 	}
 
@@ -309,10 +313,173 @@ public class SandboxController extends WorldController {
 		boolean inking = input.isThrusterApplied();
 		float rotation = input.getRotation();
 
+		cephalonaut.setForce(Vector2.Zero);
+		for(GameObject object : objects) {
+			if(object.getClass() == LevelElement.class) {
+//				((LevelElement) object).updateElement();
+//				object.update(cephalonaut);
+				switch (((LevelElement) object).getElement()) {
+					case BLACK_HOLE:
+						attract(object);
+						break;
+					case FLYING_METEOR:
+						updateFlyingMeteor((LevelElement) object);
+						break;
+					case BOOST_PAD:
+						boost((LevelElement) object);
+						break;
+					case DOOR:
+						if(((LevelElement) object).getActivated()) {
+							openDoor((LevelElement) object);
+						}
+						break;
+					default:
+						break;
+				}
+			}
+		}
 		cephalonautController.update(grappleButton, crossHair, inking, rotation);
 		canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
 	}
-	
+
+	public void updateFlyingMeteor(LevelElement element) {
+		if(element.getPosition().cpy().sub(element.getOriginalPos().cpy()).len() > 5) {
+			element.setPosition(element.getOriginalPos());
+		}
+	}
+
+
+	public void fly(LevelElement element) {
+		switch (element.getDirection()) {
+			case UP:
+				element.setLinearVelocity(new Vector2(0, METEOR_SPEED));
+				break;
+			case LEFT:
+				element.setLinearVelocity(new Vector2(-METEOR_SPEED, 0));
+				break;
+			case DOWN:
+				element.setLinearVelocity(new Vector2(0, -METEOR_SPEED));
+				break;
+			case RIGHT:
+				element.setLinearVelocity(new Vector2(METEOR_SPEED, 0));
+				break;
+			default:
+				break;
+		}
+	}
+
+	/** Force from cephalonaut attracted to obj */
+	public void attract(GameObject obj) {
+		if(Math.abs(obj.getBody().getPosition().cpy().sub(cephalonaut.getPosition().cpy()).len()) < ATTRACT_DIST) {
+			Vector2 pos = obj.getBody().getWorldCenter();
+			Vector2 objPos = cephalonaut.getBody().getWorldCenter();
+			Vector2 force = pos.sub(objPos);
+
+			force.clamp(1, 5);
+			force.nor();
+			float strength = (9.81f * 1 * cephalonaut.getBody().getMass()) / (force.len() * force.len());
+			force.scl(strength);
+			cephalonaut.addForce(force);
+		}
+	}
+
+	public void boost(LevelElement obj) {
+		if(!obj.getInContact()) {
+			return;
+		}
+		switch(obj.getDirection()) {
+			case UP:
+				cephalonaut.addForce(new Vector2(0, BOOST_SPEED));
+				break;
+			case LEFT:
+				cephalonaut.addForce(new Vector2(-BOOST_SPEED, 0));
+				break;
+			case DOWN:
+				cephalonaut.addForce(new Vector2(0, -BOOST_SPEED));
+				break;
+			case RIGHT:
+				cephalonaut.addForce(new Vector2(BOOST_SPEED, 0));
+				break;
+			default:
+				break;
+		}
+	}
+
+	public void openDoor(LevelElement element) {
+		if(element.getOpened()) {
+			element.setLinearVelocity(Vector2.Zero);
+			return;
+		}
+		element.setLinearVelocity(new Vector2(0, 1));
+		if(element.getBody().getPosition().y >= element.getOriginalPos().y + 1.4  * DOOR_SIZE) {
+			element.setOpened(true);
+		}
+	}
+
+	public void finishLevel() {
+
+	}
+
+
+	/**
+	 * Callback method for the start of a collision
+	 *
+	 * This method is called when we first get a collision between two objects.  We use
+	 * this method to test if it is the "right" kind of collision.
+	 *
+	 * @param contact The two bodies that collided
+	 */
+	public void beginContact(Contact contact) {
+		Body body1 = contact.getFixtureA().getBody();
+		Body body2 = contact.getFixtureB().getBody();
+
+		SimpleObstacle bd1 = (SimpleObstacle)body1.getUserData();
+		SimpleObstacle bd2 = (SimpleObstacle)body2.getUserData();
+
+		try {
+			if (bd1.getClass() == LevelElement.class && bd2.getName().equals("michael")) {
+				((LevelElement) bd1).setInContact(true);
+			}
+			if (bd2.getClass() == LevelElement.class && bd1.getName().equals("michael")) {
+				((LevelElement) bd2).setInContact(true);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void endContact(Contact contact) {
+		Body body1 = contact.getFixtureA().getBody();
+		Body body2 = contact.getFixtureB().getBody();
+
+		SimpleObstacle bd1 = (SimpleObstacle)body1.getUserData();
+		SimpleObstacle bd2 = (SimpleObstacle)body2.getUserData();
+
+		try {
+			if (bd1.getClass() == LevelElement.class && bd2.getName().equals("michael")) {
+				((LevelElement) bd1).setInContact(false);
+				if(bd1.getName().equals("finish")) {
+					finishLevel();
+				}
+			}
+			if (bd2.getClass() == LevelElement.class && bd1.getName().equals("michael")) {
+				((LevelElement) bd2).setInContact(false);
+				if(bd2.getName().equals("finish")) {
+					finishLevel();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void preSolve(Contact contact, Manifold oldManifold) { }
+
+	@Override
+	public void postSolve(Contact contact, ContactImpulse impulse) { }
+
 	/**
 	 * Draw the physics objects together with foreground and background
 	 *
@@ -323,7 +490,7 @@ public class SandboxController extends WorldController {
 	public void draw(float dt) {
 		canvas.clear();
 		canvas.begin();
-		for(Obstacle obj : objects) {
+		for(GameObject obj : objects) {
 			obj.draw(canvas);
 		}
 
@@ -332,7 +499,7 @@ public class SandboxController extends WorldController {
 		
 		if (isDebug()) {
 			canvas.beginDebug();
-			for(Obstacle obj : objects) {
+			for(GameObject obj : objects) {
 				obj.drawDebug(canvas);
 			}
 			canvas.endDebug();
