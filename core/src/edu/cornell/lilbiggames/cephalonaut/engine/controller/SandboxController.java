@@ -15,10 +15,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
@@ -297,7 +294,61 @@ public class SandboxController extends WorldController implements ContactListene
 
 		cephalonautController.update(grappleButton, crossHair, inking, rotation);
 	}
-	
+
+
+	/**
+	 * Callback method for the start of a collision
+	 *
+	 * This method is called when we first get a collision between two objects.  We use
+	 * this method to test if it is the "right" kind of collision.
+	 *
+	 * @param contact The two bodies that collided
+	 */
+	public void beginContact(Contact contact) {
+		Body body1 = contact.getFixtureA().getBody();
+		Body body2 = contact.getFixtureB().getBody();
+
+		SimpleObstacle bd1 = (SimpleObstacle)body1.getUserData();
+		SimpleObstacle bd2 = (SimpleObstacle)body2.getUserData();
+
+		try {
+			if (bd1.getClass() == LevelElement.class && bd2.getName().equals("michael")) {
+				((LevelElement) bd1).setInContact(true);
+			}
+			if (bd2.getClass() == LevelElement.class && bd1.getName().equals("michael")) {
+				((LevelElement) bd2).setInContact(true);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void endContact(Contact contact) {
+		Body body1 = contact.getFixtureA().getBody();
+		Body body2 = contact.getFixtureB().getBody();
+
+		SimpleObstacle bd1 = (SimpleObstacle)body1.getUserData();
+		SimpleObstacle bd2 = (SimpleObstacle)body2.getUserData();
+
+		try {
+			if (bd1.getClass() == LevelElement.class && bd2.getName().equals("michael")) {
+				((LevelElement) bd1).setInContact(false);
+			}
+			if (bd2.getClass() == LevelElement.class && bd1.getName().equals("michael")) {
+				((LevelElement) bd2).setInContact(false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void preSolve(Contact contact, Manifold oldManifold) { }
+
+	@Override
+	public void postSolve(Contact contact, ContactImpulse impulse) { }
+
 	/**
 	 * Draw the physics objects together with foreground and background
 	 *
