@@ -416,6 +416,17 @@ public class GameCanvas {
     	spriteBatch.setColor(Color.WHITE);
 		spriteBatch.draw(image, x,  y);
 	}
+
+	public void draw(Texture image, float x, float y, int srcX, int srcY, int srcWidth, int srcHeight, float sx, float sy) {
+		if (active != DrawPass.STANDARD) {
+			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+			return;
+		}
+
+		spriteBatch.setColor(Color.WHITE);
+		spriteBatch.draw(image, x, y, 0, 0, image.getWidth(), image.getHeight(), sx, sy, 0,
+						srcX, srcY, srcWidth, srcHeight, false, false);
+	}
 	
 	/**
 	 * Draws the tinted texture at the given position.

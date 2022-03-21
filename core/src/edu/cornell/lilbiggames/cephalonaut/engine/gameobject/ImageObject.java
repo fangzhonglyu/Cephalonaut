@@ -14,7 +14,8 @@ public class ImageObject extends GameObject {
     public ImageObject (Texture texture) {
         this.texture = texture;
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        Paral
+
+        parallaxFactor = new Vector2(0.3f, 0.3f);
     }
 
     @Override
@@ -25,7 +26,9 @@ public class ImageObject extends GameObject {
 
     @Override
     public void draw(GameCanvas canvas) {
-        canvas.draw(texture, Color.WHITE, -100f, -100f, 10000f, 10000f);
+        float offsetX = canvas.getCameraX() * parallaxFactor.x;
+        float offsetY = canvas.getCameraY() * parallaxFactor.y;
+        canvas.draw(texture, -5000 + offsetX, -5000 + offsetY, 0, 0, 10000, 10000, 16, 16);
     }
 
     @Override
