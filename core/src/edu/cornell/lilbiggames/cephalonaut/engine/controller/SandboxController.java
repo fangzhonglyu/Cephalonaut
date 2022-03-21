@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
@@ -33,7 +34,7 @@ import java.util.logging.Level;
 /**
  * Gameplay specific controller for the gameplay prototype.
  */
-public class SandboxController extends WorldController {
+public class SandboxController extends WorldController implements ContactListener {
 	/** Reference to the cephalonaut's model */
 	private CephalonautModel cephalonaut;
 
@@ -93,6 +94,7 @@ public class SandboxController extends WorldController {
 		world = new World(gravity,false);
 		setComplete(false);
 		setFailure(false);
+		world.setContactListener(this);
 		populateLevel();
 	}
 
