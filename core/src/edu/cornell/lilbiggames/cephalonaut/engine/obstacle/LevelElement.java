@@ -46,7 +46,8 @@ public class LevelElement extends SimpleObstacle {
         BOOST_PAD,
         BUTTON,
         DOOR,
-        MISC_POLY
+        MISC_POLY,
+        FINISH
     }
 
     public enum DIRECTION {
@@ -185,6 +186,10 @@ public class LevelElement extends SimpleObstacle {
         switch (element) {
             case MISC_POLY:
                 createMiscPoly(scale, vertices);
+                break;
+            case FINISH:
+                createFinish(scale, vertices);
+                break;
             default:
                 break;
         }
@@ -235,8 +240,13 @@ public class LevelElement extends SimpleObstacle {
                 break;
             case DOOR:
                 createDoor(scale, width, height);
+                break;
             case MISC_POLY:
                 createMiscPoly(scale, width, height);
+                break;
+            case FINISH:
+                createFinish(scale, width, height);
+                break;
             default:
                 break;
         }
@@ -284,6 +294,10 @@ public class LevelElement extends SimpleObstacle {
                 break;
             case DOOR:
                 createDoor(scale);
+                break;
+            case FINISH:
+                createFinish(scale);
+                break;
             default:
                 break;
         }
@@ -517,6 +531,44 @@ public class LevelElement extends SimpleObstacle {
         setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
         setName("door"+door_count);
         door_count++;
+    }
+
+    private void createFinish(Vector2 scale) {
+        createBoostPad(scale, BOX_WIDTH, BOX_HEIGHT);
+    }
+
+    private void createFinish(Vector2 scale, float width, float height) {
+//        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
+        geometry = null;
+        boxResize(width, height);
+        setGrapple(false);
+        setBodyType(BodyDef.BodyType.StaticBody);
+        setDensity(0);
+        setFriction(0);
+        setSensor(true);
+        setDrawScale(scale);
+        setTint(Color.YELLOW);
+        setTexture(earthTexture);
+        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
+        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
+        setName("finish");
+    }
+
+    private void createFinish(Vector2 scale, float[] vertices) {
+//        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
+        geometry = null;
+        setVertices(vertices);
+        setGrapple(false);
+        setBodyType(BodyDef.BodyType.StaticBody);
+        setDensity(0);
+        setFriction(0);
+        setSensor(true);
+        setDrawScale(scale);
+        setTint(Color.YELLOW);
+        setTexture(earthTexture);
+        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
+        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
+        setName("finish");
     }
 
     public void setDirection(DIRECTION direction) {
