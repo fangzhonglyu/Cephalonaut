@@ -33,6 +33,16 @@
              "x":0,
              "y":0
             },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+
+                    }
+                }],
          "type":"GameObject"
         }, 
         {

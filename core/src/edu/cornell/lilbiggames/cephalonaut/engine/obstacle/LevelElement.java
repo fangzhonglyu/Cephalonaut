@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 
@@ -46,7 +48,8 @@ public class LevelElement extends SimpleObstacle {
         BOOST_PAD,
         BUTTON,
         DOOR,
-        MISC_POLY
+        MISC_POLY,
+        FINISH
     }
 
     public enum DIRECTION {
@@ -60,8 +63,8 @@ public class LevelElement extends SimpleObstacle {
     private LevelElement activatee;
     private DIRECTION direction;
     private Vector2 original_pos;
-    private boolean inContact;
-    private boolean activated;
+    private boolean inContact = false;
+    private boolean activated = false;
     private boolean opened;
     private float radius;
     private float width;
@@ -109,28 +112,20 @@ public class LevelElement extends SimpleObstacle {
 
     public void setInContact(boolean inContact) {
         this.inContact = inContact;
-        if(inContact) {
-            switch (element) {
-                case BUTTON:
-                    activate();
-                    break;
-                default:
-                    break;
+        if (inContact) {
+            if (element == ELEMENT.BUTTON) {
+                activate();
             }
         }
     }
 
     public void activate() {
         activated = true;
-        switch(element) {
-            case BUTTON:
-                setTint(Color.GREEN);
-                if(activatee != null) {
-                    activatee.activate();
-                }
-                break;
-            default:
-                break;
+        if (element == ELEMENT.BUTTON) {
+            setTint(Color.GREEN);
+            if (activatee != null) {
+                activatee.activate();
+            }
         }
     }
 
@@ -148,132 +143,94 @@ public class LevelElement extends SimpleObstacle {
         return element;
     }
 
-    /**
-     * Sets the radius of this circle
-     *
-     * @param element  the radius of this circle
-     */
-    public void setElement(ELEMENT element) {
-        this.element = element;
-    }
-
-    /**
-     * Creates a new circle at the origin.
-     *
-     * The size is expressed in physics units NOT pixels.  In order for
-     * drawing to work properly, you MUST set the drawScale. The drawScale
-     * converts the physics units to pixels.
-     *
-     * @param element	The wheel radius
-     */
-
-
-    public LevelElement(Vector2 scale, ELEMENT element) {
-        this(0, 0, 0, scale, element);
-    }
-
-
-    public LevelElement(float x, float y, float[] vertices, float angle, Vector2 scale, ELEMENT element) {
-        super(x,y);
-        inContact = false;
-        this.element = element;
-        original_pos = new Vector2(x, y);
-        setDrawScale(scale);
-        setAngle(angle);
-        geometry = null;
-        activated = false;
+    public void setElement(String element) {
         switch (element) {
-            case MISC_POLY:
-                createMiscPoly(scale, vertices);
+            case "Wall":
+                this.element = ELEMENT.WALL;
+                break;
+            case "Black Hole":
+                this.element = ELEMENT.BLACK_HOLE;
+                break;
+            case "Boost Pad":
+                this.element = ELEMENT.BOOST_PAD;
+                break;
+            case "Button":
+                this.element = ELEMENT.BUTTON;
+                break;
+            case "Door":
+                this.element = ELEMENT.DOOR;
+                break;
+            case "Finish":
+                this.element = ELEMENT.FINISH;
+                break;
             default:
+                System.out.printf("WARNING: Unknown LevelElement type '%s'\n", element);
+                this.element = ELEMENT.WALL;
                 break;
         }
     }
 
-    public LevelElement(float x, float y, float radius, float angle, Vector2 scale, ELEMENT element) {
-        super(x,y);
-        inContact = false;
-        this.element = element;
-        original_pos = new Vector2(x, y);
-        setDrawScale(scale);
-        setAngle(angle);
-        geometry = null;
-        activated = false;
-        switch (element) {
-            case BLACK_HOLE:
-                createBlackHole(scale, radius);
-                break;
-            case FLYING_METEOR:
-                createFlyingMeteor(scale, radius);
-                break;
-            case BUTTON:
-                createButton(scale, radius);
-                break;
-            default:
-                break;
+    private void setProperties(JsonValue properties) {
+        if (properties == null) {
+            element = ELEMENT.WALL;
+            setDensity(0);
+            setBodyType(BodyDef.BodyType.StaticBody);
+            setRestitution(0.3f);
+            setGrapple(true);
+        } else {
+            setElement(properties.getString("type", "Wall"));
+            setGrapple(properties.getBoolean("canGrappleOn", true));
+            setDensity(properties.getFloat("density", 0));
+            setRestitution(properties.getFloat("restitution", 0.3f));
+            boolean isStatic = properties.getBoolean("isStatic", true);
+            setBodyType(isStatic ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
         }
     }
 
-    public LevelElement(float x, float y, float width, float height, float angle, Vector2 scale, ELEMENT element) {
+    public LevelElement(int x, int y, JsonValue tile) {
         super(x,y);
-        inContact = false;
-        this.element = element;
+        setName("unnamed");
         original_pos = new Vector2(x, y);
-        setDrawScale(scale);
-        setAngle(angle);
-        geometry = null;
-        activated = false;
-        switch (element) {
-            case WALL:
-                createWall(scale, width, height);
-                break;
-            case BOUNCY_WALL:
-                createBouncyWall(scale, width, height);
-                break;
-            case BOOST_PAD:
-                createBoostPad(scale, width, height);
-                break;
-            case DOOR:
-                createDoor(scale, width, height);
-            case MISC_POLY:
-                createMiscPoly(scale, width, height);
-            default:
-                break;
+
+        JsonValue properties = tile.get("properties");
+        JsonValue elementProperties = null;
+        if (properties != null) {
+            for (JsonValue property : properties.iterator()) {
+                String name = property.getString("name", "");
+                String propertyType = property.getString("propertytype", "");
+                if (name.equals("body") && propertyType.equals("GameObject")) {
+                    elementProperties = property.get("value");
+                }
+            }
         }
-    }
+        setProperties(elementProperties);
 
+        JsonValue collisionObject = tile.get("objectgroup").get("objects").get(0);
+        JsonValue polygon = collisionObject.get("polygon");
+        if (polygon != null) {
+            // TODO: Replace 16 with less magic number
 
-    /**
-     * Creates a new circle object.
-     *
-     * The size is expressed in physics units NOT pixels.  In order for
-     * drawing to work properly, you MUST set the drawScale. The drawScale
-     * converts the physics units to pixels.
-     *
-     * @param x 		Initial x position of the circle center
-     * @param y  		Initial y position of the circle center
-     * @param element	The wheel radius
-     */
-    public LevelElement(float x, float y, float angle, ELEMENT element) {
-        super(x,y);
-        inContact = false;
-        this.element = element;
-        original_pos = new Vector2(x, y);
-        setAngle(angle);
-        geometry = null;
-        activated = false;
+            float ox = collisionObject.getFloat("x");
+            float oy = collisionObject.getFloat("y");
+            float[] vertices = new float[2 * polygon.size];
+            for (int i = 0; i < polygon.size; i++) {
+                vertices[2 * i] = (ox + polygon.get(i).getFloat("x")) / 16;
+                vertices[2 * i + 1] = 1f - (oy + polygon.get(i).getFloat("y")) / 16;
+            }
+            setVertices(vertices);
+        } else {
+            // TODO: Replace. This creates square polygon when no polygon is found
+
+            float[] vertices = {0, 0, 1, 0, 1, 1, 0, 1};
+            setVertices(vertices);
+        }
+
         switch (element) {
             case BLACK_HOLE:
                 createBlackHole();
                 break;
             case FLYING_METEOR:
                 createFlyingMeteor();
-                break;
-            case WALL:
-                createWall();
-                break;
-            case BOUNCY_WALL:
-                createBouncyWall();
                 break;
             case BOOST_PAD:
                 createBoostPad();
@@ -283,9 +240,27 @@ public class LevelElement extends SimpleObstacle {
                 break;
             case DOOR:
                 createDoor();
+                break;
+            case FINISH:
+                createFinish();
+                break;
             default:
                 break;
         }
+    }
+
+    public void setTexture(TextureRegion value) {
+        texture = value;
+        origin.set(0, 0);
+//        origin.set(texture.getRegionWidth() / 2.0f, texture.getRegionHeight() / 2.0f);
+//        setTextureScaleX(drawScale.x / texture.getRegionWidth());
+//        setTextureScaleY(drawScale.y / texture.getRegionHeight());
+    }
+
+    public void setDrawScale(Vector2 value) {
+        super.setDrawScale(value);
+        setTextureScaleX(drawScale.x / texture.getRegionWidth());
+        setTextureScaleY(drawScale.y / texture.getRegionHeight());
     }
 
     private void setVertices(float[] vertices) {
@@ -317,50 +292,13 @@ public class LevelElement extends SimpleObstacle {
         shape = temp;
     }
 
-
-    private void createMiscPoly(Vector2 scale, float width, float height) {
-        geometry = null;
-        boxResize(width, height);
-
-        setGrapple(true);
-        setBodyType(BodyDef.BodyType.StaticBody);
-        setDensity(0);
-        setFriction(0);
-        setRestitution(0.3f);
-        setDrawScale(scale);
-        setTint(new Color(0.5f, 0.4f, 0.4f, 1));
-//        setTexture(earthTexture);
-//        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
-//        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
-        setName("misc"+misc_count);
-        misc_count++;
-    }
-
-
-    private void createMiscPoly(float[] vertices) {
-        geometry = null;
-        setVertices(vertices);
-
-        setGrapple(true);
-        setBodyType(BodyDef.BodyType.StaticBody);
-        setDensity(0);
-        setFriction(0);
-        setRestitution(0.3f);
-        setTint(new Color(0.5f, 0.4f, 0.4f, 1));
-//        setTexture(earthTexture);
-//        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
-//        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
-        setName("misc"+misc_count);
-        misc_count++;
-    }
-
     public void setTextureBottomLeft(TextureRegion value) {
         texture = value;
         origin.set(0, 0);
     }
 
-    private void createBlackHole(Vector2 scale) {
-        createBlackHole(scale, BLACK_HOLE_RADIUS);
+    private void createBlackHole() {
+        createBlackHole(BLACK_HOLE_RADIUS);
     }
 
     private void createBlackHole(float radius) {
@@ -370,8 +308,8 @@ public class LevelElement extends SimpleObstacle {
         setGrapple(false);
         setTexture(crosshairTexture);
         setBodyType(BodyDef.BodyType.StaticBody);
-        setTextureScaleX(radius * 2 * scale.x / crosshairTexture.getRegionWidth());
-        setTextureScaleY(radius * 2 * scale.y / crosshairTexture.getRegionHeight());
+//        setTextureScaleX(radius * 2 * scale.x / crosshairTexture.getRegionWidth());
+//        setTextureScaleY(radius * 2 * scale.y / crosshairTexture.getRegionHeight());
         setTint(Color.YELLOW);
         black_hole_count++;
     }
@@ -387,19 +325,19 @@ public class LevelElement extends SimpleObstacle {
         setGrapple(true);
         setTexture(crosshairTexture);
         setBodyType(BodyDef.BodyType.KinematicBody);
-        setDrawScale(scale);
-        setTextureScaleX(radius * 2 * scale.x / crosshairTexture.getRegionWidth());
-        setTextureScaleY(radius * 2 * scale.y / crosshairTexture.getRegionHeight());
+//        setDrawScale(scale);
+//        setTextureScaleX(radius * 2 * scale.x / crosshairTexture.getRegionWidth());
+//        setTextureScaleY(radius * 2 * scale.y / crosshairTexture.getRegionHeight());
         setTint(Color.PURPLE);
         meteor_count++;
         this.direction = DIRECTION.RIGHT;
     }
 
-    private void createBoostPad(Vector2 scale) {
-        createBoostPad(scale, BOX_WIDTH, BOX_HEIGHT);
+    private void createBoostPad() {
+        createBoostPad(BOX_WIDTH, BOX_HEIGHT);
     }
 
-    private void createBoostPad(Vector2 scale, float width, float height) {
+    private void createBoostPad(float width, float height) {
 //        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
         geometry = null;
         boxResize(width, height);
@@ -409,11 +347,11 @@ public class LevelElement extends SimpleObstacle {
         setDensity(0);
         setFriction(0);
         setSensor(true);
-        setDrawScale(scale);
+//        setDrawScale(scale);
         setTint(Color.YELLOW);
         setTexture(earthTexture);
-        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
-        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
+//        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
+//        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
         setName("boost"+boost_count);
         boost_count++;
     }
@@ -435,45 +373,11 @@ public class LevelElement extends SimpleObstacle {
         bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
     }
 
-    private void createWall(Vector2 scale) {
-        createWall(scale, BOX_WIDTH, BOX_HEIGHT);
+    private void createButton() {
+        createButton(BUTTON_RADIUS);
     }
 
-    private void createWall(Vector2 scale, float width, float height) {
-//        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
-        geometry = null;
-        boxResize(width, height);
-
-        setGrapple(true);
-        setBodyType(BodyDef.BodyType.StaticBody);
-        setDensity(0);
-        setFriction(0);
-        setRestitution(0.3f);
-        setDrawScale(scale);
-        setTint(new Color(0.5f, 0.4f, 0.4f, 1));
-        setTexture(earthTexture);
-        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
-        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
-        setName("wall"+wall_count);
-        wall_count++;
-    }
-
-    private void createBouncyWall(Vector2 scale) {
-        createBouncyWall(scale, BOX_WIDTH, BOX_HEIGHT);
-    }
-
-    private void createBouncyWall(Vector2 scale, float width, float height) {
-        createWall(scale, width, height);
-        setRestitution(BOUNCY_WALL_RESTITUTION);
-        setTint(Color.CYAN);
-        setName(getName() + "bouncy");
-    }
-
-    private void createButton(Vector2 scale) {
-        createButton(scale, BUTTON_RADIUS);
-    }
-
-    private void createButton(Vector2 scale, float radius) {
+    private void createButton(float radius) {
         shape = new CircleShape();
         shape.setRadius(radius);
 //        bodyinfo.position.set(BOX_SIZE * original_pos.x + BOX_SIZE / 2, BOX_SIZE * original_pos.y);
@@ -485,20 +389,20 @@ public class LevelElement extends SimpleObstacle {
         setDensity(0);
         setFriction(0);
         setRestitution(0.5f);
-        setDrawScale(scale);
+//        setDrawScale(scale);
         setTint(Color.RED);
         setTexture(earthTexture);
-        setTextureScaleX(radius * 2 * scale.x / earthTexture.getRegionWidth());
-        setTextureScaleY(radius * 2 * scale.y / earthTexture.getRegionWidth());
+//        setTextureScaleX(radius * 2 * scale.x / earthTexture.getRegionWidth());
+//        setTextureScaleY(radius * 2 * scale.y / earthTexture.getRegionWidth());
         setName("button"+button_count);
         button_count++;
     }
 
-    private void createDoor(Vector2 scale) {
-        createDoor(scale, DOOR_WIDTH, DOOR_HEIGHT);
+    private void createDoor() {
+        createDoor(DOOR_WIDTH, DOOR_HEIGHT);
     }
 
-    private void createDoor(Vector2 scale, float width, float height) {
+    private void createDoor(float width, float height) {
 //        bodyinfo.position.set(20, 8);
 //        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
         geometry = null;
@@ -508,13 +412,51 @@ public class LevelElement extends SimpleObstacle {
         setDensity(0);
         setFriction(0);
         setRestitution(0.3f);
-        setDrawScale(scale);
+//        setDrawScale(scale);
         setTint(Color.PINK);
         setTexture(earthTexture);
-        setTextureScaleX(width * scale.x / earthTexture.getRegionHeight());
-        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
+//        setTextureScaleX(width * scale.x / earthTexture.getRegionHeight());
+//        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
         setName("door"+door_count);
         door_count++;
+    }
+
+    private void createFinish() {
+        createBoostPad(BOX_WIDTH, BOX_HEIGHT);
+    }
+
+    private void createFinish(float width, float height) {
+//        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
+        geometry = null;
+        boxResize(width, height);
+        setGrapple(false);
+        setBodyType(BodyDef.BodyType.StaticBody);
+        setDensity(0);
+        setFriction(0);
+        setSensor(true);
+//        setDrawScale(scale);
+        setTint(Color.YELLOW);
+        setTexture(earthTexture);
+//        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
+//        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
+        setName("finish");
+    }
+
+    private void createFinish(float[] vertices) {
+//        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
+        geometry = null;
+        setVertices(vertices);
+        setGrapple(false);
+        setBodyType(BodyDef.BodyType.StaticBody);
+        setDensity(0);
+        setFriction(0);
+        setSensor(true);
+//        setDrawScale(scale);
+        setTint(Color.YELLOW);
+        setTexture(earthTexture);
+//        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
+//        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
+        setName("finish");
     }
 
     public void setDirection(DIRECTION direction) {

@@ -67,20 +67,20 @@ public class GDXRoot extends Game {
 
 		// Load in levels
 //		try{
-			levels = levelLoader.loadLevels(levelNames);
+//			levels = levelLoader.loadLevels(levelNames);
 //		} catch(Exception e){
 //			System.out.println(e);
 //		}
 
 		// Initialize the game world
-		PlayMode defaultLevel = levels.get("level_1");
-
+//		PlayMode defaultLevel = levels.get("level_1");
 		sandboxController = new SandboxController();
 		LevelElement.gatherAssets(directory);
 		sandboxController.gatherAssets(directory);
 		sandboxController.setCanvas(canvas);
-		sandboxController.setLevel(defaultLevel);
-		sandboxController.reset();
+//		sandboxController.setLevel(defaultLevel);
+
+		sandboxController.reset(levelLoader.loadLevel("level_1"));
 		setScreen(sandboxController);
 	}
 

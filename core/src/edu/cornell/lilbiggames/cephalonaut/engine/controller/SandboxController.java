@@ -10,6 +10,7 @@
  */
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -51,8 +52,6 @@ public class SandboxController extends WorldController implements ContactListene
 
 	private CephalonautController cephalonautController;
 
-	private PlayMode level;
-
 	private static final float ATTRACT_DIST = 5f;
 	private static final float METEOR_SPEED = 2f;
 	private static final float BOOST_SPEED = 8f;
@@ -67,15 +66,10 @@ public class SandboxController extends WorldController implements ContactListene
 		setDebug(false);
 		setComplete(false);
 		setFailure(false);
-
 	}
 
-	/**
-	 * Sets the current level
-	 * @param  level
-	 */
-	public void setLevel(PlayMode level){
-		this.level = level;
+	public void reset() {
+		reset(new Queue<GameObject>());
 	}
 
 	/**
@@ -83,7 +77,7 @@ public class SandboxController extends WorldController implements ContactListene
 	 *
 	 * This method disposes of the world and creates a new one.
 	 */
-	public void reset() {
+	public void reset(Queue<GameObject> newObjects) {
 		Vector2 gravity = new Vector2(world.getGravity());
 		
 		for(GameObject obj : objects) {
@@ -97,7 +91,7 @@ public class SandboxController extends WorldController implements ContactListene
 		setComplete(false);
 		setFailure(false);
 		world.setContactListener(this);
-		populateLevel();
+		populateLevel(newObjects);
 	}
 
 	/**
@@ -115,164 +109,16 @@ public class SandboxController extends WorldController implements ContactListene
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
 	}
 
-	private PolygonObstacle createPolygonObstacle(JsonValue objectJson) {
-			float[] vertices = new float[10];
-			Iterator<JsonValue> it = objectJson.get("polygon").iterator();
-			int i = 0;
-			JsonValue curr;
-			while(it.hasNext()) {
-				curr = it.next();
-				vertices[i] = curr.getFloat("x");
-				vertices[i + 1] = curr.getFloat("y");
-				i += 1;
-			}
-			return new PolygonObstacle(vertices);
-	}
-
-	/** SHOULD BE DELETED OR REFACTORED FOR LEVEL ELEMENTS
-	 * @param objectJson json of game object
-	 * @param tileID id of game object in reference to texture
-	 * @param x position for rendering
-	 * @param y position for rendering
-	 * @return SimpleObstacle representing created object
-	 */
-	private SimpleObstacle initializeObjectFromJsonOrig(JsonValue objectJson, int tileID, int x, int y){
-
-
-		float width = objectJson.getFloat("width");
-		float height = objectJson.getFloat("height");
-
-		SimpleObstacle obstacle = new BoxObstacle(x, y,  1, 1);
-
-		TextureRegion texture = textures.get(tileID);
-		obstacle.setDrawScale(scale);
-		obstacle.setTint(new Color(0.5f, 0.4f, 0.4f, 1));
-		obstacle.setTexture(texture);
-		obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth()*16));
-		obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight()*16));
-		for(JsonValue property : objectJson.get("properties")){
-			switch (property.getString("name")) {
-				case "canGrappleOn":
-					obstacle.setGrapple(property.getBoolean("value"));
-			}
-		}
-		return obstacle;
-	}
-
-	private LevelElement initializeObjectFromJson(JsonValue objectJson, int tileID, int x, int y) {
-		if (!objectJson.getString("type").equals("GameObject")) return null;
-//		JsonValue body = objectJson.get("body");
-//		if (body == null) return null;
-
-		JsonValue collisionObject = objectJson.get("objectgroup").get("objects").get(0);
-		JsonValue polygon = collisionObject.get("polygon");
-		if (polygon != null) {
-			// TODO: Replace 16 with less magic number
-
-			float ox = collisionObject.getFloat("x");
-			float oy = collisionObject.getFloat("y");
-			float[] vertices = new float[2 * polygon.size];
-			for (int i = 0; i < polygon.size; i++) {
-				vertices[2 * i] = (ox + polygon.get(i).getFloat("x")) / 16;
-				vertices[2 * i + 1] = 1f - (oy + polygon.get(i).getFloat("y")) / 16;
-			}
-
-			LevelElement obstacle = new LevelElement(x, y, vertices, 0, scale, LevelElement.ELEMENT.MISC_POLY);
-
-			TextureRegion texture = textures.get(tileID);
-			obstacle.setTextureBottomLeft(texture);
-			obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth() * 16));
-			obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight() * 16));
-			return obstacle;
-		} else {
-			LevelElement obstacle = new LevelElement(x, y, collisionObject.getFloat("width") / 16,
-					collisionObject.getFloat("height") / 16, collisionObject.getFloat("rotation"), scale,
-					LevelElement.ELEMENT.MISC_POLY);
-
-			TextureRegion texture = textures.get(tileID);
-			obstacle.setTexture(texture);
-			obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth()*16));
-			obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight()*16));
-			return obstacle;
-		}
-
-	}
-
-
-	/**
-	 * Parses the game objects from the LevelLoader
-	 */
-	private void initializeLevelInfo(){
-
-		// queue of all the game objects
-		Queue<GameObjectJson> gameObjectJsons = level.getGameObjectQueue();
-
-		// map of all the textures, you use tileID to reference texture given game object
-		textures = level.getTextures();
-
-		boxObstacles = new LinkedList<>();
-
-		// iterate through GameObjectJsons
-		Iterator<GameObjectJson> it = gameObjectJsons.iterator();
-		while(it.hasNext()){
-
-			GameObjectJson gameObjectJson = it.next();
-
-			// get relevant information from object
-			JsonValue objectJson = gameObjectJson.getJsonObject();
-			int tileID = gameObjectJson.getTileID();
-			int x = gameObjectJson.getX();
-			int y = gameObjectJson.getY();
-
-			// MODIFY THE CODE BELOW
-
-
-			// NOTE: There are multiple ways of doing this.
-			/*
-			If we want to see what type of shape the object is, then we need to check the following
-			if(objectJson.has("polygon")) {
-				1. run polygon relevant LevelElement creation
-				2. have access to vertices array, but must be parsed as seen in createPolygonObstacle() above
-			} else if(objectJson.has("ellipse")) {
-				1. run ellipse relevant LevelElement creation
-				2. has width and height property. no radius. width and height can be access like rectangle object.
-			} else {
-				1. run rectangle relevant LevelElement creation
-				2. has width and height property.
-			}
-			*/
-
-			// We can also check the name of the object. Name will allow us to create objects with the
-			// same properties. However, this might be unnecessary since all objects should have the same properties
-			// with different values, so parsing from the object to the LevelElement should be the same regardless.
-
-			// here is where you can determine what type of object it is
-			// there is a name field which allows us to treat the objects equally given they share the same name
-			String name = (objectJson.get("name") != null) ? objectJson.getString("name") : "";
-
-//			if(name.equals("Rock")){
-				// using a SimpleObstacle for now, when we merge with Oliver's code we can use gameobjects
-				// TO BE CHANGED HERE
-				LevelElement objectToInit = initializeObjectFromJson(objectJson, tileID, x, y);
-				if(objectToInit != null) {
-					addObject(objectToInit);
-//				}
-//				addObject(initializeObjectFromJsonOrig(objectJson, tileID, x, y));
-				// TO BE CHANGED HERE
-			}
-
-			// MODIFY THE CODE ABOVE
-		}
-
-	}
-
 	/**
 	 * Lays out the game geography.
 	 */
-	private void populateLevel() {
-		// Make the cephalonaut
-		initializeLevelInfo();
+	private void populateLevel(Queue<GameObject> newObjects) {
+		for (GameObject object : newObjects) {
+			object.setDrawScale(scale);
+			addObject(object);
+		}
 
+		// Make the cephalonaut
 		float dwidth  = octopusTexture.getRegionWidth()/scale.x;
 		float dheight = octopusTexture.getRegionHeight()/scale.y;
 		cephalonaut = new CephalonautModel(10, 10, dwidth, dheight, scale);

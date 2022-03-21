@@ -5,8 +5,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObjectJson;
-import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.LevelElement;
 
 import java.util.HashMap;
@@ -16,7 +17,8 @@ import java.util.Map;
 public class LevelLoader {
 
     private AssetDirectory assetDirectory;
-    private HashMap<Integer, JsonValue> map;
+    private Map<Integer, JsonValue> map;
+    private Map<Integer, TextureRegion> textures;
     private Texture tilesetTexture;
     private JsonValue tileset;
 
@@ -28,6 +30,7 @@ public class LevelLoader {
         tilesetTexture = new Texture("TS-meteroid-space.png");
         tileset = assetDirectory.getEntry("tileset", JsonValue.class);
         map = getTileMap();
+        textures = getTextures();
     }
 
     public AssetDirectory getAssetDirectory() {
@@ -89,67 +92,21 @@ public class LevelLoader {
         return tiles;
     }
 
-    public Map<String, PlayMode> loadLevels(String[] levelNames){
-        Map<String, PlayMode> levels = new HashMap<>();
-        //iterate over files in directory, adding them to level model list
-        for(String levelName : levelNames){
-            PlayMode level = loadLevel(levelName);
-            levels.put(levelName,level);
-            System.out.println("Loaded in " + levelName);
+    // Maps tileset tiles to texture regions
+    private Map<Integer, TextureRegion> getTextures() {
+        int tileSize = tileset.getInt("tilewidth");
+        int columns = tileset.getInt("columns");
+        Map<Integer, TextureRegion> textures = new HashMap<>();
+        for (JsonValue tile : tileset.get("tiles")) {
+            int id = tile.getInt("id");
+            int x = (id % columns)*tileSize;
+            int y = (id / columns)*tileSize;
+            textures.put(id, new TextureRegion(tilesetTexture, x, y, tileSize, tileSize));
         }
-        return levels;
+        return textures;
     }
 
-    public PlayMode loadLevel(String levelName) {
-        JsonValue level = assetDirectory.getEntry(levelName, JsonValue.class);
-        if(!level.get("layers").iterator().hasNext()) {
-            throw new RuntimeException("No layer to parse.");
-        }
-        Queue<GameObjectJson> objects = getObjectQueue(level);
-        Map<Integer, TextureRegion> textures = getTextures(level);
-        return new PlayMode(objects, textures);
-    }
-
-    private LevelElement initializeObjectFromJson(JsonValue objectJson, int tileID, int x, int y) {
-        if (!objectJson.getString("type").equals("GameObject")) return null;
-//		JsonValue body = objectJson.get("body");
-//		if (body == null) return null;
-
-        JsonValue collisionObject = objectJson.get("objectgroup").get("objects").get(0);
-        JsonValue polygon = collisionObject.get("polygon");
-        if (polygon != null) {
-            // TODO: Replace 16 with less magic number
-
-            float ox = collisionObject.getFloat("x");
-            float oy = collisionObject.getFloat("y");
-            float[] vertices = new float[2 * polygon.size];
-            for (int i = 0; i < polygon.size; i++) {
-                vertices[2 * i] = (ox + polygon.get(i).getFloat("x")) / 16;
-                vertices[2 * i + 1] = 1f - (oy + polygon.get(i).getFloat("y")) / 16;
-            }
-
-            LevelElement obstacle = new LevelElement(x, y, vertices, 0, LevelElement.ELEMENT.MISC_POLY);
-
-            TextureRegion texture = textures.get(tileID);
-            obstacle.setTextureBottomLeft(texture);
-            obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth() * 16));
-            obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight() * 16));
-            return obstacle;
-        } else {
-            LevelElement obstacle = new LevelElement(x, y, collisionObject.getFloat("width") / 16,
-                    collisionObject.getFloat("height") / 16, collisionObject.getFloat("rotation"), scale,
-                    LevelElement.ELEMENT.MISC_POLY);
-
-            TextureRegion texture = textures.get(tileID);
-            obstacle.setTexture(texture);
-            obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth()*16));
-            obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight()*16));
-            return obstacle;
-        }
-
-    }
-
-    public void loadLevel2(String levelName) {
+    public Queue<GameObject> loadLevel(String levelName) {
         Queue<GameObject> objects = new Queue<>();
         JsonValue level = assetDirectory.getEntry(levelName, JsonValue.class);
         for (JsonValue layer : level.get("layers").iterator()) {
@@ -162,18 +119,24 @@ public class LevelLoader {
                 for(int i = 0; i < data.length; i++) {
                     // need to convert to game object, for now, its JsonValue object
                     int id = data[i];
-                    if(map.get(id-1) != null) {
+                    JsonValue tile = map.get(id - 1);
+                    TextureRegion texture = textures.get(id - 1);
+                    if (tile != null && texture != null) {
                         int x = i % width;
-                        int y = (data.length - i) / width;
-                        objects.addLast(new LevelElement());
+                        int y = height - i / width - 1;
+                        LevelElement obstacle = new LevelElement(x, y, tile);
+                        obstacle.setTexture(texture);
+                        objects.addLast((GameObject) obstacle);
                     }
                 }
             } else if (type.equals("imagelayer")) {
-
+                ImageObject object = new ImageObject(assetDirectory.getEntry( "background.png", Texture.class));
+                objects.addLast(object);
             } else {
                 System.out.printf("ERROR: Cannot parse layer type '%s'\n", type);
             }
         }
 
+        return objects;
     }
 }

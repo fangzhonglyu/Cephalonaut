@@ -8,7 +8,8 @@
     "barrier": "barrier.png",
     "squid": "squid.png",
     "octopus": "octopus.png",
-    "crosshair": "crosshair.png"
+    "crosshair": "crosshair.png",
+    "background.png": "background.png"
   },
   "jsons": {
     "tileset": "tileset.tsj",
