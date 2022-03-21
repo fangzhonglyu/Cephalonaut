@@ -434,6 +434,7 @@ public class LevelElement extends SimpleObstacle {
         PolygonShape temp = new PolygonShape();
         temp.set(vertices);
         shape = temp;
+        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
     }
 
     private void createWall(Vector2 scale) {
