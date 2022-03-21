@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
@@ -80,9 +81,9 @@ public abstract class WorldController implements Screen {
 	/** Reference to the game canvas */
 	protected GameCanvas canvas;
 	/** All the objects in the world. */
-	protected PooledList<Obstacle> objects  = new PooledList<Obstacle>();
+	protected PooledList<GameObject> objects  = new PooledList<GameObject>();
 	/** Queue for adding objects */
-	protected PooledList<Obstacle> addQueue = new PooledList<Obstacle>();
+	protected PooledList<GameObject> addQueue = new PooledList<GameObject>();
 	/** Listener that will update the player mode when we are done */
 	private ScreenListener listener;
 
@@ -302,7 +303,7 @@ public abstract class WorldController implements Screen {
 	 *
 	 * param obj The object to add
 	 */
-	public void addQueuedObject(Obstacle obj) {
+	public void addQueuedObject(GameObject obj) {
 		assert inBounds(obj) : "Object is not in bounds";
 		addQueue.add(obj);
 	}
@@ -312,7 +313,7 @@ public abstract class WorldController implements Screen {
 	 *
 	 * param obj The object to add
 	 */
-	protected void addObject(Obstacle obj) {
+	protected void addObject(GameObject obj) {
 		assert inBounds(obj) : "Object is not in bounds";
 		objects.add(obj);
 		obj.activatePhysics(world);
@@ -327,7 +328,7 @@ public abstract class WorldController implements Screen {
 	 *
 	 * @return true if the object is in bounds.
 	 */
-	public boolean inBounds(Obstacle obj) {
+	public boolean inBounds(GameObject obj) {
 		boolean horiz = (bounds.x <= obj.getX() && obj.getX() <= bounds.x+bounds.width);
 		boolean vert  = (bounds.y <= obj.getY() && obj.getY() <= bounds.y+bounds.height);
 		return horiz && vert;

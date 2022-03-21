@@ -81,7 +81,7 @@ public class SandboxController extends WorldController implements ContactListene
 	public void reset() {
 		Vector2 gravity = new Vector2(world.getGravity());
 		
-		for(Obstacle obj : objects) {
+		for(GameObject obj : objects) {
 			obj.deactivatePhysics(world);
 		}
 		objects.clear();
@@ -292,7 +292,106 @@ public class SandboxController extends WorldController implements ContactListene
 		boolean inking = input.isThrusterApplied();
 		float rotation = input.getRotation();
 
+		cephalonaut.setForce(Vector2.Zero);
+		for(GameObject object : objects) {
+			if(object.getClass() == LevelElement.class) {
+//				((LevelElement) object).updateElement();
+//				object.update(cephalonaut);
+				switch (((LevelElement) object).getElement()) {
+					case BLACK_HOLE:
+						attract(object);
+						break;
+					case FLYING_METEOR:
+						updateFlyingMeteor((LevelElement) object);
+						break;
+					case BOOST_PAD:
+						boost((LevelElement) object);
+						break;
+					case DOOR:
+						if(((LevelElement) object).getActivated()) {
+							openDoor((LevelElement) object);
+						}
+						break;
+					default:
+						break;
+				}
+			}
+		}
 		cephalonautController.update(grappleButton, crossHair, inking, rotation);
+	}
+
+	public void updateFlyingMeteor(LevelElement element) {
+		if(element.getPosition().cpy().sub(element.getOriginalPos().cpy()).len() > 5) {
+			element.setPosition(element.getOriginalPos());
+		}
+	}
+
+
+	public void fly(LevelElement element) {
+		switch (element.getDirection()) {
+			case UP:
+				element.setLinearVelocity(new Vector2(0, METEOR_SPEED));
+				break;
+			case LEFT:
+				element.setLinearVelocity(new Vector2(-METEOR_SPEED, 0));
+				break;
+			case DOWN:
+				element.setLinearVelocity(new Vector2(0, -METEOR_SPEED));
+				break;
+			case RIGHT:
+				element.setLinearVelocity(new Vector2(METEOR_SPEED, 0));
+				break;
+			default:
+				break;
+		}
+	}
+
+	/** Force from cephalonaut attracted to obj */
+	public void attract(GameObject obj) {
+		if(Math.abs(obj.getBody().getPosition().cpy().sub(cephalonaut.getPosition().cpy()).len()) < ATTRACT_DIST) {
+			Vector2 pos = obj.getBody().getWorldCenter();
+			Vector2 objPos = cephalonaut.getBody().getWorldCenter();
+			Vector2 force = pos.sub(objPos);
+
+			force.clamp(1, 5);
+			force.nor();
+			float strength = (9.81f * 1 * cephalonaut.getBody().getMass()) / (force.len() * force.len());
+			force.scl(strength);
+			cephalonaut.addForce(force);
+		}
+	}
+
+	public void boost(LevelElement obj) {
+		if(!obj.getInContact()) {
+			return;
+		}
+		switch(obj.getDirection()) {
+			case UP:
+				cephalonaut.addForce(new Vector2(0, BOOST_SPEED));
+				break;
+			case LEFT:
+				cephalonaut.addForce(new Vector2(-BOOST_SPEED, 0));
+				break;
+			case DOWN:
+				cephalonaut.addForce(new Vector2(0, -BOOST_SPEED));
+				break;
+			case RIGHT:
+				cephalonaut.addForce(new Vector2(BOOST_SPEED, 0));
+				break;
+			default:
+				break;
+		}
+	}
+
+	public void openDoor(LevelElement element) {
+		if(element.getOpened()) {
+			element.setLinearVelocity(Vector2.Zero);
+			return;
+		}
+		element.setLinearVelocity(new Vector2(0, 1));
+		if(element.getBody().getPosition().y >= element.getOriginalPos().y + 1.4  * DOOR_SIZE) {
+			element.setOpened(true);
+		}
 	}
 
 

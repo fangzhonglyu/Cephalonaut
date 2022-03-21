@@ -23,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 
 /**
  * Base model class to support collisions.
@@ -32,7 +33,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
  *
  * This class does not provide Shape information, and cannot be instantiated directly.
  */
-public abstract class SimpleObstacle extends Obstacle {
+public abstract class SimpleObstacle extends GameObject {
 	/** The physics body for Box2D. */
 	protected Body body;
 
