@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObjectJson;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
+import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.LevelElement;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class LevelLoader {
     }
 
     // This method captures the tile textures for the relevant level by parsing the png
-    private Map<Integer,TextureRegion> getTextures(JsonValue level) {
+    private Map<Integer, TextureRegion> getTextures(JsonValue level) {
         JsonValue layer = level.get("layers").iterator().next();
         int[] data = layer.get("data").asIntArray();
         int tileSize = tileset.getInt("tilewidth");
@@ -107,5 +108,72 @@ public class LevelLoader {
         Queue<GameObjectJson> objects = getObjectQueue(level);
         Map<Integer, TextureRegion> textures = getTextures(level);
         return new PlayMode(objects, textures);
+    }
+
+    private LevelElement initializeObjectFromJson(JsonValue objectJson, int tileID, int x, int y) {
+        if (!objectJson.getString("type").equals("GameObject")) return null;
+//		JsonValue body = objectJson.get("body");
+//		if (body == null) return null;
+
+        JsonValue collisionObject = objectJson.get("objectgroup").get("objects").get(0);
+        JsonValue polygon = collisionObject.get("polygon");
+        if (polygon != null) {
+            // TODO: Replace 16 with less magic number
+
+            float ox = collisionObject.getFloat("x");
+            float oy = collisionObject.getFloat("y");
+            float[] vertices = new float[2 * polygon.size];
+            for (int i = 0; i < polygon.size; i++) {
+                vertices[2 * i] = (ox + polygon.get(i).getFloat("x")) / 16;
+                vertices[2 * i + 1] = 1f - (oy + polygon.get(i).getFloat("y")) / 16;
+            }
+
+            LevelElement obstacle = new LevelElement(x, y, vertices, 0, LevelElement.ELEMENT.MISC_POLY);
+
+            TextureRegion texture = textures.get(tileID);
+            obstacle.setTextureBottomLeft(texture);
+            obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth() * 16));
+            obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight() * 16));
+            return obstacle;
+        } else {
+            LevelElement obstacle = new LevelElement(x, y, collisionObject.getFloat("width") / 16,
+                    collisionObject.getFloat("height") / 16, collisionObject.getFloat("rotation"), scale,
+                    LevelElement.ELEMENT.MISC_POLY);
+
+            TextureRegion texture = textures.get(tileID);
+            obstacle.setTexture(texture);
+            obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth()*16));
+            obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight()*16));
+            return obstacle;
+        }
+
+    }
+
+    public void loadLevel2(String levelName) {
+        Queue<GameObject> objects = new Queue<>();
+        JsonValue level = assetDirectory.getEntry(levelName, JsonValue.class);
+        for (JsonValue layer : level.get("layers").iterator()) {
+            String type = layer.getString("type");
+            if (type.equals("tilelayer")) {
+                int[] data = layer.get("data").asIntArray();
+                int width = layer.getInt("width");
+                int height = layer.getInt("height");
+                // NOTE: ID's in data array is 1-index, so subtract 1 to match tileset 0-index
+                for(int i = 0; i < data.length; i++) {
+                    // need to convert to game object, for now, its JsonValue object
+                    int id = data[i];
+                    if(map.get(id-1) != null) {
+                        int x = i % width;
+                        int y = (data.length - i) / width;
+                        objects.addLast(new LevelElement());
+                    }
+                }
+            } else if (type.equals("imagelayer")) {
+
+            } else {
+                System.out.printf("ERROR: Cannot parse layer type '%s'\n", type);
+            }
+        }
+
     }
 }

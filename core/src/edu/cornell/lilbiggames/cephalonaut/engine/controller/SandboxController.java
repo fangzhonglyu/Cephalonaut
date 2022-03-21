@@ -160,7 +160,6 @@ public class SandboxController extends WorldController implements ContactListene
 	}
 
 	private LevelElement initializeObjectFromJson(JsonValue objectJson, int tileID, int x, int y) {
-		System.out.println(objectJson);
 		if (!objectJson.getString("type").equals("GameObject")) return null;
 //		JsonValue body = objectJson.get("body");
 //		if (body == null) return null;
@@ -254,10 +253,8 @@ public class SandboxController extends WorldController implements ContactListene
 //			if(name.equals("Rock")){
 				// using a SimpleObstacle for now, when we merge with Oliver's code we can use gameobjects
 				// TO BE CHANGED HERE
-			System.out.println("proc");
 				LevelElement objectToInit = initializeObjectFromJson(objectJson, tileID, x, y);
 				if(objectToInit != null) {
-					System.out.println("PROC!");
 					addObject(objectToInit);
 //				}
 //				addObject(initializeObjectFromJsonOrig(objectJson, tileID, x, y));
@@ -306,7 +303,6 @@ public class SandboxController extends WorldController implements ContactListene
 		InputController input = InputController.getInstance();
 
 		boolean grappleButton = input.didSecondary();
-		System.out.println(canvas.getCameraX());
 		Vector2 crossHair = input.getCrossHair().add(
 				(canvas.getCameraX() - canvas.getWidth() / 2f) / scale.x,
 				(canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);

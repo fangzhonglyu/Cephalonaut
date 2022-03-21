@@ -254,36 +254,35 @@ public class LevelElement extends SimpleObstacle {
      * @param y  		Initial y position of the circle center
      * @param element	The wheel radius
      */
-    public LevelElement(float x, float y, float angle, Vector2 scale, ELEMENT element) {
+    public LevelElement(float x, float y, float angle, ELEMENT element) {
         super(x,y);
         inContact = false;
         this.element = element;
         original_pos = new Vector2(x, y);
-        setDrawScale(scale);
         setAngle(angle);
         geometry = null;
         activated = false;
         switch (element) {
             case BLACK_HOLE:
-                createBlackHole(scale);
+                createBlackHole();
                 break;
             case FLYING_METEOR:
-                createFlyingMeteor(scale);
+                createFlyingMeteor();
                 break;
             case WALL:
-                createWall(scale);
+                createWall();
                 break;
             case BOUNCY_WALL:
-                createBouncyWall(scale);
+                createBouncyWall();
                 break;
             case BOOST_PAD:
-                createBoostPad(scale);
+                createBoostPad();
                 break;
             case BUTTON:
-                createButton(scale);
+                createButton();
                 break;
             case DOOR:
-                createDoor(scale);
+                createDoor();
             default:
                 break;
         }
@@ -338,7 +337,7 @@ public class LevelElement extends SimpleObstacle {
     }
 
 
-    private void createMiscPoly(Vector2 scale, float[] vertices) {
+    private void createMiscPoly(float[] vertices) {
         geometry = null;
         setVertices(vertices);
 
@@ -347,7 +346,6 @@ public class LevelElement extends SimpleObstacle {
         setDensity(0);
         setFriction(0);
         setRestitution(0.3f);
-        setDrawScale(scale);
         setTint(new Color(0.5f, 0.4f, 0.4f, 1));
 //        setTexture(earthTexture);
 //        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
@@ -365,7 +363,7 @@ public class LevelElement extends SimpleObstacle {
         createBlackHole(scale, BLACK_HOLE_RADIUS);
     }
 
-    private void createBlackHole(Vector2 scale, float radius) {
+    private void createBlackHole(float radius) {
         shape = new CircleShape();
         shape.setRadius(radius);
         setName("blackHole" + black_hole_count);
@@ -378,11 +376,11 @@ public class LevelElement extends SimpleObstacle {
         black_hole_count++;
     }
 
-    private void createFlyingMeteor(Vector2 scale) {
-        createFlyingMeteor(scale, METEOR_RADIUS);
+    private void createFlyingMeteor() {
+        createFlyingMeteor(METEOR_RADIUS);
     }
 
-    private void createFlyingMeteor(Vector2 scale, float radius) {
+    private void createFlyingMeteor(float radius) {
         shape = new CircleShape();
         shape.setRadius(radius);
         setName("meteor" + meteor_count);

@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.BoxObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
@@ -40,7 +42,7 @@ public class PlayMode extends WorldController {
     public void reset() {
         Vector2 gravity = new Vector2(world.getGravity());
 
-        for(Obstacle obj : objects) {
+        for(GameObject obj : objects) {
             obj.deactivatePhysics(world);
         }
         objects.clear();
@@ -50,7 +52,7 @@ public class PlayMode extends WorldController {
         world = new World(gravity,false);
         setComplete(false);
         setFailure(false);
-        populateLevel();
+//        populateLevel();
     }
 
     /**
@@ -64,13 +66,6 @@ public class PlayMode extends WorldController {
     public void gatherAssets(AssetDirectory directory) {
         // Allocate the tiles
         // TODO: Do we need this?
-    }
-
-    /**
-     * Lays out the game geography.
-     */
-    private void populateLevel() {
-        // TODO: Make the cephalonaut
     }
 
     /**
@@ -106,14 +101,14 @@ public class PlayMode extends WorldController {
         canvas.clear();
 
         canvas.begin();
-        for(Obstacle obj : objects) {
+        for(GameObject obj : objects) {
             obj.draw(canvas);
         }
         canvas.end();
 
         if (isDebug()) {
             canvas.beginDebug();
-            for(Obstacle obj : objects) {
+            for(GameObject obj : objects) {
                 obj.drawDebug(canvas);
             }
             canvas.endDebug();
