@@ -235,6 +235,8 @@ public class LevelElement extends SimpleObstacle {
                 break;
             case DOOR:
                 createDoor(scale, width, height);
+            case MISC_POLY:
+                createMiscPoly(scale, width, height);
             default:
                 break;
         }
@@ -315,6 +317,26 @@ public class LevelElement extends SimpleObstacle {
         temp.set(vertices);
         shape = temp;
     }
+
+
+    private void createMiscPoly(Vector2 scale, float width, float height) {
+        geometry = null;
+        boxResize(width, height);
+
+        setGrapple(true);
+        setBodyType(BodyDef.BodyType.StaticBody);
+        setDensity(0);
+        setFriction(0);
+        setRestitution(0.3f);
+        setDrawScale(scale);
+        setTint(new Color(0.5f, 0.4f, 0.4f, 1));
+//        setTexture(earthTexture);
+//        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
+//        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
+        setName("misc"+misc_count);
+        misc_count++;
+    }
+
 
     private void createMiscPoly(Vector2 scale, float[] vertices) {
         geometry = null;

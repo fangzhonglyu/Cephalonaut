@@ -162,15 +162,25 @@ public class SandboxController extends WorldController {
 				vertices[2 * i] = objectJson.get("polygon").get(i).getFloat("x") / 16;
 				vertices[2 * i + 1] = -objectJson.get("polygon").get(i).getFloat("y") / 16;
 			}
-			LevelElement obstacle = new LevelElement(x, y, vertices, 0, scale, LevelElement.ELEMENT.MISC_POLY);
+
+			LevelElement obstacle = new LevelElement(x, y, vertices, objectJson.getFloat("rotation"), scale, LevelElement.ELEMENT.MISC_POLY);
 
 			TextureRegion texture = textures.get(tileID);
 			obstacle.setTextureBottomLeft(texture);
 			obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth()*16));
 			obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight()*16));
 			return obstacle;
+		} else {
+			LevelElement obstacle = new LevelElement(x, y, objectJson.getFloat("width") / 16,
+					objectJson.getFloat("height") / 16, objectJson.getFloat("rotation"), scale,
+					LevelElement.ELEMENT.MISC_POLY);
+
+			TextureRegion texture = textures.get(tileID);
+			obstacle.setTexture(texture);
+			obstacle.setTextureScaleX(16 * scale.x / (texture.getRegionWidth()*16));
+			obstacle.setTextureScaleY(16 * scale.y / (texture.getRegionHeight()*16));
+			return obstacle;
 		}
-		return null;
 
 	}
 
