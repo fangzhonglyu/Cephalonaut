@@ -17,12 +17,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObjectJson;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
+import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
 
@@ -46,7 +46,11 @@ public class SandboxController extends WorldController implements ContactListene
 
 	private Texture earthTexture;
 
+	/** The grapple mechanic mode */
+	private boolean directionalGrapple;
+
 	private TextureRegion octopusTexture;
+
 	/** Texture asset for mouse crosshairs */
 	private TextureRegion crosshairTexture;
 
@@ -57,15 +61,18 @@ public class SandboxController extends WorldController implements ContactListene
 	private static final float BOOST_SPEED = 8f;
 	private static final float DOOR_SIZE = 1f;
 
+	/** Sound Controller */
+	private SoundController soundController;
 
 	/**
 	 * Creates and initialize a new instance of the sandbox
 	 */
 	public SandboxController() {
-		super(DEFAULT_WIDTH,DEFAULT_HEIGHT,DEFAULT_GRAVITY);
+		super(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_GRAVITY);
 		setDebug(false);
 		setComplete(false);
 		setFailure(false);
+		directionalGrapple = true;
 	}
 
 	public void reset() {
@@ -79,6 +86,7 @@ public class SandboxController extends WorldController implements ContactListene
 	 */
 	public void reset(Queue<GameObject> newObjects) {
 		Vector2 gravity = new Vector2(world.getGravity());
+
 		
 		for(GameObject obj : objects) {
 			obj.deactivatePhysics(world);
@@ -88,10 +96,15 @@ public class SandboxController extends WorldController implements ContactListene
 		world.dispose();
 		
 		world = new World(gravity,false);
+		world.setContactListener(this);
 		setComplete(false);
 		setFailure(false);
 		world.setContactListener(this);
 		populateLevel(newObjects);
+
+		GrappleModel grapple = cephalonaut.getGrapple();
+		grapple.reset();
+		SoundController.switchTrack(1);
 	}
 
 	/**
@@ -126,7 +139,9 @@ public class SandboxController extends WorldController implements ContactListene
 		cephalonautController = new CephalonautController(world, cephalonaut);
 
 		addObject(cephalonaut);
-		addObject(cephalonaut.getGrapple());
+		GrappleModel grapple = cephalonaut.getGrapple();
+		grapple.setMaxLength(7.0f);
+		addObject(grapple);
 		setDebug(true);
 
 		selector = new ObstacleSelector(world);
@@ -147,17 +162,14 @@ public class SandboxController extends WorldController implements ContactListene
 	public void update(float dt) {
 	    // Move an object if touched
 		InputController input = InputController.getInstance();
-
-		boolean grappleButton = input.didSecondary();
-		Vector2 crossHair = input.getCrossHair().add(
-				(canvas.getCameraX() - canvas.getWidth() / 2f) / scale.x,
-				(canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
-		boolean inking = input.isThrusterApplied();
-		float rotation = input.getRotation();
-
+		if (input.didTertiary()) {
+			directionalGrapple = !directionalGrapple;
+		}
 		cephalonaut.setForce(Vector2.Zero);
+
+
 		for(GameObject object : objects) {
-			if(object.getClass() == LevelElement.class) {
+			if (object.getClass() == LevelElement.class) {
 //				((LevelElement) object).updateElement();
 //				object.update(cephalonaut);
 				switch (((LevelElement) object).getElement()) {
@@ -171,7 +183,7 @@ public class SandboxController extends WorldController implements ContactListene
 						boost((LevelElement) object);
 						break;
 					case DOOR:
-						if(((LevelElement) object).getActivated()) {
+						if (((LevelElement) object).getActivated()) {
 							openDoor((LevelElement) object);
 						}
 						break;
@@ -180,7 +192,15 @@ public class SandboxController extends WorldController implements ContactListene
 				}
 			}
 		}
-		cephalonautController.update(grappleButton, crossHair, inking, rotation);
+
+		boolean grappleButton = input.didSecondary();
+		Vector2 crossHair = input.getCrossHair().add(
+				(canvas.getCameraX() - canvas.getWidth() / 2f) / scale.x,
+				(canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
+		boolean inking = input.isThrusterApplied();
+		float rotation = input.getRotation();
+
+		cephalonautController.update(grappleButton, directionalGrapple, objects, crossHair, inking, rotation);
 		canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
 	}
 
@@ -262,7 +282,6 @@ public class SandboxController extends WorldController implements ContactListene
 
 	}
 
-
 	/**
 	 * Callback method for the start of a collision
 	 *
@@ -281,9 +300,22 @@ public class SandboxController extends WorldController implements ContactListene
 		try {
 			if (bd1.getClass() == LevelElement.class && bd2.getName().equals("michael")) {
 				((LevelElement) bd1).setInContact(true);
-			}
-			if (bd2.getClass() == LevelElement.class && bd1.getName().equals("michael")) {
+			} else if (bd2.getClass() == LevelElement.class && bd1.getName().equals("michael")) {
 				((LevelElement) bd2).setInContact(true);
+			}
+
+			GrappleModel grapple = cephalonaut.getGrapple();
+			if (!grapple.isAnchored()) {
+				if (bd1.getName().equals("grapple") && !bd2.getName().equals("michael")) {
+					grapple.setAnchored(true);
+					// grapple.setExtensionLength(cephalonaut.getPosition().dst(bd2.getPosition()));
+					grapple.setAnchorLocation(bd2.getName());
+				}
+				if (bd2.getName().equals("grapple") && !bd1.getName().equals("michael")) {
+					grapple.setAnchored(true);
+					// grapple.setExtensionLength(cephalonaut.getPosition().dst(bd1.getPosition()));
+					grapple.setAnchorLocation(bd1.getName());
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -337,6 +369,7 @@ public class SandboxController extends WorldController implements ContactListene
 		}
 
 		selector.draw(canvas);
+		cephalonaut.draw(canvas);
 		canvas.end();
 		
 		if (isDebug()) {

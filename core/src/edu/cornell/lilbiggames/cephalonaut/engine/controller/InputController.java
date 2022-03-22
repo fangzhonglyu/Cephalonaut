@@ -58,8 +58,8 @@ public class InputController {
 	/** Whether the secondary action button was pressed. */
 	private boolean secondaryPressed;
 	private boolean secondaryPrevious;
-//	/** Whether the teritiary action button was pressed. */
-//	private boolean tertiaryPressed;
+	/** Whether the teritiary action button was pressed. */
+	private boolean tertiaryPressed;
 	/** Whether the debug toggle was pressed. */
 	private boolean debugPressed;
 	private boolean debugPrevious;
@@ -145,6 +145,18 @@ public class InputController {
 	 */
 	public boolean didSecondary() {
 		return secondaryPressed && !secondaryPrevious;
+	}
+
+	/**
+	 * Returns true if the tertiary action button was pressed.
+	 *
+	 * This is a one-press button. It only returns true at the moment it was
+	 * pressed, and returns false at any frame afterwards.
+	 *
+	 * @return true if the tertiary action button was pressed. This should be used for switch grappling mode.
+	 */
+	public boolean didTertiary() {
+		return tertiaryPressed && !secondaryPrevious;
 	}
 
 	/**
@@ -292,6 +304,7 @@ public class InputController {
 		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
 		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT));
 		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
+		tertiaryPressed = (secondary && tertiaryPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.Q));
 
 		// Directional controls
 		rotation = (secondary ? rotation : 0.0f);

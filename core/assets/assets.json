@@ -19,4 +19,10 @@
     "level_0": "level_0.tmj",
     "level_1": "level_1.tmj"
   },
+  "music": {
+    "level1": "CephalonautLevel1Mix1.mp3"
+  },
+  "sounds":{
+    "ink": "sample ink.mp3"
+  }
 }

@@ -75,6 +75,9 @@ public class GameCanvas {
 	
 	/** Camera for the underlying SpriteBatch */
 	private OrthographicCamera camera;
+
+	/** ShapeRenderer for the fuel bar*/
+	private ShapeRenderer shapeRen;
 	
 	/** Value to cache window width (if we are currently full screen) */
 	int width;
@@ -101,6 +104,7 @@ public class GameCanvas {
 		active = DrawPass.INACTIVE;
 		spriteBatch = new PolygonSpriteBatch();
 		debugRender = new ShapeRenderer();
+		shapeRen = new ShapeRenderer();
 		
 		// Set the projection matrix (for proper scaling)
 		camera = new OrthographicCamera(getWidth(),getHeight());
@@ -259,7 +263,6 @@ public class GameCanvas {
 	 * This method raises an IllegalStateException if called while drawing is
 	 * active (e.g. in-between a begin-end pair).
 	 *
-	 * @param fullscreen Whether this canvas should change to fullscreen.
 	 * @param desktop 	 Whether to use the current desktop resolution
 	 */	 
 	public void setFullscreen(boolean value, boolean desktop) {
@@ -402,7 +405,6 @@ public class GameCanvas {
 	 * at the given coordinates.
 	 *
 	 * @param image The texture to draw
-	 * @param tint  The color tint
 	 * @param x 	The x-coordinate of the bottom left corner
 	 * @param y 	The y-coordinate of the bottom left corner
 	 */
@@ -566,7 +568,6 @@ public class GameCanvas {
 	 * at the given coordinates.
 	 *
 	 * @param region The texture to draw
-	 * @param tint  The color tint
 	 * @param x 	The x-coordinate of the bottom left corner
 	 * @param y 	The y-coordinate of the bottom left corner
 	 */
@@ -591,7 +592,6 @@ public class GameCanvas {
 	 * the texture will be unscaled.  The bottom left of the texture will be positioned
 	 * at the given coordinates.
 	 *region
-	 * @param image The texture to draw
 	 * @param tint  The color tint
 	 * @param x 	The x-coordinate of the bottom left corner
 	 * @param y 	The y-coordinate of the bottom left corner
@@ -680,6 +680,17 @@ public class GameCanvas {
 		spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
 	}
 
+	public void drawSimpleFuelBar(float ink, float x, float y){
+		spriteBatch.end();
+		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRen.setColor(Color.WHITE);
+		shapeRen.rect(x, y, 100, 12);
+		shapeRen.setColor(ink > 0.6  ? Color.CYAN : ink > 0.3 ? Color.ORANGE : Color.RED);
+		shapeRen.rect(x + 2, y + 1, ink * 96.0f, 10);
+		shapeRen.end();
+		spriteBatch.begin();
+	}
+
 	/**
 	 * Draws the tinted texture with the given transformations
 	 *
@@ -693,11 +704,9 @@ public class GameCanvas {
 	 * The local transformations in this method are applied in the following order: 
 	 * scaling, then rotation, then translation (e.g. placement at (sx,sy)).
 	 *
-	 * @param image The region to draw
 	 * @param tint  The color tint
 	 * @param ox 	The x-coordinate of texture origin (in pixels)
 	 * @param oy 	The y-coordinate of texture origin (in pixels)
-	 * @param transform  The image transform
 	 */	
 	public void draw(TextureRegion region, Color tint, float ox, float oy, Affine2 affine) {
 		if (active != DrawPass.STANDARD) {
@@ -728,7 +737,6 @@ public class GameCanvas {
 	 * scaling, then rotation, then translation (e.g. placement at (sx,sy)).
 	 *
 	 * @param region The polygon to draw
-	 * @param tint  The color tint
 	 * @param x 	The x-coordinate of the bottom left corner
 	 * @param y 	The y-coordinate of the bottom left corner
 	 */	
@@ -873,7 +881,6 @@ public class GameCanvas {
 	 * @param tint  The color tint
 	 * @param ox 	The x-coordinate of texture origin (in pixels)
 	 * @param oy 	The y-coordinate of texture origin (in pixels)
-	 * @param transform  The image transform
 	 */	
 	public void draw(PolygonRegion region, Color tint, float ox, float oy, Affine2 affine) {
 		if (active != DrawPass.STANDARD) {

@@ -3,35 +3,38 @@ package edu.cornell.lilbiggames.cephalonaut.engine.model;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.CapsuleObstacle;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
+import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
+import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
 
 public class GrappleModel extends WheelObstacle {
-    /** Whether the grapple is actively extending */
+    /** Whether the grapple is out */
+    private boolean isOut;
+    /** Whether the grapple is taut */
     private boolean isGrappling;
     /** Whether the grapple is anchored */
     private boolean isAnchored;
-    /** The joint anchor for the grapple */
-    private DistanceJointDef anchor;
+    /** The anchor location of the grapple */
+    private String anchorLocation;
     /** The extension length of the grapple */
     private float extensionLength;
+    /** The max extension length of the grapple */
+    private float maxLength;
 
     public GrappleModel(float x, float y, Vector2 drawScale) {
         // The shrink factors fit the image to a tighter hitbox
         super(x, y, 0.1f);
-        setName("hook");
+        setName("grapple");
         setDrawScale(drawScale);
         setFixedRotation(true);
         setActive(false);
         setSensor(true);
-        setBodyType(BodyDef.BodyType.StaticBody);
+        setBullet(true);
 
         int pixDiameter = (int) (getRadius() * 2);
         Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
@@ -39,6 +42,27 @@ public class GrappleModel extends WheelObstacle {
         pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
         texture = new TextureRegion(new Texture(pixmap));
         origin.set(pixDiameter / 2f, pixDiameter / 2f);
+
+        isOut = false;
+        isGrappling = false;
+        isAnchored = false;
+        anchorLocation = "";
+        extensionLength = 0;
+    }
+
+    /**
+     * Resets grapple to constructor values.
+     *
+     */
+    public void reset() {
+        setActive(false);
+        setLinearVelocity(new Vector2());
+        setBodyType(BodyDef.BodyType.DynamicBody);
+        isOut = false;
+        isGrappling = false;
+        isAnchored = false;
+        anchorLocation = "";
+        extensionLength = 0;
     }
 
     public boolean activatePhysics(World world) {
@@ -53,18 +77,36 @@ public class GrappleModel extends WheelObstacle {
     }
 
     /**
-     * Returns true if the grapple is actively extending.
+     * Returns true if the grapple is out.
      *
-     * @return true if the grapple is actively extending.
+     * @return true if the grapple is out.
+     */
+    public boolean isOut() {
+        return isOut;
+    }
+
+    /**
+     * Sets whether the grapple is out.
+     *
+     * @param out whether the grapple is out.
+     */
+    public void setOut(boolean out) {
+        isOut = out;
+    }
+
+    /**
+     * Returns true if the grapple is taut.
+     *
+     * @return true if the grapple is taut.
      */
     public boolean isGrappling() {
         return isGrappling;
     }
 
     /**
-     * Sets whether the grapple is actively extending.
+     * Sets whether the grapple is taut.
      *
-     * @param grappling whether the grapple is actively extending.
+     * @param grappling whether the grapple is taut.
      */
     public void setGrappling(boolean grappling) {
         isGrappling = grappling;
@@ -84,27 +126,23 @@ public class GrappleModel extends WheelObstacle {
      *
      * @param anchored whether the grapple is anchored.
      */
-    public void setAnchored(boolean anchored) {
-        isAnchored = anchored;
+    public void setAnchored(boolean anchored) { isAnchored = anchored; }
+
+    /**
+     * Sets the grapple's anchor location.
+     *
+     * @param location the distance joint definition for the grapple.
+     */
+    public void setAnchorLocation(String location) {
+        this.anchorLocation = location;
     }
 
     /**
-     * Sets the grapple's anchor.
+     * Returns the grapple's anchor location.
      *
-     * @param anchor the distance joint definition for the grapple.
+     * @return the grapple's anchor location.
      */
-    public void setAnchor(DistanceJointDef anchor) {
-        this.anchor = anchor;
-    }
-
-    /**
-     * Returns the grapple's anchor.
-     *
-     * @return the grapple's anchor.
-     */
-    public DistanceJointDef getAnchor() {
-        return anchor;
-    }
+    public String getAnchorLocation() { return anchorLocation; }
 
     /**
      * Sets the grapple's extension length.
@@ -124,15 +162,70 @@ public class GrappleModel extends WheelObstacle {
         return extensionLength;
     }
 
+    /**
+     * Sets the grapple's linear velocity closest towards anchoring point.
+     *
+     */
+    public void closestAnchor(PooledList<GameObject> objects) {
+        Vector2 closest = new Vector2(Float.MAX_VALUE, Float.MAX_VALUE);
+        for (GameObject o : objects) {
+            float distance = getPosition().dst(o.getPosition());
+            if (!o.getName().equals("michael") && !o.getName().equals("grapple") &&
+                    distance < getPosition().dst(closest)) {
+                closest = o.getPosition();
+            }
+        }
+        setLinearVelocity(closest.cpy().sub(getPosition().cpy()).nor().scl(15));
+    }
+
+    /**
+     * Set the grapple's max length.
+     *
+     * @param length the grapple's max length.
+     */
+    public void setMaxLength(float length) {
+        maxLength = length;
+    }
+
+    /**
+     * Get the grapple's max length.
+     *
+     * @return the grapple's max length.
+     */
+    public float getMaxLength() {
+        return maxLength;
+    }
+
+    /**
+     * Whether the grapple's is fully extended.
+     *
+     * @return whether the grapple's is fully extended.
+     */
+    public boolean isFullyExtended() {
+        return extensionLength >= maxLength;
+    }
+
+    /**
+     * Draws the physics object.
+     *
+     * @param canvas Drawing context
+     */
     public void draw(GameCanvas canvas) {
-        if (isGrappling || isAnchored) {
+        if (isOut) {
             canvas.draw(texture, Color.ORANGE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
                     getAngle(), 1, 1);
         }
     }
 
+    /**
+     * Draws the outline of the physics body.
+     *
+     * This method can be helpful for understanding issues with collisions.
+     *
+     * @param canvas Drawing context
+     */
     public void drawDebug(GameCanvas canvas) {
-        if (isGrappling || isAnchored) {
+        if (isOut) {
             super.drawDebug(canvas);
             canvas.drawPhysics(shape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
         }

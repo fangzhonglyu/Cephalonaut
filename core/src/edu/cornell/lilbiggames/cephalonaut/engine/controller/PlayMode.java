@@ -87,7 +87,7 @@ public class PlayMode extends WorldController {
         boolean inking = input.isThrusterApplied();
         float rotation = input.getRotation();
 
-        cephalonautController.update(grappleButton, crossHair, inking, rotation);
+//        cephalonautController.update(grappleButton, crossHair, inking, rotation);
     }
 
     /**

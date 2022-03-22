@@ -18,8 +18,8 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SandboxController;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.LevelElement;
-
 import java.util.Map;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
 
 /**
  * Root class for a LibGDX.  
@@ -43,7 +43,7 @@ public class GDXRoot extends Game {
 	private LevelLoader levelLoader;
 	private final String[] levelNames = {"level_0", "level_1"};
 	private Map<String, PlayMode> levels;
-	
+
 	/**
 	 * Creates a new game from the configuration settings.
 	 *
@@ -72,6 +72,9 @@ public class GDXRoot extends Game {
 //			System.out.println(e);
 //		}
 
+		SoundController.gatherSoundAssets(directory);
+
+
 		// Initialize the game world
 //		PlayMode defaultLevel = levels.get("level_1");
 		sandboxController = new SandboxController();
@@ -82,6 +85,7 @@ public class GDXRoot extends Game {
 
 		sandboxController.reset(levelLoader.loadLevel("level_1"));
 		setScreen(sandboxController);
+
 	}
 
 	/** 

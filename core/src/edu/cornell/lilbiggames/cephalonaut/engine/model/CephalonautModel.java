@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.OctopusObstacle;
 
 /**
@@ -47,6 +48,11 @@ public class CephalonautModel extends OctopusObstacle {
 	/** Whether or not the octopus is ink-thrusting */
 	private boolean inking;
 
+	/** How much ink the cephalonaut has left */
+	private float ink;
+
+	/** Get how much ink the cephalonaut has left*/
+
 	/**
 	 * Returns true if the cephalonaut is actively inking.
 	 *
@@ -63,7 +69,8 @@ public class CephalonautModel extends OctopusObstacle {
 	 */
 	public void setInking(boolean inking) {
 		this.inking = inking;
-		this.forceCache.y = inking ? force : 0.0f;
+		this.forceCache.y = (inking && ink > 0) ? force : 0.0f;
+		SoundController.setInkSound(inking && ink > 0);
 	}
 
 	/**
@@ -111,8 +118,8 @@ public class CephalonautModel extends OctopusObstacle {
 		// Matias: I don't think this line of code matters bc it's being overwritten by the setTexture call
 		// in the SandboxController.
 		origin.set(width / 2f, height / 2f);
-
-		grapple = new GrappleModel(100000000, 100000000, drawScale);
+		ink = 1f;
+		grapple = new GrappleModel(x, y, drawScale);
 	}
 
 	/**
@@ -191,9 +198,13 @@ public class CephalonautModel extends OctopusObstacle {
 	 * @param dt	Number of seconds since last animation frame
 	 */
 	public void update(float dt) {
-		// TODO: Stuff here probably
-		
 		super.update(dt);
+		if (inking && ink > 0.0f) {
+			ink -= 0.006f;
+		} else if (!inking && ink < 1.0f) {
+			ink += 0.0004f;
+		}
+		ink = Math.min(ink, 1.0f);
 	}
 
 	/**
@@ -202,7 +213,7 @@ public class CephalonautModel extends OctopusObstacle {
 	 * @param canvas Drawing context
 	 */
 	public void draw(GameCanvas canvas) {
-		if (grapple.isGrappling()) {
+		if (grapple.isOut()) {
 			float distance = getPosition().dst(grapple.getPosition());
 			float angle = getPosition().cpy().sub(grapple.getPosition()).angleRad() + (float) Math.PI / 2f;
 			Vector2 middle = getPosition().cpy().add(grapple.getPosition()).scl(0.5f);
@@ -211,7 +222,7 @@ public class CephalonautModel extends OctopusObstacle {
 					angle, 5, distance * drawScale.x);
 		}
 
-		if (isInking()) {
+		if (isInking() && ink > 0) {
 			Vector2 behind = new Vector2();
 			behind.set(0, getHeight()).setAngleRad(getAngle() - (float) Math.PI / 2f).add(getPosition());
 			canvas.draw(tentacleTexture, Color.PURPLE, 0.5f, 0.5f, behind.x * drawScale.x, behind.y * drawScale.y,
@@ -221,6 +232,8 @@ public class CephalonautModel extends OctopusObstacle {
 		canvas.draw(texture, Color.WHITE, origin.x, origin.y,
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 1, 1);
+
+		canvas.drawSimpleFuelBar(ink, canvas.getWidth() - 150, canvas.getHeight() - 70);
 	}
 	
 	/**
