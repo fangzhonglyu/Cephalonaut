@@ -162,21 +162,21 @@ public class GrappleModel extends WheelObstacle {
         return extensionLength;
     }
 
-    /**
-     * Sets the grapple's linear velocity closest towards anchoring point.
-     *
-     */
-    public void closestAnchor(PooledList<GameObject> objects) {
-        Vector2 closest = new Vector2(Float.MAX_VALUE, Float.MAX_VALUE);
-        for (GameObject o : objects) {
-            float distance = getPosition().dst(o.getPosition());
-            if (!o.getName().equals("michael") && !o.getName().equals("grapple") &&
-                    distance < getPosition().dst(closest)) {
-                closest = o.getPosition();
-            }
-        }
-        setLinearVelocity(closest.cpy().sub(getPosition().cpy()).nor().scl(15));
-    }
+//    /**
+//     * Sets the grapple's linear velocity closest towards anchoring point.
+//     *
+//     */
+//    public void closestAnchor(PooledList<GameObject> objects) {
+//        Vector2 closest = new Vector2(Float.MAX_VALUE, Float.MAX_VALUE);
+//        for (GameObject o : objects) {
+//            float distance = getPosition().dst(o.getPosition());
+//            if (!o.getName().equals("michael") && !o.getName().equals("grapple") &&
+//                    distance < getPosition().dst(closest)) {
+//                closest = o.getPosition();
+//            }
+//        }
+//        setLinearVelocity(closest.cpy().sub(getPosition().cpy()).nor().scl(15));
+//    }
 
     /**
      * Set the grapple's max length.
