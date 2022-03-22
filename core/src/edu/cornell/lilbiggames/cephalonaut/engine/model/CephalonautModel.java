@@ -74,6 +74,20 @@ public class CephalonautModel extends OctopusObstacle {
 	}
 
 	/**
+	 * Sets the amount of ink in the cephalonaut's sac.
+	 *
+	 * @param ink the amount of ink in the cephalonaut's sac.
+	 */
+	public void setInk(int ink) { this.ink = Math.min(1, ink); }
+
+	/**
+	 * Returns the amount of ink in the cephalonaut's sac.
+	 *
+	 * @returns the amount of ink in the cephalonaut's sac.
+	 */
+	public float getInk() { return ink; }
+
+	/**
 	 * Sets whether the cephalonaut is actively inking.
 	 *
 	 * @param new_force whether the cephalonaut is actively inking.

@@ -200,6 +200,10 @@ public class SandboxController extends WorldController implements ContactListene
 		boolean inking = input.isThrusterApplied();
 		float rotation = input.getRotation();
 
+		if (input.didTertiary()) {
+			cephalonaut.setInk(1);
+		}
+
 		cephalonautController.update(grappleButton, directionalGrapple, objects, crossHair, inking, rotation);
 		canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
 	}
