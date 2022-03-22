@@ -308,12 +308,12 @@ public class SandboxController extends WorldController implements ContactListene
 			if (!grapple.isAnchored()) {
 				if (bd1.getName().equals("grapple") && !bd2.getName().equals("michael")) {
 					grapple.setAnchored(true);
-					// grapple.setExtensionLength(cephalonaut.getPosition().dst(bd2.getPosition()));
+					 grapple.setExtensionLength(cephalonaut.getPosition().dst(bd2.getPosition()));
 					grapple.setAnchorLocation(bd2.getName());
 				}
 				if (bd2.getName().equals("grapple") && !bd1.getName().equals("michael")) {
 					grapple.setAnchored(true);
-					// grapple.setExtensionLength(cephalonaut.getPosition().dst(bd1.getPosition()));
+					 grapple.setExtensionLength(cephalonaut.getPosition().dst(bd1.getPosition()));
 					grapple.setAnchorLocation(bd1.getName());
 				}
 			}
