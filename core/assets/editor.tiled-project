@@ -32,6 +32,11 @@
                     "value": 0.3
                 },
                 {
+                    "name": "tint",
+                    "type": "color",
+                    "value": "#ffffffff"
+                },
+                {
                     "name": "type",
                     "propertyType": "LevelElementType",
                     "type": "string",

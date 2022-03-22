@@ -39,7 +39,7 @@ public class LevelLoader {
         }
 
         for (JsonValue tile : object_tileset.get("tiles")) {
-            map.put(tile.getInt("id") + 129, tile);
+            map.put(tile.getInt("id") + 128, tile);
         }
     }
 
@@ -77,7 +77,7 @@ public class LevelLoader {
                     if (tile != null && texture != null) {
                         int x = i % width;
                         int y = height - i / width - 1;
-                        LevelElement obstacle = new LevelElement(x, y, texture,1, 1, tile);
+                        LevelElement obstacle = new LevelElement(x, y,1, 1, texture, tile);
                         objects.addLast((GameObject) obstacle);
                     }
                 }
@@ -88,9 +88,18 @@ public class LevelLoader {
                 objects.addLast(object);
             } else if (type.equals("objectgroup")) {
                 for (JsonValue jsonObject : layer.get("objects")) {
-                    JsonValue jsonObjectType = map.get(jsonObject.getInt("gid"));
-                    Texture texture = assetDirectory.getEntry(jsonObjectType.getString("image"), Texture.class);
-                    LevelElement object = new LevelElement(jsonObject, jsonObjectType, new TextureRegion(texture));
+                    int gid = jsonObject.getInt("gid") - 1;
+                    JsonValue jsonObjectType = map.get(gid);
+                    TextureRegion texture;
+                    if (jsonObjectType.has("image")) {
+                        texture = new TextureRegion(
+                            assetDirectory.getEntry(jsonObjectType.getString("image"), Texture.class)
+                        );
+                    } else {
+                        texture = textures.get(gid);
+                    }
+
+                    LevelElement object = new LevelElement(jsonObject, jsonObjectType, texture);
                     objects.addLast(object);
                 }
             } else {

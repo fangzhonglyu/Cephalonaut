@@ -175,6 +175,16 @@ public class LevelElement extends SimpleObstacle {
         setGrapple(true);
     }
 
+    // TODO: Move this (along some other parsing code I guess) somewhere else?
+    public static Color argbToColor (String hex, Color color) {
+        hex = hex.charAt(0) == '#' ? hex.substring(1) : hex;
+        color.a = Integer.parseInt(hex.substring(0, 2), 16) / 255f;
+        color.r = Integer.parseInt(hex.substring(2, 4), 16) / 255f;
+        color.g = Integer.parseInt(hex.substring(4, 6), 16) / 255f;
+        color.b = Integer.parseInt(hex.substring(6, 8), 16) / 255f;
+        return color;
+    }
+
     private void setProperties(JsonValue json) {
         JsonValue properties = json.get("properties");
         if (properties == null) return;
@@ -199,19 +209,22 @@ public class LevelElement extends SimpleObstacle {
             setRestitution(go_properties.getFloat("restitution"));
         if (go_properties.has("isStatic"))
             setBodyType(go_properties.getBoolean("isStatic") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+        if (go_properties.has("tint"))
+            argbToColor(go_properties.getString("tint"), tint);
     }
 
-    private LevelElement(float x, float y, TextureRegion texture) {
+    private LevelElement(float x, float y, float width, float height, TextureRegion texture) {
         super(x, y);
         //        original_pos = new Vector2(x, y);
         setName("unnamed");
         setDefaultProperties();
+        setSize(width, height);
         setTexture(texture);
+        setPosition(x - 0.5f + width / 2f, y - 0.5f + height / 2f);
     }
 
-    public LevelElement(int x, int y, TextureRegion texture, float width, float height, JsonValue tile) {
-        this(x, y, texture);
-        setSize(width, height);
+    public LevelElement(int x, int y, float width, float height, TextureRegion texture, JsonValue tile) {
+        this(x, y, width, height, texture);
 
         setProperties(tile);
 
@@ -230,8 +243,11 @@ public class LevelElement extends SimpleObstacle {
     }
 
     public LevelElement(JsonValue object, JsonValue objectType, TextureRegion texture) {
-        this(object.getInt("x") / 16f, 50 - object.getInt("y") / 16f, texture);
-        setSize(object.getFloat("width") / 16f, object.getFloat("height") / 16f);
+        this(object.getInt("x") / 16f,
+                50 - object.getInt("y") / 16f,
+                object.getFloat("width") / 16f,
+                object.getFloat("height") / 16f,
+                texture);
 
         setProperties(objectType);
         setProperties(object);
@@ -241,15 +257,12 @@ public class LevelElement extends SimpleObstacle {
 
         if (polygon != null) {
             setPolygon(collisionObject, polygon);
-        } else if (collisionObject.has("ellipse")) {
+        } else {
             // TODO: Replace. This creates square polygon when no polygon is found
 
-            CircleShape shape = new CircleShape();
-            shape.setRadius(collisionObject.getFloat("width") / (2f * 16f));
-            float x = collisionObject.getFloat("x") / 16f;
-            float y = -collisionObject.getFloat("y") / 16f;
-            shape.setPosition(new Vector2(x, y));
-            this.shape = shape;
+//            float[] vertices = {-0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f};
+            float[] vertices = {-0.5f, -3f, 0.5f, -3f, 0.5f, 3f, -0.5f, 3f};
+            setVertices(vertices);
         }
 
         finishSetup();

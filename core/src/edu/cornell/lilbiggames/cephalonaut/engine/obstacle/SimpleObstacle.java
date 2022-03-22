@@ -43,7 +43,7 @@ public abstract class SimpleObstacle extends GameObject {
 	/** The texture origin for drawing */
 	protected Vector2 origin;
 
-	protected Color tint = Color.WHITE;
+	protected Color tint;
 	protected float sx = 1, sy = 1;
 
 	public float getTextureScaleX() { return sx; }
@@ -827,6 +827,7 @@ public abstract class SimpleObstacle extends GameObject {
 		super(x,y);
 		origin = new Vector2();
 		body = null;
+		tint = new Color(Color.WHITE);
 	}
 	
 	/**
