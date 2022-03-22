@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":9,
-         "image":"background.png",
+         "image":"BG-purplespace.png",
          "name":"Background",
          "opacity":1,
          "parallaxx":0.5,
@@ -20,7 +20,42 @@
          "draworder":"topdown",
          "id":10,
          "name":"Objects",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":134,
+                 "height":32,
+                 "id":21,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":496.666666666667,
+                 "y":608.666666666667
+                }, 
+                {
+                 "gid":131,
+                 "height":16,
+                 "id":22,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "type":"Finish"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":81.6666666666667,
+                 "y":90.3333333333333
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -40,7 +75,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":18,
+ "nextobjectid":23,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
@@ -52,7 +87,7 @@
         }, 
         {
          "firstgid":129,
-         "source":"objects.tsx"
+         "source":"objects.tsj"
         }],
  "tilewidth":16,
  "type":"map",

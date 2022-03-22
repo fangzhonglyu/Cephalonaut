@@ -3,14 +3,19 @@ package edu.cornell.lilbiggames.cephalonaut.engine.obstacle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.EllipseShapeBuilder;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 
 import javax.xml.validation.Validator;
+import java.awt.*;
 
 
 public class LevelElement extends SimpleObstacle {
@@ -66,28 +71,20 @@ public class LevelElement extends SimpleObstacle {
     private boolean inContact = false;
     private boolean activated = false;
     private boolean opened;
-    private float radius;
+
     private float width;
     private float height;
-//    private float[] vertices;
 
-    /**
-     * Returns the radius of this circle
-     *
-     * @return the radius of this circle
-     */
-    public float getRadius() {
-        return shape.getRadius();
+    private void updateScale() {
+        if (texture == null) return;
+        setTextureScaleX(drawScale.x * width / texture.getRegionWidth());
+        setTextureScaleY(drawScale.y * height / texture.getRegionHeight());
     }
 
-    /**
-     * Sets the radius of this circle
-     *
-     * @param value  the radius of this circle
-     */
-    public void setRadius(float value) {
-        shape.setRadius(value);
-        markDirty(true);
+    public void setSize(float width, float height) {
+        this.width = width;
+        this.height = height;
+        updateScale();
     }
 
     public boolean getActivated() {
@@ -170,64 +167,98 @@ public class LevelElement extends SimpleObstacle {
         }
     }
 
-    private void setProperties(JsonValue properties) {
-        if (properties == null) {
-            element = ELEMENT.WALL;
-            setDensity(0);
-            setBodyType(BodyDef.BodyType.StaticBody);
-            setRestitution(0.3f);
-            setGrapple(true);
-        } else {
-            setElement(properties.getString("type", "Wall"));
-            setGrapple(properties.getBoolean("canGrappleOn", true));
-            setDensity(properties.getFloat("density", 0));
-            setRestitution(properties.getFloat("restitution", 0.3f));
-            boolean isStatic = properties.getBoolean("isStatic", true);
-            setBodyType(isStatic ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
-        }
+    private void setDefaultProperties() {
+        element = ELEMENT.WALL;
+        setDensity(0);
+        setBodyType(BodyDef.BodyType.StaticBody);
+        setRestitution(0.3f);
+        setGrapple(true);
     }
 
-    public LevelElement(int x, int y, JsonValue tile) {
-        super(x,y);
-        setName("unnamed");
-        original_pos = new Vector2(x, y);
+    private void setProperties(JsonValue json) {
+        JsonValue properties = json.get("properties");
+        if (properties == null) return;
 
-        JsonValue properties = tile.get("properties");
-        JsonValue elementProperties = null;
-        if (properties != null) {
-            for (JsonValue property : properties.iterator()) {
-                String name = property.getString("name", "");
-                String propertyType = property.getString("propertytype", "");
-                if (name.equals("body") && propertyType.equals("GameObject")) {
-                    elementProperties = property.get("value");
-                }
+        JsonValue go_properties = null;
+        for (JsonValue property : properties.iterator()) {
+            String name = property.getString("name", "");
+            String propertyType = property.getString("propertytype", "");
+            if (name.equals("body") && propertyType.equals("GameObject")) {
+                go_properties = property.get("value");
             }
         }
-        setProperties(elementProperties);
+        if (go_properties == null) return;
+
+        if (go_properties.has("type"))
+            setElement(go_properties.getString("type"));
+        if (go_properties.has("canGrappleOn"))
+            setGrapple(go_properties.getBoolean("canGrappleOn"));
+        if (go_properties.has("density"))
+            setDensity(go_properties.getFloat("density"));
+        if (go_properties.has("restitution"))
+            setRestitution(go_properties.getFloat("restitution"));
+        if (go_properties.has("isStatic"))
+            setBodyType(go_properties.getBoolean("isStatic") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+    }
+
+    private LevelElement(float x, float y, TextureRegion texture) {
+        super(x, y);
+        //        original_pos = new Vector2(x, y);
+        setName("unnamed");
+        setDefaultProperties();
+        setTexture(texture);
+    }
+
+    public LevelElement(int x, int y, TextureRegion texture, float width, float height, JsonValue tile) {
+        this(x, y, texture);
+        setSize(width, height);
+
+        setProperties(tile);
 
         JsonValue collisionObject = tile.get("objectgroup").get("objects").get(0);
         JsonValue polygon = collisionObject.get("polygon");
         if (polygon != null) {
-            // TODO: Replace 16 with less magic number
-
-            float ox = collisionObject.getFloat("x");
-            float oy = collisionObject.getFloat("y");
-            float[] vertices = new float[2 * polygon.size];
-            for (int i = 0; i < polygon.size; i++) {
-                vertices[2 * i] = (ox + polygon.get(i).getFloat("x")) / 16;
-                vertices[2 * i + 1] = 1f - (oy + polygon.get(i).getFloat("y")) / 16;
-            }
-            setVertices(vertices);
+            setPolygon(collisionObject, polygon);
         } else {
             // TODO: Replace. This creates square polygon when no polygon is found
 
-            float[] vertices = {0, 0, 1, 0, 1, 1, 0, 1};
+            float[] vertices = {-0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f};
             setVertices(vertices);
         }
 
+        finishSetup();
+    }
+
+    public LevelElement(JsonValue object, JsonValue objectType, TextureRegion texture) {
+        this(object.getInt("x") / 16f, 50 - object.getInt("y") / 16f, texture);
+        setSize(object.getFloat("width") / 16f, object.getFloat("height") / 16f);
+
+        setProperties(objectType);
+        setProperties(object);
+
+        JsonValue collisionObject = objectType.get("objectgroup").get("objects").get(0);
+        JsonValue polygon = collisionObject.get("polygon");
+
+        if (polygon != null) {
+            setPolygon(collisionObject, polygon);
+        } else if (collisionObject.has("ellipse")) {
+            // TODO: Replace. This creates square polygon when no polygon is found
+
+            CircleShape shape = new CircleShape();
+            shape.setRadius(collisionObject.getFloat("width") / (2f * 16f));
+            float x = collisionObject.getFloat("x") / 16f;
+            float y = -collisionObject.getFloat("y") / 16f;
+            shape.setPosition(new Vector2(x, y));
+            this.shape = shape;
+        }
+
+        finishSetup();
+    }
+
+    private void finishSetup() {
         switch (element) {
             case BLACK_HOLE:
-                createBlackHole();
+                setName("blackHole" + black_hole_count++);
                 break;
             case FLYING_METEOR:
                 createFlyingMeteor();
@@ -249,69 +280,39 @@ public class LevelElement extends SimpleObstacle {
         }
     }
 
+    private void setPolygon(JsonValue collisionObject, JsonValue polygon) {
+        // TODO: Replace 16 with less magic number
+
+        float ox = collisionObject.getFloat("x");
+        float oy = collisionObject.getFloat("y");
+        float[] vertices = new float[2 * polygon.size];
+
+        float scaleX = 16f * width / texture.getRegionWidth();
+        float scaleY = 16f * height / texture.getRegionHeight();
+
+        for (int i = 0; i < polygon.size; i++) {
+            vertices[2 * i] = scaleX * ((ox + polygon.get(i).getFloat("x")) / 16f - width / 2f);
+            vertices[2 * i + 1] = scaleY * (height / 2f - (oy + polygon.get(i).getFloat("y")) / 16f);
+        }
+
+        setVertices(vertices);
+    }
+
     public void setTexture(TextureRegion value) {
         texture = value;
-        origin.set(0, 0);
-//        origin.set(texture.getRegionWidth() / 2.0f, texture.getRegionHeight() / 2.0f);
-//        setTextureScaleX(drawScale.x / texture.getRegionWidth());
-//        setTextureScaleY(drawScale.y / texture.getRegionHeight());
+        origin.set(value.getRegionWidth() / 2f, value.getRegionHeight() / 2f);
+        updateScale();
     }
 
     public void setDrawScale(Vector2 value) {
         super.setDrawScale(value);
-        setTextureScaleX(drawScale.x / texture.getRegionWidth());
-        setTextureScaleY(drawScale.y / texture.getRegionHeight());
+        updateScale();
     }
 
     private void setVertices(float[] vertices) {
-        // Make the box with the center in the center
-        float xMin = vertices[0];
-        float xMax = vertices[0];
-        float yMin = vertices[1];
-        float yMax = vertices[1];
-        for(int i = 0; i < vertices.length; i += 2) {
-            if(vertices[i] < xMin) {
-                xMin = vertices[i];
-            }
-            if(vertices[i] > xMax) {
-                xMax = vertices[i];
-            }
-        }
-        for(int i = 1; i < vertices.length; i += 2) {
-            if(vertices[i] < yMin) {
-                yMin = vertices[i];
-            }
-            if(vertices[i] > yMax) {
-                yMax = vertices[i];
-            }
-        }
-        width = xMax - xMin;
-        height = yMax - yMin;
         PolygonShape temp = new PolygonShape();
         temp.set(vertices);
         shape = temp;
-    }
-
-    public void setTextureBottomLeft(TextureRegion value) {
-        texture = value;
-        origin.set(0, 0);
-    }
-
-    private void createBlackHole() {
-        createBlackHole(BLACK_HOLE_RADIUS);
-    }
-
-    private void createBlackHole(float radius) {
-        shape = new CircleShape();
-        shape.setRadius(radius);
-        setName("blackHole" + black_hole_count);
-        setGrapple(false);
-        setTexture(crosshairTexture);
-        setBodyType(BodyDef.BodyType.StaticBody);
-//        setTextureScaleX(radius * 2 * scale.x / crosshairTexture.getRegionWidth());
-//        setTextureScaleY(radius * 2 * scale.y / crosshairTexture.getRegionHeight());
-        setTint(Color.YELLOW);
-        black_hole_count++;
     }
 
     private void createFlyingMeteor() {
@@ -422,7 +423,8 @@ public class LevelElement extends SimpleObstacle {
     }
 
     private void createFinish() {
-        createBoostPad(BOX_WIDTH, BOX_HEIGHT);
+        setSensor(true);
+//        createBoostPad(BOX_WIDTH, BOX_HEIGHT);
     }
 
     private void createFinish(float width, float height) {
@@ -513,9 +515,17 @@ public class LevelElement extends SimpleObstacle {
      * @param canvas Drawing context
      */
     public void drawDebug(GameCanvas canvas) {
+        if (shape instanceof PolygonShape) {
+            canvas.drawPhysics((PolygonShape) shape,Color.YELLOW,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+            return;
+        }
+
         switch(element) {
             case BLACK_HOLE:
-                canvas.drawPhysics((CircleShape) shape,Color.YELLOW,getX(),getY(),drawScale.x,drawScale.y);
+                CircleShape circleShape = (CircleShape) shape;
+                canvas.drawPhysics(circleShape,Color.YELLOW,
+                                getX() + circleShape.getPosition().x,getY() + circleShape.getPosition().y,
+                                   drawScale.x,drawScale.y);
                 break;
             case FLYING_METEOR:
                 canvas.drawPhysics((CircleShape) shape,Color.YELLOW,getX(),getY(),drawScale.x,drawScale.y);

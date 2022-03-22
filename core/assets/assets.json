@@ -6,13 +6,16 @@
       "wrapV": "repeated"
     },
     "barrier": "barrier.png",
-    "squid": "squid.png",
+    "squid.png": "squid.png",
     "octopus": "octopus.png",
     "crosshair": "crosshair.png",
-    "background.png": "background.png"
+    "BG-purplespace.png": "BG-purplespace.png",
+    "GO-blackhole.png": "GO-blackhole.png",
+    "GO-wormhole.png": "GO-wormhole.png"
   },
   "jsons": {
-    "tileset": "tileset.tsj",
+    "tile-tileset": "tileset.tsj",
+    "object-tileset": "objects.tsj",
     "level_0": "level_0.tmj",
     "level_1": "level_1.tmj"
   },

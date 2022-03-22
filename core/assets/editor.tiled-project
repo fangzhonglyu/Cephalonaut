@@ -53,7 +53,8 @@
                 "Button",
                 "Door",
                 "Misc Poly",
-                "Finish"
+                "Finish",
+                "Wormhole"
             ],
             "valuesAsFlags": false
         }

@@ -14,8 +14,11 @@ public class ImageObject extends GameObject {
     public ImageObject (Texture texture) {
         this.texture = texture;
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        parallaxFactor = new Vector2(1, 1);
+    }
 
-        parallaxFactor = new Vector2(0.3f, 0.3f);
+    public void setParallax(float x, float y) {
+        parallaxFactor.set(x, y);
     }
 
     @Override
