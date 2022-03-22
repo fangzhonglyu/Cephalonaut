@@ -145,3 +145,5 @@ hs_err_pid*
 # Output directories
 out/
 *.tiled-session
+
+core/resources
