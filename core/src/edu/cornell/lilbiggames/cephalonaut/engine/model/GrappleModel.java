@@ -23,7 +23,7 @@ public class GrappleModel extends WheelObstacle {
     /** Whether the grapple is anchored */
     private boolean isAnchored;
     /** Whether the grapple is locked in place*/
-    public boolean isLocked;
+    public float isLocked;
     /** The anchor location of the grapple */
     private String anchorLocation;
     /** The extension length of the grapple */
@@ -54,7 +54,7 @@ public class GrappleModel extends WheelObstacle {
         isOut = false;
         isGrappling = false;
         isAnchored = false;
-        isLocked = false;
+        isLocked = 0;
         anchorLocation = "";
         extensionLength = 0;
         trace = new ArrayList<>();
@@ -71,7 +71,7 @@ public class GrappleModel extends WheelObstacle {
         isOut = false;
         isGrappling = false;
         isAnchored = false;
-        isLocked = false;
+        isLocked = 0;
         anchorLocation = "";
         extensionLength = 0;
         trace = new ArrayList<>();
@@ -233,7 +233,9 @@ public class GrappleModel extends WheelObstacle {
             tr.rotate(getPosition().sub(cephP).angleDeg());
             float dist = getPosition().dst(cephP);
             for (float i = 0; i<getPosition().dst(cephP)/2; i+=1/drawScale.x){
-                Vector2 t = new Vector2(i*2, (float) Math.sin(i*5)/dist*(float)Math.sqrt(Math.sqrt(1-i*2/dist)));
+                Vector2 t = new Vector2(i*2, (float)(-Math.sin(i*5)-Math.cos(i*4))/(dist+0.3f)/2f*(float)Math.sqrt(Math.sqrt(1-i*2/dist)));
+                if(isLocked>0)
+                    t.set(t.x,t.y*(8-isLocked)/8);
                 tr.applyTo(t);
                 canvas.draw(tex, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
                         getAngle(), 1, 1);

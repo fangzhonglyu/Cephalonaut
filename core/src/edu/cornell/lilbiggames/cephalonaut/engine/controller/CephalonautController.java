@@ -31,7 +31,7 @@ public class CephalonautController {
         updateGrapple(grappleButton, directionalGrapple, anchoringPoints, crossHair);
 
         cephalonaut.setInking(thrusterApplied);
-        if(!cephalonaut.getGrapple().isLocked)
+        if(cephalonaut.getGrapple().isLocked==0)
             cephalonaut.setRotationalDirection(rotation);
         cephalonaut.applyRotation();
         cephalonaut.applyForce();
@@ -54,17 +54,16 @@ public class CephalonautController {
                 grapple.setActive(true);
             }
         }
-
-        if(grapple.isOut()&&!grapple.isAnchored()){
-            grapple.addTrace(cephalonaut.getPosition());
-        }
+        if(grapple.isLocked>0&&grapple.isLocked<8)
+            grapple.isLocked+=0.4;
 
         float distance = cephalonaut.getPosition().cpy().dst(grapple.getPosition());
         if (grapple.isAnchored()) {
             grapple.setBodyType(BodyDef.BodyType.StaticBody);
             if (distance > grapple.getExtensionLength() && !grapple.isGrappling()) {
                 Vector2 swing = cephalonaut.getPosition().cpy().sub(grapple.getPosition()).rotate90(0);
-                grapple.isLocked = true;
+                if(grapple.isLocked<8)
+                    grapple.isLocked=1;
                 float dot = swing.dot(cephalonaut.getLinearVelocity());
                 if (dot != 0) {
                     // Experimental: Conserve velocity when rotating around point behind cephalonaut
@@ -94,6 +93,8 @@ public class CephalonautController {
                 anchor3.length = distance;
                 anchor.frequencyHz = 3f;
                 anchor2.frequencyHz = 3f;
+                anchor3.dampingRatio=0.8f;
+                anchor3.frequencyHz=0.6f;
                 grappleJoint = world.createJoint(anchor);
                 grappleJoint2 = world.createJoint(anchor2);
                 grappleJoint3 = world.createJoint(anchor3);
