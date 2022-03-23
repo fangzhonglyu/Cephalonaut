@@ -31,7 +31,8 @@ public class CephalonautController {
         updateGrapple(grappleButton, directionalGrapple, anchoringPoints, crossHair);
 
         cephalonaut.setInking(thrusterApplied);
-        cephalonaut.setRotationalDirection(rotation);
+        if(!cephalonaut.getGrapple().isAnchored())
+            cephalonaut.setRotationalDirection(rotation);
         cephalonaut.applyRotation();
         cephalonaut.applyForce();
     }
@@ -39,7 +40,6 @@ public class CephalonautController {
     private void updateGrapple(boolean grappleButton, boolean directionalGrapple, PooledList<GameObject> anchoringPoints,
                                   Vector2 crossHair) {
         GrappleModel grapple = cephalonaut.getGrapple();
-
         if (grappleButton) {
             grapple.setOut(!grapple.isOut());
             if (grapple.isOut()) {
