@@ -233,7 +233,7 @@ public class GrappleModel extends WheelObstacle {
             tr.rotate(getPosition().sub(cephP).angleDeg());
             float dist = getPosition().dst(cephP);
             for (float i = 0; i<getPosition().dst(cephP)/2; i+=1/drawScale.x){
-                Vector2 t = new Vector2(i*2, (float) Math.sin(i*5)/dist);
+                Vector2 t = new Vector2(i*2, (float) Math.sin(i*5)/dist*(float)Math.sqrt(Math.sqrt(1-i*2/dist)));
                 tr.applyTo(t);
                 canvas.draw(tex, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
                         getAngle(), 1, 1);
