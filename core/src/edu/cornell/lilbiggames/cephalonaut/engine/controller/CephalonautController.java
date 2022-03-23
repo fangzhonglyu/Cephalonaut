@@ -19,7 +19,7 @@ public class CephalonautController {
     private CephalonautModel cephalonaut;
 
     /** The joint of the grapple */
-    private Joint grappleJoint;
+    private Joint grappleJoint,grappleJoint2,grappleJoint3;
 
     public CephalonautController(World world, CephalonautModel cephalonaut) {
         this.world = world;
@@ -68,12 +68,31 @@ public class CephalonautController {
                     cephalonaut.setLinearVelocity(cephalonaut.getLinearVelocity().setAngleRad(newAngle));
                 }
 
+
                 DistanceJointDef anchor = new DistanceJointDef();
+                DistanceJointDef anchor2 = new DistanceJointDef();
+                DistanceJointDef anchor3 = new DistanceJointDef();
                 anchor.bodyA = grapple.getBody();
                 anchor.bodyB = cephalonaut.getBody();
+                anchor.localAnchorB.set(0,-20);
                 anchor.collideConnected = false;
-                anchor.length = distance;
+                anchor.length = (float)Math.sqrt(distance*distance+400);
+                anchor.dampingRatio=0.6f;
+                anchor2.bodyA = grapple.getBody();
+                anchor2.bodyB = cephalonaut.getBody();
+                anchor2.dampingRatio=0.6f;
+                anchor2.localAnchorB.set(0,20);
+                anchor2.collideConnected = false;
+                anchor2.length = (float)Math.sqrt(distance*distance+400);
+                anchor3.bodyA = grapple.getBody();
+                anchor3.bodyB = cephalonaut.getBody();
+                anchor3.collideConnected = false;
+                anchor3.length = distance;
+                anchor.frequencyHz = 3f;
+                anchor2.frequencyHz = 3f;
                 grappleJoint = world.createJoint(anchor);
+                grappleJoint2 = world.createJoint(anchor2);
+                grappleJoint3 = world.createJoint(anchor3);
                 grapple.setGrappling(true);
             }
         }
@@ -86,6 +105,10 @@ public class CephalonautController {
             if (grappleJoint != null) {
                 world.destroyJoint(grappleJoint);
                 grappleJoint = null;
+                world.destroyJoint(grappleJoint2);
+                grappleJoint2 = null;
+                world.destroyJoint(grappleJoint3);
+                grappleJoint3 = null;
             }
             grapple.reset();
             grapple.setPosition(cephalonaut.getPosition().cpy());
