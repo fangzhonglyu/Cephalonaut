@@ -15,8 +15,7 @@
 
 import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
-import edu.cornell.lilbiggames.cephalonaut.engine.controller.SandboxController;
-import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.LevelElement;
 import java.util.Map;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
@@ -37,9 +36,7 @@ public class GDXRoot extends Game {
 	/** Drawing context to display graphics (VIEW CLASS) */
 	private GameCanvas canvas;
 
-	/** Sandbox controller **/
-	private SandboxController sandboxController;
-
+	private PlayMode playMode;
 	private LevelLoader levelLoader;
 	private final String[] levelNames = {"level_0", "level_1"};
 	private Map<String, PlayMode> levels;
@@ -65,6 +62,7 @@ public class GDXRoot extends Game {
 		levelLoader = new LevelLoader();
 		directory = levelLoader.getAssetDirectory();
 
+		// TODO: This should be cleaner when we have a main menu
 		// Load in levels
 //		try{
 //			levels = levelLoader.loadLevels(levelNames);
@@ -76,15 +74,13 @@ public class GDXRoot extends Game {
 
 
 		// Initialize the game world
-//		PlayMode defaultLevel = levels.get("level_1");
-		sandboxController = new SandboxController();
+		playMode = new PlayMode();
 		LevelElement.gatherAssets(directory);
-		sandboxController.gatherAssets(directory);
-		sandboxController.setCanvas(canvas);
-//		sandboxController.setLevel(defaultLevel);
+		playMode.gatherAssets(directory);
+		playMode.setCanvas(canvas);
 
-		sandboxController.reset(levelLoader.loadLevel("level_1"));
-		setScreen(sandboxController);
+		playMode.reset(levelLoader.loadLevel("level_1"));
+		setScreen(playMode);
 
 	}
 
@@ -96,7 +92,7 @@ public class GDXRoot extends Game {
 	public void dispose() {
 		// Call dispose on our children
 		setScreen(null);
-		sandboxController.dispose();
+		playMode.dispose();
 
 		canvas.dispose();
 		canvas = null;

@@ -14,9 +14,11 @@ import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 
 
 public class LevelElement extends SimpleObstacle {
-    /** Shape information for this circle */
-    protected Shape shape;
+    /** Triangles for this element */
     private PolygonShape[] triangles;
+
+    // TODO: We probably don't need shape and geometry? What's this about a resizing cache?
+    protected Shape shape;
     /** A cache value for the fixture (for resizing) */
     private Fixture geometry;
 
@@ -27,6 +29,10 @@ public class LevelElement extends SimpleObstacle {
 
     /** Door **/
     private Vector2 originalPos;
+    private LevelElement activatee;
+    private boolean inContact = false;
+    private boolean activated = false;
+    private boolean opened;
 
     /** Misc. element stuff **/
     private static final float BLACK_HOLE_RADIUS = .5f;
@@ -42,6 +48,8 @@ public class LevelElement extends SimpleObstacle {
     private static TextureRegion octopusTexture;
     private static TextureRegion crosshairTexture;
 
+    /** Element counts for naming **/
+    // TODO: Can probably replace by Tiled object names. Tiled can be named by their coordinates.
     private static int black_hole_count = 0;
     private static int meteor_count = 0;
     private static int wall_count = 0;
@@ -54,20 +62,17 @@ public class LevelElement extends SimpleObstacle {
         BLACK_HOLE,
         FLYING_METEOR,
         WALL,
-        BOUNCY_WALL,
+        BOUNCE_PAD,
         BOOST_PAD,
         BUTTON,
         DOOR,
-        MISC_POLY,
         FINISH
     }
 
+    /** Type of element **/
     private Element element;
-    private LevelElement activatee;
-    private boolean inContact = false;
-    private boolean activated = false;
-    private boolean opened;
 
+    /** Size of element, used for texture and polygon resizing purposes **/
     private float width;
     private float height;
 
@@ -264,10 +269,12 @@ public class LevelElement extends SimpleObstacle {
         setProperties(object);
 
         JsonValue collisionObject = object.get("objectgroup").get("objects").get(0);
-        JsonValue polygon = collisionObject.get("polygon");
-        if (polygon != null) {
+
+        // Can use Tiled polygon and rectangles to define shape
+        // TODO: Allow shapeless objects maybe?
+        if (collisionObject.has("polygon")) {
             // Create PolygonShape from Tiled polygon
-            setPolygon(collisionObject, polygon);
+            setPolygon(collisionObject, collisionObject.get("polygon"));
         } else {
             // Create PolygonShape from Tiled rectangle
             float cWidth = collisionObject.getFloat("width");
@@ -299,6 +306,7 @@ public class LevelElement extends SimpleObstacle {
 
         switch (element) {
             case BLACK_HOLE:
+                // TODO: Get parameters like strength and attraction radius from JSON
                 setName("blackHole" + black_hole_count++);
                 break;
             case FLYING_METEOR:
@@ -506,10 +514,6 @@ public class LevelElement extends SimpleObstacle {
         for (Fixture fixture : body.getFixtureList()) {
             body.destroyFixture(fixture);
         }
-//        if (geometry != null) {
-//            body.destroyFixture(geometry);
-//            geometry = null;
-//        }
     }
 
     /**

@@ -10,27 +10,23 @@
  */
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObjectJson;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
-import edu.cornell.lilbiggames.cephalonaut.engine.model.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
 
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * Gameplay specific controller for the gameplay prototype.
+ * TODO: Move class functionality to PlayMode, clean it, and then delete SandboxController
+ * TODO: Fix resetting levels (even if by re-constructing the controller)
  */
 public class SandboxController extends WorldController implements ContactListener {
 	/** Reference to the cephalonaut's model */
@@ -212,11 +208,8 @@ public class SandboxController extends WorldController implements ContactListene
 		if(Math.abs(obj.getBody().getPosition().cpy().sub(cephalonaut.getPosition().cpy()).len()) < ATTRACT_DIST) {
 			Vector2 pos = obj.getBody().getWorldCenter();
 			Vector2 objPos = cephalonaut.getBody().getWorldCenter();
-			Vector2 force = pos.sub(objPos);
-
-			force.clamp(1, 5);
-			force.nor();
-			float strength = (9.81f * 1 * cephalonaut.getBody().getMass()) / (force.len() * force.len());
+			Vector2 force = pos.sub(objPos).clamp(1, 5).nor();
+			float strength = 9.81f * cephalonaut.getBody().getMass() / force.len2();
 			force.scl(strength);
 			cephalonaut.addForce(force);
 		}

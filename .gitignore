@@ -144,6 +144,9 @@ hs_err_pid*
 
 # Output directories
 out/
+
+# Tiled user-specific session
 *.tiled-session
 
+# Misc.
 core/resources
