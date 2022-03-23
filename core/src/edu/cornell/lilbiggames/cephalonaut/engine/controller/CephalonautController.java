@@ -20,10 +20,13 @@ public class CephalonautController {
 
     /** The joint of the grapple */
     private Joint grappleJoint1, grappleJoint2, grappleJoint3;
+    private DistanceJointDef grappleJoint1Def, grappleJoint2Def;
+    private int grappleSwitchCooldown;
 
     public CephalonautController(World world, CephalonautModel cephalonaut) {
         this.world = world;
         this.cephalonaut = cephalonaut;
+        grappleSwitchCooldown = 0;
     }
 
     public void update(boolean grappleButton, boolean refill, Vector2 crossHair, boolean thrusterApplied,
@@ -38,7 +41,16 @@ public class CephalonautController {
             cephalonaut.setRotationalDirection(rotation);
             cephalonaut.applyRotation();
         }
+
         cephalonaut.applyForce();
+
+        if(rotation != 0) {
+            switchGrappleDirection();
+        }
+
+        if(grappleSwitchCooldown > 0) {
+            grappleSwitchCooldown--;
+        }
     }
 
     private void updateGrapple(boolean grappleButton, Vector2 crossHair) {
@@ -94,6 +106,8 @@ public class CephalonautController {
                 anchor3.length = distance;
                 anchor1.frequencyHz = 3f;
                 anchor2.frequencyHz = 3f;
+                grappleJoint1Def = anchor1;
+                grappleJoint2Def = anchor2;
                 grappleJoint1 = world.createJoint(anchor1);
                 grappleJoint2 = world.createJoint(anchor2);
                 grappleJoint3 = world.createJoint(anchor3);
@@ -109,13 +123,31 @@ public class CephalonautController {
             if (grappleJoint1 != null) {
                 world.destroyJoint(grappleJoint1);
                 grappleJoint1 = null;
+                grappleJoint1Def = null;
                 world.destroyJoint(grappleJoint2);
                 grappleJoint2 = null;
+                grappleJoint2Def = null;
                 world.destroyJoint(grappleJoint3);
                 grappleJoint3 = null;
             }
             grapple.reset();
             grapple.setPosition(cephalonaut.getPosition().cpy());
+        }
+    }
+
+    public void switchGrappleDirection() {
+        if(cephalonaut.getGrapple().isGrappling() && grappleJoint1 != null && grappleJoint2 != null &&
+                grappleJoint1Def != null && grappleJoint2Def != null) {
+            if(grappleSwitchCooldown <= 0) {
+                world.destroyJoint(grappleJoint1);
+                world.destroyJoint(grappleJoint2);
+                grappleJoint1 = null;
+                grappleJoint2 = null;
+                cephalonaut.getBody().setTransform(cephalonaut.getPosition(), (float) (3 * Math.PI/4) + cephalonaut.getAngle());
+                grappleJoint1 = world.createJoint(grappleJoint1Def);
+                grappleJoint2 = world.createJoint(grappleJoint2Def);
+                grappleSwitchCooldown = 20;
+            }
         }
     }
 }
