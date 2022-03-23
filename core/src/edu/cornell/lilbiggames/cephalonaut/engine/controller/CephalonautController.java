@@ -31,7 +31,7 @@ public class CephalonautController {
         updateGrapple(grappleButton, directionalGrapple, anchoringPoints, crossHair);
 
         cephalonaut.setInking(thrusterApplied);
-        if(!cephalonaut.getGrapple().isAnchored())
+        if(!cephalonaut.getGrapple().isLocked)
             cephalonaut.setRotationalDirection(rotation);
         cephalonaut.applyRotation();
         cephalonaut.applyForce();
@@ -60,7 +60,7 @@ public class CephalonautController {
             grapple.setBodyType(BodyDef.BodyType.StaticBody);
             if (distance > grapple.getExtensionLength() && !grapple.isGrappling()) {
                 Vector2 swing = cephalonaut.getPosition().cpy().sub(grapple.getPosition()).rotate90(0);
-
+                grapple.isLocked = true;
                 float dot = swing.dot(cephalonaut.getLinearVelocity());
                 if (dot != 0) {
                     // Experimental: Conserve velocity when rotating around point behind cephalonaut

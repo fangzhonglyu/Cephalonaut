@@ -19,6 +19,8 @@ public class GrappleModel extends WheelObstacle {
     private boolean isGrappling;
     /** Whether the grapple is anchored */
     private boolean isAnchored;
+    /** Whether the grapple is locked in place*/
+    public boolean isLocked;
     /** The anchor location of the grapple */
     private String anchorLocation;
     /** The extension length of the grapple */
@@ -46,6 +48,7 @@ public class GrappleModel extends WheelObstacle {
         isOut = false;
         isGrappling = false;
         isAnchored = false;
+        isLocked = false;
         anchorLocation = "";
         extensionLength = 0;
     }
@@ -61,6 +64,7 @@ public class GrappleModel extends WheelObstacle {
         isOut = false;
         isGrappling = false;
         isAnchored = false;
+        isLocked = false;
         anchorLocation = "";
         extensionLength = 0;
     }
