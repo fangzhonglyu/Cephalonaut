@@ -191,20 +191,6 @@ public class LevelElement extends SimpleObstacle {
         return color;
     }
 
-    private JsonValue getProperties(JsonValue json) {
-        JsonValue properties = json.get("properties");
-        if (properties == null) return null;
-
-        for (JsonValue property : properties) {
-            String name = property.getString("name", "");
-            String propertyType = property.getString("propertytype", "");
-            if (name.equals("body") && propertyType.equals("GameObject")) {
-                return property.get("value");
-            }
-        }
-        return null;
-    }
-
     // Merges json [b] into json [a].
     private static JsonValue mergeJsons(JsonValue a, JsonValue b) {
         if (a == null) return b;
@@ -267,7 +253,7 @@ public class LevelElement extends SimpleObstacle {
         setDefaultProperties();
         setSize(width, height);
         setTexture(texture);
-        // Tiled coordinates origins are at the bottom left, while we want centered origins
+        // Tiled coordinates origins are at the bottom-left, while we want centered origins
         setPosition(x - 0.5f + width / 2f, y - 0.5f + height / 2f);
         originalPos = new Vector2(getPosition());
     }
@@ -316,19 +302,23 @@ public class LevelElement extends SimpleObstacle {
                 setName("blackHole" + black_hole_count++);
                 break;
             case FLYING_METEOR:
+                // TODO: Make work in level editor properly. Maybe you should make configurable spawners?
                 createFlyingMeteor();
                 break;
             case BOOST_PAD:
                 createBoostPad(properties);
                 break;
             case BUTTON:
+                // TODO: Make work in level editor properly
                 createButton();
                 break;
             case DOOR:
+                // TODO: Make work in level editor properly
                 createDoor();
                 break;
             case FINISH:
-                createFinish();
+                setName("finish");
+                setSensor(true);
                 break;
             default:
                 break;
@@ -346,19 +336,20 @@ public class LevelElement extends SimpleObstacle {
 
     final static EarClippingTriangulator triangulator = new EarClippingTriangulator();
     private void setPolygon(JsonValue collisionObject, float[] vertices) {
-        // TODO: Replace 16 with less magic number (in general all around)
-
         float ox = collisionObject.getFloat("x");
         float oy = collisionObject.getFloat("y");
 
-        float scaleX = 16f * width / texture.getRegionWidth();
-        float scaleY = 16f * height / texture.getRegionHeight();
+        float scaleX = width / texture.getRegionWidth();
+        float scaleY = height / texture.getRegionHeight();
 
+        // Scale and center vertices. The y-axis is flipped since Tiled has origin on top-left instead of bottom-left.
         for (int i = 0; i < vertices.length; i += 2) {
-            vertices[i] = scaleX * (ox + vertices[i]) / 16f - width / 2f;
-            vertices[i + 1] = height / 2f - scaleY * (oy + vertices[i + 1]) / 16f;
+            vertices[i] = scaleX * (ox + vertices[i]) - width / 2f;
+            vertices[i + 1] = height / 2f - scaleY * (oy + vertices[i + 1]);
         }
 
+        // Triangulation of n-vertex polygons into 3-vertex triangles
+        // For performance reasons and because box2d throws a hissy fit whenever we use polygons with over 8 vertices
         ShortArray tris = triangulator.computeTriangles(vertices);
         triangles = new PolygonShape[tris.size / 3];
         for (int i = 0; i < tris.size; i += 3) {
@@ -371,10 +362,6 @@ public class LevelElement extends SimpleObstacle {
             poly.set(tri_vertices);
             triangles[i / 3] = poly;
         }
-
-
-
-//        setVertices(vertices);
     }
 
     public void setTexture(TextureRegion value) {
@@ -480,45 +467,6 @@ public class LevelElement extends SimpleObstacle {
 //        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
         setName("door"+door_count);
         door_count++;
-    }
-
-    private void createFinish() {
-        setSensor(true);
-//        createBoostPad(BOX_WIDTH, BOX_HEIGHT);
-    }
-
-    private void createFinish(float width, float height) {
-//        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
-        geometry = null;
-        boxResize(width, height);
-        setGrapple(false);
-        setBodyType(BodyDef.BodyType.StaticBody);
-        setDensity(0);
-        setFriction(0);
-        setSensor(true);
-//        setDrawScale(scale);
-        setTint(Color.YELLOW);
-        setTexture(earthTexture);
-//        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
-//        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
-        setName("finish");
-    }
-
-    private void createFinish(float[] vertices) {
-//        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
-        geometry = null;
-//        setVertices(vertices);
-        setGrapple(false);
-        setBodyType(BodyDef.BodyType.StaticBody);
-        setDensity(0);
-        setFriction(0);
-        setSensor(true);
-//        setDrawScale(scale);
-        setTint(Color.YELLOW);
-        setTexture(earthTexture);
-//        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
-//        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
-        setName("finish");
     }
 
     public void setActivatee(LevelElement element) {

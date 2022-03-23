@@ -241,7 +241,7 @@ public class SandboxController extends WorldController implements ContactListene
 	}
 
 	public void finishLevel() {
-
+		System.out.println("Level finished!");
 	}
 
 	/**
