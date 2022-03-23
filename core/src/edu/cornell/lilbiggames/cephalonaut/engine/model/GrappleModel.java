@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
@@ -11,6 +12,8 @@ import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
 import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
+
+import java.util.ArrayList;
 
 public class GrappleModel extends WheelObstacle {
     /** Whether the grapple is out */
@@ -27,6 +30,9 @@ public class GrappleModel extends WheelObstacle {
     private float extensionLength;
     /** The max extension length of the grapple */
     private float maxLength;
+    /** Travelled Points*/
+    private ArrayList<Vector2> trace;
+    private Texture tex;
 
     public GrappleModel(float x, float y, Vector2 drawScale) {
         // The shrink factors fit the image to a tighter hitbox
@@ -38,11 +44,11 @@ public class GrappleModel extends WheelObstacle {
         setSensor(true);
         setBullet(true);
 
-        int pixDiameter = (int) (getRadius() * 2);
+        int pixDiameter = 6;
         Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
+        pixmap.setColor(Color.ORANGE);
         pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
-        texture = new TextureRegion(new Texture(pixmap));
+        tex = (new Texture(pixmap));
         origin.set(pixDiameter / 2f, pixDiameter / 2f);
 
         isOut = false;
@@ -51,6 +57,7 @@ public class GrappleModel extends WheelObstacle {
         isLocked = false;
         anchorLocation = "";
         extensionLength = 0;
+        trace = new ArrayList<>();
     }
 
     /**
@@ -67,6 +74,11 @@ public class GrappleModel extends WheelObstacle {
         isLocked = false;
         anchorLocation = "";
         extensionLength = 0;
+        trace = new ArrayList<>();
+    }
+
+    public void addTrace(Vector2 cephP){
+        trace.add(new Vector2(getX(),getY()).sub(cephP));
     }
 
     public boolean activatePhysics(World world) {
@@ -214,11 +226,22 @@ public class GrappleModel extends WheelObstacle {
      *
      * @param canvas Drawing context
      */
-    public void draw(GameCanvas canvas) {
+    public void draw(GameCanvas canvas, Vector2 cephP) {
         if (isOut) {
-            canvas.draw(texture, Color.ORANGE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
+            Affine2 tr = new Affine2();
+            tr.preTranslate(cephP.x, cephP.y);
+            tr.rotate(getPosition().sub(cephP).angleDeg());
+            float dist = getPosition().dst(cephP);
+            for (float i = 0; i<getPosition().dst(cephP)/2; i+=1/drawScale.x){
+                Vector2 t = new Vector2(i*2, (float) Math.sin(i*5)/dist);
+                tr.applyTo(t);
+                canvas.draw(tex, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
+                        getAngle(), 1, 1);
+            }
+            canvas.draw(tex, Color.ORANGE, 3f, 3f, getX() * drawScale.x, getY() * drawScale.y,
                     getAngle(), 1, 1);
         }
+
     }
 
     /**

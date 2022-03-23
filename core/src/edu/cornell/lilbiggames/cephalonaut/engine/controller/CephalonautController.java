@@ -55,6 +55,10 @@ public class CephalonautController {
             }
         }
 
+        if(grapple.isOut()&&!grapple.isAnchored()){
+            grapple.addTrace(cephalonaut.getPosition());
+        }
+
         float distance = cephalonaut.getPosition().cpy().dst(grapple.getPosition());
         if (grapple.isAnchored()) {
             grapple.setBodyType(BodyDef.BodyType.StaticBody);
