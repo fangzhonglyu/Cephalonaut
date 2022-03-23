@@ -46,9 +46,6 @@ public class SandboxController extends WorldController implements ContactListene
 
 	private Texture earthTexture;
 
-	/** The grapple mechanic mode */
-	private boolean directionalGrapple;
-
 	private TextureRegion octopusTexture;
 
 	/** Texture asset for mouse crosshairs */
@@ -72,7 +69,6 @@ public class SandboxController extends WorldController implements ContactListene
 		setDebug(false);
 		setComplete(false);
 		setFailure(false);
-		directionalGrapple = true;
 	}
 
 	public void reset() {
@@ -162,11 +158,7 @@ public class SandboxController extends WorldController implements ContactListene
 	public void update(float dt) {
 	    // Move an object if touched
 		InputController input = InputController.getInstance();
-		if (input.didTertiary()) {
-			directionalGrapple = !directionalGrapple;
-		}
 		cephalonaut.setForce(Vector2.Zero);
-
 
 		for(GameObject object : objects) {
 			if (object.getClass() == LevelElement.class) {
@@ -200,11 +192,7 @@ public class SandboxController extends WorldController implements ContactListene
 		boolean inking = input.isThrusterApplied();
 		float rotation = input.getRotation();
 
-		if (input.didTertiary()) {
-			cephalonaut.setInk(1);
-		}
-
-		cephalonautController.update(grappleButton, directionalGrapple, objects, crossHair, inking, rotation);
+		cephalonautController.update(grappleButton, input.didTertiary(), crossHair, inking, rotation);
 		canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
 	}
 
@@ -314,8 +302,7 @@ public class SandboxController extends WorldController implements ContactListene
 					grapple.setAnchored(true);
 					grapple.setExtensionLength(1 + cephalonaut.getPosition().dst(bd2.getPosition()));
 					grapple.setAnchorLocation(bd2.getName());
-				}
-				if (bd2.getName().equals("grapple") && !bd1.getName().equals("michael")) {
+				} else if (bd2.getName().equals("grapple") && !bd1.getName().equals("michael")) {
 					grapple.setAnchored(true);
 					grapple.setExtensionLength(1 + cephalonaut.getPosition().dst(bd1.getPosition()));
 					grapple.setAnchorLocation(bd1.getName());

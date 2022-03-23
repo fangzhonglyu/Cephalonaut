@@ -51,8 +51,6 @@ public class CephalonautModel extends OctopusObstacle {
 	/** How much ink the cephalonaut has left */
 	private float ink;
 
-	/** Get how much ink the cephalonaut has left*/
-
 	/**
 	 * Returns true if the cephalonaut is actively inking.
 	 *
@@ -234,7 +232,7 @@ public class CephalonautModel extends OctopusObstacle {
 			Color tint = grapple.isGrappling() ? Color.RED : Color.GREEN;
 			//canvas.draw(tentacleTexture, tint, 0.5f, 0.5f, middle.x * drawScale.x, middle.y * drawScale.y,
 			//		angle, 5, distance * drawScale.x);
-			grapple.draw(canvas,getPosition());
+			grapple.draw(canvas, getPosition());
 		}
 
 		if (isInking() && ink > 0) {

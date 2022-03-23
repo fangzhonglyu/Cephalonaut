@@ -23,7 +23,7 @@ public class GrappleModel extends WheelObstacle {
     /** Whether the grapple is anchored */
     private boolean isAnchored;
     /** Whether the grapple is locked in place*/
-    public boolean isLocked;
+    private boolean isLocked;
     /** The anchor location of the grapple */
     private String anchorLocation;
     /** The extension length of the grapple */
@@ -32,7 +32,8 @@ public class GrappleModel extends WheelObstacle {
     private float maxLength;
     /** Travelled Points*/
     private ArrayList<Vector2> trace;
-    private Texture tex;
+    /** The grapple's texture */
+    private Texture texture;
 
     public GrappleModel(float x, float y, Vector2 drawScale) {
         // The shrink factors fit the image to a tighter hitbox
@@ -48,7 +49,7 @@ public class GrappleModel extends WheelObstacle {
         Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.ORANGE);
         pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
-        tex = (new Texture(pixmap));
+        texture = (new Texture(pixmap));
         origin.set(pixDiameter / 2f, pixDiameter / 2f);
 
         isOut = false;
@@ -145,6 +146,22 @@ public class GrappleModel extends WheelObstacle {
     public void setAnchored(boolean anchored) { isAnchored = anchored; }
 
     /**
+     * Returns true if the grapple is locked.
+     *
+     * @return true if the grapple is locked.
+     */
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    /**
+     * Sets whether the grapple is locked.
+     *
+     * @param locked whether the grapple is locked.
+     */
+    public void setLocked(boolean locked) { isLocked = locked; }
+
+    /**
      * Sets the grapple's anchor location.
      *
      * @param location the distance joint definition for the grapple.
@@ -232,13 +249,13 @@ public class GrappleModel extends WheelObstacle {
             tr.preTranslate(cephP.x, cephP.y);
             tr.rotate(getPosition().sub(cephP).angleDeg());
             float dist = getPosition().dst(cephP);
-            for (float i = 0; i<getPosition().dst(cephP)/2; i+=1/drawScale.x){
+            for (float i = 0; i < getPosition().dst(cephP)/2; i+=1/drawScale.x){
                 Vector2 t = new Vector2(i*2, (float) Math.sin(i*5)/dist);
                 tr.applyTo(t);
-                canvas.draw(tex, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
+                canvas.draw(texture, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
                         getAngle(), 1, 1);
             }
-            canvas.draw(tex, Color.ORANGE, 3f, 3f, getX() * drawScale.x, getY() * drawScale.y,
+            canvas.draw(texture, Color.ORANGE, 3f, 3f, getX() * drawScale.x, getY() * drawScale.y,
                     getAngle(), 1, 1);
         }
 
