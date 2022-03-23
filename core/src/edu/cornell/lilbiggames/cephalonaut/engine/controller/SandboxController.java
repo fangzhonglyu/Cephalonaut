@@ -177,7 +177,7 @@ public class SandboxController extends WorldController implements ContactListene
 						attract(object);
 						break;
 					case FLYING_METEOR:
-						updateFlyingMeteor((LevelElement) object);
+//						updateFlyingMeteor((LevelElement) object);
 						break;
 					case BOOST_PAD:
 						boost((LevelElement) object);
@@ -208,32 +208,6 @@ public class SandboxController extends WorldController implements ContactListene
 		canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
 	}
 
-	public void updateFlyingMeteor(LevelElement element) {
-		if(element.getPosition().cpy().sub(element.getOriginalPos().cpy()).len() > 5) {
-			element.setPosition(element.getOriginalPos());
-		}
-	}
-
-
-	public void fly(LevelElement element) {
-		switch (element.getDirection()) {
-			case UP:
-				element.setLinearVelocity(new Vector2(0, METEOR_SPEED));
-				break;
-			case LEFT:
-				element.setLinearVelocity(new Vector2(-METEOR_SPEED, 0));
-				break;
-			case DOWN:
-				element.setLinearVelocity(new Vector2(0, -METEOR_SPEED));
-				break;
-			case RIGHT:
-				element.setLinearVelocity(new Vector2(METEOR_SPEED, 0));
-				break;
-			default:
-				break;
-		}
-	}
-
 	/** Force from cephalonaut attracted to obj */
 	public void attract(GameObject obj) {
 		if(Math.abs(obj.getBody().getPosition().cpy().sub(cephalonaut.getPosition().cpy()).len()) < ATTRACT_DIST) {
@@ -253,22 +227,8 @@ public class SandboxController extends WorldController implements ContactListene
 		if(!obj.getInContact()) {
 			return;
 		}
-		switch(obj.getDirection()) {
-			case UP:
-				cephalonaut.addForce(new Vector2(0, BOOST_SPEED));
-				break;
-			case LEFT:
-				cephalonaut.addForce(new Vector2(-BOOST_SPEED, 0));
-				break;
-			case DOWN:
-				cephalonaut.addForce(new Vector2(0, -BOOST_SPEED));
-				break;
-			case RIGHT:
-				cephalonaut.addForce(new Vector2(BOOST_SPEED, 0));
-				break;
-			default:
-				break;
-		}
+		Vector2 force = new Vector2(0, BOOST_SPEED).setAngleRad(obj.getAngle());
+		cephalonaut.addForce(force);
 	}
 
 	public void openDoor(LevelElement element) {

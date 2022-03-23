@@ -3,9 +3,7 @@ package edu.cornell.lilbiggames.cephalonaut.engine.obstacle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.EllipseShapeBuilder;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Ellipse;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -14,9 +12,6 @@ import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 
-import javax.xml.validation.Validator;
-import java.awt.*;
-
 
 public class LevelElement extends SimpleObstacle {
     /** Shape information for this circle */
@@ -24,6 +19,13 @@ public class LevelElement extends SimpleObstacle {
     /** A cache value for the fixture (for resizing) */
     private Fixture geometry;
 
+    /** Boost pad **/
+    private float boostPadFactor = 1;
+
+    /** Door **/
+    private Vector2 originalPos;
+
+    /** Misc. element stuff **/
     private static final float BLACK_HOLE_RADIUS = .5f;
     private static final float METEOR_RADIUS = .5f;
     private static final float BOUNCY_WALL_RESTITUTION = 2.0f;
@@ -45,7 +47,7 @@ public class LevelElement extends SimpleObstacle {
     private static int door_count = 0;
     private static int misc_count = 0;
 
-    public enum ELEMENT {
+    public enum Element {
         BLACK_HOLE,
         FLYING_METEOR,
         WALL,
@@ -57,17 +59,8 @@ public class LevelElement extends SimpleObstacle {
         FINISH
     }
 
-    public enum DIRECTION {
-        UP,
-        LEFT,
-        DOWN,
-        RIGHT
-    }
-
-    private ELEMENT element;
+    private Element element;
     private LevelElement activatee;
-    private DIRECTION direction;
-    private Vector2 original_pos;
     private boolean inContact = false;
     private boolean activated = false;
     private boolean opened;
@@ -85,6 +78,10 @@ public class LevelElement extends SimpleObstacle {
         this.width = width;
         this.height = height;
         updateScale();
+    }
+
+    public Vector2 getOriginalPos() {
+        return originalPos;
     }
 
     public boolean getActivated() {
@@ -110,7 +107,7 @@ public class LevelElement extends SimpleObstacle {
     public void setInContact(boolean inContact) {
         this.inContact = inContact;
         if (inContact) {
-            if (element == ELEMENT.BUTTON) {
+            if (element == Element.BUTTON) {
                 activate();
             }
         }
@@ -118,15 +115,13 @@ public class LevelElement extends SimpleObstacle {
 
     public void activate() {
         activated = true;
-        if (element == ELEMENT.BUTTON) {
+        if (element == Element.BUTTON) {
             setTint(Color.GREEN);
             if (activatee != null) {
                 activatee.activate();
             }
         }
     }
-
-    public Vector2 getOriginalPos() {return original_pos;}
 
     public static void gatherAssets(AssetDirectory directory) {
         // Allocate the tiles
@@ -136,39 +131,39 @@ public class LevelElement extends SimpleObstacle {
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
     }
 
-    public ELEMENT getElement() {
+    public Element getElement() {
         return element;
     }
 
     public void setElement(String element) {
         switch (element) {
             case "Wall":
-                this.element = ELEMENT.WALL;
+                this.element = Element.WALL;
                 break;
             case "Black Hole":
-                this.element = ELEMENT.BLACK_HOLE;
+                this.element = Element.BLACK_HOLE;
                 break;
             case "Boost Pad":
-                this.element = ELEMENT.BOOST_PAD;
+                this.element = Element.BOOST_PAD;
                 break;
             case "Button":
-                this.element = ELEMENT.BUTTON;
+                this.element = Element.BUTTON;
                 break;
             case "Door":
-                this.element = ELEMENT.DOOR;
+                this.element = Element.DOOR;
                 break;
             case "Finish":
-                this.element = ELEMENT.FINISH;
+                this.element = Element.FINISH;
                 break;
             default:
                 System.out.printf("WARNING: Unknown LevelElement type '%s'\n", element);
-                this.element = ELEMENT.WALL;
+                this.element = Element.WALL;
                 break;
         }
     }
 
     private void setDefaultProperties() {
-        element = ELEMENT.WALL;
+        element = Element.WALL;
         setDensity(0);
         setBodyType(BodyDef.BodyType.StaticBody);
         setRestitution(0.3f);
@@ -176,7 +171,7 @@ public class LevelElement extends SimpleObstacle {
     }
 
     // TODO: Move this (along some other parsing code I guess) somewhere else?
-    public static Color argbToColor (String hex, Color color) {
+    public static Color argbToColor(String hex, Color color) {
         hex = hex.charAt(0) == '#' ? hex.substring(1) : hex;
         color.a = Integer.parseInt(hex.substring(0, 2), 16) / 255f;
         color.r = Integer.parseInt(hex.substring(2, 4), 16) / 255f;
@@ -185,12 +180,44 @@ public class LevelElement extends SimpleObstacle {
         return color;
     }
 
+    private JsonValue getProperties(JsonValue json) {
+        JsonValue properties = json.get("properties");
+        if (properties == null) return null;
+
+        for (JsonValue property : properties) {
+            String name = property.getString("name", "");
+            String propertyType = property.getString("propertytype", "");
+            if (name.equals("body") && propertyType.equals("GameObject")) {
+                return property.get("value");
+            }
+        }
+        return null;
+    }
+
+    // Merges json [b] into json [a].
+    private static JsonValue mergeJsons(JsonValue a, JsonValue b) {
+        if (a == null) return b;
+        if (b == null) return a;
+        if (!a.isObject() || !b.isObject()) return a;
+
+        for (JsonValue bChild : b) {
+            JsonValue aChild = a.get(bChild.name);
+            if (aChild != null) {
+                mergeJsons(aChild, bChild);
+            } else {
+                a.addChild(bChild);
+            }
+        }
+
+        return a;
+    }
+
     private void setProperties(JsonValue json) {
         JsonValue properties = json.get("properties");
         if (properties == null) return;
 
         JsonValue go_properties = null;
-        for (JsonValue property : properties.iterator()) {
+        for (JsonValue property : properties) {
             String name = property.getString("name", "");
             String propertyType = property.getString("propertytype", "");
             if (name.equals("body") && propertyType.equals("GameObject")) {
@@ -215,15 +242,16 @@ public class LevelElement extends SimpleObstacle {
 
     private LevelElement(float x, float y, float width, float height, TextureRegion texture) {
         super(x, y);
-        //        original_pos = new Vector2(x, y);
         setName("unnamed");
         setDefaultProperties();
         setSize(width, height);
         setTexture(texture);
+        // Tiled coordinates origins are at the bottom left, while we want centered origins
         setPosition(x - 0.5f + width / 2f, y - 0.5f + height / 2f);
+        originalPos = new Vector2(getPosition());
     }
 
-    public LevelElement(int x, int y, float width, float height, TextureRegion texture, JsonValue tile) {
+    public LevelElement(float x, float y, float width, float height, TextureRegion texture, JsonValue tile) {
         this(x, y, width, height, texture);
 
         setProperties(tile);
@@ -231,12 +259,14 @@ public class LevelElement extends SimpleObstacle {
         JsonValue collisionObject = tile.get("objectgroup").get("objects").get(0);
         JsonValue polygon = collisionObject.get("polygon");
         if (polygon != null) {
+            // Create PolygonShape from Tiled polygon
             setPolygon(collisionObject, polygon);
         } else {
-            // TODO: Replace. This creates square polygon when no polygon is found
-
-            float[] vertices = {-0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f};
-            setVertices(vertices);
+            // Create PolygonShape from Tiled rectangle
+            float cWidth = collisionObject.getFloat("width");
+            float cHeight = collisionObject.getFloat("height");
+            float[] vertices = {0, 0, cWidth, 0, cHeight, cWidth, 0, cHeight};
+            setPolygon(collisionObject, vertices);
         }
 
         finishSetup();
@@ -244,28 +274,11 @@ public class LevelElement extends SimpleObstacle {
 
     public LevelElement(JsonValue object, JsonValue objectType, TextureRegion texture) {
         this(object.getInt("x") / 16f,
-                50 - object.getInt("y") / 16f,
+                50 - object.getInt("y") / 16f, // TODO: This 50 is the map height... Should be more flexibile.
                 object.getFloat("width") / 16f,
                 object.getFloat("height") / 16f,
-                texture);
-
-        setProperties(objectType);
-        setProperties(object);
-
-        JsonValue collisionObject = objectType.get("objectgroup").get("objects").get(0);
-        JsonValue polygon = collisionObject.get("polygon");
-
-        if (polygon != null) {
-            setPolygon(collisionObject, polygon);
-        } else {
-            // TODO: Replace. This creates square polygon when no polygon is found
-
-//            float[] vertices = {-0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f};
-            float[] vertices = {-0.5f, -3f, 0.5f, -3f, 0.5f, 3f, -0.5f, 3f};
-            setVertices(vertices);
-        }
-
-        finishSetup();
+                texture,
+                mergeJsons(object, objectType));
     }
 
     private void finishSetup() {
@@ -277,6 +290,7 @@ public class LevelElement extends SimpleObstacle {
                 createFlyingMeteor();
                 break;
             case BOOST_PAD:
+
                 createBoostPad();
                 break;
             case BUTTON:
@@ -294,18 +308,26 @@ public class LevelElement extends SimpleObstacle {
     }
 
     private void setPolygon(JsonValue collisionObject, JsonValue polygon) {
-        // TODO: Replace 16 with less magic number
+        float[] vertices = new float[2 * polygon.size];
+        for (int i = 0; i < polygon.size; i++) {
+            vertices[2 * i] = polygon.get(i).getFloat("x");
+            vertices[2 * i + 1] = polygon.get(i).getFloat("y");
+        }
+        setPolygon(collisionObject, vertices);
+    }
+
+    private void setPolygon(JsonValue collisionObject, float[] vertices) {
+        // TODO: Replace 16 with less magic number (in general all around)
 
         float ox = collisionObject.getFloat("x");
         float oy = collisionObject.getFloat("y");
-        float[] vertices = new float[2 * polygon.size];
 
         float scaleX = 16f * width / texture.getRegionWidth();
         float scaleY = 16f * height / texture.getRegionHeight();
 
-        for (int i = 0; i < polygon.size; i++) {
-            vertices[2 * i] = scaleX * ((ox + polygon.get(i).getFloat("x")) / 16f - width / 2f);
-            vertices[2 * i + 1] = scaleY * (height / 2f - (oy + polygon.get(i).getFloat("y")) / 16f);
+        for (int i = 0; i < vertices.length; i += 2) {
+            vertices[i] = scaleX * (ox + vertices[i]) / 16f - width / 2f;
+            vertices[i + 1] = height / 2f - scaleY * (oy + vertices[i + 1]) / 16f;
         }
 
         setVertices(vertices);
@@ -344,7 +366,7 @@ public class LevelElement extends SimpleObstacle {
 //        setTextureScaleY(radius * 2 * scale.y / crosshairTexture.getRegionHeight());
         setTint(Color.PURPLE);
         meteor_count++;
-        this.direction = DIRECTION.RIGHT;
+//        this.direction = DIRECTION.RIGHT;
     }
 
     private void createBoostPad() {
@@ -355,7 +377,7 @@ public class LevelElement extends SimpleObstacle {
 //        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
         geometry = null;
         boxResize(width, height);
-        direction = DIRECTION.RIGHT;
+//        direction = DIRECTION.RIGHT;
         setGrapple(false);
         setBodyType(BodyDef.BodyType.StaticBody);
         setDensity(0);
@@ -384,8 +406,9 @@ public class LevelElement extends SimpleObstacle {
         PolygonShape temp = new PolygonShape();
         temp.set(vertices);
         shape = temp;
-        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
+//        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
     }
+
 
     private void createButton() {
         createButton(BUTTON_RADIUS);
@@ -472,14 +495,6 @@ public class LevelElement extends SimpleObstacle {
 //        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
 //        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
         setName("finish");
-    }
-
-    public void setDirection(DIRECTION direction) {
-        this.direction = direction;
-    }
-
-    public DIRECTION getDirection() {
-        return direction;
     }
 
     public void setActivatee(LevelElement element) {
