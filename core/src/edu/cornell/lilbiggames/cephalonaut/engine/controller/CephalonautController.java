@@ -34,10 +34,10 @@ public class CephalonautController {
         updateGrapple(grappleButton, crossHair);
         cephalonaut.setInking(thrusterApplied);
 
-        if (cephalonaut.getGrapple().isLocked() == 0)
+        if (cephalonaut.getGrapple().isLocked() == 0) {
             cephalonaut.setRotationalDirection(rotation);
-
-        cephalonaut.applyRotation();
+            cephalonaut.applyRotation();
+        }
         cephalonaut.applyForce();
     }
 
@@ -94,8 +94,6 @@ public class CephalonautController {
                 anchor3.length = distance;
                 anchor1.frequencyHz = 3f;
                 anchor2.frequencyHz = 3f;
-                anchor3.dampingRatio=0.8f;
-                anchor3.frequencyHz=0.6f;
                 grappleJoint1 = world.createJoint(anchor1);
                 grappleJoint2 = world.createJoint(anchor2);
                 grappleJoint3 = world.createJoint(anchor3);
