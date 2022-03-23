@@ -28,15 +28,15 @@ public class CephalonautController {
 
     public void update(boolean grappleButton, boolean refill, Vector2 crossHair, boolean thrusterApplied,
                        float rotation) {
-        if (!cephalonaut.getGrapple().isLocked()) {
-            cephalonaut.setRotationalDirection(rotation);
-        }
-        if (refill) {
+        if (refill)
             cephalonaut.setInk(1);
-        }
 
         updateGrapple(grappleButton, crossHair);
         cephalonaut.setInking(thrusterApplied);
+
+        if (cephalonaut.getGrapple().isLocked() == 0)
+            cephalonaut.setRotationalDirection(rotation);
+
         cephalonaut.applyRotation();
         cephalonaut.applyForce();
     }
@@ -52,16 +52,19 @@ public class CephalonautController {
             }
         }
 
-        if (grapple.isOut() && !grapple.isAnchored()){
+        if (grapple.isOut() && !grapple.isAnchored())
             grapple.addTrace(cephalonaut.getPosition());
-        }
+
+        if (grapple.isLocked() > 0 && grapple.isLocked() < 8)
+            grapple.setLocked(grapple.isLocked() + 0.4f);;
 
         float distance = cephalonaut.getPosition().cpy().dst(grapple.getPosition());
         if (grapple.isAnchored()) {
             grapple.setBodyType(BodyDef.BodyType.StaticBody);
             if (distance > grapple.getExtensionLength() && !grapple.isGrappling()) {
                 Vector2 swing = cephalonaut.getPosition().cpy().sub(grapple.getPosition()).rotate90(0);
-                grapple.setLocked(true);
+                if (grapple.isLocked() < 8)
+                    grapple.setLocked(1);
                 float dot = swing.dot(cephalonaut.getLinearVelocity());
                 if (dot != 0) {
                     // Experimental: Conserve velocity when rotating around point behind cephalonaut
@@ -91,6 +94,8 @@ public class CephalonautController {
                 anchor3.length = distance;
                 anchor1.frequencyHz = 3f;
                 anchor2.frequencyHz = 3f;
+                anchor3.dampingRatio=0.8f;
+                anchor3.frequencyHz=0.6f;
                 grappleJoint1 = world.createJoint(anchor1);
                 grappleJoint2 = world.createJoint(anchor2);
                 grappleJoint3 = world.createJoint(anchor3);

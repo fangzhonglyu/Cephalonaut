@@ -23,7 +23,7 @@ public class GrappleModel extends WheelObstacle {
     /** Whether the grapple is anchored */
     private boolean isAnchored;
     /** Whether the grapple is locked in place*/
-    private boolean isLocked;
+    private float isLocked;
     /** The anchor location of the grapple */
     private String anchorLocation;
     /** The extension length of the grapple */
@@ -55,7 +55,7 @@ public class GrappleModel extends WheelObstacle {
         isOut = false;
         isGrappling = false;
         isAnchored = false;
-        isLocked = false;
+        isLocked = 0;
         anchorLocation = "";
         extensionLength = 0;
         trace = new ArrayList<>();
@@ -72,7 +72,7 @@ public class GrappleModel extends WheelObstacle {
         isOut = false;
         isGrappling = false;
         isAnchored = false;
-        isLocked = false;
+        isLocked = 0;
         anchorLocation = "";
         extensionLength = 0;
         trace = new ArrayList<>();
@@ -150,16 +150,14 @@ public class GrappleModel extends WheelObstacle {
      *
      * @return true if the grapple is locked.
      */
-    public boolean isLocked() {
-        return isLocked;
-    }
+    public float isLocked() { return isLocked; }
 
     /**
      * Sets whether the grapple is locked.
      *
      * @param locked whether the grapple is locked.
      */
-    public void setLocked(boolean locked) { isLocked = locked; }
+    public void setLocked(float locked) { isLocked = locked; }
 
     /**
      * Sets the grapple's anchor location.
@@ -249,8 +247,10 @@ public class GrappleModel extends WheelObstacle {
             tr.preTranslate(cephP.x, cephP.y);
             tr.rotate(getPosition().sub(cephP).angleDeg());
             float dist = getPosition().dst(cephP);
-            for (float i = 0; i < getPosition().dst(cephP)/2; i+=1/drawScale.x){
-                Vector2 t = new Vector2(i*2, (float) Math.sin(i*5)/dist);
+            for (float i = 0; i<getPosition().dst(cephP)/2; i+=1/drawScale.x){
+                Vector2 t = new Vector2(i*2, (float)(-Math.sin(i*5)-Math.cos(i*4))/(dist+0.3f)/2f*(float)Math.sqrt(Math.sqrt(1-i*2/dist)));
+                if (isLocked > 0)
+                    t.set(t.x,t.y*(8-isLocked)/8);
                 tr.applyTo(t);
                 canvas.draw(texture, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
                         getAngle(), 1, 1);
