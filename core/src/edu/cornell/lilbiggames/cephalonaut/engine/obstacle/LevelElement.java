@@ -3,13 +3,12 @@ package edu.cornell.lilbiggames.cephalonaut.engine.obstacle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Shape2D;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.ShortArray;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 
@@ -17,6 +16,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 public class LevelElement extends SimpleObstacle {
     /** Shape information for this circle */
     protected Shape shape;
+    private PolygonShape[] triangles;
     /** A cache value for the fixture (for resizing) */
     private Fixture geometry;
 
@@ -344,6 +344,7 @@ public class LevelElement extends SimpleObstacle {
         setPolygon(collisionObject, vertices);
     }
 
+    final static EarClippingTriangulator triangulator = new EarClippingTriangulator();
     private void setPolygon(JsonValue collisionObject, float[] vertices) {
         // TODO: Replace 16 with less magic number (in general all around)
 
@@ -358,7 +359,22 @@ public class LevelElement extends SimpleObstacle {
             vertices[i + 1] = height / 2f - scaleY * (oy + vertices[i + 1]) / 16f;
         }
 
-        setVertices(vertices);
+        ShortArray tris = triangulator.computeTriangles(vertices);
+        triangles = new PolygonShape[tris.size / 3];
+        for (int i = 0; i < tris.size; i += 3) {
+            float[] tri_vertices = new float[] {
+                    vertices[2 * tris.get(i    )], vertices[2 * tris.get(i    ) + 1],
+                    vertices[2 * tris.get(i + 1)], vertices[2 * tris.get(i + 1) + 1],
+                    vertices[2 * tris.get(i + 2)], vertices[2 * tris.get(i + 2) + 1]
+            };
+            PolygonShape poly = new PolygonShape();
+            poly.set(tri_vertices);
+            triangles[i / 3] = poly;
+        }
+
+
+
+//        setVertices(vertices);
     }
 
     public void setTexture(TextureRegion value) {
@@ -370,12 +386,6 @@ public class LevelElement extends SimpleObstacle {
     public void setDrawScale(Vector2 value) {
         super.setDrawScale(value);
         updateScale();
-    }
-
-    private void setVertices(float[] vertices) {
-        PolygonShape temp = new PolygonShape();
-        temp.set(vertices);
-        shape = temp;
     }
 
     private void createFlyingMeteor() {
@@ -497,7 +507,7 @@ public class LevelElement extends SimpleObstacle {
     private void createFinish(float[] vertices) {
 //        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
         geometry = null;
-        setVertices(vertices);
+//        setVertices(vertices);
         setGrapple(false);
         setBodyType(BodyDef.BodyType.StaticBody);
         setDensity(0);
@@ -531,9 +541,11 @@ public class LevelElement extends SimpleObstacle {
 
         releaseFixtures();
 
-        // Create the fixture
-        fixture.shape = shape;
-        geometry = body.createFixture(fixture);
+        // Create the fixtures
+        for (Shape shape : triangles) {
+            fixture.shape = shape;
+            body.createFixture(fixture);
+        }
         markDirty(false);
     }
 
@@ -543,10 +555,13 @@ public class LevelElement extends SimpleObstacle {
      * This is the primary method to override for custom physics objects
      */
     protected void releaseFixtures() {
-        if (geometry != null) {
-            body.destroyFixture(geometry);
-            geometry = null;
+        for (Fixture fixture : body.getFixtureList()) {
+            body.destroyFixture(fixture);
         }
+//        if (geometry != null) {
+//            body.destroyFixture(geometry);
+//            geometry = null;
+//        }
     }
 
     /**
@@ -557,39 +572,8 @@ public class LevelElement extends SimpleObstacle {
      * @param canvas Drawing context
      */
     public void drawDebug(GameCanvas canvas) {
-        if (shape instanceof PolygonShape) {
-            canvas.drawPhysics((PolygonShape) shape,Color.YELLOW,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-            return;
+        for (PolygonShape tri : triangles) {
+            canvas.drawPhysics(tri,Color.YELLOW,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
         }
-
-        switch(element) {
-            case BLACK_HOLE:
-                CircleShape circleShape = (CircleShape) shape;
-                canvas.drawPhysics(circleShape,Color.YELLOW,
-                                getX() + circleShape.getPosition().x,getY() + circleShape.getPosition().y,
-                                   drawScale.x,drawScale.y);
-                break;
-            case FLYING_METEOR:
-                canvas.drawPhysics((CircleShape) shape,Color.YELLOW,getX(),getY(),drawScale.x,drawScale.y);
-                break;
-            case WALL:
-                canvas.drawPhysics((PolygonShape) shape,Color.YELLOW,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-                break;
-            case BOUNCY_WALL:
-                canvas.drawPhysics((PolygonShape) shape,Color.YELLOW,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-                break;
-            case BUTTON:
-                canvas.drawPhysics((CircleShape) shape,Color.YELLOW,getX(),getY(),drawScale.x,drawScale.y);
-                break;
-            case DOOR:
-                canvas.drawPhysics((PolygonShape) shape,Color.YELLOW,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-                break;
-            case MISC_POLY:
-                canvas.drawPhysics((PolygonShape) shape,Color.YELLOW,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-                break;
-            default:
-                break;
-        }
-//        canvas.drawPhysics(shape,Color.YELLOW,getX(),getY(),drawScale.x,drawScale.y);
     }
 }
