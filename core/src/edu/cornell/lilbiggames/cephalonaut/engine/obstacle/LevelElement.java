@@ -3,6 +3,7 @@ package edu.cornell.lilbiggames.cephalonaut.engine.obstacle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -20,7 +21,9 @@ public class LevelElement extends SimpleObstacle {
     private Fixture geometry;
 
     /** Boost pad **/
+    private static final float DEFAULT_BOOST_FACTOR = 8f;
     private float boostPadFactor = 1;
+    private float boostPadAngle = 0;
 
     /** Door **/
     private Vector2 originalPos;
@@ -78,6 +81,14 @@ public class LevelElement extends SimpleObstacle {
         this.width = width;
         this.height = height;
         updateScale();
+    }
+
+    public float getBoostPadFactor() {
+        return boostPadFactor;
+    }
+
+    public float getBoostPadAngle() {
+        return boostPadAngle;
     }
 
     public Vector2 getOriginalPos() {
@@ -212,18 +223,28 @@ public class LevelElement extends SimpleObstacle {
         return a;
     }
 
+    private JsonValue findProperty(JsonValue properties, String name) {
+        for (JsonValue property : properties) {
+            if (property.getString("name").equals(name))
+                return property.get("value");
+        }
+        return null;
+    }
+
+    private float findProperty(JsonValue properties, String name, float defaultValue) {
+        JsonValue property = findProperty(properties, name);
+        if (property == null) {
+            return defaultValue;
+        } else {
+            return property.asFloat();
+        }
+    }
+
     private void setProperties(JsonValue json) {
         JsonValue properties = json.get("properties");
         if (properties == null) return;
 
-        JsonValue go_properties = null;
-        for (JsonValue property : properties) {
-            String name = property.getString("name", "");
-            String propertyType = property.getString("propertytype", "");
-            if (name.equals("body") && propertyType.equals("GameObject")) {
-                go_properties = property.get("value");
-            }
-        }
+        JsonValue go_properties = findProperty(properties, "body");
         if (go_properties == null) return;
 
         if (go_properties.has("type"))
@@ -251,12 +272,12 @@ public class LevelElement extends SimpleObstacle {
         originalPos = new Vector2(getPosition());
     }
 
-    public LevelElement(float x, float y, float width, float height, TextureRegion texture, JsonValue tile) {
+    public LevelElement(float x, float y, float width, float height, TextureRegion texture, JsonValue object) {
         this(x, y, width, height, texture);
 
-        setProperties(tile);
+        setProperties(object);
 
-        JsonValue collisionObject = tile.get("objectgroup").get("objects").get(0);
+        JsonValue collisionObject = object.get("objectgroup").get("objects").get(0);
         JsonValue polygon = collisionObject.get("polygon");
         if (polygon != null) {
             // Create PolygonShape from Tiled polygon
@@ -269,7 +290,7 @@ public class LevelElement extends SimpleObstacle {
             setPolygon(collisionObject, vertices);
         }
 
-        finishSetup();
+        finishSetup(object);
     }
 
     public LevelElement(JsonValue object, JsonValue objectType, TextureRegion texture) {
@@ -279,9 +300,17 @@ public class LevelElement extends SimpleObstacle {
                 object.getFloat("height") / 16f,
                 texture,
                 mergeJsons(object, objectType));
+
+        // Need to account that rotation is around the bottom-left origin in Tiled instead of the center origin here
+        float rotation = -MathUtils.degreesToRadians * object.getFloat("rotation", 0);
+        setAngle(rotation);
+        Vector2 origin = new Vector2(object.getInt("x") / 16f, 50 - object.getInt("y") / 16f);
+        setPosition(getPosition().rotateAroundRad(origin, rotation));
     }
 
-    private void finishSetup() {
+    private void finishSetup(JsonValue tile) {
+        JsonValue properties = tile.get("properties");
+
         switch (element) {
             case BLACK_HOLE:
                 setName("blackHole" + black_hole_count++);
@@ -290,8 +319,7 @@ public class LevelElement extends SimpleObstacle {
                 createFlyingMeteor();
                 break;
             case BOOST_PAD:
-
-                createBoostPad();
+                createBoostPad(properties);
                 break;
             case BUTTON:
                 createButton();
@@ -369,26 +397,12 @@ public class LevelElement extends SimpleObstacle {
 //        this.direction = DIRECTION.RIGHT;
     }
 
-    private void createBoostPad() {
-        createBoostPad(BOX_WIDTH, BOX_HEIGHT);
-    }
 
-    private void createBoostPad(float width, float height) {
-//        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
-        geometry = null;
-        boxResize(width, height);
-//        direction = DIRECTION.RIGHT;
-        setGrapple(false);
-        setBodyType(BodyDef.BodyType.StaticBody);
-        setDensity(0);
-        setFriction(0);
+    private void createBoostPad(JsonValue properties) {
+        this.boostPadFactor = findProperty(properties, "boostPadFactor", DEFAULT_BOOST_FACTOR);
+        this.boostPadAngle = -MathUtils.degreesToRadians * findProperty(properties, "boostPadAngle", 0f);
         setSensor(true);
-//        setDrawScale(scale);
-        setTint(Color.YELLOW);
-        setTexture(earthTexture);
-//        setTextureScaleX(width * scale.x / earthTexture.getRegionWidth());
-//        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
-        setName("boost"+boost_count);
+        setName("boost" + boost_count);
         boost_count++;
     }
 

@@ -58,7 +58,6 @@ public class SandboxController extends WorldController implements ContactListene
 
 	private static final float ATTRACT_DIST = 5f;
 	private static final float METEOR_SPEED = 2f;
-	private static final float BOOST_SPEED = 8f;
 	private static final float DOOR_SIZE = 1f;
 
 	/** Sound Controller */
@@ -224,10 +223,9 @@ public class SandboxController extends WorldController implements ContactListene
 	}
 
 	public void boost(LevelElement obj) {
-		if(!obj.getInContact()) {
-			return;
-		}
-		Vector2 force = new Vector2(0, BOOST_SPEED).setAngleRad(obj.getAngle());
+		if(!obj.getInContact()) return;
+
+		Vector2 force = new Vector2(0, obj.getBoostPadFactor()).setAngleRad(obj.getAngle() + obj.getBoostPadAngle());
 		cephalonaut.addForce(force);
 	}
 

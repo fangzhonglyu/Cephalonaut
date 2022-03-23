@@ -78,6 +78,40 @@
                  "width":16,
                  "x":16,
                  "y":288
+                }, 
+                {
+                 "gid":5,
+                 "height":36.0346921336188,
+                 "id":26,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "tint":"#ffffaa21",
+                             "type":"Boost Pad"
+                            }
+                        }, 
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":45
+                        }, 
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":8
+                        }],
+                 "rotation":135,
+                 "type":"",
+                 "visible":true,
+                 "width":36.0346921336188,
+                 "x":211.833333333333,
+                 "y":224.166666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -98,7 +132,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":26,
+ "nextobjectid":27,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
