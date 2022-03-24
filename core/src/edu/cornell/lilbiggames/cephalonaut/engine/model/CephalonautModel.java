@@ -37,10 +37,10 @@ public class CephalonautModel extends OctopusObstacle {
 	/** Cache object for transforming the force according the object angle */
 	private final Affine2 affineCache = new Affine2();
 
-	private final float MAX_SPEED = 8.0f;
+	private final float MAX_SPEED = 6.0f;
 
 	/** Magnitude of force to apply */
-	private final float force = 4.0f;
+	private final float force = 2.0f;
 
 	/** The direction of rotation */
 	private float rotation;
@@ -50,8 +50,6 @@ public class CephalonautModel extends OctopusObstacle {
 
 	/** How much ink the cephalonaut has left */
 	private float ink;
-
-	/** Get how much ink the cephalonaut has left*/
 
 	/**
 	 * Returns true if the cephalonaut is actively inking.
@@ -216,7 +214,7 @@ public class CephalonautModel extends OctopusObstacle {
 		if (inking && ink > 0.0f) {
 			ink -= 0.006f;
 		} else if (!inking && ink < 1.0f) {
-			ink += 0.0004f;
+			ink += 0.004f;
 		}
 		ink = Math.min(ink, 1.0f);
 	}
@@ -232,8 +230,9 @@ public class CephalonautModel extends OctopusObstacle {
 			float angle = getPosition().cpy().sub(grapple.getPosition()).angleRad() + (float) Math.PI / 2f;
 			Vector2 middle = getPosition().cpy().add(grapple.getPosition()).scl(0.5f);
 			Color tint = grapple.isGrappling() ? Color.RED : Color.GREEN;
-			canvas.draw(tentacleTexture, tint, 0.5f, 0.5f, middle.x * drawScale.x, middle.y * drawScale.y,
-					angle, 5, distance * drawScale.x);
+			//canvas.draw(tentacleTexture, tint, 0.5f, 0.5f, middle.x * drawScale.x, middle.y * drawScale.y,
+			//		angle, 5, distance * drawScale.x);
+			grapple.draw(canvas, getPosition());
 		}
 
 		if (isInking() && ink > 0) {
@@ -246,6 +245,7 @@ public class CephalonautModel extends OctopusObstacle {
 		canvas.draw(texture, Color.WHITE, origin.x, origin.y,
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 1, 1);
+
 
 		canvas.drawSimpleFuelBar(ink, canvas.getWidth() - 150, canvas.getHeight() - 70);
 	}

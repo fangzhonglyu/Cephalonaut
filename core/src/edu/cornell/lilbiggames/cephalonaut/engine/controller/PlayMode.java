@@ -151,11 +151,7 @@ public class PlayMode extends WorldController {
         boolean inking = input.isThrusterApplied();
         float rotation = input.getRotation();
 
-        if (input.didTertiary()) {
-            cephalonaut.setInk(1);
-        }
-
-        cephalonautController.update(grappleButton, directionalGrapple, objects, crossHair, inking, rotation);
+        cephalonautController.update(grappleButton, input.didTertiary(), crossHair, inking, rotation);
         canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
     }
 

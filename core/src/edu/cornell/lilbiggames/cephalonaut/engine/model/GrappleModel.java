@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
@@ -12,6 +13,8 @@ import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
 import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
 
+import java.util.ArrayList;
+
 public class GrappleModel extends WheelObstacle {
     /** Whether the grapple is out */
     private boolean isOut;
@@ -19,12 +22,18 @@ public class GrappleModel extends WheelObstacle {
     private boolean isGrappling;
     /** Whether the grapple is anchored */
     private boolean isAnchored;
+    /** Whether the grapple is locked in place*/
+    private float isLocked;
     /** The anchor location of the grapple */
     private String anchorLocation;
     /** The extension length of the grapple */
     private float extensionLength;
     /** The max extension length of the grapple */
     private float maxLength;
+    /** Travelled Points*/
+    private ArrayList<Vector2> trace;
+    /** The grapple's texture */
+    private Texture texture;
 
     public GrappleModel(float x, float y, Vector2 drawScale) {
         // The shrink factors fit the image to a tighter hitbox
@@ -36,18 +45,20 @@ public class GrappleModel extends WheelObstacle {
         setSensor(true);
         setBullet(true);
 
-        int pixDiameter = (int) (getRadius() * 2);
+        int pixDiameter = 6;
         Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
+        pixmap.setColor(Color.ORANGE);
         pixmap.fillCircle(pixDiameter / 2, pixDiameter / 2, pixDiameter / 2);
-        texture = new TextureRegion(new Texture(pixmap));
+        texture = (new Texture(pixmap));
         origin.set(pixDiameter / 2f, pixDiameter / 2f);
 
         isOut = false;
         isGrappling = false;
         isAnchored = false;
+        isLocked = 0;
         anchorLocation = "";
         extensionLength = 0;
+        trace = new ArrayList<>();
     }
 
     /**
@@ -61,8 +72,14 @@ public class GrappleModel extends WheelObstacle {
         isOut = false;
         isGrappling = false;
         isAnchored = false;
+        isLocked = 0;
         anchorLocation = "";
         extensionLength = 0;
+        trace = new ArrayList<>();
+    }
+
+    public void addTrace(Vector2 cephP){
+        trace.add(new Vector2(getX(),getY()).sub(cephP));
     }
 
     public boolean activatePhysics(World world) {
@@ -127,6 +144,20 @@ public class GrappleModel extends WheelObstacle {
      * @param anchored whether the grapple is anchored.
      */
     public void setAnchored(boolean anchored) { isAnchored = anchored; }
+
+    /**
+     * Returns true if the grapple is locked.
+     *
+     * @return true if the grapple is locked.
+     */
+    public float isLocked() { return isLocked; }
+
+    /**
+     * Sets whether the grapple is locked.
+     *
+     * @param locked whether the grapple is locked.
+     */
+    public void setLocked(float locked) { isLocked = locked; }
 
     /**
      * Sets the grapple's anchor location.
@@ -210,11 +241,24 @@ public class GrappleModel extends WheelObstacle {
      *
      * @param canvas Drawing context
      */
-    public void draw(GameCanvas canvas) {
+    public void draw(GameCanvas canvas, Vector2 cephP) {
         if (isOut) {
-            canvas.draw(texture, Color.ORANGE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
+            Affine2 tr = new Affine2();
+            tr.preTranslate(cephP.x, cephP.y);
+            tr.rotate(getPosition().sub(cephP).angleDeg());
+            float dist = getPosition().dst(cephP);
+            for (float i = 0; i<getPosition().dst(cephP)/2; i+=1/drawScale.x){
+                Vector2 t = new Vector2(i*2, (float)(-Math.sin(i*5)-Math.cos(i*4))/(dist+0.3f)/2f*(float)Math.sqrt(Math.sqrt(1-i*2/dist)));
+                if (isLocked > 0)
+                    t.set(t.x,t.y*(8-isLocked)/8);
+                tr.applyTo(t);
+                canvas.draw(texture, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
+                        getAngle(), 1, 1);
+            }
+            canvas.draw(texture, Color.ORANGE, 3f, 3f, getX() * drawScale.x, getY() * drawScale.y,
                     getAngle(), 1, 1);
         }
+
     }
 
     /**
