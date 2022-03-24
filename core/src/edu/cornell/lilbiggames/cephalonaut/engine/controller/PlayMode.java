@@ -149,13 +149,14 @@ public class PlayMode extends WorldController {
         }
 
         boolean grappleButton = input.didSecondary();
+        boolean ungrappleButton = input.didTertiary();
         Vector2 crossHair = input.getCrossHair().add(
                 (canvas.getCameraX() - canvas.getWidth() / 2f) / scale.x,
                 (canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
         boolean inking = input.isThrusterApplied();
         float rotation = input.getRotation();
 
-        cephalonautController.update(grappleButton, input.didTertiary(), crossHair, inking, rotation);
+        cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
         canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
     }
 

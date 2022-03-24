@@ -102,12 +102,12 @@ public class LevelController implements ContactListener {
 
             GrappleModel grapple = cephalonaut.getGrapple();
             if (!grapple.isAnchored()) {
-                if (bd1.getName().equals("grapple") && !bd2.getName().equals("michael")) {
+                if (bd1.getName().equals("grapple") && !bd2.getName().equals("michael") && bd2.canGrapple()) {
                     grapple.setAnchored(true);
                     grapple.setExtensionLength(1 + cephalonaut.getPosition().dst(bd2.getPosition()));
                     grapple.setAnchorLocation(bd2.getName());
                 }
-                if (bd2.getName().equals("grapple") && !bd1.getName().equals("michael")) {
+                if (bd2.getName().equals("grapple") && !bd1.getName().equals("michael") && bd1.canGrapple()) {
                     grapple.setAnchored(true);
                     grapple.setExtensionLength(1 + cephalonaut.getPosition().dst(bd1.getPosition()));
                     grapple.setAnchorLocation(bd1.getName());
