@@ -217,6 +217,12 @@ public class LevelLoader {
 
         for (JsonValue layer : level.get("layers")) {
             String type = layer.getString("type");
+            // TODO: Transfer coordinates from parallaxed layers from Tiled more accurately
+            Vector2 parallax = new Vector2(
+                    1 - layer.getFloat("parallaxx", 1),
+                    1 - layer.getFloat("parallaxy", 1));
+            System.out.println(parallax);
+
             switch (type) {
                 case "tilelayer":
                     int[] data = layer.get("data").asIntArray();
@@ -240,7 +246,9 @@ public class LevelLoader {
                             levelElementDef.y = layerHeight - tiledY - 1;
                             levelElementDef.texture = textures.get(id - 1);
                             loadTile(levelElementDef, tile);
-                            objects.addLast(LevelElement.create(levelElementDef));
+                            LevelElement element = LevelElement.create(levelElementDef);
+                            element.setParallaxFactor(parallax);
+                            objects.addLast(element);
                         }
                     }
                     break;
@@ -259,6 +267,7 @@ public class LevelLoader {
 
                         loadObject(levelElementDef, jsonObject, tileSize, levelHeight);
                         LevelElement newObject = LevelElement.create(levelElementDef);
+                        newObject.setParallaxFactor(parallax);
                         objects.addLast(newObject);
                         objectIds.put(jsonObject.getInt("id"), newObject);
                     }
@@ -267,7 +276,7 @@ public class LevelLoader {
                     Texture image = assetDirectory.getEntry(layer.getString("image"), Texture.class);
                     image.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
                     ImageObject imageObject = new ImageObject(image);
-                    imageObject.setParallax(layer.getFloat("parallaxx"), layer.getFloat("parallaxy"));
+                    imageObject.setParallaxFactor(parallax);
                     objects.addLast(imageObject);
                     break;
                 default:

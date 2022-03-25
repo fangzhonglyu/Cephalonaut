@@ -30,6 +30,8 @@ public class LevelController implements ContactListener {
             boost((LEBoostPad) object);
         } else if (object instanceof LEBlackHole) {
             attract((LEBlackHole) object);
+        } else if (object instanceof LETriggerable) {
+            ((LETriggerable) object).checkPos();
         }
 
         if (object instanceof LevelElement) {
@@ -110,7 +112,7 @@ public class LevelController implements ContactListener {
             if (contactObject instanceof LETrigger) {
                 LETrigger trigger = (LETrigger) contactObject;
                 LETriggerable target = (LETriggerable) playMode.getObject(trigger.getTarget());
-                target.trigger();
+                target.setActivated(trigger.isActivated());
             }
         }
 

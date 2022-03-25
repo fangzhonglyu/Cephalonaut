@@ -25,7 +25,7 @@ public class LevelElement extends SimpleObstacle {
 //    /** A cache value for the fixture (for resizing) */
 //    private Fixture geometry;
 
-    private boolean inContact = false;
+    protected boolean inContact = false;
 
     public enum Element {
         BLACK_HOLE,
@@ -118,8 +118,9 @@ public class LevelElement extends SimpleObstacle {
     }
 
     public void setInContact(boolean inContact) {
+        boolean wasInContact = this.inContact;
         this.inContact = inContact;
-        if (inContact) contacted();
+        if (!wasInContact && this.inContact) contacted();
     }
 
     protected void contacted() {}

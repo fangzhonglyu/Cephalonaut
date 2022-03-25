@@ -40,6 +40,11 @@
                     "value": 0
                 },
                 {
+                    "name": "isSensor",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "restitution",
                     "type": "float",
                     "value": 0.3
