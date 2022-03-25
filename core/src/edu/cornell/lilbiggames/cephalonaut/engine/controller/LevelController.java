@@ -1,28 +1,28 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LEBlackHole;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LEBoostPad;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.*;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEBlackHole;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEBoostPad;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETrigger;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETriggerable;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.SimpleObstacle;
-
-import java.util.logging.Level;
 
 public class LevelController implements ContactListener {
     /** Reference to player **/
     private final CephalonautModel cephalonaut;
 
+    /** Reference to the play mode **/
+    private final PlayMode playMode;
+
     /** Level element constants. TODO: Should be moved to LevelElement eventually. **/
-    private static final float METEOR_SPEED = 2f;
     private static final float DOOR_SIZE = 1f;
 
-    public LevelController(CephalonautModel cephalonaut) {
+    public LevelController(CephalonautModel cephalonaut, PlayMode playMode) {
         this.cephalonaut = cephalonaut;
+        this.playMode = playMode;
     }
 
     public void update(GameObject object) {
@@ -80,17 +80,6 @@ public class LevelController implements ContactListener {
         cephalonaut.addForce(force);
     }
 
-    public void openDoor(LevelElement element) {
-        if(element.getOpened()) {
-            element.setLinearVelocity(Vector2.Zero);
-            return;
-        }
-        element.setLinearVelocity(new Vector2(0, 1));
-        if(element.getBody().getPosition().y >= element.getOriginalPos().y + 1.4  * DOOR_SIZE) {
-            element.setOpened(true);
-        }
-    }
-
     public void finishLevel() {
         System.out.println("Level finished!");
     }
@@ -116,6 +105,12 @@ public class LevelController implements ContactListener {
         if (contactObject != null) {
             if (contactObject instanceof LevelElement) {
                 ((LevelElement) contactObject).setInContact(true);
+            }
+
+            if (contactObject instanceof LETrigger) {
+                LETrigger trigger = (LETrigger) contactObject;
+                LETriggerable target = (LETriggerable) playMode.getObject(trigger.getTarget());
+                target.trigger();
             }
         }
 

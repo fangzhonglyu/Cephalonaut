@@ -1,20 +1,19 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.gameobject;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ShortArray;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEBlackHole;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEBoostPad;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETrigger;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETriggerable;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.SimpleObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.Properties;
-
-import java.util.logging.Level;
 
 
 public class LevelElement extends SimpleObstacle {
@@ -26,36 +25,7 @@ public class LevelElement extends SimpleObstacle {
     /** A cache value for the fixture (for resizing) */
     private Fixture geometry;
 
-    /** Door **/
-    private Vector2 originalPos;
-    private LevelElement activatee;
     private boolean inContact = false;
-    private boolean activated = false;
-    private boolean opened;
-
-    /** Misc. element stuff **/
-    private static final float BLACK_HOLE_RADIUS = .5f;
-    private static final float METEOR_RADIUS = .5f;
-    private static final float BOUNCY_WALL_RESTITUTION = 2.0f;
-    private static final float BOX_HEIGHT = 1f;
-    private static final float BOX_WIDTH = 1f;
-    private static final float BUTTON_RADIUS = .25f;
-    private static final float DOOR_HEIGHT = 1f;
-    private static final float DOOR_WIDTH = .5f;
-
-    private static TextureRegion earthTexture;
-    private static TextureRegion octopusTexture;
-    private static TextureRegion crosshairTexture;
-
-    /** Element counts for naming **/
-    // TODO: Can probably replace by Tiled object names. Tiled can be named by their coordinates.
-    private static int black_hole_count = 0;
-    private static int meteor_count = 0;
-    private static int wall_count = 0;
-    private static int boost_count = 0;
-    private static int button_count = 0;
-    private static int door_count = 0;
-    private static int misc_count = 0;
 
     public enum Element {
         BLACK_HOLE,
@@ -73,8 +43,8 @@ public class LevelElement extends SimpleObstacle {
     private Element element;
 
     /** Size of element, used for texture and polygon resizing purposes **/
-    private float width;
-    private float height;
+    protected float width;
+    protected float height;
 
     public static class Def {
         public String name;
@@ -113,8 +83,14 @@ public class LevelElement extends SimpleObstacle {
 
     public static LevelElement create(Def def) {
         switch (def.element) {
+            case BLACK_HOLE:
+                return new LEBlackHole(def);
             case BOOST_PAD:
                 return new LEBoostPad(def);
+            case DOOR:
+                return new LETriggerable(def);
+            case BUTTON:
+                return new LETrigger(def);
             default:
                 return new LevelElement(def);
         }
@@ -132,92 +108,26 @@ public class LevelElement extends SimpleObstacle {
         updateScale();
     }
 
-    public Vector2 getOriginalPos() {
-        return originalPos;
-    }
-
-    public boolean getActivated() {
-        return activated;
-    }
-
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
-
-    public boolean getOpened() {
-        return opened;
-    }
-
-    public void setOpened(boolean opened) {
-        this.opened = opened;
-    }
-
+    // TODO: Clean these next few functions up a bit.
     public boolean getInContact() {
         return inContact;
     }
 
     public void setInContact(boolean inContact) {
         this.inContact = inContact;
-        if (inContact) {
-            if (element == Element.BUTTON) {
-                activate();
-            }
-        }
+        if (inContact) contacted();
     }
 
-    public void activate() {
-        activated = true;
-        if (element == Element.BUTTON) {
-            setTint(Color.GREEN);
-            if (activatee != null) {
-                activatee.activate();
-            }
-        }
-    }
+    protected void contacted() {}
 
     public static void gatherAssets(AssetDirectory directory) {
         // Allocate the tiles
-        earthTexture = new TextureRegion(directory.getEntry( "earth", Texture.class ));
-        octopusTexture = new TextureRegion(directory.getEntry( "octopus", Texture.class ));
-        crosshairTexture = new TextureRegion(directory.getEntry("crosshair", Texture.class));
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
     }
 
     public Element getElement() {
         return element;
     }
-
-//    private void finishSetup(JsonValue tile) {
-//        JsonValue properties = tile.get("properties");
-//
-//        switch (element) {
-//            case BLACK_HOLE:
-//                // TODO: Get parameters like strength and attraction radius from JSON
-//                setName("blackHole" + black_hole_count++);
-//                break;
-//            case FLYING_METEOR:
-//                // TODO: Make work in level editor properly. Maybe you should make configurable spawners?
-//                createFlyingMeteor();
-//                break;
-//            case BOOST_PAD:
-//                createBoostPad(properties);
-//                break;
-//            case BUTTON:
-//                // TODO: Make work in level editor properly
-//                createButton();
-//                break;
-//            case DOOR:
-//                // TODO: Make work in level editor properly
-//                createDoor();
-//                break;
-//            case FINISH:
-//                setName("finish");
-//                setSensor(true);
-//                break;
-//            default:
-//                break;
-//        }
-//    }
 
     final static EarClippingTriangulator triangulator = new EarClippingTriangulator();
     private void setVertices(float[] vertices) {
@@ -248,80 +158,20 @@ public class LevelElement extends SimpleObstacle {
         updateScale();
     }
 
-    private void createFlyingMeteor() {
-        createFlyingMeteor(METEOR_RADIUS);
-    }
+//    private void createFlyingMeteor() {
+//        createFlyingMeteor(METEOR_RADIUS);
+//    }
+//
+//    private void createFlyingMeteor(float radius) {
+//        shape = new CircleShape();
+//        shape.setRadius(radius);
+//        setName("meteor" + meteor_count);
+//        setGrapple(true);
+//        setTexture(crosshairTexture);
+//        setBodyType(BodyDef.BodyType.KinematicBody);
+//        setTint(Color.PURPLE);
+//    }
 
-    private void createFlyingMeteor(float radius) {
-        shape = new CircleShape();
-        shape.setRadius(radius);
-        setName("meteor" + meteor_count);
-        setGrapple(true);
-        setTexture(crosshairTexture);
-        setBodyType(BodyDef.BodyType.KinematicBody);
-//        setDrawScale(scale);
-//        setTextureScaleX(radius * 2 * scale.x / crosshairTexture.getRegionWidth());
-//        setTextureScaleY(radius * 2 * scale.y / crosshairTexture.getRegionHeight());
-        setTint(Color.PURPLE);
-        meteor_count++;
-//        this.direction = DIRECTION.RIGHT;
-    }
-
-    private void createButton() {
-        createButton(BUTTON_RADIUS);
-    }
-
-    private void createButton(float radius) {
-        shape = new CircleShape();
-        shape.setRadius(radius);
-//        bodyinfo.position.set(BOX_SIZE * original_pos.x + BOX_SIZE / 2, BOX_SIZE * original_pos.y);
-//        geometry = null;
-//        boxResize(BOX_SIZE/2, BOX_SIZE/2);
-
-        setGrapple(true);
-        setBodyType(BodyDef.BodyType.StaticBody);
-        setDensity(0);
-        setFriction(0);
-        setRestitution(0.5f);
-//        setDrawScale(scale);
-        setTint(Color.RED);
-        setTexture(earthTexture);
-//        setTextureScaleX(radius * 2 * scale.x / earthTexture.getRegionWidth());
-//        setTextureScaleY(radius * 2 * scale.y / earthTexture.getRegionWidth());
-        setName("button"+button_count);
-        button_count++;
-    }
-
-    private void createDoor() {
-        createDoor(DOOR_WIDTH, DOOR_HEIGHT);
-    }
-
-    private void createDoor(float width, float height) {
-//        bodyinfo.position.set(20, 8);
-//        bodyinfo.position.set(original_pos.x + width / 2, original_pos.y + height / 2);
-        geometry = null;
-//        boxResize(width, height);
-        setGrapple(true);
-        setBodyType(BodyDef.BodyType.KinematicBody);
-        setDensity(0);
-        setFriction(0);
-        setRestitution(0.3f);
-//        setDrawScale(scale);
-        setTint(Color.PINK);
-        setTexture(earthTexture);
-//        setTextureScaleX(width * scale.x / earthTexture.getRegionHeight());
-//        setTextureScaleY(height * scale.y / earthTexture.getRegionHeight());
-        setName("door"+door_count);
-        door_count++;
-    }
-
-    public void setActivatee(LevelElement element) {
-        activatee = element;
-    }
-
-    public LevelElement getActivatee() {
-        return activatee;
-    }
 
     /**
      * Create new fixtures for this body, defining the shape

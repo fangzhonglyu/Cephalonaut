@@ -76,11 +76,15 @@ public class GDXRoot extends Game {
 
 		// Initialize the game world
 		playMode = new PlayMode();
+//		playMode = levelLoader.loadLevel("level_1");
 		LevelElement.gatherAssets(directory);
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
+//		playMode.reset(levelLoader.loadLevel("level_1"));
+		levelLoader.loadLevel("level_1", playMode);
 
-		playMode.reset(levelLoader.loadLevel("level_1"));
+
+
 		setScreen(playMode);
 
 	}

@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
@@ -165,6 +166,7 @@ public class LevelLoader {
     }
 
     private void loadObject(LevelElement.Def def, JsonValue json, float tileSize, int levelHeight) {
+        def.name = json.getString("name");
         float x = json.getInt("x") / tileSize;
         float y = levelHeight - json.getInt("y") / tileSize;
         def.x = x;
@@ -180,8 +182,10 @@ public class LevelLoader {
         def.y = pos.y;
     }
 
-    public Queue<GameObject> loadLevel(String levelName) {
+    public void loadLevel(String levelName, PlayMode playMode) {
         LevelElement.Def levelElementDef = new LevelElement.Def();
+
+        Map<Integer, LevelElement> objectIds = new HashMap<>();
         Queue<GameObject> objects = new Queue<>();
         JsonValue level = assetDirectory.getEntry(levelName, JsonValue.class);
         int levelHeight = level.getInt("height");
@@ -206,8 +210,11 @@ public class LevelLoader {
                         int id = data[i];
                         JsonValue tile = map.get(id - 1);
                         if (tile != null) {
-                            levelElementDef.x = i % layerWidth;
-                            levelElementDef.y = layerHeight - i / layerWidth - 1;
+                            int tiledX = i % layerWidth;
+                            int tiledY = i / layerWidth;
+                            levelElementDef.name = String.format("Tile #%d (%d, %d)", id, tiledX, tiledY);
+                            levelElementDef.x = tiledX;
+                            levelElementDef.y = layerHeight - tiledY - 1;
                             levelElementDef.texture = textures.get(id - 1);
                             loadTile(levelElementDef, tile);
                             objects.addLast(LevelElement.create(levelElementDef));
@@ -228,7 +235,9 @@ public class LevelLoader {
                         }
 
                         loadObject(levelElementDef, jsonObject, tileSize, levelHeight);
-                        objects.addLast(LevelElement.create(levelElementDef));
+                        LevelElement newObject = LevelElement.create(levelElementDef);
+                        objects.addLast(newObject);
+                        objectIds.put(jsonObject.getInt("id"), newObject);
                     }
                     break;
                 case "imagelayer":
@@ -244,6 +253,7 @@ public class LevelLoader {
             }
         }
 
-        return objects;
+        playMode.setObjectMap(objectIds);
+        playMode.reset(objects);
     }
 }

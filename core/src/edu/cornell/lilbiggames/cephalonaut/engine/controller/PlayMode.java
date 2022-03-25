@@ -8,12 +8,14 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
-import edu.cornell.lilbiggames.cephalonaut.engine.LevelLoader;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
+import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 
+import java.util.Map;
 import java.util.logging.Level;
 
 /** Game mode for playing a level */
@@ -39,6 +41,8 @@ public class PlayMode extends WorldController {
     /** Mouse selector to move the cephalonaut TODO: Can this be in CephalonautController too? */
     private ObstacleSelector selector;
 
+    private Map<Integer, LevelElement> objectMap;
+
     private LevelLoader levelLoader;
 
 
@@ -54,9 +58,17 @@ public class PlayMode extends WorldController {
         levelLoader = new LevelLoader();
     }
 
+    public void setObjectMap(Map<Integer, LevelElement> objectMap) {
+        this.objectMap = objectMap;
+    }
+
+    public LevelElement getObject(int id) {
+        return objectMap.get(id);
+    }
+
     // TODO: Fix resetting
     public void reset() {
-        reset(levelLoader.loadLevel("level_1"));
+//        reset(levelLoader.loadLevel("level_1"));
     }
 
     /**
@@ -80,7 +92,7 @@ public class PlayMode extends WorldController {
         setFailure(false);
         populateLevel(newObjects);
 
-        levelController = new LevelController(cephalonaut);
+        levelController = new LevelController(cephalonaut, this);
         world.setContactListener(levelController);
         GrappleModel grapple = cephalonaut.getGrapple();
         grapple.reset();

@@ -1,6 +1,7 @@
-package edu.cornell.lilbiggames.cephalonaut.engine.gameobject;
+package edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements;
 
 import com.badlogic.gdx.math.MathUtils;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 public class LEBoostPad extends LevelElement {
     private static final float DEFAULT_BOOST_FACTOR = 8f;
@@ -8,7 +9,7 @@ public class LEBoostPad extends LevelElement {
     private float boostPadFactor;
     private float boostPadAngle;
 
-    protected LEBoostPad(Def def) {
+    public LEBoostPad(Def def) {
         super(def);
         this.boostPadFactor = def.properties.getFloat("boostPadFactor", DEFAULT_BOOST_FACTOR);
         this.boostPadAngle = -MathUtils.degreesToRadians * def.properties.getFloat("boostPadAngle", 0f);
