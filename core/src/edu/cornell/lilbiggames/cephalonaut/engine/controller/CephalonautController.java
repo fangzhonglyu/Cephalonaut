@@ -21,12 +21,12 @@ public class CephalonautController {
     /** The joint of the grapple */
     private Joint grappleJoint1, grappleJoint2, grappleJoint3;
     private DistanceJointDef grappleJoint1Def, grappleJoint2Def;
-    private int grappleSwitchCooldown;
+    private float lastRotation;
 
     public CephalonautController(World world, CephalonautModel cephalonaut) {
         this.world = world;
         this.cephalonaut = cephalonaut;
-        grappleSwitchCooldown = 0;
+        lastRotation = 0f;
     }
 
     public void update(boolean grappleButton, boolean refill, Vector2 crossHair, boolean thrusterApplied,
@@ -49,9 +49,7 @@ public class CephalonautController {
             switchGrappleDirection();
         }
 
-        if(grappleSwitchCooldown > 0) {
-            grappleSwitchCooldown--;
-        }
+        lastRotation = rotation;
     }
 
     private void updateGrapple(boolean grappleButton, Vector2 crossHair) {
@@ -139,7 +137,7 @@ public class CephalonautController {
     public void switchGrappleDirection() {
         if(cephalonaut.getGrapple().isGrappling() && grappleJoint1 != null && grappleJoint2 != null &&
                 grappleJoint1Def != null && grappleJoint2Def != null) {
-            if(grappleSwitchCooldown <= 0) {
+            if(lastRotation == 0) {
                 world.destroyJoint(grappleJoint1);
                 world.destroyJoint(grappleJoint2);
                 grappleJoint1 = null;
@@ -147,7 +145,6 @@ public class CephalonautController {
                 cephalonaut.getBody().setTransform(cephalonaut.getPosition(), (float) (3 * Math.PI/4) + cephalonaut.getAngle());
                 grappleJoint1 = world.createJoint(grappleJoint1Def);
                 grappleJoint2 = world.createJoint(grappleJoint2Def);
-                grappleSwitchCooldown = 20;
             }
         }
     }
