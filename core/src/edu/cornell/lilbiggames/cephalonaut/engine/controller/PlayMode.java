@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
+import edu.cornell.lilbiggames.cephalonaut.engine.LevelLoader;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
@@ -38,6 +39,8 @@ public class PlayMode extends WorldController {
     /** Mouse selector to move the cephalonaut TODO: Can this be in CephalonautController too? */
     private ObstacleSelector selector;
 
+    private LevelLoader levelLoader;
+
 
     /**
      * Creates and initialize a new instance of the sandbox
@@ -48,11 +51,12 @@ public class PlayMode extends WorldController {
         setComplete(false);
         setFailure(false);
         directionalGrapple = true;
+        levelLoader = new LevelLoader();
     }
 
     // TODO: Fix resetting
     public void reset() {
-        reset(new Queue<GameObject>());
+        reset(levelLoader.loadLevel("level_1"));
     }
 
     /**
