@@ -16,9 +16,10 @@
 import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.PlayMode;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.LevelElement;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import java.util.Map;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
+import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 
 /**
  * Root class for a LibGDX.  
