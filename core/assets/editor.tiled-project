@@ -9,8 +9,26 @@
     "objectTypesFile": "",
     "propertyTypes": [
         {
+            "id": 3,
+            "name": "BodyType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "Static",
+                "Dynamic",
+                "Kinematic"
+            ],
+            "valuesAsFlags": false
+        },
+        {
             "id": 2,
             "members": [
+                {
+                    "name": "bodyType",
+                    "propertyType": "BodyType",
+                    "type": "string",
+                    "value": "Static"
+                },
                 {
                     "name": "canGrappleOn",
                     "type": "bool",
@@ -20,11 +38,6 @@
                     "name": "density",
                     "type": "float",
                     "value": 0
-                },
-                {
-                    "name": "isStatic",
-                    "type": "bool",
-                    "value": true
                 },
                 {
                     "name": "restitution",
@@ -41,6 +54,16 @@
                     "propertyType": "LevelElementType",
                     "type": "string",
                     "value": "Wall"
+                },
+                {
+                    "name": "vx",
+                    "type": "float",
+                    "value": 0
+                },
+                {
+                    "name": "vy",
+                    "type": "float",
+                    "value": 0
                 }
             ],
             "name": "GameObject",

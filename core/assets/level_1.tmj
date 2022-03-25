@@ -125,6 +125,7 @@
                          "type":"class",
                          "value":
                             {
+                             "bodyType":"Kinematic",
                              "tint":"#ffaa0000",
                              "type":"Door"
                             }
@@ -163,6 +164,32 @@
                  "width":13.5838394603464,
                  "x":369.156954881527,
                  "y":183.365059372786
+                }, 
+                {
+                 "gid":135,
+                 "height":32,
+                 "id":31,
+                 "name":"zoomer",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "bodyType":"Kinematic",
+                             "canGrappleOn":false,
+                             "type":"Wormhole",
+                             "vx":5,
+                             "vy":5
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":3,
+                 "y":794
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -183,7 +210,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":31,
+ "nextobjectid":32,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

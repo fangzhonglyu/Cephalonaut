@@ -15,7 +15,7 @@ public class LETriggerable extends LevelElement {
 
     public LETriggerable(Def def) {
         super(def);
-        setBodyType(BodyDef.BodyType.KinematicBody);
+//        setBodyType(BodyDef.BodyType.KinematicBody);
         originalPos = getPosition();
     }
 

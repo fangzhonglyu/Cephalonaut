@@ -85,6 +85,22 @@ public class LevelLoader {
         }
     }
 
+    private BodyDef.BodyType stringToBodyType(String bodyType) {
+        if (bodyType == null) return BodyDef.BodyType.StaticBody;
+
+        switch (bodyType) {
+            case "Static":
+                return BodyDef.BodyType.StaticBody;
+            case "Dynamic":
+                return BodyDef.BodyType.DynamicBody;
+            case "Kinematic":
+                return BodyDef.BodyType.KinematicBody;
+            default:
+                System.out.printf("ERROR: Unknown body type '%s'\n", bodyType);
+                return null;
+        }
+    }
+
     private static Color argbToColor(String hex, Color color) {
         if (hex == null) return Color.WHITE;
         hex = hex.charAt(0) == '#' ? hex.substring(1) : hex;
@@ -149,20 +165,27 @@ public class LevelLoader {
 
         def.x += def.width  / 2 - 0.5f;
         def.y += def.height / 2 - 0.5f;
+        def.vx = body.getFloat("vx", 0);
+        def.vy = body.getFloat("vy", 0);
 
         def.angle = 0;
         def.element = stringToElementType(body.getString("type", null));
         def.canGrapple = body.getBoolean("canGrappleOn", true);
         def.density = body.getFloat("density", 0);
         def.restitution = body.getFloat("restitution", 0.3f);
-        def.bodyType = body.getBoolean("isStatic", true) ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody;
+        def.isSensor = body.getBoolean("isSensor", false);
+        def.bodyType = stringToBodyType(body.getString("bodyType", null));
         def.tint = argbToColor(body.getString("tint", null), new Color());
 
         def.properties = properties;
 
         // Currently the collider is just the first object in 'objectgroup'. We can change this later if we end up
         // having multiple objects in 'objectgroup'.
-        loadCollider(def, json.get("objectgroup").get("objects").child);
+        if (json.has("objectgroup")) {
+            loadCollider(def, json.get("objectgroup").get("objects").child);
+        } else {
+            def.vertices = null;
+        }
     }
 
     private void loadObject(LevelElement.Def def, JsonValue json, float tileSize, int levelHeight) {
