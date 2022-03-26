@@ -221,7 +221,6 @@ public class LevelLoader {
             Vector2 parallax = new Vector2(
                     1 - layer.getFloat("parallaxx", 1),
                     1 - layer.getFloat("parallaxy", 1));
-            System.out.println(parallax);
 
             switch (type) {
                 case "tilelayer":

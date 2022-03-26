@@ -17,9 +17,6 @@ public class LevelController implements ContactListener {
     /** Reference to the play mode **/
     private final PlayMode playMode;
 
-    /** Level element constants. TODO: Should be moved to LevelElement eventually. **/
-    private static final float DOOR_SIZE = 1f;
-
     public LevelController(CephalonautModel cephalonaut, PlayMode playMode) {
         this.cephalonaut = cephalonaut;
         this.playMode = playMode;
