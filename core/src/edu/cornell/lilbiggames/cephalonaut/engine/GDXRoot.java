@@ -15,10 +15,12 @@
 
 import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.MainMenuMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.LevelElement;
 import java.util.Map;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
+import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 /**
  * Root class for a LibGDX.  
@@ -29,7 +31,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
  * plaforms. In addition, this functions as the root class all intents and purposes, 
  * and you would draw it as a root class in an architecture specification.  
  */
-public class GDXRoot extends Game {
+public class GDXRoot extends Game implements ScreenListener {
 	/** AssetManager to load game assets (textures, sounds, etc.) */
 	AssetDirectory directory;
 
@@ -37,6 +39,7 @@ public class GDXRoot extends Game {
 	private GameCanvas canvas;
 
 	private PlayMode playMode;
+	private MainMenuMode menuMode;
 	private LevelLoader levelLoader;
 	private final String[] levelNames = {"level_0", "level_1"};
 	private Map<String, PlayMode> levels;
@@ -72,16 +75,24 @@ public class GDXRoot extends Game {
 
 		SoundController.gatherSoundAssets(directory);
 
-
 		// Initialize the game world
-		playMode = new PlayMode();
+		menuMode = new MainMenuMode(directory, canvas);
+
 		LevelElement.gatherAssets(directory);
+
+		setScreen(menuMode);
+		menuMode.setScreenListener(this);
+
+	}
+
+	public void selectLevel(){
+		String levelName = menuMode.getCurLevel();
+		playMode = new PlayMode();
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
 
-		playMode.reset(levelLoader.loadLevel("level_1"));
+		playMode.reset(levelLoader.loadLevel(levelName));
 		setScreen(playMode);
-
 	}
 
 	/** 
@@ -92,7 +103,7 @@ public class GDXRoot extends Game {
 	public void dispose() {
 		// Call dispose on our children
 		setScreen(null);
-		playMode.dispose();
+		menuMode.dispose();
 
 		canvas.dispose();
 		canvas = null;
@@ -118,5 +129,12 @@ public class GDXRoot extends Game {
 	public void resize(int width, int height) {
 		canvas.resize();
 		super.resize(width,height);
+	}
+
+	@Override
+	public void exitScreen(Screen screen, int exitCode) {
+		if(screen == menuMode){
+			selectLevel();
+		}
 	}
 }

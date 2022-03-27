@@ -11,7 +11,9 @@
     "crosshair": "crosshair.png",
     "BG-purplespace.png": "BG-purplespace.png",
     "GO-blackhole.png": "GO-blackhole.png",
-    "GO-wormhole.png": "GO-wormhole.png"
+    "GO-wormhole.png": "GO-wormhole.png",
+    "main-menu:background": "BG-purplespace.png",
+    "levelicon:level_1": "squid.png"
   },
   "jsons": {
     "tile-tileset": "tileset.tsj",

@@ -60,6 +60,8 @@ public class InputController {
 	private boolean secondaryPrevious;
 	/** Whether the teritiary action button was pressed. */
 	private boolean tertiaryPressed;
+
+	private boolean selectPressed;
 	/** Whether the debug toggle was pressed. */
 	private boolean debugPressed;
 	private boolean debugPrevious;
@@ -196,6 +198,15 @@ public class InputController {
 	}
 
 	/**
+	 * Returns true if the player just selected something
+	 *
+	 * @return true if the select button was pressed
+	 */
+	public boolean isSelectPressed(){
+		return selectPressed;
+	}
+
+	/**
 	 * Gets the rotation of the octopus
 	 * Returns 1.0 for clockwise rotation, 0 for no rotation, and -1.0 for counterclockwise rotation
 	 *
@@ -241,6 +252,7 @@ public class InputController {
 		resetPrevious  = resetPressed;
 		debugPrevious  = debugPressed;
 		exitPrevious = exitPressed;
+		selectPressed = selectPressed;
 		thrusterApplied = thrusterApplied;
 		
 		// Check to see if a GamePad is connected
@@ -305,6 +317,7 @@ public class InputController {
 		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT));
 		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
 		tertiaryPressed = (secondary && tertiaryPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.F));
+		selectPressed = (secondary && selectPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ENTER));
 
 		// Directional controls
 		rotation = (secondary ? rotation : 0.0f);
