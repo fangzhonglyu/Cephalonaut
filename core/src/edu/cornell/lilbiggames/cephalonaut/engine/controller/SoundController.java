@@ -63,7 +63,7 @@ public class SoundController {
      * @param level the index of the bgm to play
      */
     public synchronized static void playBGM(int level) {
-        if (bgmPlaying != null || level >= musicCache.length || level <= 0)
+        if (bgmPlaying != null || level >= musicCache.length || level < 0)
             return;
         bgmPlaying = musicCache[level];
         bgmPlaying.setLooping(true);
@@ -122,6 +122,9 @@ public class SoundController {
     }
 
     /**
+     *
+     *
+     *
      * Play the start menu music.
      */
     public synchronized static void startMenuMusic() {
