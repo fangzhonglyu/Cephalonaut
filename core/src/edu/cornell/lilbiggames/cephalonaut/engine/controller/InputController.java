@@ -336,8 +336,8 @@ public class InputController {
 		debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
 		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
 		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT));
-		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
-		selectPressed = (secondary && selectPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ENTER));
+		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) && !selectPressed;;
+		selectPressed = ((secondary && selectPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))) && !exitPressed;
 		nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || (Gdx.input.isKeyJustPressed(Input.Keys.D)));
 		prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || (Gdx.input.isKeyJustPressed(Input.Keys.A)));
 		tertiaryPressed = (secondary && tertiaryPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) ||
