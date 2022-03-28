@@ -74,13 +74,14 @@ public class GDXRoot extends Game implements ScreenListener {
 		menuMode = new MainMenuMode(directory, canvas, this);
 		LevelElement.gatherAssets(directory);
 
+		SoundController.toggleMenuMusic();
 		setScreen(menuMode);
 
 	}
 
 	public void selectLevel(){
 		String levelName = menuMode.getCurLevel();
-		playMode = new PlayMode(this);
+		playMode = new PlayMode(this, menuMode.getCurLevelNumber());
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
 		levelLoader.loadLevel(levelName, playMode);
@@ -128,7 +129,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		if(screen == menuMode){
 			selectLevel();
 		} else if(exitCode == PlayMode.EXIT_LEVEL){
-			SoundController.fadeOutBGM();
+			SoundController.toggleMenuMusic();
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			setScreen(menuMode);
 		}

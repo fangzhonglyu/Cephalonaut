@@ -91,6 +91,10 @@ public class MainMenuMode implements Screen {
         return "level_"+curLevel;
     }
 
+    public int getCurLevelNumber(){
+        return curLevel;
+    }
+
     /**
      * Called when the Screen is resized.
      *

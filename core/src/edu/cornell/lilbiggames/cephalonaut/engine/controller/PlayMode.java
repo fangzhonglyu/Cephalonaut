@@ -54,13 +54,16 @@ public class PlayMode extends WorldController implements Screen {
 
     boolean exiting = false;
 
+    private int level;
+
 
     /**
      * Creates and initialize a new instance of the sandbox
      */
-    public PlayMode(ScreenListener listener) {
+    public PlayMode(ScreenListener listener, int level) {
         super(DEFAULT_WIDTH, DEFAULT_HEIGHT, 0);
         this.listener = listener;
+        this.level = level;
         setDebug(false);
         setComplete(false);
         setFailure(false);
@@ -79,7 +82,7 @@ public class PlayMode extends WorldController implements Screen {
 
     // TODO: Fix resetting, make this less jank
     public void reset() {
-        levelLoader.loadLevel("level_1", this);
+        levelLoader.loadLevel("level_"+level, this);
     }
 
 
@@ -110,7 +113,7 @@ public class PlayMode extends WorldController implements Screen {
         world.setContactListener(levelController);
         GrappleModel grapple = cephalonaut.getGrapple();
         grapple.reset();
-        SoundController.switchTrack(1);
+        SoundController.switchTrack(level);
     }
 
     private void populateLevel(Queue<GameObject> newObjects) {

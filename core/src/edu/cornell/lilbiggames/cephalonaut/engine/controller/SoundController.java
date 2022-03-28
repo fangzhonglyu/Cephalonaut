@@ -9,13 +9,19 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 
 public class SoundController {
     private static Music bgmPlaying;
+    private static Music mainMenu;
     private static Music[] musicCache = new Music[10];
+    private static Music curMusic;
+
     private static Sound inkSound;
     private static boolean locked = false;
     private static boolean inkPlaying = false;
 
     public static void gatherSoundAssets(AssetDirectory directory){
-        musicCache[1] = directory.getEntry("level1",Music.class);
+        for(int i = 0; i < 7; i++){
+            musicCache[i] = directory.getEntry("level"+i,Music.class);
+        }
+        mainMenu = directory.getEntry("mainMenu",Music.class);
         inkSound = directory.getEntry("ink",Sound.class);
     }
 
@@ -30,23 +36,25 @@ public class SoundController {
         }
     }
 
-    public static void playBGM(int level){
-        if(bgmPlaying!=null||locked||level>=musicCache.length||level<=0)
+    public static void playBGM(Music music){
+        if(bgmPlaying!=null||locked)
             pauseBGM();
-        bgmPlaying = musicCache[level];
+        curMusic = music;
+        bgmPlaying = curMusic;
         bgmPlaying.setLooping(true);
         bgmPlaying.setVolume(1);
         bgmPlaying.play();
 
     }
 
-    private static void playBGMDelay(final int level, final float delay){
+    private static void playBGMDelay(final float delay, Music music){
         if(locked)
             return;
+        curMusic = music;
         Timer.schedule(new Timer.Task(){
             @Override
             public void run() {
-                bgmPlaying = musicCache[level];
+                bgmPlaying = curMusic;
                 bgmPlaying.setLooping(true);
                 bgmPlaying.play();
                 locked = false;
@@ -79,11 +87,29 @@ public class SoundController {
         if(locked)
             return;
         if(bgmPlaying == null) {
-            playBGM(level);
+            if(level >= 0 && level < musicCache.length)
+                playBGM(musicCache[level]);
+            else
+                pauseBGM();
             return;
         }
         fadeOutBGM();
-        playBGMDelay(level,2.5f);
+        if(level >= 0 && level < musicCache.length)
+            playBGMDelay(2.5f, musicCache[level]);
+        else
+            pauseBGM();
+        locked = true;
+    }
+
+    public static void toggleMenuMusic(){
+        if(locked)
+            return;
+        if(bgmPlaying == null) {
+            playBGM(mainMenu);
+            return;
+        }
+        fadeOutBGM();
+        playBGMDelay(1.0f, mainMenu);
         locked = true;
     }
 
