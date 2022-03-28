@@ -128,6 +128,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		if(screen == menuMode){
 			selectLevel();
 		} else if(exitCode == PlayMode.EXIT_LEVEL){
+			SoundController.fadeOutBGM();
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			setScreen(menuMode);
 		}
