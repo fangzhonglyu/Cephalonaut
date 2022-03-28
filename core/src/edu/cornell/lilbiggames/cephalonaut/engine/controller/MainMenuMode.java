@@ -10,7 +10,8 @@ import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 public class MainMenuMode implements Screen {
-    private static final int NUM_LEVELS = 7;
+    public static final int LEVEL_SELECTED_CODE = 21;
+    public static final int NUM_LEVELS = 7;
     private static final int DEFAULT_LEVEL = 0;
 
     /** The font for giving messages to the player */
@@ -66,7 +67,7 @@ public class MainMenuMode implements Screen {
     public void render(float delta) {
         if (levelSelected && listener != null) {
             levelSelected = false;
-            listener.exitScreen(this, 0);
+            listener.exitScreen(this, LEVEL_SELECTED_CODE);
         } else {
             update(delta);
             draw();

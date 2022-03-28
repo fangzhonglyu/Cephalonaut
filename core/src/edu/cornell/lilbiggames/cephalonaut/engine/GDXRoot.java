@@ -43,8 +43,6 @@ public class GDXRoot extends Game implements ScreenListener {
 	private PlayMode playMode;
 	private MainMenuMode menuMode;
 	private LevelLoader levelLoader;
-	private final String[] levelNames = {"level_0", "level_1"};
-	private Map<String, PlayMode> levels;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -66,6 +64,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		canvas  = new GameCanvas();
 		levelLoader = new LevelLoader();
 		directory = levelLoader.getAssetDirectory();
+
 		canvas.resize();
 
 		SoundController.gatherSoundAssets(directory);
@@ -126,12 +125,16 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	@Override
 	public void exitScreen(Screen screen, int exitCode) {
-		if(screen == menuMode){
+		if(exitCode == MainMenuMode.LEVEL_SELECTED_CODE){
 			selectLevel();
 		} else if(exitCode == PlayMode.EXIT_LEVEL){
 			SoundController.startMenuMusic();
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			setScreen(menuMode);
+		} else if (exitCode == WorldController.EXIT_QUIT) {
+			// We quit the main application
+			Gdx.app.exit();
 		}
 	}
+
 }
