@@ -2,6 +2,7 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
@@ -10,9 +11,12 @@ import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 public class MainMenuMode implements Screen {
     private static final int NUM_LEVELS = 7;
+    private static final int DEFAULT_LEVEL = 0;
 
+    /** The font for giving messages to the player */
+    private BitmapFont displayFont;
 
-    /** Listener that will update the player mode when we are done */
+    /** Listener that will move to selected level when we are done */
     private ScreenListener listener;
 
     /** Background texture for start-up */
@@ -25,11 +29,9 @@ public class MainMenuMode implements Screen {
 
     protected float scale;
 
-    private int width, height;
-
     private AssetDirectory assets;
 
-    private String curLevel;
+    private int curLevel;
 
     private InputController inputController;
 
@@ -41,29 +43,19 @@ public class MainMenuMode implements Screen {
      * @param assets    The asset directory to use
      * @param canvas 	The game canvas to draw to
      */
-    public MainMenuMode(AssetDirectory assets, GameCanvas canvas){
+    public MainMenuMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
         this.canvas  = canvas;
-
-        // Compute the dimensions from the canvas
-        resize(canvas.getWidth(),canvas.getHeight());
+        this.listener = listener;
+        displayFont = assets.getEntry("retro",BitmapFont.class);
 
         background = assets.getEntry( "main-menu:background", Texture.class );
-        background.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
+        background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        this.assets = assets;
 
-        levelIcon = assets.getEntry("levelicon:level_1", Texture.class);
+        curLevel = DEFAULT_LEVEL;
+        levelIcon = assets.getEntry("levelicon:level_"+curLevel, Texture.class);
 
-        curLevel = "level_1";
     }
-
-    /**
-     * Sets the ScreenListener for this mode
-     *
-     * The ScreenListener will respond to requests to quit.
-     */
-    public void setScreenListener(ScreenListener listener) {
-        this.listener = listener;
-    }
-
 
     @Override
     public void show() {
@@ -73,7 +65,7 @@ public class MainMenuMode implements Screen {
     @Override
     public void render(float delta) {
         if (levelSelected && listener != null) {
-            System.out.println("exiting menu");
+            levelSelected = false;
             listener.exitScreen(this, 0);
         } else {
             update(delta);
@@ -85,13 +77,18 @@ public class MainMenuMode implements Screen {
         inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
         if(inputController.isSelectPressed()){
-            System.out.println("select pressed");
             levelSelected = true;
+        } else if (inputController.isNextPressed()){
+            curLevel = (curLevel + 1)%NUM_LEVELS;
+            levelIcon = assets.getEntry("levelicon:level_"+curLevel, Texture.class);
+        } else if (inputController.isPrevPressed()){
+            curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
+            levelIcon = assets.getEntry("levelicon:level_"+curLevel, Texture.class);
         }
     }
 
     public String getCurLevel(){
-        return curLevel;
+        return "level_"+curLevel;
     }
 
     /**
@@ -128,15 +125,19 @@ public class MainMenuMode implements Screen {
     }
 
     public void draw(){
+        canvas.clear();
         canvas.begin();
-        canvas.draw(background, 0, 0);
 
-        int levelIconWidth = levelIcon.getWidth();
-        int levelIconHeight = levelIcon.getHeight();
-        int width = canvas.getWidth();;
-        int height = canvas.getHeight();
+        float height = canvas.getHeight();
+        float width = canvas.getWidth();
+        canvas.draw(background, 0, 0 , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth(), (float)height/(float)background.getHeight());
 
-        canvas.draw(levelIcon, width/2 - levelIconWidth/2, height/2 - levelIconHeight/2, 0, 0, levelIcon.getWidth(), levelIcon.getHeight(), 1, 1);
+        float levelIconWidth = levelIcon.getWidth();
+        float levelIconHeight = levelIcon.getHeight();
+
+        canvas.draw(levelIcon, width/2 - 0.5f*levelIconWidth/2, height/2 - 0.5f*levelIconHeight/2, 0, 0, levelIcon.getWidth(), levelIcon.getHeight(), 0.5f, 0.5f);
+
+        canvas.drawTextCentered("LEVEL: " + curLevel, displayFont, -height/4);
 
         canvas.end();
     }

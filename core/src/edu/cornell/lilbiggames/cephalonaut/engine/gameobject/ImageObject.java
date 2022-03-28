@@ -8,19 +8,13 @@ import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 
 public class ImageObject extends GameObject {
 
-    private Vector2 parallaxFactor;
     private Texture texture;
 
     public ImageObject (Texture texture) {
         this.texture = texture;
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        parallaxFactor = new Vector2(1, 1);
     }
-
-    public void setParallax(float x, float y) {
-        parallaxFactor.set(x, y);
-    }
-
+    
     @Override
     public boolean activatePhysics(World world) { return true; }
 

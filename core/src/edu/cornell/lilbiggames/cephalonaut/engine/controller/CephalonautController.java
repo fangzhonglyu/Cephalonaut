@@ -21,21 +21,18 @@ public class CephalonautController {
     /** The joint of the grapple */
     private Joint grappleJoint1, grappleJoint2, grappleJoint3;
     private DistanceJointDef grappleJoint1Def, grappleJoint2Def;
-    private int grappleSwitchCooldown;
+    private float lastRotation;
 
     public CephalonautController(World world, CephalonautModel cephalonaut) {
         this.world = world;
         this.cephalonaut = cephalonaut;
-        grappleSwitchCooldown = 0;
+        lastRotation = 0f;
     }
 
-    public void update(boolean grappleButton, boolean refill, Vector2 crossHair, boolean thrusterApplied,
+    public void update(boolean grappleButton, boolean ungrappleButton, Vector2 crossHair, boolean thrusterApplied,
                        float rotation) {
-        if (refill) {
-            cephalonaut.setInk(1);
-        }
 
-        updateGrapple(grappleButton, crossHair);
+        updateGrapple(grappleButton, ungrappleButton, crossHair);
         cephalonaut.setInking(thrusterApplied);
 
         if (cephalonaut.getGrapple().isLocked() == 0) {
@@ -49,27 +46,43 @@ public class CephalonautController {
             switchGrappleDirection();
         }
 
-        if(grappleSwitchCooldown > 0) {
-            grappleSwitchCooldown--;
-        }
+        lastRotation = rotation;
     }
 
-    private void updateGrapple(boolean grappleButton, Vector2 crossHair) {
+    private void updateGrapple(boolean grappleButton, boolean ungrappleButton, Vector2 crossHair) {
         GrappleModel grapple = cephalonaut.getGrapple();
-        if (grappleButton) {
-            grapple.setOut(!grapple.isOut());
-            if (grapple.isOut()) {
-                grapple.setPosition(cephalonaut.getPosition().cpy());
-                grapple.setLinearVelocity(crossHair.cpy().sub(grapple.getPosition().cpy()).nor().scl(15));
-                grapple.setActive(true);
+        // "pull in" the grapple if requested, or if it has stretched its max length
+        // and still hasn't anchored
+        if ((grappleButton && grapple.isOut()) ||
+                (grapple.isOut() && grapple.isFullyExtended() && !grapple.isAnchored()) ||
+                ungrappleButton) {
+            if (grappleJoint1 != null) {
+                world.destroyJoint(grappleJoint1);
+                grappleJoint1 = null;
+                grappleJoint1Def = null;
+                world.destroyJoint(grappleJoint2);
+                grappleJoint2 = null;
+                grappleJoint2Def = null;
+                world.destroyJoint(grappleJoint3);
+                grappleJoint3 = null;
             }
+            grapple.reset();
+            grapple.setPosition(cephalonaut.getPosition().cpy());
+        }
+
+        if (grappleButton) {
+            grapple.setPosition(cephalonaut.getPosition().cpy());
+            grapple.setLinearVelocity(crossHair.cpy().sub(grapple.getPosition().cpy()).nor().scl(15));
+            grapple.setActive(true);
+            grapple.setOut(true);
         }
 
         if (grapple.isOut() && !grapple.isAnchored())
             grapple.addTrace(cephalonaut.getPosition());
 
         if (grapple.isLocked() > 0 && grapple.isLocked() < 8)
-            grapple.setLocked(grapple.isLocked() + 0.4f);;
+            grapple.setLocked(grapple.isLocked() + 0.4f);
+        ;
 
         float distance = cephalonaut.getPosition().cpy().dst(grapple.getPosition());
         if (grapple.isAnchored()) {
@@ -91,16 +104,16 @@ public class CephalonautController {
                 DistanceJointDef anchor3 = new DistanceJointDef();
                 anchor1.bodyA = grapple.getBody();
                 anchor1.bodyB = cephalonaut.getBody();
-                anchor1.localAnchorB.set(0,-20);
+                anchor1.localAnchorB.set(0, -20);
                 anchor1.collideConnected = false;
-                anchor1.length = (float)Math.sqrt(distance*distance+400);
-                anchor1.dampingRatio=0.6f;
+                anchor1.length = (float) Math.sqrt(distance * distance + 400);
+                anchor1.dampingRatio = 0.6f;
                 anchor2.bodyA = grapple.getBody();
                 anchor2.bodyB = cephalonaut.getBody();
-                anchor2.dampingRatio=0.6f;
-                anchor2.localAnchorB.set(0,20);
+                anchor2.dampingRatio = 0.6f;
+                anchor2.localAnchorB.set(0, 20);
                 anchor2.collideConnected = false;
-                anchor2.length = (float)Math.sqrt(distance*distance+400);
+                anchor2.length = (float) Math.sqrt(distance * distance + 400);
                 anchor3.bodyA = grapple.getBody();
                 anchor3.bodyB = cephalonaut.getBody();
                 anchor3.collideConnected = false;
@@ -116,30 +129,12 @@ public class CephalonautController {
             }
         }
         grapple.setExtensionLength(distance);
-
-        // "pull in" the grapple if requested, or if it has stretched its max length
-        // and still hasn't anchored
-        if ((grappleButton && !grapple.isOut()) ||
-                (grapple.isOut() && grapple.isFullyExtended() && !grapple.isAnchored())) {
-            if (grappleJoint1 != null) {
-                world.destroyJoint(grappleJoint1);
-                grappleJoint1 = null;
-                grappleJoint1Def = null;
-                world.destroyJoint(grappleJoint2);
-                grappleJoint2 = null;
-                grappleJoint2Def = null;
-                world.destroyJoint(grappleJoint3);
-                grappleJoint3 = null;
-            }
-            grapple.reset();
-            grapple.setPosition(cephalonaut.getPosition().cpy());
-        }
     }
 
     public void switchGrappleDirection() {
         if(cephalonaut.getGrapple().isGrappling() && grappleJoint1 != null && grappleJoint2 != null &&
                 grappleJoint1Def != null && grappleJoint2Def != null) {
-            if(grappleSwitchCooldown <= 0) {
+            if(lastRotation == 0) {
                 world.destroyJoint(grappleJoint1);
                 world.destroyJoint(grappleJoint2);
                 grappleJoint1 = null;
@@ -147,7 +142,6 @@ public class CephalonautController {
                 cephalonaut.getBody().setTransform(cephalonaut.getPosition(), (float) (3 * Math.PI/4) + cephalonaut.getAngle());
                 grappleJoint1 = world.createJoint(grappleJoint1Def);
                 grappleJoint2 = world.createJoint(grappleJoint2Def);
-                grappleSwitchCooldown = 20;
             }
         }
     }

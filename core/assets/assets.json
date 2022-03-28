@@ -13,18 +13,35 @@
     "GO-blackhole.png": "GO-blackhole.png",
     "GO-wormhole.png": "GO-wormhole.png",
     "main-menu:background": "BG-purplespace.png",
-    "levelicon:level_1": "squid.png"
+    "levelicon:level_0": "levels/level_0.png",
+    "levelicon:level_1": "levels/level_1.png",
+    "levelicon:level_2": "levels/level_2.png",
+    "levelicon:level_3": "levels/level_3.png",
+    "levelicon:level_4": "levels/level_4.png",
+    "levelicon:level_5": "levels/level_5.png",
+    "levelicon:level_6": "levels/level_6.png"
   },
   "jsons": {
     "tile-tileset": "tileset.tsj",
     "object-tileset": "objects.tsj",
-    "level_0": "level_0.tmj",
-    "level_1": "level_1.tmj"
+    "level_0": "levels/level_0.tmj",
+    "level_1": "levels/level_1.tmj",
+    "level_2": "levels/level_2.tmj",
+    "level_3": "levels/level_3.tmj",
+    "level_4": "levels/level_4.tmj",
+    "level_5": "levels/level_5.tmj",
+    "level_6": "levels/level_6.tmj"
   },
   "music": {
     "level1": "CephalonautLevel1Mix1.mp3"
   },
   "sounds":{
     "ink": "sample ink.mp3"
+  },
+  "fonts": {
+    "retro": {
+      "file": "RetroGame.ttf",
+      "size": 64
+    }
   }
 }

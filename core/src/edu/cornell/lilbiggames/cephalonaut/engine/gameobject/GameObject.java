@@ -68,7 +68,15 @@ public abstract class GameObject {
 
 	/** Whether the obstacle can be grappled by the cephalonaut. */
 	private boolean canGrapple = false;
+	protected Vector2 parallaxFactor = new Vector2(0, 0);
 
+	public void setParallaxFactor(float x, float y) {
+		this.parallaxFactor.set(x, y);
+	}
+
+	public void setParallaxFactor(Vector2 parallaxFactor) {
+		this.parallaxFactor = parallaxFactor;
+	}
 
 	/// BodyDef Methods
 	/**

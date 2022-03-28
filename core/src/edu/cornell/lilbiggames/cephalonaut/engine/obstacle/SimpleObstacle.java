@@ -793,7 +793,11 @@ public abstract class SimpleObstacle extends GameObject {
 	 */
 	public void draw(GameCanvas canvas) {
 		if (texture != null) {
-			canvas.draw(texture,tint,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),sx,sy);
+			float offsetX = canvas.getCameraX() * parallaxFactor.x;
+			float offsetY = canvas.getCameraY() * parallaxFactor.y;
+			canvas.draw(texture, tint, origin.x, origin.y,
+					getX() * drawScale.x + offsetX,getY() * drawScale.y + offsetY,
+					getAngle(), sx, sy);
 		}
 	}
 	

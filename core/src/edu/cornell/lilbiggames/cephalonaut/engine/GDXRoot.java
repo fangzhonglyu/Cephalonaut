@@ -17,10 +17,12 @@ import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.MainMenuMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.PlayMode;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.LevelElement;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.WorldController;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import java.util.Map;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 
 /**
  * Root class for a LibGDX.  
@@ -64,34 +66,24 @@ public class GDXRoot extends Game implements ScreenListener {
 		canvas  = new GameCanvas();
 		levelLoader = new LevelLoader();
 		directory = levelLoader.getAssetDirectory();
-
-		// TODO: This should be cleaner when we have a main menu
-		// Load in levels
-//		try{
-//			levels = levelLoader.loadLevels(levelNames);
-//		} catch(Exception e){
-//			System.out.println(e);
-//		}
+		canvas.resize();
 
 		SoundController.gatherSoundAssets(directory);
 
 		// Initialize the game world
-		menuMode = new MainMenuMode(directory, canvas);
-
+		menuMode = new MainMenuMode(directory, canvas, this);
 		LevelElement.gatherAssets(directory);
 
 		setScreen(menuMode);
-		menuMode.setScreenListener(this);
 
 	}
 
 	public void selectLevel(){
 		String levelName = menuMode.getCurLevel();
-		playMode = new PlayMode();
+		playMode = new PlayMode(this);
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
-
-		playMode.reset(levelLoader.loadLevel(levelName));
+		levelLoader.loadLevel(levelName, playMode);
 		setScreen(playMode);
 	}
 
@@ -135,6 +127,9 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void exitScreen(Screen screen, int exitCode) {
 		if(screen == menuMode){
 			selectLevel();
+		} else if(exitCode == PlayMode.EXIT_LEVEL){
+			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
+			setScreen(menuMode);
 		}
 	}
 }

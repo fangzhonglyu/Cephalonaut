@@ -287,10 +287,6 @@ public abstract class WorldController implements Screen {
 	 */
 	public void gatherAssets(AssetDirectory directory) {
 		// Allocate the tiles
-		earthTile = new TextureRegion(directory.getEntry( "earth", Texture.class ));
-		barrierTile  = new TextureRegion(directory.getEntry( "barrier", Texture.class ));
-		squidTexture = new TextureRegion(directory.getEntry("squid", Texture.class));
-
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
 	}
 
