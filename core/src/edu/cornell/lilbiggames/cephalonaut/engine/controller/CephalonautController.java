@@ -56,18 +56,7 @@ public class CephalonautController {
         if ((grappleButton && grapple.isOut()) ||
                 (grapple.isOut() && grapple.isFullyExtended() && !grapple.isAnchored()) ||
                 ungrappleButton) {
-            if (grappleJoint1 != null) {
-                world.destroyJoint(grappleJoint1);
-                grappleJoint1 = null;
-                grappleJoint1Def = null;
-                world.destroyJoint(grappleJoint2);
-                grappleJoint2 = null;
-                grappleJoint2Def = null;
-                world.destroyJoint(grappleJoint3);
-                grappleJoint3 = null;
-            }
-            grapple.reset();
-            grapple.setPosition(cephalonaut.getPosition().cpy());
+            removeGrapple(grapple);
         }
 
         if (grappleButton) {
@@ -143,6 +132,23 @@ public class CephalonautController {
                 grappleJoint1 = world.createJoint(grappleJoint1Def);
                 grappleJoint2 = world.createJoint(grappleJoint2Def);
             }
+        }
+    }
+
+    public void removeGrapple(GrappleModel grapple) {
+        if(grapple.isOut()) {
+            if (grappleJoint1 != null) {
+                world.destroyJoint(grappleJoint1);
+                grappleJoint1 = null;
+                grappleJoint1Def = null;
+                world.destroyJoint(grappleJoint2);
+                grappleJoint2 = null;
+                grappleJoint2Def = null;
+                world.destroyJoint(grappleJoint3);
+                grappleJoint3 = null;
+            }
+            grapple.reset();
+            grapple.setPosition(cephalonaut.getPosition().cpy());
         }
     }
 }

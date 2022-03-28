@@ -68,7 +68,7 @@ public class PlayMode extends WorldController {
 
     // TODO: Fix resetting, make this less jank
     public void reset() {
-        levelLoader.loadLevel("level_1", this);
+        levelLoader.loadLevel("wormhole_test", this);
     }
 
     /**
@@ -157,7 +157,7 @@ public class PlayMode extends WorldController {
 
 
         for(GameObject object : objects) {
-            levelController.update(object);
+            levelController.update(object, cephalonautController);
         }
 
         boolean grappleButton = input.didSecondary();

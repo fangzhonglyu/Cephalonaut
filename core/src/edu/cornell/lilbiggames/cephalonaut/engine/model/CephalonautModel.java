@@ -27,6 +27,8 @@ public class CephalonautModel extends OctopusObstacle {
 	/** Cache for internal force calculations */
 	private final Vector2 forceCache = new Vector2();
 	private final Vector2 miscForceCache = new Vector2();
+	private boolean shouldTeleport = false;
+	private Vector2 teleportLocation;
 
 	/** The cephalonaut's grapple tentacle */
 	private GrappleModel grapple;
@@ -70,6 +72,23 @@ public class CephalonautModel extends OctopusObstacle {
 		this.forceCache.y = (inking && ink > 0) ? force : 0.0f;
 		SoundController.setInkSound(inking && ink > 0);
 	}
+
+	public boolean getShouldTeleport() {
+		return shouldTeleport;
+	}
+
+	public void setShouldTeleport(boolean shouldT) {
+		shouldTeleport = shouldT;
+	}
+
+	public Vector2 getTeleportLocation() {
+		return teleportLocation;
+	}
+
+	public void setTeleportLocation(Vector2 teleportLoc) {
+		teleportLocation = teleportLoc;
+	}
+
 
 	/**
 	 * Sets the amount of ink in the cephalonaut's sac.

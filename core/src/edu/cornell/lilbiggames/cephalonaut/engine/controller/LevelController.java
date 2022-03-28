@@ -3,10 +3,7 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.*;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEBlackHole;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEBoostPad;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETrigger;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETriggerable;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 
@@ -22,13 +19,15 @@ public class LevelController implements ContactListener {
         this.playMode = playMode;
     }
 
-    public void update(GameObject object) {
+    public void update(GameObject object, CephalonautController cephalonautController) {
         if (object instanceof LEBoostPad) {
             boost((LEBoostPad) object);
         } else if (object instanceof LEBlackHole) {
             attract((LEBlackHole) object);
         } else if (object instanceof LETriggerable) {
             ((LETriggerable) object).checkPos();
+        } else if (object instanceof LEWormHole && ((LEWormHole) object).getCooldown() > 0) {
+            ((LEWormHole) object).setCooldown(((LEWormHole) object).getCooldown() - 1);
         }
 
         if (object instanceof LevelElement) {
@@ -36,6 +35,10 @@ public class LevelController implements ContactListener {
             if (levelElement.getElement() == LevelElement.Element.FINISH && levelElement.getInContact()) {
                 finishLevel();
             }
+        }
+
+        if(cephalonaut.getShouldTeleport()) {
+            teleport(cephalonautController);
         }
 
 //        if (object.getClass() == LevelElement.class) {
@@ -70,6 +73,20 @@ public class LevelController implements ContactListener {
             float strength = blackHole.getBlackHoleAttractFactor() * cephalonaut.getMass() / force.len2();
             cephalonaut.addForce(force.scl(strength));
         }
+    }
+
+    public void teleport(CephalonautController cephalonautController) {
+        GrappleModel grapple = cephalonaut.getGrapple();
+        if(grapple.isOut()) {
+            cephalonautController.removeGrapple(grapple);
+        }
+        cephalonaut.setPosition(cephalonaut.getTeleportLocation());
+        cephalonaut.setShouldTeleport(false);
+    }
+
+    public void setTeleport(LEWormHole wormHole) {
+        cephalonaut.setTeleportLocation(wormHole.getPosition());
+        cephalonaut.setShouldTeleport(true);
     }
 
     public void boost(LEBoostPad obj) {
@@ -110,6 +127,16 @@ public class LevelController implements ContactListener {
                 LETrigger trigger = (LETrigger) contactObject;
                 LETriggerable target = (LETriggerable) playMode.getObject(trigger.getTarget());
                 target.setActivated(trigger.isActivated());
+            }
+
+            if (contactObject instanceof LEWormHole) {
+                LEWormHole hole1 = (LEWormHole) contactObject;
+                LEWormHole hole2 = (LEWormHole) playMode.getObject(hole1.getTarget());
+                if(hole1.getCooldown() == 0 && hole2.getCooldown() == 0) {
+                    setTeleport(hole2);
+                    hole1.setCooldown(hole1.getWormHoleCooldown());
+                    hole2.setCooldown(hole2.getWormHoleCooldown());
+                }
             }
         }
 

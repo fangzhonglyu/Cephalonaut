@@ -20,7 +20,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -50,7 +49,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -186,7 +184,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -249,6 +246,50 @@
          "image":"GO-wormhole.png",
          "imageheight":32,
          "imagewidth":32,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":4,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":4,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":-11.2054329371817,
+                             "y":8.83251772695496
+                            }, 
+                            {
+                             "x":-3.16388694696894,
+                             "y":24.9156097073804
+                            }, 
+                            {
+                             "x":13.1828622790373,
+                             "y":19.6424647957655
+                            }, 
+                            {
+                             "x":13.5783481474084,
+                             "y":6.32777389393788
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":13.7101767701987,
+                     "y":2.9002297013882
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
          "properties":[
                 {
                  "name":"body",
@@ -259,6 +300,11 @@
                      "canGrappleOn":false,
                      "type":"Wormhole"
                     }
+                }, 
+                {
+                 "name":"target",
+                 "type":"object",
+                 "value":1
                 }],
          "type":"GameObject"
         }],
