@@ -52,6 +52,8 @@ public class PlayMode extends WorldController implements Screen {
 
     private int level;
 
+    private Queue<GameObject> defaultObjects;
+
 
     /**
      * Creates and initialize a new instance of the sandbox
@@ -76,7 +78,7 @@ public class PlayMode extends WorldController implements Screen {
 
     // TODO: Fix resetting, make this less jank
     public void reset() {
-        // TODO
+        reset(defaultObjects);
     }
 
 
@@ -95,6 +97,7 @@ public class PlayMode extends WorldController implements Screen {
      * This method disposes of the world and creates a new one.
      */
     public void reset(Queue<GameObject> newObjects) {
+        defaultObjects = newObjects;
         Vector2 gravity = new Vector2(world.getGravity());
         cleanupLevel();
 
