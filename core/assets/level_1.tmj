@@ -123,6 +123,7 @@
                          "type":"class",
                          "value":
                             {
+                             "bodyType":"Kinematic",
                              "tint":"#ffaa0000",
                              "type":"Door"
                             }
@@ -146,6 +147,7 @@
                          "type":"class",
                          "value":
                             {
+                             "isSensor":true,
                              "tint":"#ffaa0000",
                              "type":"Button"
                             }
@@ -267,6 +269,45 @@
          "type":"tilelayer",
          "visible":true,
          "width":50,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":11,
+         "name":"Foreground Objects",
+         "objects":[
+                {
+                 "gid":135,
+                 "height":32,
+                 "id":32,
+                 "name":"zoomer",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "bodyType":"Kinematic",
+                             "canGrappleOn":false,
+                             "type":"Wormhole",
+                             "vx":5,
+                             "vy":5
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":-6.49999999999997,
+                 "y":1128
+                }],
+         "opacity":1,
+         "parallaxx":1.3,
+         "parallaxy":1.3,
+         "type":"objectgroup",
+         "visible":true,
          "x":0,
          "y":0
         }],

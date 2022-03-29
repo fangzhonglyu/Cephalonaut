@@ -14,9 +14,6 @@ public class LevelController implements ContactListener {
     /** Reference to the play mode **/
     private final PlayMode playMode;
 
-    /** Level element constants. TODO: Should be moved to LevelElement eventually. **/
-    private static final float DOOR_SIZE = 1f;
-
     public LevelController(CephalonautModel cephalonaut, PlayMode playMode) {
         this.cephalonaut = cephalonaut;
         this.playMode = playMode;
@@ -27,6 +24,8 @@ public class LevelController implements ContactListener {
             boost((LEBoostPad) object);
         } else if (object instanceof LEBlackHole) {
             attract((LEBlackHole) object);
+        } else if (object instanceof LETriggerable) {
+            ((LETriggerable) object).checkPos();
         }
 //        else if (object instanceof LEGlassBarrier) {
 //            hit((LEGlassBarrier) object);
@@ -116,7 +115,7 @@ public class LevelController implements ContactListener {
             if (contactObject instanceof LETrigger) {
                 LETrigger trigger = (LETrigger) contactObject;
                 LETriggerable target = (LETriggerable) playMode.getObject(trigger.getTarget());
-                target.trigger();
+                target.setActivated(trigger.isActivated());
             }
 
             if (contactObject instanceof LEGlassBarrier) {

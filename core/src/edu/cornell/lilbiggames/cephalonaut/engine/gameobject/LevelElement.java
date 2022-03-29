@@ -18,11 +18,11 @@ public class LevelElement extends SimpleObstacle {
     private PolygonShape[] triangles;
 
     // TODO: We probably don't need shape and geometry? What's this about a resizing cache?
-    protected Shape shape;
-    /** A cache value for the fixture (for resizing) */
-    private Fixture geometry;
+//    protected Shape shape;
+//    /** A cache value for the fixture (for resizing) */
+//    private Fixture geometry;
 
-    private boolean inContact = false;
+    protected boolean inContact = false;
 
     public enum Element {
         GLASS_BARRIER,
@@ -38,7 +38,7 @@ public class LevelElement extends SimpleObstacle {
     }
 
     /** Type of element **/
-    private Element element;
+    private final Element element;
 
     /** Size of element, used for texture and polygon resizing purposes **/
     protected float width;
@@ -46,7 +46,7 @@ public class LevelElement extends SimpleObstacle {
 
     public static class Def {
         public String name;
-        public float x, y;
+        public float x, y, vx, vy;
         public float width, height;
         public float angle;
 
@@ -54,6 +54,7 @@ public class LevelElement extends SimpleObstacle {
         public float density;
         public BodyDef.BodyType bodyType;
         public float restitution;
+        public boolean isSensor;
         public boolean canGrapple;
         public Color tint;
 
@@ -64,6 +65,8 @@ public class LevelElement extends SimpleObstacle {
 
     protected LevelElement(Def def) {
         super(def.x, def.y);
+        setVX(def.vx);
+        setVY(def.vy);
         setName(def.name);
         setSize(def.width, def.height);
         setAngle(def.angle);
@@ -72,6 +75,7 @@ public class LevelElement extends SimpleObstacle {
         setDensity(def.density);
         setBodyType(def.bodyType);
         setRestitution(def.restitution);
+        setSensor(def.isSensor);
         setGrapple(def.canGrapple);
         setTint(def.tint);
 
@@ -114,8 +118,9 @@ public class LevelElement extends SimpleObstacle {
     }
 
     public void setInContact(boolean inContact) {
+        boolean wasInContact = this.inContact;
         this.inContact = inContact;
-        if (inContact) contacted();
+        if (!wasInContact && this.inContact) contacted();
     }
 
     protected void contacted() {}
@@ -131,6 +136,11 @@ public class LevelElement extends SimpleObstacle {
 
     final static EarClippingTriangulator triangulator = new EarClippingTriangulator();
     private void setVertices(float[] vertices) {
+        if (vertices == null) {
+            triangles = new PolygonShape[0];
+            return;
+        }
+
         // Triangulation of n-vertex polygons into 3-vertex triangles
         // For performance reasons and because box2d throws a hissy fit whenever we use polygons with over 8 vertices
         ShortArray tris = triangulator.computeTriangles(vertices);
