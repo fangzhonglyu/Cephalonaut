@@ -15,12 +15,10 @@
 
 import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
-import edu.cornell.lilbiggames.cephalonaut.engine.controller.MainMenuMode;
-import edu.cornell.lilbiggames.cephalonaut.engine.controller.PlayMode;
-import edu.cornell.lilbiggames.cephalonaut.engine.controller.WorldController;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import java.util.Map;
-import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
+
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 
@@ -42,6 +40,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	private PlayMode playMode;
 	private MainMenuMode menuMode;
+	private PauseMode pauseMode;
 	private LevelLoader levelLoader;
 
 	/**
@@ -72,6 +71,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		// Initialize the game world
 		menuMode = new MainMenuMode(directory, canvas, this);
 		LevelElement.gatherAssets(directory);
+		pauseMode = new PauseMode(directory, canvas, this);
 
 		SoundController.startMenuMusic();
 		setScreen(menuMode);
@@ -128,12 +128,20 @@ public class GDXRoot extends Game implements ScreenListener {
 		if(exitCode == MainMenuMode.LEVEL_SELECTED_CODE){
 			selectLevel();
 		} else if(exitCode == PlayMode.EXIT_LEVEL){
+			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
+			pauseMode.setDefault();
+			setScreen(pauseMode);
+		} else if (exitCode == PauseMode.EXIT_LEVEL_CODE){
 			SoundController.startMenuMusic();
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			setScreen(menuMode);
-		} else if (exitCode == WorldController.EXIT_QUIT) {
-			// We quit the main application
-			Gdx.app.exit();
+		} else if(exitCode == PauseMode.RESUME_LEVEL_CODE){
+			playMode.resume();
+			setScreen(playMode);
+		} else if(exitCode == PauseMode.RESTART_LEVEL_CODE){
+			playMode.reset();
+			playMode.resume();
+			setScreen(playMode);
 		}
 	}
 

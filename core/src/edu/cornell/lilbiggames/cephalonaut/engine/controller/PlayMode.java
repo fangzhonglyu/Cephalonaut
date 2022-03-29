@@ -81,6 +81,10 @@ public class PlayMode extends WorldController implements Screen {
         reset(defaultObjects);
     }
 
+    public void resume(){
+        exiting = false;
+    }
+
 
     public void cleanupLevel(){
         for(GameObject obj : objects) {
