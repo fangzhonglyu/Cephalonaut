@@ -79,6 +79,8 @@ public class LevelLoader {
                 return LevelElement.Element.DOOR;
             case "Finish":
                 return LevelElement.Element.FINISH;
+            case "Start":
+                return LevelElement.Element.START;
             default:
                 System.out.printf("WARNING: Unknown LevelElement type '%s'\n", element);
                 return LevelElement.Element.WALL;

@@ -36,7 +36,8 @@ public class LevelElement extends SimpleObstacle {
         BUTTON,
         DOOR,
         FINISH,
-        MISC
+        MISC,
+        START
     }
 
     /** Type of element **/
