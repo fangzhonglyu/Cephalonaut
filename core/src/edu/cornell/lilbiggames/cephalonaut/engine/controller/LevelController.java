@@ -123,7 +123,6 @@ public class LevelController implements ContactListener {
                 hit(glassBarrier);
             }
 
-
         }
 
         GrappleModel grapple = cephalonaut.getGrapple();
