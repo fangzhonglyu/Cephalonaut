@@ -1,11 +1,9 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
@@ -16,7 +14,6 @@ import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 
 import java.util.Map;
-import java.util.logging.Level;
 
 /** Game mode for playing a level */
 public class PlayMode extends WorldController {
@@ -47,6 +44,7 @@ public class PlayMode extends WorldController {
 
     private boolean dead;
     private float deathRotationCount;
+    private float fadeInCount;
 
 
     /**
@@ -61,6 +59,7 @@ public class PlayMode extends WorldController {
         levelLoader = new LevelLoader();
         dead = false;
         deathRotationCount = 0;
+        fadeInCount = 1;
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -108,6 +107,7 @@ public class PlayMode extends WorldController {
         SoundController.switchTrack(1);
         dead = false;
         deathRotationCount = 0;
+        fadeInCount = 1;
     }
 
     private void populateLevel(Queue<GameObject> newObjects) {
@@ -182,6 +182,10 @@ public class PlayMode extends WorldController {
         cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
         canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
 
+        if (fadeInCount > 0) {
+            fadeInCount -= .05f;
+        }
+
         if(dead) {
             cephalonaut.getBody().setTransform(cephalonaut.getPosition(), deathRotationCount);
             deathRotationCount += Math.PI / 16;
@@ -207,10 +211,10 @@ public class PlayMode extends WorldController {
 
         selector.draw(canvas);
         cephalonaut.draw(canvas);
-//        if (dead) {
-//            canvas.fadeOut(deathRotationCount / (float) (4 * Math.PI));
-//        }
-        canvas.drawFadeOut(2);
+        canvas.drawFade(fadeInCount);
+        if (dead) {
+            canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
+        }
         canvas.end();
 
         if (isDebug()) {

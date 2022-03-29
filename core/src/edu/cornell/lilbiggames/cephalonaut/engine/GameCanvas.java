@@ -107,7 +107,7 @@ public class GameCanvas {
 		spriteBatch = new PolygonSpriteBatch();
 		debugRender = new ShapeRenderer();
 		shapeRen = new ShapeRenderer();
-		shapeRen2 = new ShapeRenderer();
+//		shapeRen2 = new ShapeRenderer();
 		
 		// Set the projection matrix (for proper scaling)
 		camera = new OrthographicCamera(getWidth(),getHeight());
@@ -397,14 +397,17 @@ public class GameCanvas {
     	active = DrawPass.INACTIVE;
     }
 
-	public void drawFadeOut(float fadeOut) {
+	public void drawFade(float fadeOut) {
 		spriteBatch.end();
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRen.setColor(Color.BLACK);
-		shapeRen.rect(-1, -1, width + 2, height + 2);
+		shapeRen.setColor(0, 0, 0,fadeOut);
+		shapeRen.rect(-1, -1, getWidth() + 2, getHeight() + 2);
 		shapeRen.end();
 		spriteBatch.begin();
 	}
+
 
 	/**
 	 * Draws the tinted texture at the given position.
