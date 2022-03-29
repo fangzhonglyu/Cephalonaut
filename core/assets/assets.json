@@ -17,7 +17,8 @@
     "tile-tileset": "tileset.tsj",
     "object-tileset": "objects.tsj",
     "level_0": "level_0.tmj",
-    "level_1": "level_1.tmj"
+    "level_1": "level_1.tmj",
+    "level_teddy_1": "level_teddy_1.tmj"
   },
   "music": {
     "level1": "CephalonautLevel1Mix1.mp3"
