@@ -45,6 +45,9 @@ public class PlayMode extends WorldController {
 
     private LevelLoader levelLoader;
 
+    private boolean dead;
+    private float deathRotationCount;
+
 
     /**
      * Creates and initialize a new instance of the sandbox
@@ -56,6 +59,8 @@ public class PlayMode extends WorldController {
         setFailure(false);
         directionalGrapple = true;
         levelLoader = new LevelLoader();
+        dead = false;
+        deathRotationCount = 0;
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -66,9 +71,13 @@ public class PlayMode extends WorldController {
         return objectMap.get(id);
     }
 
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
     // TODO: Fix resetting, make this less jank
     public void reset() {
-        levelLoader.loadLevel("wormhole_test", this);
+        levelLoader.loadLevel("level_1", this);
     }
 
     /**
@@ -97,6 +106,8 @@ public class PlayMode extends WorldController {
         GrappleModel grapple = cephalonaut.getGrapple();
         grapple.reset();
         SoundController.switchTrack(1);
+        dead = false;
+        deathRotationCount = 0;
     }
 
     private void populateLevel(Queue<GameObject> newObjects) {
@@ -170,6 +181,14 @@ public class PlayMode extends WorldController {
 
         cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
         canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+
+        if(dead) {
+            cephalonaut.getBody().setTransform(cephalonaut.getPosition(), deathRotationCount);
+            deathRotationCount += Math.PI / 16;
+            if(deathRotationCount >= 4 * Math.PI) {
+                reset();
+            }
+        }
     }
 
     /**
@@ -188,6 +207,10 @@ public class PlayMode extends WorldController {
 
         selector.draw(canvas);
         cephalonaut.draw(canvas);
+//        if (dead) {
+//            canvas.fadeOut(deathRotationCount / (float) (4 * Math.PI));
+//        }
+        canvas.drawFadeOut(2);
         canvas.end();
 
         if (isDebug()) {

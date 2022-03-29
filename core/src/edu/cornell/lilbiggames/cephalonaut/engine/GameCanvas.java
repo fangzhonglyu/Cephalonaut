@@ -78,6 +78,8 @@ public class GameCanvas {
 
 	/** ShapeRenderer for the fuel bar*/
 	private ShapeRenderer shapeRen;
+	/** ShapeRenderer for the fuel bar*/
+	private ShapeRenderer shapeRen2;
 	
 	/** Value to cache window width (if we are currently full screen) */
 	int width;
@@ -105,6 +107,7 @@ public class GameCanvas {
 		spriteBatch = new PolygonSpriteBatch();
 		debugRender = new ShapeRenderer();
 		shapeRen = new ShapeRenderer();
+		shapeRen2 = new ShapeRenderer();
 		
 		// Set the projection matrix (for proper scaling)
 		camera = new OrthographicCamera(getWidth(),getHeight());
@@ -393,6 +396,15 @@ public class GameCanvas {
     	spriteBatch.end();
     	active = DrawPass.INACTIVE;
     }
+
+	public void drawFadeOut(float fadeOut) {
+		spriteBatch.end();
+		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRen.setColor(Color.BLACK);
+		shapeRen.rect(-1, -1, width + 2, height + 2);
+		shapeRen.end();
+		spriteBatch.begin();
+	}
 
 	/**
 	 * Draws the tinted texture at the given position.

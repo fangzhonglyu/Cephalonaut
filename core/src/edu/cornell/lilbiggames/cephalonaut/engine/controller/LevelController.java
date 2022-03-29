@@ -123,6 +123,10 @@ public class LevelController implements ContactListener {
                 ((LevelElement) contactObject).setInContact(true);
             }
 
+            if (contactObject instanceof LEBlackHole) {
+                playMode.setDead(true);
+            }
+
             if (contactObject instanceof LETrigger) {
                 LETrigger trigger = (LETrigger) contactObject;
                 LETriggerable target = (LETriggerable) playMode.getObject(trigger.getTarget());
