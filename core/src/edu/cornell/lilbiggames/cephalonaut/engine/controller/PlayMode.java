@@ -76,7 +76,7 @@ public class PlayMode extends WorldController {
 
     // TODO: Fix resetting, make this less jank
     public void reset() {
-        levelLoader.loadLevel("level_1", this);
+        levelLoader.loadLevel("wormhole_test", this);
     }
 
     /**
@@ -119,7 +119,7 @@ public class PlayMode extends WorldController {
         // Make the cephalonaut
         float dwidth  = octopusTexture.getRegionWidth()/scale.x;
         float dheight = octopusTexture.getRegionHeight()/scale.y;
-        cephalonaut = new CephalonautModel(10, 10, dwidth, dheight, scale);
+        cephalonaut = new CephalonautModel(7, 7, dwidth, dheight, scale);
         cephalonaut.setTexture(octopusTexture);
         cephalonautController = new CephalonautController(world, cephalonaut);
 
