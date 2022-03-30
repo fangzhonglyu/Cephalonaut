@@ -8,10 +8,7 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.ShortArray;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEBlackHole;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEBoostPad;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETrigger;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETriggerable;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.SimpleObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.Properties;
 
@@ -28,6 +25,7 @@ public class LevelElement extends SimpleObstacle {
     protected boolean inContact = false;
 
     public enum Element {
+        GLASS_BARRIER,
         BLACK_HOLE,
         FLYING_METEOR,
         WALL,
@@ -96,6 +94,8 @@ public class LevelElement extends SimpleObstacle {
                 return new LETriggerable(def);
             case BUTTON:
                 return new LETrigger(def);
+            case GLASS_BARRIER:
+                return new LEGlassBarrier(def);
             default:
                 return new LevelElement(def);
         }
