@@ -251,9 +251,8 @@ public class CephalonautModel extends OctopusObstacle {
 			Color tint = grapple.isGrappling() ? Color.RED : Color.GREEN;
 			//canvas.draw(tentacleTexture, tint, 0.5f, 0.5f, middle.x * drawScale.x, middle.y * drawScale.y,
 			//		angle, 5, distance * drawScale.x);
-			grapple.draw(canvas, getPosition());
 		}
-
+		grapple.draw(canvas, getPosition());
 		if (isInking() && ink > 0) {
 			Vector2 behind = new Vector2();
 			behind.set(0, getHeight()).setAngleRad(getAngle() - (float) Math.PI / 2f).add(getPosition());

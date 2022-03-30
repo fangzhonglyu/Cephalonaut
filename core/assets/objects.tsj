@@ -39,7 +39,19 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "type":"Start"
+                    }
+                }],
+         "type":"GameObject"
         }, 
         {
          "id":2,

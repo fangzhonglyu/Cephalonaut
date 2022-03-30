@@ -28,6 +28,8 @@ public class LevelController implements ContactListener {
             ((LETriggerable) object).checkPos();
         } else if (object instanceof LEWormHole && ((LEWormHole) object).getCooldown() > 0) {
             ((LEWormHole) object).setCooldown(((LEWormHole) object).getCooldown() - 1);
+        } else if (object instanceof LEGlassBarrier) {
+            hit((LEGlassBarrier) object);
         }
 
         if (object instanceof LevelElement) {
@@ -96,6 +98,23 @@ public class LevelController implements ContactListener {
         cephalonaut.addForce(force);
     }
 
+    public void hit(LEGlassBarrier obj) {
+        Vector2 glassBarrierPos = obj.getBody().getWorldCenter();
+        Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
+        if(!obj.getInContact() && glassBarrierPos.dst(cephalonautPos) > .8) {
+            return;
+        }
+        float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
+        if(!obj.getInContact() && hitSpeed < 1) {
+            return;
+        }
+        obj.hit(hitSpeed);
+        if(obj.getHealth() <= 0) {
+            obj.markRemoved(true);
+            cephalonaut.setVX(cephalonaut.getVX() * .5f);
+        }
+    }
+
     public void finishLevel() {
         System.out.println("Level finished!");
     }
@@ -136,11 +155,16 @@ public class LevelController implements ContactListener {
             if (contactObject instanceof LEWormHole) {
                 LEWormHole hole1 = (LEWormHole) contactObject;
                 LEWormHole hole2 = (LEWormHole) playMode.getObject(hole1.getTarget());
-                if(hole1.getCooldown() == 0 && hole2.getCooldown() == 0) {
+                if (hole1.getCooldown() == 0 && hole2.getCooldown() == 0) {
                     setTeleport(hole2);
                     hole1.setCooldown(hole1.getWormHoleCooldown());
                     hole2.setCooldown(hole2.getWormHoleCooldown());
                 }
+            }
+
+            if (contactObject instanceof LEGlassBarrier) {
+                LEGlassBarrier glassBarrier = (LEGlassBarrier) contactObject;
+                hit(glassBarrier);
             }
         }
 

@@ -16,23 +16,41 @@ import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
 import java.util.ArrayList;
 
 public class GrappleModel extends WheelObstacle {
-    /** Whether the grapple is out */
+    /**
+     * Whether the grapple is out
+     */
     private boolean isOut;
-    /** Whether the grapple is taut */
+    /**
+     * Whether the grapple is taut
+     */
     private boolean isGrappling;
-    /** Whether the grapple is anchored */
+    /**
+     * Whether the grapple is anchored
+     */
     private boolean isAnchored;
-    /** Whether the grapple is locked in place*/
+    /**
+     * Whether the grapple is locked in place
+     */
     private float isLocked;
-    /** The anchor location of the grapple */
+    /**
+     * The anchor location of the grapple
+     */
     private String anchorLocation;
-    /** The extension length of the grapple */
+    /**
+     * The extension length of the grapple
+     */
     private float extensionLength;
-    /** The max extension length of the grapple */
+    /**
+     * The max extension length of the grapple
+     */
     private float maxLength;
-    /** Travelled Points*/
-    private ArrayList<Vector2> trace;
-    /** The grapple's texture */
+    /**
+     * Retraction vertex
+     */
+    public Vector2 vertex;
+    /**
+     * The grapple's texture
+     */
     private Texture texture;
 
     public GrappleModel(float x, float y, Vector2 drawScale) {
@@ -58,12 +76,10 @@ public class GrappleModel extends WheelObstacle {
         isLocked = 0;
         anchorLocation = "";
         extensionLength = 0;
-        trace = new ArrayList<>();
     }
 
     /**
      * Resets grapple to constructor values.
-     *
      */
     public void reset() {
         setActive(false);
@@ -75,22 +91,11 @@ public class GrappleModel extends WheelObstacle {
         isLocked = 0;
         anchorLocation = "";
         extensionLength = 0;
-        trace = new ArrayList<>();
-    }
-
-    public void addTrace(Vector2 cephP){
-        trace.add(new Vector2(getX(),getY()).sub(cephP));
     }
 
     public boolean activatePhysics(World world) {
         // create the box from our superclass
-        if (!super.activatePhysics(world)) {
-            return false;
-        }
-
-        // TODO: Stuff here probably
-
-        return true;
+        return super.activatePhysics(world);
     }
 
     /**
@@ -143,21 +148,27 @@ public class GrappleModel extends WheelObstacle {
      *
      * @param anchored whether the grapple is anchored.
      */
-    public void setAnchored(boolean anchored) { isAnchored = anchored; }
+    public void setAnchored(boolean anchored) {
+        isAnchored = anchored;
+    }
 
     /**
      * Returns true if the grapple is locked.
      *
      * @return true if the grapple is locked.
      */
-    public float isLocked() { return isLocked; }
+    public float isLocked() {
+        return isLocked;
+    }
 
     /**
      * Sets whether the grapple is locked.
      *
      * @param locked whether the grapple is locked.
      */
-    public void setLocked(float locked) { isLocked = locked; }
+    public void setLocked(float locked) {
+        isLocked = locked;
+    }
 
     /**
      * Sets the grapple's anchor location.
@@ -173,7 +184,9 @@ public class GrappleModel extends WheelObstacle {
      *
      * @return the grapple's anchor location.
      */
-    public String getAnchorLocation() { return anchorLocation; }
+    public String getAnchorLocation() {
+        return anchorLocation;
+    }
 
     /**
      * Sets the grapple's extension length.
@@ -245,12 +258,14 @@ public class GrappleModel extends WheelObstacle {
         if (isOut) {
             Affine2 tr = new Affine2();
             tr.preTranslate(cephP.x, cephP.y);
-            tr.rotate(getPosition().sub(cephP).angleDeg());
+            float angle = getPosition().sub(cephP).angleDeg();
+            tr.rotate(angle);
             float dist = getPosition().dst(cephP);
-            for (float i = 0; i<getPosition().dst(cephP)/2; i+=1/drawScale.x){
-                Vector2 t = new Vector2(i*2, (float)(-Math.sin(i*5)-Math.cos(i*4))/(dist+0.3f)/2f*(float)Math.sqrt(Math.sqrt(1-i*2/dist)));
+            for (float i = 0; i < getPosition().dst(cephP) / 2; i += 1 / drawScale.x) {
+                Vector2 t = new Vector2(i * 2, (float) (-Math.sin(i * 5) - Math.cos(i * 4)) / (dist + 0.3f) / 2f * (float) Math.sqrt(Math.sqrt(1 - i * 2 / dist)));
                 if (isLocked > 0)
-                    t.set(t.x,t.y*(8-isLocked)/8);
+                    t.set(t.x, t.y * (8 - isLocked) / 8);
+                t.y = (angle>=270||angle<90)?t.y:-t.y;
                 tr.applyTo(t);
                 canvas.draw(texture, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
                         getAngle(), 1, 1);
@@ -258,12 +273,28 @@ public class GrappleModel extends WheelObstacle {
             canvas.draw(texture, Color.ORANGE, 3f, 3f, getX() * drawScale.x, getY() * drawScale.y,
                     getAngle(), 1, 1);
         }
+        if (vertex != null) {
+            Affine2 tr = new Affine2();
+            tr.preTranslate(cephP.x, cephP.y);
+            float angle = vertex.cpy().sub(cephP).angleDeg();
+            tr.rotate(angle);
+            float dist = vertex.dst(cephP);
+            for (float i = 0; i < vertex.dst(cephP) / 2; i += 1 / drawScale.x) {
+                Vector2 t = new Vector2(i * 2, (float) (-Math.sin(i * 5) - Math.cos(i * 4)) / (dist + 0.7f) / 2f * (float) Math.sqrt(Math.sqrt(1 - i * 2 / dist)));
+                t.y = (angle>=270||angle<90)?t.y:-t.y;
+                tr.applyTo(t);
+                canvas.draw(texture, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
+                        getAngle(), 1, 1);
+            }
+            canvas.draw(texture, Color.ORANGE, 3f, 3f, vertex.x * drawScale.x, vertex.y * drawScale.y,
+                    getAngle(), 1, 1);
+        }
 
     }
 
     /**
      * Draws the outline of the physics body.
-     *
+     * <p>
      * This method can be helpful for understanding issues with collisions.
      *
      * @param canvas Drawing context

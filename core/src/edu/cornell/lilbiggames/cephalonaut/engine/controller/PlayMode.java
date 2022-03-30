@@ -46,6 +46,9 @@ public class PlayMode extends WorldController {
     private float deathRotationCount;
     private float fadeInCount;
     private String level;
+    /** Default starting position for the cephalonaut */
+    private float DEFAULT_STARTING_POS_X = 10.0f;
+    private float DEFAULT_STARTING_POS_Y = 10.0f;
 
 
     /**
@@ -116,15 +119,23 @@ public class PlayMode extends WorldController {
     }
 
     private void populateLevel(Queue<GameObject> newObjects) {
+        float startX = DEFAULT_STARTING_POS_X;
+        float startY = DEFAULT_STARTING_POS_Y;
         for (GameObject object : newObjects) {
+            if(object.getName() != null && object.getName().equals("start")) {
+                startX = object.getX();
+                startY = object.getY();
+                continue;
+            }
             object.setDrawScale(scale);
             addObject(object);
         }
 
+
         // Make the cephalonaut
         float dwidth  = octopusTexture.getRegionWidth()/scale.x;
         float dheight = octopusTexture.getRegionHeight()/scale.y;
-        cephalonaut = new CephalonautModel(7, 7, dwidth, dheight, scale);
+        cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight, scale);
         cephalonaut.setTexture(octopusTexture);
         cephalonautController = new CephalonautController(world, cephalonaut);
 
@@ -149,7 +160,7 @@ public class PlayMode extends WorldController {
     public void gatherAssets(AssetDirectory directory) {
         // Allocate the tiles
         earthTile = new TextureRegion(directory.getEntry( "earth", Texture.class ));
-        octopusTexture = new TextureRegion(directory.getEntry( "octopus", Texture.class ));
+        octopusTexture = new TextureRegion(directory.getEntry( "octopus.png", Texture.class ));
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
     }
 

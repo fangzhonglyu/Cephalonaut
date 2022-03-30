@@ -81,6 +81,10 @@ public class LevelLoader {
                 return LevelElement.Element.FINISH;
             case "Wormhole":
                 return LevelElement.Element.WORMHOLE;
+            case "Start":
+                return LevelElement.Element.START;
+            case "Glass Barrier":
+                return LevelElement.Element.GLASS_BARRIER;
             default:
                 System.out.printf("WARNING: Unknown LevelElement type '%s'\n", element);
                 return LevelElement.Element.WALL;

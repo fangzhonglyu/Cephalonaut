@@ -25,6 +25,7 @@ public class LevelElement extends SimpleObstacle {
     protected boolean inContact = false;
 
     public enum Element {
+        GLASS_BARRIER,
         BLACK_HOLE,
         FLYING_METEOR,
         WALL,
@@ -34,7 +35,8 @@ public class LevelElement extends SimpleObstacle {
         DOOR,
         FINISH,
         WORMHOLE,
-        MISC
+        MISC,
+        START
     }
 
     /** Type of element **/
@@ -95,6 +97,8 @@ public class LevelElement extends SimpleObstacle {
                 return new LETrigger(def);
             case WORMHOLE:
                 return new LEWormHole(def);
+            case GLASS_BARRIER:
+                return new LEGlassBarrier(def);
             default:
                 return new LevelElement(def);
         }
