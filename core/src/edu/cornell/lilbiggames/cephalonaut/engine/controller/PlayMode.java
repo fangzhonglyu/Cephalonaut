@@ -14,6 +14,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -25,6 +26,7 @@ public class PlayMode extends WorldController {
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
+    private Texture octopusInkStrip;
 
     /** Controller that handles cephalonaut movement (grappling and inking) */
     private CephalonautController cephalonautController;
@@ -108,8 +110,9 @@ public class PlayMode extends WorldController {
         // Make the cephalonaut
         float dwidth  = octopusTexture.getRegionWidth()/scale.x;
         float dheight = octopusTexture.getRegionHeight()/scale.y;
-        cephalonaut = new CephalonautModel(10, 10, dwidth, dheight, scale);
-        cephalonaut.setTexture(octopusTexture);
+
+        FilmStrip cephInkFilm = new FilmStrip(octopusInkStrip,1,7);
+        cephalonaut = new CephalonautModel(10, 10, dwidth, dheight, scale, cephInkFilm);
         cephalonautController = new CephalonautController(world, cephalonaut);
 
         addObject(cephalonaut);
@@ -134,6 +137,7 @@ public class PlayMode extends WorldController {
         // Allocate the tiles
         earthTile = new TextureRegion(directory.getEntry( "earth", Texture.class ));
         octopusTexture = new TextureRegion(directory.getEntry( "octopus", Texture.class ));
+        octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
     }
 
