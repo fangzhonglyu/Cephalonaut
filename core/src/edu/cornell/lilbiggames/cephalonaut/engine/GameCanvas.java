@@ -680,12 +680,14 @@ public class GameCanvas {
 		spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
 	}
 
-	public void drawSimpleFuelBar(float ink, float x, float y){
+	public void drawSimpleFuelBar(float ink,float sx, float sy){
+		float x = getWidth()*0.93f/sx;
+		float y = getHeight()*0.97f/sy;
 		spriteBatch.end();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(Color.WHITE);
 		shapeRen.rect(x, y, 100, 12);
-		shapeRen.setColor(ink > 0.6  ? Color.CYAN : ink > 0.3 ? Color.ORANGE : Color.RED);
+		shapeRen.setColor(ink > 0.6  ? Color.PURPLE : ink > 0.3 ? Color.ORANGE : Color.RED);
 		shapeRen.rect(x + 2, y + 1, ink * 96.0f, 10);
 		shapeRen.end();
 		spriteBatch.begin();

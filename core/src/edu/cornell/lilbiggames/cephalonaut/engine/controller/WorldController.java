@@ -92,7 +92,7 @@ public abstract class WorldController implements Screen {
 	/** The boundary of the world */
 	protected Rectangle bounds;
 	/** The world scale */
-	protected Vector2 scale;
+	protected Vector2 scale, Oscale;
 	
 	/** Whether or not this is an active controller */
 	private boolean active;
@@ -209,6 +209,7 @@ public abstract class WorldController implements Screen {
 		this.canvas = canvas;
 		this.scale.x = canvas.getWidth()/bounds.getWidth();
 		this.scale.y = canvas.getHeight()/bounds.getHeight();
+		this.Oscale = scale.cpy();
 	}
 	
 	/**
@@ -367,11 +368,11 @@ public abstract class WorldController implements Screen {
 		}
 
 		// Now it is time to maybe switch screens.
-		if (input.didExit()) {
+		/*if (input.didExit()) {
 			pause();
 			listener.exitScreen(this, EXIT_QUIT);
 			return false;
-		}
+		}*/
 
 		return true;
 	}
@@ -514,9 +515,11 @@ public abstract class WorldController implements Screen {
 	 * @param width  The new width in pixels
 	 * @param height The new height in pixels
 	 */
+	@Override
 	public void resize(int width, int height) {
 		scale.x = canvas.getWidth()/bounds.getWidth();
 		scale.y = canvas.getHeight()/bounds.getHeight();
+		canvas.resize();
 	}
 
 	/**

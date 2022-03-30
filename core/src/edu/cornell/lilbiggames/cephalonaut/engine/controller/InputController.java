@@ -64,6 +64,8 @@ public class InputController {
 	private boolean selectPressed;
 	private boolean prevPressed;
 	private boolean nextPressed;
+	private boolean upPressed;
+	private boolean downPressed;
 	/** Whether the debug toggle was pressed. */
 	private boolean debugPressed;
 	private boolean debugPrevious;
@@ -227,6 +229,24 @@ public class InputController {
 	}
 
 	/**
+	 * Returns true if the player indicated to go to previous
+	 *
+	 * @return true if the prev button was pressed
+	 */
+	public boolean isUpPressed(){
+		return upPressed;
+	}
+
+	/**
+	 * Returns true if the player indicated to go to previous
+	 *
+	 * @return true if the prev button was pressed
+	 */
+	public boolean isDownPressed(){
+		return downPressed;
+	}
+
+	/**
 	 * Gets the rotation of the octopus
 	 * Returns 1.0 for clockwise rotation, 0 for no rotation, and -1.0 for counterclockwise rotation
 	 *
@@ -336,12 +356,14 @@ public class InputController {
 		debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
 		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
 		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT));
-		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
-		selectPressed = (secondary && selectPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ENTER));
+		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) && !selectPressed;;
+		selectPressed = ((secondary && selectPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))) && !exitPressed;
 		nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || (Gdx.input.isKeyJustPressed(Input.Keys.D)));
 		prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || (Gdx.input.isKeyJustPressed(Input.Keys.A)));
 		tertiaryPressed = (secondary && tertiaryPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) ||
 				(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT));
+		upPressed = (secondary && upPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.UP) || (Gdx.input.isKeyJustPressed(Input.Keys.W)));
+		downPressed = (secondary && downPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || (Gdx.input.isKeyJustPressed(Input.Keys.S)));
 
 		// Directional controls
 		rotation = (secondary ? rotation : 0.0f);

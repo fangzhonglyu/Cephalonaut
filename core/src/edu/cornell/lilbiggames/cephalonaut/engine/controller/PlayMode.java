@@ -14,18 +14,16 @@ import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
-import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 import java.util.Map;
-import java.util.logging.Level;
 
 /** Game mode for playing a level */
 public class PlayMode extends WorldController implements Screen {
     // Matias: We might want to think of making this not extend WorldController, or editing/making our own
 
     // for knowing we have exited a level
-    public static int EXIT_LEVEL = 2;
+    public static int EXIT_LEVEL = 20;
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
@@ -47,8 +45,6 @@ public class PlayMode extends WorldController implements Screen {
 
     private Map<Integer, LevelElement> objectMap;
 
-    private LevelLoader levelLoader;
-
     /** Listener that will update the screen when we are done */
     private ScreenListener listener;
 
@@ -59,6 +55,12 @@ public class PlayMode extends WorldController implements Screen {
     /** Default starting position for the cephalonaut */
     static private final float DEFAULT_STARTING_POS_X = 10.0f;
     static private final float DEFAULT_STARTING_POS_Y = 10.0f;
+
+    // Matias: What's this variable for?
+    private Vector2 canvasO;
+    // Matias: We shouldn't do this bc objects have state which change from loading to restarting
+    // TODO: Change
+    private Queue<GameObject> defaultObjects;
 
     /**
      * Creates and initialize a new instance of the sandbox
@@ -71,9 +73,8 @@ public class PlayMode extends WorldController implements Screen {
         setComplete(false);
         setFailure(false);
         directionalGrapple = true;
-        levelLoader = new LevelLoader();
+        canvasO = new Vector2(1920,1080);
     }
-
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
         this.objectMap = objectMap;
@@ -85,7 +86,11 @@ public class PlayMode extends WorldController implements Screen {
 
     // TODO: Fix resetting, make this less jank
     public void reset() {
-        levelLoader.loadLevel("level_"+level, this);
+        reset(defaultObjects);
+    }
+
+    public void resume(){
+        exiting = false;
     }
 
 
@@ -104,6 +109,7 @@ public class PlayMode extends WorldController implements Screen {
      * This method disposes of the world and creates a new one.
      */
     public void reset(Queue<GameObject> newObjects) {
+        defaultObjects = newObjects;
         Vector2 gravity = new Vector2(world.getGravity());
         cleanupLevel();
 
@@ -182,7 +188,7 @@ public class PlayMode extends WorldController implements Screen {
         if(input.didExit()){
             if (listener != null) {
                 exiting = true;
-                cleanupLevel();
+                pause();
                 listener.exitScreen(this, EXIT_LEVEL);
             } else {
                 System.err.println("No listener! Did you correctly set the listener for this playmode?");
@@ -207,7 +213,7 @@ public class PlayMode extends WorldController implements Screen {
             float rotation = input.getRotation();
 
             cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
-            canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+            canvas.setCameraPos(cephalonaut.getX() * Oscale.x, cephalonaut.getY() * Oscale.y);
         }
 
 
@@ -232,6 +238,7 @@ public class PlayMode extends WorldController implements Screen {
 
             selector.draw(canvas);
             cephalonaut.draw(canvas);
+            canvas.drawSimpleFuelBar(cephalonaut.getInk(),scale.x/Oscale.x,scale.y/Oscale.y);
             canvas.end();
 
             if (isDebug()) {
@@ -243,4 +250,5 @@ public class PlayMode extends WorldController implements Screen {
             }
         }
     }
+
 }

@@ -10,7 +10,8 @@ import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 public class MainMenuMode implements Screen {
-    private static final int NUM_LEVELS = 7;
+    public static final int LEVEL_SELECTED_CODE = 21;
+    public static final int NUM_LEVELS = 7;
     private static final int DEFAULT_LEVEL = 0;
 
     /** The font for giving messages to the player */
@@ -27,13 +28,13 @@ public class MainMenuMode implements Screen {
     /** Reference to the game canvas */
     protected GameCanvas canvas;
 
-    protected float scale;
-
     private AssetDirectory assets;
 
     private int curLevel;
 
     private InputController inputController;
+
+    private Vector2 bounds,scale;
 
     private boolean levelSelected;
 
@@ -46,6 +47,8 @@ public class MainMenuMode implements Screen {
     public MainMenuMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
         this.canvas  = canvas;
         this.listener = listener;
+        this.scale = new Vector2(1,1);
+        this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro",BitmapFont.class);
 
         background = assets.getEntry( "main-menu:background", Texture.class );
@@ -66,11 +69,18 @@ public class MainMenuMode implements Screen {
     public void render(float delta) {
         if (levelSelected && listener != null) {
             levelSelected = false;
-            listener.exitScreen(this, 0);
+            listener.exitScreen(this, LEVEL_SELECTED_CODE);
         } else {
             update(delta);
             draw();
         }
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        scale.x = canvas.getWidth()/bounds.x;
+        scale.y = canvas.getHeight()/bounds.y;
+        canvas.setCameraPos(0.5f*width,0.5f*height);
     }
 
     private void update(float delta){
@@ -95,18 +105,6 @@ public class MainMenuMode implements Screen {
         return curLevel;
     }
 
-    /**
-     * Called when the Screen is resized.
-     *
-     * This can happen at any point during a non-paused state but will never happen
-     * before a call to show().
-     *
-     * @param width  The new width in pixels
-     * @param height The new height in pixels
-     */
-    public void resize(int width, int height) {
-
-    }
 
     @Override
     public void pause() {
@@ -134,12 +132,12 @@ public class MainMenuMode implements Screen {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
-        canvas.draw(background, 0, 0 , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth(), (float)height/(float)background.getHeight());
+        canvas.draw(background, 0.5f*canvas.getWidth()-canvas.getCameraX()/scale.x, 0.5f*canvas.getHeight()-canvas.getCameraY()/scale.y , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth()/scale.x, (float)height/(float)background.getHeight()/scale.y);
 
         float levelIconWidth = levelIcon.getWidth();
         float levelIconHeight = levelIcon.getHeight();
 
-        canvas.draw(levelIcon, width/2 - 0.5f*levelIconWidth/2, height/2 - 0.5f*levelIconHeight/2, 0, 0, levelIcon.getWidth(), levelIcon.getHeight(), 0.5f, 0.5f);
+        canvas.draw(levelIcon, (width/2 - 0.25f*levelIconWidth), (height/2 - 0.25f*levelIconHeight), 0, 0, levelIcon.getWidth(), levelIcon.getHeight(), 0.5f, 0.5f);
 
         canvas.drawTextCentered("LEVEL: " + curLevel, displayFont, -height/4);
 
