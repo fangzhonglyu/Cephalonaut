@@ -29,7 +29,7 @@ public class PauseMode implements Screen {
 
     private int optionId;
 
-    private float scale;
+    private Vector2 bounds,scale;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -42,7 +42,8 @@ public class PauseMode implements Screen {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
-        scale = Math.max(width/background.getWidth(), height/background.getHeight());
+        this.scale = new Vector2(1,1);
+        this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro",BitmapFont.class);
         optionId = 0; //default is resume
     }
@@ -82,8 +83,9 @@ public class PauseMode implements Screen {
         canvas.clear();
         canvas.begin();
 
-
-        canvas.draw(background, 0, 0 , 0, 0, background.getWidth(), background.getHeight(), scale, scale);
+        float height = canvas.getHeight();
+        float width = canvas.getWidth();
+        canvas.draw(background, 0.5f*canvas.getWidth()-canvas.getCameraX()/scale.x, 0.5f*canvas.getHeight()-canvas.getCameraY()/scale.y , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth()/scale.x, (float)height/(float)background.getHeight()/scale.y);
 
         drawOptions();
 
@@ -104,7 +106,9 @@ public class PauseMode implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        scale.x = canvas.getWidth()/bounds.x;
+        scale.y = canvas.getHeight()/bounds.y;
+        canvas.setCameraPos(0.5f*width,0.5f*height);
     }
 
     @Override
