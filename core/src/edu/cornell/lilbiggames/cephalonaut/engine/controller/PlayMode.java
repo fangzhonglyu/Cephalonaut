@@ -52,6 +52,8 @@ public class PlayMode extends WorldController implements Screen {
 
     private int level;
 
+    private Vector2 canvasO;
+
     private Queue<GameObject> defaultObjects;
 
 
@@ -66,6 +68,7 @@ public class PlayMode extends WorldController implements Screen {
         setComplete(false);
         setFailure(false);
         directionalGrapple = true;
+        canvasO = new Vector2(1920,1080);
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -197,7 +200,7 @@ public class PlayMode extends WorldController implements Screen {
             float rotation = input.getRotation();
 
             cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
-            canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+            canvas.setCameraPos(cephalonaut.getX() * Oscale.x, cephalonaut.getY() * Oscale.y);
         }
 
 
@@ -222,6 +225,7 @@ public class PlayMode extends WorldController implements Screen {
 
             selector.draw(canvas);
             cephalonaut.draw(canvas);
+            canvas.drawSimpleFuelBar(cephalonaut.getInk(),scale.x/Oscale.x,scale.y/Oscale.y);
             canvas.end();
 
             if (isDebug()) {
