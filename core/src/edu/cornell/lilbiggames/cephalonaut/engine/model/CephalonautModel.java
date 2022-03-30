@@ -253,7 +253,7 @@ public class CephalonautModel extends OctopusObstacle {
 		//animation
 
 		float ox = 0.5f * filmstrip.getRegionWidth();
-		float oy = 0.5f * filmstrip.getRegionHeight();
+		float oy = 0.55f * filmstrip.getRegionHeight();
 		canvas.draw(filmstrip, Color.WHITE, ox, oy,
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 0.2f, 0.2f);
