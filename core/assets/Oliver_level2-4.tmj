@@ -408,6 +408,17 @@
                  "name":"",
                  "properties":[
                         {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Wormhole"
+                            }
+                        }, 
+                        {
                          "name":"target",
                          "type":"object",
                          "value":67
@@ -425,6 +436,17 @@
                  "id":67,
                  "name":"",
                  "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Wormhole"
+                            }
+                        }, 
                         {
                          "name":"target",
                          "type":"object",
