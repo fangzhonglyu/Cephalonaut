@@ -45,6 +45,7 @@ public class PlayMode extends WorldController {
     private boolean dead;
     private float deathRotationCount;
     private float fadeInCount;
+    private String level;
 
 
     /**
@@ -74,9 +75,13 @@ public class PlayMode extends WorldController {
         this.dead = dead;
     }
 
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
     // TODO: Fix resetting, make this less jank
     public void reset() {
-        levelLoader.loadLevel("wormhole_test", this);
+        levelLoader.loadLevel(level, this);
     }
 
     /**

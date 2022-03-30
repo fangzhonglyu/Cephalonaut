@@ -249,7 +249,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":4,
              "name":"",
              "objects":[
                     {
@@ -298,6 +297,7 @@
                  "value":
                     {
                      "canGrappleOn":false,
+                     "isSensor":true,
                      "type":"Wormhole"
                     }
                 }, 

@@ -81,7 +81,8 @@ public class GDXRoot extends Game {
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
 //		playMode.reset(levelLoader.loadLevel("level_1"));
-		levelLoader.loadLevel("wormhole_test", playMode);
+		playMode.setLevel("Oliver_level2");
+		levelLoader.loadLevel("Oliver_level2", playMode);
 
 
 
