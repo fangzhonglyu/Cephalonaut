@@ -3,10 +3,7 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.*;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEBlackHole;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEBoostPad;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETrigger;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETriggerable;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 
@@ -29,6 +26,8 @@ public class LevelController implements ContactListener {
             attract((LEBlackHole) object);
         } else if (object instanceof LETriggerable) {
             ((LETriggerable) object).checkPos();
+        } else if (object instanceof LEGlassBarrier) {
+            hit((LEGlassBarrier) object);
         }
 
         if (object instanceof LevelElement) {
@@ -79,6 +78,23 @@ public class LevelController implements ContactListener {
         cephalonaut.addForce(force);
     }
 
+    public void hit(LEGlassBarrier obj) {
+        Vector2 glassBarrierPos = obj.getBody().getWorldCenter();
+        Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
+        if(!obj.getInContact() && glassBarrierPos.dst(cephalonautPos) > .8) {
+            return;
+        }
+        float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
+        if(!obj.getInContact() && hitSpeed < 1) {
+            return;
+        }
+        obj.hit(hitSpeed);
+        if(obj.getHealth() <= 0) {
+            obj.markRemoved(true);
+            cephalonaut.setVX(cephalonaut.getVX() * .5f);
+        }
+    }
+
     public void finishLevel() {
         System.out.println("Level finished!");
     }
@@ -110,6 +126,11 @@ public class LevelController implements ContactListener {
                 LETrigger trigger = (LETrigger) contactObject;
                 LETriggerable target = (LETriggerable) playMode.getObject(trigger.getTarget());
                 target.setActivated(trigger.isActivated());
+            }
+
+            if (contactObject instanceof LEGlassBarrier) {
+                LEGlassBarrier glassBarrier = (LEGlassBarrier) contactObject;
+                hit(glassBarrier);
             }
         }
 
