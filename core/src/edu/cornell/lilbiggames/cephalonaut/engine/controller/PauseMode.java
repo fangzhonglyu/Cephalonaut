@@ -67,6 +67,8 @@ public class PauseMode implements Screen {
             listener.exitScreen(this, EXIT_LEVEL_CODE);
         } else if(optionId == 2 && inputController.isSelectPressed()){
             listener.exitScreen(this, RESTART_LEVEL_CODE);
+        } else if(inputController.didExit()){
+            listener.exitScreen(this, RESUME_LEVEL_CODE);
         } else if(inputController.isUpPressed()){
             optionId = optionId == 0 ? options.length-1 : optionId-1;
         } else if(inputController.isDownPressed()){
