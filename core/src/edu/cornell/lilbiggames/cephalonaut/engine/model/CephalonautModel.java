@@ -259,7 +259,7 @@ public class CephalonautModel extends OctopusObstacle {
 				getAngle(), 0.004f* drawScale.x, 0.004f*drawScale.y);
 
 		//fuel bar
-		canvas.drawSimpleFuelBar(ink, canvas.getWidth() - 150, canvas.getHeight() - 70);
+		canvas.drawSimpleFuelBar(ink);
 	}
 	
 	/**
