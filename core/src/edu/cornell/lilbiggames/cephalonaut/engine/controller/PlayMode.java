@@ -1,5 +1,6 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,15 +14,16 @@ import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
-import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
+import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 import java.util.Map;
-import java.util.logging.Level;
 
 /** Game mode for playing a level */
-public class PlayMode extends WorldController {
+public class PlayMode extends WorldController implements Screen {
     // Matias: We might want to think of making this not extend WorldController, or editing/making our own
 
+    // for knowing we have exited a level
+    public static int EXIT_LEVEL = 20;
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
@@ -43,23 +45,35 @@ public class PlayMode extends WorldController {
 
     private Map<Integer, LevelElement> objectMap;
 
-    private LevelLoader levelLoader;
+    /** Listener that will update the screen when we are done */
+    private ScreenListener listener;
+
+    boolean exiting = false;
+
+    private int level;
 
     /** Default starting position for the cephalonaut */
-    private float DEFAULT_STARTING_POS_X = 10.0f;
-    private float DEFAULT_STARTING_POS_Y = 10.0f;
+    static private final float DEFAULT_STARTING_POS_X = 10.0f;
+    static private final float DEFAULT_STARTING_POS_Y = 10.0f;
 
+    // Matias: What's this variable for?
+//    private Vector2 canvasO;
+    // Matias: We shouldn't do this bc objects have state which change from loading to restarting
+    // TODO: Change
+    private Queue<GameObject> defaultObjects;
 
     /**
      * Creates and initialize a new instance of the sandbox
      */
-    public PlayMode() {
+    public PlayMode(ScreenListener listener, int level) {
         super(DEFAULT_WIDTH, DEFAULT_HEIGHT, 0);
+        this.listener = listener;
+        this.level = level;
         setDebug(false);
         setComplete(false);
         setFailure(false);
         directionalGrapple = true;
-        levelLoader = new LevelLoader();
+//        canvasO = new Vector2(1920,1080);
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -72,7 +86,21 @@ public class PlayMode extends WorldController {
 
     // TODO: Fix resetting, make this less jank
     public void reset() {
-        levelLoader.loadLevel("level_1", this);
+        reset(defaultObjects);
+    }
+
+    public void resume(){
+        exiting = false;
+    }
+
+
+    public void cleanupLevel(){
+        for(GameObject obj : objects) {
+            obj.deactivatePhysics(world);
+        }
+        objects.clear();
+        addQueue.clear();
+        world.dispose();
     }
 
     /**
@@ -81,15 +109,9 @@ public class PlayMode extends WorldController {
      * This method disposes of the world and creates a new one.
      */
     public void reset(Queue<GameObject> newObjects) {
+        defaultObjects = newObjects;
         Vector2 gravity = new Vector2(world.getGravity());
-
-
-        for(GameObject obj : objects) {
-            obj.deactivatePhysics(world);
-        }
-        objects.clear();
-        addQueue.clear();
-        world.dispose();
+        cleanupLevel();
 
         world = new World(gravity,false);
         setComplete(false);
@@ -100,7 +122,7 @@ public class PlayMode extends WorldController {
         world.setContactListener(levelController);
         GrappleModel grapple = cephalonaut.getGrapple();
         grapple.reset();
-        SoundController.switchTrack(1);
+        SoundController.switchTrack(level);
     }
 
     private void populateLevel(Queue<GameObject> newObjects) {
@@ -162,52 +184,81 @@ public class PlayMode extends WorldController {
     public void update(float dt) {
         // Move an object if touched
         InputController input = InputController.getInstance();
-        if (input.didTertiary()) {
-            directionalGrapple = !directionalGrapple;
+
+        if(input.didExit()){
+            if (listener != null) {
+                exiting = true;
+                pause();
+                listener.exitScreen(this, EXIT_LEVEL);
+            } else {
+                System.err.println("No listener! Did you correctly set the listener for this playmode?");
+            }
+        } else {
+            if (input.didTertiary()) {
+                directionalGrapple = !directionalGrapple;
+            }
+            cephalonaut.setForce(Vector2.Zero);
+
+
+            for(GameObject object : objects) {
+                levelController.update(object);
+            }
+
+            boolean grappleButton = input.didSecondary();
+            boolean ungrappleButton = input.didTertiary();
+
+            Vector2 crossHair = input.getCrossHair().add(
+                    (canvas.getCameraX() - canvas.getWidth() / 2f) / scale.x,
+                    (canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
+
+            boolean inking = input.isThrusterApplied();
+            float rotation = input.getRotation();
+
+            cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
+            canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
         }
-        cephalonaut.setForce(Vector2.Zero);
 
 
-        for(GameObject object : objects) {
-            levelController.update(object);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        for (GameObject object : objects) {
+            object.setDrawScale(scale);
         }
-
-        boolean grappleButton = input.didSecondary();
-        boolean ungrappleButton = input.didTertiary();
-        Vector2 crossHair = input.getCrossHair().add(
-                (canvas.getCameraX() - canvas.getWidth() / 2f) / scale.x,
-                (canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
-        boolean inking = input.isThrusterApplied();
-        float rotation = input.getRotation();
-
-        cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
-        canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
     }
 
     /**
      * Draw the physics objects together with foreground and background
      *
      * This is completely overridden to support custom background and foreground art.
+     * This is completely overridden to support custom background and foreground art.
      *
      * @param dt Timing values from parent loop
      */
     public void draw(float dt) {
         canvas.clear();
-        canvas.begin();
-        for(GameObject obj : objects) {
-            obj.draw(canvas);
-        }
 
-        selector.draw(canvas);
-        cephalonaut.draw(canvas);
-        canvas.end();
-
-        if (isDebug()) {
-            canvas.beginDebug();
-            for(GameObject obj : objects) {
-                obj.drawDebug(canvas);
+        if(!exiting) {
+            canvas.begin();
+            for (GameObject obj : objects) {
+                obj.draw(canvas);
             }
-            canvas.endDebug();
+
+            selector.draw(canvas);
+            cephalonaut.draw(canvas);
+            canvas.drawSimpleFuelBar(cephalonaut.getInk());
+            canvas.end();
+
+            if (isDebug()) {
+                canvas.beginDebug();
+                for (GameObject obj : objects) {
+                    obj.drawDebug(canvas);
+                }
+                canvas.endDebug();
+            }
         }
     }
+
 }

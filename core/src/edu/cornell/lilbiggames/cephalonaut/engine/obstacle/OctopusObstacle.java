@@ -12,6 +12,7 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.obstacle;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -159,10 +160,18 @@ public class OctopusObstacle extends SimpleObstacle {
         resize(width, height);
     }
 
+    @Override
+    public void setTexture(TextureRegion value) {
+        super.setTexture(value);
+        updateScale();
+    }
+
     /**
      * Reset the polygon vertices in the shape to match the dimension.
      */
     private void resize(float width, float height) {
+        updateScale();
+
         // Make the box with the center in the center
         vertices[0] = -width/2.0f;
         vertices[1] = -height/2.0f;
@@ -175,6 +184,27 @@ public class OctopusObstacle extends SimpleObstacle {
         triangleShape.set(vertices);
         circleShape.setPosition(new Vector2(0.0f, width/4.0f));
         circleShape.setRadius(width/3.0f);
+    }
+
+    @Override
+    public void setDrawScale(float x, float y) {
+        super.setDrawScale(x, y);
+        updateScale();
+    }
+
+    @Override
+    public void setDrawScale(Vector2 value) {
+        super.setDrawScale(value);
+        updateScale();
+    }
+
+    private void updateScale() {
+        if (texture != null) {
+            System.out.println("HUH " + sx + ", " + sy);
+
+            setTextureScaleX(drawScale.x * dimension.x / texture.getRegionWidth());
+            setTextureScaleY(drawScale.y * dimension.y / texture.getRegionHeight());
+        }
     }
 
     /**
