@@ -268,10 +268,10 @@ public class GrappleModel extends WheelObstacle {
                 t.y = (angle>=270||angle<90)?t.y:-t.y;
                 tr.applyTo(t);
                 canvas.draw(texture, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
-                        getAngle(), 1, 1);
+                        getAngle(), 0.018f*drawScale.x, 0.018f*drawScale.y);
             }
             canvas.draw(texture, Color.ORANGE, 3f, 3f, getX() * drawScale.x, getY() * drawScale.y,
-                    getAngle(), 1, 1);
+                    getAngle(), 0.018f*drawScale.x, 0.018f*drawScale.y);
         }
         if (vertex != null) {
             Affine2 tr = new Affine2();
@@ -284,10 +284,10 @@ public class GrappleModel extends WheelObstacle {
                 t.y = (angle>=270||angle<90)?t.y:-t.y;
                 tr.applyTo(t);
                 canvas.draw(texture, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
-                        getAngle(), 1, 1);
+                        getAngle(), 0.018f*drawScale.x, 0.018f*drawScale.y);
             }
             canvas.draw(texture, Color.ORANGE, 3f, 3f, vertex.x * drawScale.x, vertex.y * drawScale.y,
-                    getAngle(), 1, 1);
+                    getAngle(), 0.018f*drawScale.x, 0.018f*drawScale.y);
         }
 
     }
