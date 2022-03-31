@@ -124,6 +124,9 @@ public class LevelController implements ContactListener {
         if (contactObject != null) {
             if (contactObject instanceof LevelElement) {
                 ((LevelElement) contactObject).setInContact(true);
+                if(((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)) {
+                    System.out.println("SPIKE");
+                }
             }
 
             if (contactObject instanceof LETrigger) {

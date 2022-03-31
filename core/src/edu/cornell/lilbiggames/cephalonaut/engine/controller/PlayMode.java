@@ -107,10 +107,11 @@ public class PlayMode extends WorldController {
         float startX = DEFAULT_STARTING_POS_X;
         float startY = DEFAULT_STARTING_POS_Y;
         for (GameObject object : newObjects) {
-            if(object.getName() != null && object.getName().equals("start")) {
+            if(object.getName() != null &&(((LevelElement) object).getElement().equals(LevelElement.Element.START))) {
                 startX = object.getX();
                 startY = object.getY();
                 continue;
+
             }
             object.setDrawScale(scale);
             addObject(object);
