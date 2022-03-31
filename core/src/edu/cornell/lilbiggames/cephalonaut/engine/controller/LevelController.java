@@ -1,22 +1,31 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
+import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 public class LevelController implements ContactListener {
+    /*Exit code for completed level */
+    public static int COMPLETE_LEVEL = 50;
+
     /** Reference to player **/
     private final CephalonautModel cephalonaut;
 
     /** Reference to the play mode **/
     private final PlayMode playMode;
 
-    public LevelController(CephalonautModel cephalonaut, PlayMode playMode) {
+    /** Listener that will update the screen when we are done */
+    private ScreenListener listener;
+
+    public LevelController(ScreenListener listener, CephalonautModel cephalonaut, PlayMode playMode) {
         this.cephalonaut = cephalonaut;
         this.playMode = playMode;
+        this.listener = listener;
     }
 
     public void update(GameObject object, CephalonautController cephalonautController) {
@@ -119,7 +128,9 @@ public class LevelController implements ContactListener {
 
 
     public void finishLevel() {
-        System.out.println("Level finished!");
+        if (listener != null) {
+            listener.exitScreen(playMode, COMPLETE_LEVEL);
+        }
     }
 
     private GameObject getOtherBody(Contact contact, GameObject object) {
