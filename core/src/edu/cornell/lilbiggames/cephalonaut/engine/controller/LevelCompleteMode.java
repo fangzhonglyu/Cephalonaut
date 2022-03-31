@@ -30,6 +30,8 @@ public class LevelCompleteMode implements Screen {
 
     private Texture homeIcon;
 
+    private Texture starIcon;
+
     /** Reference to the game canvas */
     protected GameCanvas canvas;
 
@@ -58,6 +60,7 @@ public class LevelCompleteMode implements Screen {
 
         replayIcon = assets.getEntry("replayicon", Texture.class);
         homeIcon = assets.getEntry("homeicon", Texture.class);
+        starIcon = assets.getEntry("staricon", Texture.class);
     }
 
     @Override
@@ -163,6 +166,13 @@ public class LevelCompleteMode implements Screen {
         canvas.drawOverlay(background, true);
 
         canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
+
+        for (int i = 0; i < 3; i++) {
+            canvas.draw(starIcon, Color.GOLD,
+                    starIcon.getWidth() / 2f, starIcon.getHeight() / 2f,
+                    width / 2f - 100 + 100 * i, height / 2f + 50,
+                    0, scale.x, scale.y);
+        }
 
         canvas.draw(replayIcon, Color.WHITE,
                 replayIcon.getWidth() / 2f, replayIcon.getHeight() / 2f,
