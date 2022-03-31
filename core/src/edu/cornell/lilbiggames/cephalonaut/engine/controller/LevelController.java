@@ -28,14 +28,7 @@ public class LevelController implements ContactListener {
             ((LETriggerable) object).checkPos();
         }
         else if (object instanceof LEGlassBarrier) {
-            LEGlassBarrier glassBarrier = ((LEGlassBarrier) object);
-            Vector2 glassBarrierPos = glassBarrier.getBody().getWorldCenter();
-            Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
-
-            if (glassBarrierPos.dst(cephalonautPos) < 5.0f) {
-                float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
-                glassBarrier.willBreak(hitSpeed);
-            }
+            willHit(((LEGlassBarrier) object));
         }
 
 
@@ -91,6 +84,13 @@ public class LevelController implements ContactListener {
     public void hit(LEGlassBarrier obj) {
         float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
         obj.hit(hitSpeed);
+    }
+
+    public void willHit(LEGlassBarrier obj) {
+        Vector2 glassBarrierPos = obj.getBody().getWorldCenter();
+        Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
+        float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
+        obj.willBreak(hitSpeed, glassBarrierPos.dst(cephalonautPos));
     }
 
 

@@ -17,7 +17,7 @@ public class LEGlassBarrier extends LevelElement {
         super(def);
         this.glassBarrierHardness = def.properties.getFloat("glassBarrierHardness", DEFAULT_HARDNESS);
         this.tint = def.tint;
-        this.indicator = new Color(tint.r + 50, tint.g, tint.b, tint.a);
+        this.indicator = new Color(tint.r + 10, tint.g, tint.b, tint.a);
         this.health = this.glassBarrierHardness;
     }
 
@@ -30,14 +30,13 @@ public class LEGlassBarrier extends LevelElement {
         }
     }
 
-    public boolean willBreak(float damage) {
-        if(health - damage <= 0) {
+    public void willBreak(float damage, float distance) {
+        if(distance < 5.0f && health - damage <= 0) {
             setTint(indicator);
         }
         else {
             setTint(tint);
         }
-        return health - damage <= 0;
     }
 
     public boolean isBroken() {
