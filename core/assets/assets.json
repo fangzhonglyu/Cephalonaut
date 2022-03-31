@@ -43,7 +43,8 @@
     "mainMenu": "music/Cephalonautintromusicmix1.mp3"
   },
   "sounds":{
-    "ink": "sample ink.mp3"
+    "ink": "sample ink.mp3",
+    "suction": "TentacleSuctionSFX.mp3"
   },
   "fonts": {
     "retro": {

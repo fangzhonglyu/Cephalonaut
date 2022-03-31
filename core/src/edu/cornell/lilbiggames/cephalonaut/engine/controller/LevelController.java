@@ -64,7 +64,8 @@ public class LevelController implements ContactListener {
         Vector2 blackHolePos = blackHole.getBody().getWorldCenter();
         Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
 
-        if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange()) {
+        if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange() ||
+                blackHolePos.dst(cephalonaut.getGrapple().getPosition()) < blackHole.getBlackHoleRange()) {
             Vector2 force = blackHolePos.sub(cephalonautPos).clamp(1, 5).nor();
             float strength = blackHole.getBlackHoleAttractFactor() * cephalonaut.getMass() / force.len2();
             cephalonaut.addForce(force.scl(strength));
@@ -116,7 +117,10 @@ public class LevelController implements ContactListener {
     }
 
     public void beginContact(Contact contact) {
+        GrappleModel grapple = cephalonaut.getGrapple();
         GameObject contactObject = getOtherBody(contact, cephalonaut);
+        contactObject = contactObject == null ? getOtherBody(contact, grapple) : contactObject;
+
         if (contactObject != null) {
             if (contactObject instanceof LevelElement) {
                 ((LevelElement) contactObject).setInContact(true);
@@ -134,7 +138,6 @@ public class LevelController implements ContactListener {
             }
         }
 
-        GrappleModel grapple = cephalonaut.getGrapple();
         if (!grapple.isAnchored()) {
             contactObject = getOtherBody(contact, grapple);
             if (contactObject != null && contactObject.canGrapple()) {
@@ -147,18 +150,9 @@ public class LevelController implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-        Body body1 = contact.getFixtureA().getBody();
-        Body body2 = contact.getFixtureB().getBody();
-
-        GameObject bd1 = (GameObject) body1.getUserData();
-        GameObject bd2 = (GameObject) body2.getUserData();
-
-        GameObject contactObject = null;
-        if (bd1 instanceof CephalonautModel) {
-            contactObject = bd2;
-        } else if (bd2 instanceof CephalonautModel) {
-            contactObject = bd1;
-        }
+        GrappleModel grapple = cephalonaut.getGrapple();
+        GameObject contactObject = getOtherBody(contact, cephalonaut);
+        contactObject = contactObject == null ? getOtherBody(contact, grapple) : contactObject;
 
         if (contactObject != null) {
             if (contactObject instanceof LevelElement) {
