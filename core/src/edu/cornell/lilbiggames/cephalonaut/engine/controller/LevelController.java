@@ -27,9 +27,6 @@ public class LevelController implements ContactListener {
         } else if (object instanceof LETriggerable) {
             ((LETriggerable) object).checkPos();
         }
-//        else if (object instanceof LEGlassBarrier) {
-//            hit((LEGlassBarrier) object);
-//        }
 
         if (object instanceof LevelElement) {
             LevelElement levelElement = ((LevelElement) object);
