@@ -42,6 +42,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private MainMenuMode menuMode;
 	private PauseMode pauseMode;
 	private LevelCompleteMode levelCompleteMode;
+	private StartScreenMode startScreenMode;
 	private LevelLoader levelLoader;
 
 	/**
@@ -71,12 +72,14 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		// Initialize the game world
 		menuMode = new MainMenuMode(directory, canvas, this);
+		startScreenMode = new StartScreenMode(directory, canvas, this);
 		LevelElement.gatherAssets(directory);
 		pauseMode = new PauseMode(directory, canvas, this);
 		levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
 
 		SoundController.startMenuMusic();
-		setScreen(menuMode);
+		setScreen(startScreenMode);
+
 
 	}
 
@@ -128,8 +131,15 @@ public class GDXRoot extends Game implements ScreenListener {
 	@Override
 	public void exitScreen(Screen screen, int exitCode) {
 		SoundController.killAllSound();
-		if (exitCode == MainMenuMode.LEVEL_SELECTED_CODE) {
-			SoundController.setPlaying(true);
+		if(exitCode == StartScreenMode.START_CODE){
+			setScreen(menuMode);
+		} else if(exitCode == StartScreenMode.OPTIONS_CODE){
+			System.out.println("options");
+			setScreen(menuMode);
+		} else if(exitCode == StartScreenMode.CREDITS_CODE){
+			System.out.println("credits");
+			setScreen(menuMode);
+		} else if(exitCode == MainMenuMode.LEVEL_SELECTED_CODE){
 			selectLevel();
 		} else if (exitCode == PlayMode.EXIT_LEVEL) {
 			SoundController.setPlaying(false);

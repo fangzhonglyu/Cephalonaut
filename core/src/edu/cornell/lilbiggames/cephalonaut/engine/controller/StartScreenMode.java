@@ -10,10 +10,10 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
-public class PauseMode implements Screen {
-    public static int EXIT_LEVEL_CODE = 30;
-    public static int RESUME_LEVEL_CODE = 31;
-    public static int RESTART_LEVEL_CODE = 32;
+public class StartScreenMode implements Screen {
+    public static int START_CODE = 40;
+    public static int OPTIONS_CODE = 41;
+    public static int CREDITS_CODE = 42;
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
 
@@ -25,7 +25,7 @@ public class PauseMode implements Screen {
 
     private InputController inputController;
 
-    private String[] options = {"RESUME PLAYING", "EXIT LEVEL", "RESTART LEVEL" };
+    private String[] options = {"START", "OPTIONS", "CREDITS" };
 
     private int optionId;
 
@@ -34,12 +34,12 @@ public class PauseMode implements Screen {
     /** Reference to the game canvas */
     protected GameCanvas canvas;
 
-    public PauseMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
+    public StartScreenMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
         this.canvas = canvas;
         this.listener = listener;
         background = assets.getEntry( "main-menu:background", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-
+        
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro",BitmapFont.class);
@@ -61,13 +61,11 @@ public class PauseMode implements Screen {
         inputController.readInput(new Rectangle(), new Vector2());
 
         if(optionId == 0 && inputController.isSelectPressed()){
-            listener.exitScreen(this, RESUME_LEVEL_CODE);
+            listener.exitScreen(this, START_CODE);
         } else if(optionId == 1 && inputController.isSelectPressed()){
-            listener.exitScreen(this, EXIT_LEVEL_CODE);
+            listener.exitScreen(this, OPTIONS_CODE);
         } else if(optionId == 2 && inputController.isSelectPressed()){
-            listener.exitScreen(this, RESTART_LEVEL_CODE);
-        } else if(inputController.didExit()){
-            listener.exitScreen(this, RESUME_LEVEL_CODE);
+            listener.exitScreen(this, CREDITS_CODE);
         } else if(inputController.isUpPressed()){
             optionId = optionId == 0 ? options.length-1 : optionId-1;
         } else if(inputController.isDownPressed()){
@@ -91,12 +89,16 @@ public class PauseMode implements Screen {
     }
 
     private void drawOptions(){
+        float start = (options.length*0.5f*displayFont.getLineHeight())/2;
+        displayFont.getData().setScale(1.0f);
+        displayFont.setColor(Color.ORANGE);
+        canvas.drawTextCentered("CEPHALONAUT", displayFont, start);
+        displayFont.setColor(Color.WHITE);
         displayFont.getData().setScale(0.5f);
-        float start = (options.length* displayFont.getLineHeight())/2;
 
         for(int i = 0; i < options.length; i++){
             if(optionId == i) displayFont.setColor(Color.CYAN);
-            canvas.drawTextCentered(options[i], displayFont, start - displayFont.getLineHeight()*i);
+            canvas.drawTextCentered(options[i], displayFont, start - displayFont.getLineHeight()*i - 2*displayFont.getLineHeight());
             if(optionId == i) displayFont.setColor(Color.WHITE);
         }
         displayFont.getData().setScale(1.0f);
