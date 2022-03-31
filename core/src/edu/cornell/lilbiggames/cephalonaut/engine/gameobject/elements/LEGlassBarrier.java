@@ -11,11 +11,13 @@ public class LEGlassBarrier extends LevelElement {
     private float glassBarrierHardness;
     private float health;
     private Color tint;
+    private Color indicator;
 
     public LEGlassBarrier(LevelElement.Def def) {
         super(def);
         this.glassBarrierHardness = def.properties.getFloat("glassBarrierHardness", DEFAULT_HARDNESS);
         this.tint = def.tint;
+        this.indicator = new Color(tint.r + 50, tint.g, tint.b, tint.a);
         this.health = this.glassBarrierHardness;
     }
 
@@ -26,6 +28,16 @@ public class LEGlassBarrier extends LevelElement {
         if(health <= 0) {
             this.markRemoved(true);
         }
+    }
+
+    public boolean willBreak(float damage) {
+        if(health - damage <= 0) {
+            setTint(indicator);
+        }
+        else {
+            setTint(tint);
+        }
+        return health - damage <= 0;
     }
 
     public boolean isBroken() {

@@ -27,6 +27,17 @@ public class LevelController implements ContactListener {
         } else if (object instanceof LETriggerable) {
             ((LETriggerable) object).checkPos();
         }
+        else if (object instanceof LEGlassBarrier) {
+            LEGlassBarrier glassBarrier = ((LEGlassBarrier) object);
+            Vector2 glassBarrierPos = glassBarrier.getBody().getWorldCenter();
+            Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
+
+            if (glassBarrierPos.dst(cephalonautPos) < 5.0f) {
+                float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
+                glassBarrier.willBreak(hitSpeed);
+            }
+        }
+
 
         if (object instanceof LevelElement) {
             LevelElement levelElement = ((LevelElement) object);
@@ -80,6 +91,7 @@ public class LevelController implements ContactListener {
         float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
         obj.hit(hitSpeed);
     }
+
 
     public void finishLevel() {
         System.out.println("Level finished!");
