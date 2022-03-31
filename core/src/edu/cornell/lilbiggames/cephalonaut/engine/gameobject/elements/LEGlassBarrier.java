@@ -11,27 +11,36 @@ public class LEGlassBarrier extends LevelElement {
     private float glassBarrierHardness;
     private float health;
     private Color tint;
-    private int hitCoolDown;
+    private Color indicator;
 
     public LEGlassBarrier(LevelElement.Def def) {
         super(def);
         this.glassBarrierHardness = def.properties.getFloat("glassBarrierHardness", DEFAULT_HARDNESS);
         this.tint = def.tint;
+        this.indicator = new Color(tint.r + 10, tint.g, tint.b, tint.a);
         this.health = this.glassBarrierHardness;
-        this.hitCoolDown = 0;
     }
 
-    public float getHealth() { return health; }
-
     public void hit(float damage) {
-        if(hitCoolDown > 0) {
-            hitCoolDown -= 1;
-            return;
-        }
         health -= damage;
         tint.a -= 1 / glassBarrierHardness * damage;
         setTint(new Color(tint.r, tint.g, tint.b, tint.a));
-        hitCoolDown = 20;
+        if(health <= 0) {
+            this.markRemoved(true);
+        }
+    }
+
+    public void willBreak(float damage, float distance) {
+        if(distance < 5.0f && health - damage <= 0) {
+            setTint(indicator);
+        }
+        else {
+            setTint(tint);
+        }
+    }
+
+    public boolean isBroken() {
+        return health <= 0;
     }
 }
 

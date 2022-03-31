@@ -26,9 +26,11 @@ public class LevelController implements ContactListener {
             attract((LEBlackHole) object);
         } else if (object instanceof LETriggerable) {
             ((LETriggerable) object).checkPos();
-        } else if (object instanceof LEGlassBarrier) {
-            hit((LEGlassBarrier) object);
         }
+        else if (object instanceof LEGlassBarrier) {
+            willHit(((LEGlassBarrier) object));
+        }
+
 
         if (object instanceof LevelElement) {
             LevelElement levelElement = ((LevelElement) object);
@@ -80,21 +82,17 @@ public class LevelController implements ContactListener {
     }
 
     public void hit(LEGlassBarrier obj) {
+        float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
+        obj.hit(hitSpeed);
+    }
+
+    public void willHit(LEGlassBarrier obj) {
         Vector2 glassBarrierPos = obj.getBody().getWorldCenter();
         Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
-        if(!obj.getInContact() && glassBarrierPos.dst(cephalonautPos) > .8) {
-            return;
-        }
         float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
-        if(!obj.getInContact() && hitSpeed < 1) {
-            return;
-        }
-        obj.hit(hitSpeed);
-        if(obj.getHealth() <= 0) {
-            obj.markRemoved(true);
-            cephalonaut.setVX(cephalonaut.getVX() * .5f);
-        }
+        obj.willBreak(hitSpeed, glassBarrierPos.dst(cephalonautPos));
     }
+
 
     public void finishLevel() {
         System.out.println("Level finished!");
@@ -122,8 +120,12 @@ public class LevelController implements ContactListener {
         contactObject = contactObject == null ? getOtherBody(contact, grapple) : contactObject;
 
         if (contactObject != null) {
+
             if (contactObject instanceof LevelElement) {
                 ((LevelElement) contactObject).setInContact(true);
+                if(((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)) {
+                    System.out.println("SPIKE");
+                }
             }
 
             if (contactObject instanceof LETrigger) {
@@ -136,6 +138,7 @@ public class LevelController implements ContactListener {
                 LEGlassBarrier glassBarrier = (LEGlassBarrier) contactObject;
                 hit(glassBarrier);
             }
+
         }
 
         if (!grapple.isAnchored()) {
@@ -162,9 +165,22 @@ public class LevelController implements ContactListener {
     }
 
     @Override
-    public void preSolve(Contact contact, Manifold oldManifold) { }
+    public void preSolve(Contact contact, Manifold oldManifold) {
+        GameObject contactObject = getOtherBody(contact, cephalonaut);
+        if (contactObject != null) {
+            if (contactObject instanceof LEGlassBarrier) {
+                LEGlassBarrier glassBarrier = (LEGlassBarrier) contactObject;
+                if(glassBarrier.isBroken()) {
+                    contact.setEnabled(false);
+                    cephalonaut.setVX(cephalonaut.getVX() * .7f);
+                }
+            }
+        }
+    }
 
     @Override
-    public void postSolve(Contact contact, ContactImpulse impulse) { }
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
+    }
 
 }
