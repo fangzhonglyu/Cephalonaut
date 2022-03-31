@@ -129,6 +129,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void exitScreen(Screen screen, int exitCode) {
 		if (exitCode == MainMenuMode.LEVEL_SELECTED_CODE) {
 			selectLevel();
+			setScreen(levelCompleteMode);
 		} else if (exitCode == PlayMode.EXIT_LEVEL) {
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			pauseMode.setDefault();
