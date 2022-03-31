@@ -273,7 +273,7 @@ public class GrappleModel extends WheelObstacle {
             canvas.draw(texture, Color.ORANGE, 3f, 3f, getX() * drawScale.x, getY() * drawScale.y,
                     getAngle(), 0.018f*drawScale.x, 0.018f*drawScale.y);
         }
-        if (vertex != null) {
+        if (vertex != null ) {
             Affine2 tr = new Affine2();
             tr.preTranslate(cephP.x, cephP.y);
             float angle = vertex.cpy().sub(cephP).angleDeg();

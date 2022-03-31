@@ -145,6 +145,7 @@ public class LevelController implements ContactListener {
             contactObject = getOtherBody(contact, grapple);
             if (contactObject != null && contactObject.canGrapple()) {
                 grapple.setAnchored(true);
+                SoundController.playSound(0,1);
                 grapple.setExtensionLength(1 + cephalonaut.getPosition().dst(contactObject.getPosition()));
                 grapple.setAnchorLocation(contactObject.getName());
             }
