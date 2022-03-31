@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.OctopusObstacle;
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 
 /**
  * Player avatar for the gameplay prototype.
@@ -33,6 +34,12 @@ public class CephalonautModel extends OctopusObstacle {
 
 	/** The tentacle's texture */
 	private Texture tentacleTexture;
+
+	/** The Filmstrip for the cephalonaut*/
+	private FilmStrip filmstrip;
+
+	/** Animation Counter*/
+	private float frame;
 
 	/** Cache object for transforming the force according the object angle */
 	private final Affine2 affineCache = new Affine2();
@@ -112,7 +119,7 @@ public class CephalonautModel extends OctopusObstacle {
 	 * converts the physics units to pixels.
 	 *
 	 */
-	public CephalonautModel(float x, float y, float width, float height, Vector2 drawScale) {
+	public CephalonautModel(float x, float y, float width, float height, Vector2 drawScale,FilmStrip filmstrip) {
 		// The shrink factors fit the image to a tighter hitbox
 		super(x, y, width, height);
 		setName("michael");
@@ -121,7 +128,9 @@ public class CephalonautModel extends OctopusObstacle {
 		setFriction(0);
 		setRestitution(0.1f);
 		setFixedRotation(false);
-
+		this.filmstrip = filmstrip;
+		this.filmstrip.setFrame(0);
+		frame = 0;
 		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.WHITE);
 		pixmap.fillRectangle(0, 0, 1, 1);
@@ -211,8 +220,22 @@ public class CephalonautModel extends OctopusObstacle {
 	 */
 	public void update(float dt) {
 		super.update(dt);
+		frame += dt*10f;
+		if(frame>1) {
+			frame--;
+			if(filmstrip.getFrame()!=0) {
+				if (filmstrip.getFrame() < filmstrip.getSize() - 1)
+					filmstrip.setFrame(filmstrip.getFrame() + 1);
+				else {
+					filmstrip.setFrame(0);
+				}
+			}
+		}
+
 		if (inking && ink > 0.0f) {
 			ink -= 0.006f;
+			if(filmstrip.getFrame()==0)
+				filmstrip.setFrame(1);
 		} else if (!inking && ink < 1.0f) {
 			ink += 0.004f;
 		}
@@ -225,23 +248,18 @@ public class CephalonautModel extends OctopusObstacle {
 	 * @param canvas Drawing context
 	 */
 	public void draw(GameCanvas canvas) {
-		if (grapple.isOut()) {
-			float distance = getPosition().dst(grapple.getPosition());
-			float angle = getPosition().cpy().sub(grapple.getPosition()).angleRad() + (float) Math.PI / 2f;
-			Vector2 middle = getPosition().cpy().add(grapple.getPosition()).scl(0.5f);
-			Color tint = grapple.isGrappling() ? Color.RED : Color.GREEN;
-			//canvas.draw(tentacleTexture, tint, 0.5f, 0.5f, middle.x * drawScale.x, middle.y * drawScale.y,
-			//		angle, 5, distance * drawScale.x);
-		}
 		grapple.draw(canvas, getPosition());
-		if (isInking() && ink > 0) {
-			Vector2 behind = new Vector2();
-			behind.set(0, getHeight()).setAngleRad(getAngle() - (float) Math.PI / 2f).add(getPosition());
-			canvas.draw(tentacleTexture, Color.PURPLE, 0.5f, 0.5f, behind.x * drawScale.x, behind.y * drawScale.y,
-					getAngle(), 10, 50);
-		}
 
-		super.draw(canvas);
+		//animation
+
+		float ox = 0.5f * filmstrip.getRegionWidth();
+		float oy = 0.55f * filmstrip.getRegionHeight();
+		canvas.draw(filmstrip, Color.WHITE, ox, oy,
+				getX() * drawScale.x, getY() * drawScale.y,
+				getAngle(), 0.004f* drawScale.x, 0.004f*drawScale.y);
+
+		//fuel bar
+		canvas.drawSimpleFuelBar(ink, canvas.getWidth() - 150, canvas.getHeight() - 70);
 	}
 	
 	/**
