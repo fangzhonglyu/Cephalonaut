@@ -28,6 +28,8 @@ public class LevelCompleteMode implements Screen {
 
     private Texture replayIcon;
 
+    private Texture homeIcon;
+
     /** Reference to the game canvas */
     protected GameCanvas canvas;
 
@@ -55,6 +57,7 @@ public class LevelCompleteMode implements Screen {
         this.assets = assets;
 
         replayIcon = assets.getEntry("replayicon", Texture.class);
+        homeIcon = assets.getEntry("homeicon", Texture.class);
     }
 
     @Override
@@ -80,11 +83,11 @@ public class LevelCompleteMode implements Screen {
         inputController.readInput(new Rectangle(), new Vector2());
         if (clickedRestart()) {
             listener.exitScreen(this, RESTART_LEVEL_CODE);
+        } else if (clickedHome()) {
+            listener.exitScreen(this, EXit_LEVEL_CODE);
         }
-        // if next
+        // else if next
             // switch to next level screen
-        //if exit
-            // switch to menu screen
     }
 
     @Override
@@ -120,8 +123,29 @@ public class LevelCompleteMode implements Screen {
             mouseY = height - Gdx.input.getY();
         }
 
-        if (((width / 2f - 200) - rWidth / 2f <= mouseX && mouseX <= (width / 2f - 200) + rWidth / 2f ) &&
+        if (((width / 2f - 100) - rWidth / 2f <= mouseX && mouseX <= (width / 2f - 100) + rWidth / 2f ) &&
                 ((height / 2f - 200) - rHeight / 2f <= mouseY && mouseY <= (height / 2f - 200) + rHeight / 2f )) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean clickedHome() {
+        float mouseX = -10;
+        float mouseY = -10;
+        float height = canvas.getHeight();
+        float width = canvas.getWidth();
+        float hHeight = homeIcon.getHeight();
+        float hWidth = homeIcon.getWidth();
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            mouseX = Gdx.input.getX();
+            mouseY = height - Gdx.input.getY();
+        }
+
+        if (((width / 2f + 100) - hWidth / 2f <= mouseX && mouseX <= (width / 2f + 100) + hWidth / 2f ) &&
+                ((height / 2f - 200) - hHeight / 2f <= mouseY && mouseY <= (height / 2f - 200) + hHeight / 2f )) {
             return true;
         }
 
@@ -142,7 +166,12 @@ public class LevelCompleteMode implements Screen {
 
         canvas.draw(replayIcon, Color.WHITE,
                 replayIcon.getWidth() / 2f, replayIcon.getHeight() / 2f,
-                width / 2f - 200, height / 2f - 200,
+                width / 2f - 100, height / 2f - 200,
+                0, scale.x, scale.y);
+
+        canvas.draw(homeIcon, Color.WHITE,
+                homeIcon.getWidth() / 2f, homeIcon.getHeight() / 2f,
+                width / 2f + 100, height / 2f - 200,
                 0, scale.x, scale.y);
 
         canvas.end();
