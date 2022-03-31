@@ -66,6 +66,7 @@ public class CephalonautController {
                 world.destroyJoint(grappleJoint3);
                 grappleJoint3 = null;
             }
+            grapple.vertex = grapple.getPosition().cpy();
             grapple.reset();
             grapple.setPosition(cephalonaut.getPosition().cpy());
         }

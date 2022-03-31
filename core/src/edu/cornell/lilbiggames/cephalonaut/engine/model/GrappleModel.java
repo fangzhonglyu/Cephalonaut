@@ -258,12 +258,14 @@ public class GrappleModel extends WheelObstacle {
         if (isOut) {
             Affine2 tr = new Affine2();
             tr.preTranslate(cephP.x, cephP.y);
-            tr.rotate(getPosition().sub(cephP).angleDeg());
+            float angle = getPosition().sub(cephP).angleDeg();
+            tr.rotate(angle);
             float dist = getPosition().dst(cephP);
             for (float i = 0; i < getPosition().dst(cephP) / 2; i += 1 / drawScale.x) {
                 Vector2 t = new Vector2(i * 2, (float) (-Math.sin(i * 5) - Math.cos(i * 4)) / (dist + 0.3f) / 2f * (float) Math.sqrt(Math.sqrt(1 - i * 2 / dist)));
                 if (isLocked > 0)
                     t.set(t.x, t.y * (8 - isLocked) / 8);
+                t.y = (angle>=270||angle<90)?t.y:-t.y;
                 tr.applyTo(t);
                 canvas.draw(texture, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
                         getAngle(), 1, 1);
@@ -274,10 +276,12 @@ public class GrappleModel extends WheelObstacle {
         if (vertex != null) {
             Affine2 tr = new Affine2();
             tr.preTranslate(cephP.x, cephP.y);
-            tr.rotate(vertex.cpy().sub(cephP).angleDeg());
+            float angle = vertex.cpy().sub(cephP).angleDeg();
+            tr.rotate(angle);
             float dist = vertex.dst(cephP);
             for (float i = 0; i < vertex.dst(cephP) / 2; i += 1 / drawScale.x) {
                 Vector2 t = new Vector2(i * 2, (float) (-Math.sin(i * 5) - Math.cos(i * 4)) / (dist + 0.7f) / 2f * (float) Math.sqrt(Math.sqrt(1 - i * 2 / dist)));
+                t.y = (angle>=270||angle<90)?t.y:-t.y;
                 tr.applyTo(t);
                 canvas.draw(texture, Color.ORANGE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
                         getAngle(), 1, 1);
