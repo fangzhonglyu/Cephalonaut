@@ -155,5 +155,6 @@ public class SoundController {
         for(int i = 0; i<soundCache.length;i++){
             killSound(i);
         }
+        setInkSound(false);
     }
 }
