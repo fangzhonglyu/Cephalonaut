@@ -240,7 +240,7 @@ public class GameCanvas {
 			Gdx.graphics.setWindowedMode(width, height);
 		}
 		resize();
-
+		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 	}
 	
 	/**
@@ -286,6 +286,7 @@ public class GameCanvas {
 	 public void resize() {
 		// Resizing screws up the spriteBatch projection matrix
 		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
+		camera.setToOrtho(false, getWidth(), getHeight());
 	}
 	
 	/**
@@ -293,7 +294,7 @@ public class GameCanvas {
 	 *
 	 * Textures draw to this canvas will be composited according
 	 * to the rules of this blend state.
-	 *
+	 *a
 	 * @return the current color blending state for this canvas
 	 */
 	public BlendState getBlendState() {
@@ -680,9 +681,9 @@ public class GameCanvas {
 		spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
 	}
 
-	public void drawSimpleFuelBar(float ink,float sx, float sy){
-		float x = getWidth()*0.93f/sx;
-		float y = getHeight()*0.97f/sy;
+	public void drawSimpleFuelBar(float ink){
+		float x = getWidth()*0.93f;
+		float y = getHeight()*0.97f;
 		spriteBatch.end();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(Color.WHITE);

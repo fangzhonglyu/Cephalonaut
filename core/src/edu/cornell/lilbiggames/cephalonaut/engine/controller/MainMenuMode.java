@@ -1,12 +1,14 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 public class MainMenuMode implements Screen {
@@ -19,6 +21,8 @@ public class MainMenuMode implements Screen {
 
     /** Listener that will move to selected level when we are done */
     private ScreenListener listener;
+
+//    ImageObject background;
 
     /** Background texture for start-up */
     private Texture background;
@@ -51,8 +55,10 @@ public class MainMenuMode implements Screen {
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro",BitmapFont.class);
 
-        background = assets.getEntry( "main-menu:background", Texture.class );
-        background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        background = assets.getEntry( "main-menu:background", Texture.class);
+        background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+//        background = new ImageObject(assets.getEntry( "main-menu:background", Texture.class));
+//        background.setDrawScale(100, 100);
         this.assets = assets;
 
         curLevel = DEFAULT_LEVEL;
@@ -79,7 +85,9 @@ public class MainMenuMode implements Screen {
     @Override
     public void resize(int width, int height) {
         scale.x = canvas.getWidth()/bounds.x;
-        scale.y = canvas.getHeight()/bounds.y;
+        scale.y = scale.x;
+//        scale.y = canvas.getHeight()/bounds.y;
+//        background.setDrawScale(scale.x, scale.y);
         canvas.setCameraPos(0.5f*width,0.5f*height);
     }
 
@@ -132,14 +140,24 @@ public class MainMenuMode implements Screen {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
-        canvas.draw(background, 0.5f*canvas.getWidth()-canvas.getCameraX()/scale.x, 0.5f*canvas.getHeight()-canvas.getCameraY()/scale.y , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth()/scale.x, (float)height/(float)background.getHeight()/scale.y);
+//        background.draw(canvas);
+
+        canvas.draw(background,
+                0.5f*canvas.getWidth()-canvas.getCameraX(),
+                0.5f*canvas.getHeight()-canvas.getCameraY(),
+                0, 0, background.getWidth() * 10, background.getHeight() * 10,
+                20,
+                20);
 
         float levelIconWidth = levelIcon.getWidth();
         float levelIconHeight = levelIcon.getHeight();
 
-        canvas.draw(levelIcon, (width/2 - 0.25f*levelIconWidth), (height/2 - 0.25f*levelIconHeight), 0, 0, levelIcon.getWidth(), levelIcon.getHeight(), 0.5f, 0.5f);
+        canvas.draw(levelIcon, Color.WHITE,
+                    levelIconWidth / 2f, levelIconHeight / 2f,
+                    width / 2f, height / 2f,
+                    0, scale.x / 2f, scale.y / 2f);
 
-        canvas.drawTextCentered("LEVEL: " + curLevel, displayFont, -height/4);
+        canvas.drawTextCentered("LEVEL: " + curLevel, displayFont, -levelIconHeight / 4f * scale.y - 60f);
 
         canvas.end();
     }

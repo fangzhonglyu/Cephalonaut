@@ -241,9 +241,7 @@ public class CephalonautModel extends OctopusObstacle {
 					getAngle(), 10, 50);
 		}
 
-		canvas.draw(texture, Color.WHITE, origin.x, origin.y,
-				getX() * drawScale.x, getY() * drawScale.y,
-				getAngle(), 1, 1);
+		super.draw(canvas);
 	}
 	
 	/**

@@ -377,10 +377,10 @@ public class InputController {
 		thrusterApplied = Gdx.input.isKeyPressed(Input.Keys.W);
 		
 		// Mouse results
-		crosshair.set(Gdx.input.getX(), Gdx.input.getY());
-		crosshair.scl(1/scale.x,-1/scale.y);
-		crosshair.y += bounds.height;
-		clampPosition(bounds);
+		crosshair.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+		crosshair.scl(1/scale.x,1/scale.y);
+		// TODO: Clamp correctly
+//		clampPosition(bounds);
 	}
 	
 	/**

@@ -92,8 +92,8 @@ public abstract class WorldController implements Screen {
 	/** The boundary of the world */
 	protected Rectangle bounds;
 	/** The world scale */
-	protected Vector2 scale, Oscale;
-	
+	protected Vector2 scale; //, Oscale;
+
 	/** Whether or not this is an active controller */
 	private boolean active;
 	/** Whether we have completed this level */
@@ -207,9 +207,10 @@ public abstract class WorldController implements Screen {
 	 */
 	public void setCanvas(GameCanvas canvas) {
 		this.canvas = canvas;
+		// TODO: look into this
 		this.scale.x = canvas.getWidth()/bounds.getWidth();
 		this.scale.y = canvas.getHeight()/bounds.getHeight();
-		this.Oscale = scale.cpy();
+//		this.Oscale = scale.cpy();
 	}
 	
 	/**
@@ -220,7 +221,7 @@ public abstract class WorldController implements Screen {
 	 * world, not the screen.
 	 */
 	protected WorldController() {
-		this(new Rectangle(0,0,DEFAULT_WIDTH,DEFAULT_HEIGHT), 
+		this(new Rectangle(0,0,DEFAULT_WIDTH,DEFAULT_HEIGHT),
 			 new Vector2(0,DEFAULT_GRAVITY));
 	}
 
@@ -252,7 +253,7 @@ public abstract class WorldController implements Screen {
 	protected WorldController(Rectangle bounds, Vector2 gravity) {
 		world = new World(gravity,false);
 		this.bounds = new Rectangle(bounds);
-		this.scale = new Vector2(1,1);
+		this.scale = new Vector2(1, 1);
 		complete = false;
 		failed = false;
 		debug  = false;
@@ -517,8 +518,12 @@ public abstract class WorldController implements Screen {
 	 */
 	@Override
 	public void resize(int width, int height) {
-		scale.x = canvas.getWidth()/bounds.getWidth();
-		scale.y = canvas.getHeight()/bounds.getHeight();
+		float tilesPerRow = 32;
+		scale.x = canvas.getWidth() / tilesPerRow;
+		scale.y = scale.x;
+//		scale.y = canvas.getHeight() / bounds.getHeight();
+		System.out.println(scale);
+		canvas.setSize(width, height);
 		canvas.resize();
 	}
 

@@ -8,7 +8,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 
 public class ImageObject extends GameObject {
 
-    private Texture texture;
+    private final Texture texture;
 
     public ImageObject (Texture texture) {
         this.texture = texture;
@@ -23,8 +23,8 @@ public class ImageObject extends GameObject {
 
     @Override
     public void draw(GameCanvas canvas) {
-        float offsetX = canvas.getCameraX() * parallaxFactor.x;
-        float offsetY = canvas.getCameraY() * parallaxFactor.y;
+        int offsetX = (int) (canvas.getCameraX() * parallaxFactor.x);
+        int offsetY = (int) (canvas.getCameraY() * parallaxFactor.y);
         canvas.draw(texture, -5000 + offsetX, -5000 + offsetY, 0, 0, 10000, 10000, drawScale.x, drawScale.y);
     }
 

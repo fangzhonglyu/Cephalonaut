@@ -57,7 +57,7 @@ public class PlayMode extends WorldController implements Screen {
     static private final float DEFAULT_STARTING_POS_Y = 10.0f;
 
     // Matias: What's this variable for?
-    private Vector2 canvasO;
+//    private Vector2 canvasO;
     // Matias: We shouldn't do this bc objects have state which change from loading to restarting
     // TODO: Change
     private Queue<GameObject> defaultObjects;
@@ -73,7 +73,7 @@ public class PlayMode extends WorldController implements Screen {
         setComplete(false);
         setFailure(false);
         directionalGrapple = true;
-        canvasO = new Vector2(1920,1080);
+//        canvasO = new Vector2(1920,1080);
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -206,17 +206,27 @@ public class PlayMode extends WorldController implements Screen {
 
             boolean grappleButton = input.didSecondary();
             boolean ungrappleButton = input.didTertiary();
+
             Vector2 crossHair = input.getCrossHair().add(
                     (canvas.getCameraX() - canvas.getWidth() / 2f) / scale.x,
                     (canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
+
             boolean inking = input.isThrusterApplied();
             float rotation = input.getRotation();
 
             cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
-            canvas.setCameraPos(cephalonaut.getX() * Oscale.x, cephalonaut.getY() * Oscale.y);
+            canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
         }
 
 
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        for (GameObject object : objects) {
+            object.setDrawScale(scale);
+        }
     }
 
     /**
@@ -238,7 +248,7 @@ public class PlayMode extends WorldController implements Screen {
 
             selector.draw(canvas);
             cephalonaut.draw(canvas);
-            canvas.drawSimpleFuelBar(cephalonaut.getInk(),scale.x/Oscale.x,scale.y/Oscale.y);
+            canvas.drawSimpleFuelBar(cephalonaut.getInk());
             canvas.end();
 
             if (isDebug()) {

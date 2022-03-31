@@ -276,7 +276,10 @@ public class LevelLoader {
                     }
                     break;
                 case "imagelayer":
-                    Texture image = assetDirectory.getEntry(layer.getString("image"), Texture.class);
+                    String path = layer.getString("image");
+                    String filename = path.substring(path.lastIndexOf("/") + 1);
+                    System.out.println(filename);
+                    Texture image = assetDirectory.getEntry(filename, Texture.class);
                     image.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
                     ImageObject imageObject = new ImageObject(image);
                     imageObject.setParallaxFactor(parallax);
