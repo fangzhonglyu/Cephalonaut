@@ -915,6 +915,104 @@ public class GameCanvas {
 		}
 	}
 
+	/**
+	 * Draw an unscaled overlay image.
+	 *
+	 * An overlay image is one that is not scaled by the global transform
+	 * This is ideal for backgrounds, foregrounds and uniform HUDs that do not
+	 * track the camera.
+	 *
+	 * @param image Texture to draw as an overlay
+	 * @param x 	The x-coordinate of the bottom left corner
+	 * @param y 	The y-coordinate of the bottom left corner
+	 */
+	public void drawOverlay(Texture image, float x, float y) {
+		if (active != DrawPass.STANDARD) {
+			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+			return;
+		}
+		drawOverlay(image,Color.WHITE,x,y);
+	}
+
+	/**
+	 * Draw an unscaled overlay image tinted by the given color.
+	 *
+	 * An overlay image is one that is not scaled by the global transform
+	 * This is ideal for backgrounds, foregrounds and uniform HUDs that do not
+	 * track the camera.
+	 *
+	 * The texture colors will be multiplied by the given color.  This will turn
+	 * any white into the given color.  Other colors will be similarly affected.
+	 *
+	 * @param image Texture to draw as an overlay
+	 * @param tint  The color tint
+	 * @param x 	The x-coordinate of the bottom left corner
+	 * @param y 	The y-coordinate of the bottom left corner
+	 */
+	public void drawOverlay(Texture image, Color tint, float x, float y) {
+		if (active != DrawPass.STANDARD) {
+			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+			return;
+		}
+		spriteBatch.setColor(tint);
+		spriteBatch.draw(image, x, y);
+	}
+
+	/**
+	 * Draw an stretched overlay image.
+	 *
+	 * An overlay image is one that is not scaled by the global transform
+	 * This is ideal for backgrounds, foregrounds and uniform HUDs that do not
+	 * track the camera.
+	 *
+	 * The image will be drawn starting at the bottom right corner, and will
+	 * be stretched to fill the whole screen if appropriate.
+	 *
+	 * @param image Texture to draw as an overlay
+	 * @param fill	Whether to stretch the image to fill the screen
+	 */
+	public void drawOverlay(Texture image, boolean fill) {
+		if (active != DrawPass.STANDARD) {
+			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+			return;
+		}
+		drawOverlay(image,Color.WHITE,fill);
+	}
+
+	/**
+	 * Draw an stretched overlay image tinted by the given color.
+	 *
+	 * An overlay image is one that is not scaled by the global transform
+	 * This is ideal for backgrounds, foregrounds and uniform HUDs that do not
+	 * track the camera.
+	 *
+	 * The image will be drawn starting at the bottom right corner, and will
+	 * be stretched to fill the whole screen if appropriate.
+	 *
+	 * The texture colors will be multiplied by the given color.  This will turn
+	 * any white into the given color.  Other colors will be similarly affected.
+	 *
+	 * @param image Texture to draw as an overlay
+	 * @param tint  The color tint
+	 * @param fill	Whether to stretch the image to fill the screen
+	 */
+	public void drawOverlay(Texture image, Color tint, boolean fill) {
+		if (active != DrawPass.STANDARD) {
+			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+			return;
+		}
+		float w, h;
+		if (fill) {
+			w = getWidth();
+			h = getHeight();
+		} else {
+			w = image.getWidth();
+			h = image.getHeight();
+		}
+		spriteBatch.setColor(tint);
+		spriteBatch.draw(image, 0, 0, w, h);
+	}
+
     /**
      * Draws text on the screen.
      *

@@ -41,6 +41,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private PlayMode playMode;
 	private MainMenuMode menuMode;
 	private PauseMode pauseMode;
+	private LevelCompleteMode levelCompleteMode;
 	private LevelLoader levelLoader;
 
 	/**
@@ -72,6 +73,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		menuMode = new MainMenuMode(directory, canvas, this);
 		LevelElement.gatherAssets(directory);
 		pauseMode = new PauseMode(directory, canvas, this);
+		levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
 
 		SoundController.startMenuMusic();
 		setScreen(menuMode);
@@ -125,23 +127,25 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	@Override
 	public void exitScreen(Screen screen, int exitCode) {
-		if(exitCode == MainMenuMode.LEVEL_SELECTED_CODE){
+		if (exitCode == MainMenuMode.LEVEL_SELECTED_CODE) {
 			selectLevel();
-		} else if(exitCode == PlayMode.EXIT_LEVEL){
+		} else if (exitCode == PlayMode.EXIT_LEVEL) {
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			pauseMode.setDefault();
 			setScreen(pauseMode);
-		} else if (exitCode == PauseMode.EXIT_LEVEL_CODE){
+		} else if (exitCode == PauseMode.EXIT_LEVEL_CODE || exitCode == LevelCompleteMode.EXit_LEVEL_CODE) {
 			SoundController.startMenuMusic();
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			setScreen(menuMode);
-		} else if(exitCode == PauseMode.RESUME_LEVEL_CODE){
+		} else if (exitCode == PauseMode.RESUME_LEVEL_CODE) {
 			playMode.resume();
 			setScreen(playMode);
-		} else if(exitCode == PauseMode.RESTART_LEVEL_CODE){
+		} else if (exitCode == PauseMode.RESTART_LEVEL_CODE || exitCode == LevelCompleteMode.RESTART_LEVEL_CODE) {
 			playMode.reset();
 			playMode.resume();
 			setScreen(playMode);
+		} else if (exitCode == LevelController.COMPLETE_LEVEL) {
+			setScreen(levelCompleteMode);
 		}
 	}
 

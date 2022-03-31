@@ -118,7 +118,7 @@ public class PlayMode extends WorldController implements Screen {
         setFailure(false);
         populateLevel(newObjects);
 
-        levelController = new LevelController(cephalonaut, this);
+        levelController = new LevelController(listener, cephalonaut, this);
         world.setContactListener(levelController);
         GrappleModel grapple = cephalonaut.getGrapple();
         grapple.reset();
