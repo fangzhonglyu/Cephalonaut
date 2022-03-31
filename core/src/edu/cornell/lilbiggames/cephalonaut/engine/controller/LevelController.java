@@ -64,7 +64,8 @@ public class LevelController implements ContactListener {
         Vector2 blackHolePos = blackHole.getBody().getWorldCenter();
         Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
 
-        if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange()) {
+        if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange() ||
+                blackHolePos.dst(cephalonaut.getGrapple().getPosition()) < blackHole.getBlackHoleRange()) {
             Vector2 force = blackHolePos.sub(cephalonautPos).clamp(1, 5).nor();
             float strength = blackHole.getBlackHoleAttractFactor() * cephalonaut.getMass() / force.len2();
             cephalonaut.addForce(force.scl(strength));
