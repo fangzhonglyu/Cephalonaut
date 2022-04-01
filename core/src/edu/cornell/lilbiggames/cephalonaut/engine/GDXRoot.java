@@ -155,6 +155,9 @@ public class GDXRoot extends Game implements ScreenListener {
 			playMode.setFailure(false);
 			SoundController.killAllSound();
 			setScreen(levelCompleteMode);
+		} else if (exitCode == LevelCompleteMode.NEXT_LEVEL_CODE) {
+			menuMode.nextLevel();
+			selectLevel();
 		}
 	}
 

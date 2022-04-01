@@ -113,6 +113,9 @@ public class MainMenuMode implements Screen {
         return curLevel;
     }
 
+    public void nextLevel() {
+        curLevel = (curLevel + 1) % NUM_LEVELS;
+    }
 
     @Override
     public void pause() {
