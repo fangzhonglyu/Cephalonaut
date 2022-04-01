@@ -129,27 +129,34 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void exitScreen(Screen screen, int exitCode) {
 		SoundController.killAllSound();
 		if (exitCode == MainMenuMode.LEVEL_SELECTED_CODE) {
+			SoundController.setPlaying(true);
 			selectLevel();
 		} else if (exitCode == PlayMode.EXIT_LEVEL) {
+			SoundController.setPlaying(false);
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			pauseMode.setDefault();
 			setScreen(pauseMode);
 		} else if (exitCode == PauseMode.EXIT_LEVEL_CODE || exitCode == LevelCompleteMode.EXit_LEVEL_CODE) {
 			SoundController.startMenuMusic();
+			SoundController.setPlaying(false);
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			setScreen(menuMode);
 		} else if (exitCode == PauseMode.RESUME_LEVEL_CODE) {
+			SoundController.setPlaying(true);
 			playMode.resume();
 			setScreen(playMode);
 		} else if (exitCode == PauseMode.RESTART_LEVEL_CODE || exitCode == LevelCompleteMode.RESTART_LEVEL_CODE) {
+			SoundController.setPlaying(true);
 			playMode.reset();
 			playMode.resume();
 			setScreen(playMode);
 		} else if (exitCode == LevelController.COMPLETE_LEVEL) {
+			SoundController.setPlaying(false);
 			playMode.setComplete(true);
 			playMode.setFailure(false);
 			setScreen(levelCompleteMode);
 		} else if (exitCode == LevelCompleteMode.NEXT_LEVEL_CODE) {
+			SoundController.setPlaying(true);
 			menuMode.nextLevel();
 			selectLevel();
 		}

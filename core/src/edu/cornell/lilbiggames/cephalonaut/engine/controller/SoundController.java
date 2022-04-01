@@ -26,6 +26,9 @@ public class SoundController {
     /** Whether the ink sound is playing */
     private static boolean inkPlaying = false;
 
+    /** Whether someone is playing */
+    private static boolean playing = false;
+
     /** Gather assets. NEEDS TO BE CALLED BEFORE USE*/
     public synchronized static void gatherSoundAssets(AssetDirectory directory) {
         for (int i = 0; i < MENU_MUSIC_INDEX; i++) {
@@ -43,14 +46,20 @@ public class SoundController {
      * @param thrust whether to play the sound or not
      */
     public synchronized static void setInkSound(boolean thrust) {
-        if (inkPlaying && !thrust) {
-            inkPlaying = false;
-            inkSound.stop();
+        if (playing) {
+            if (inkPlaying && !thrust) {
+                inkPlaying = false;
+                inkSound.stop();
+            }
+            if (!inkPlaying && thrust) {
+                inkPlaying = true;
+                inkSound.loop();
+            }
         }
-        if (!inkPlaying && thrust) {
-            inkPlaying = true;
-            inkSound.loop();
-        }
+    }
+
+    public synchronized static void setPlaying(boolean play) {
+        playing = play;
     }
 
     /**
