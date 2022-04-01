@@ -11,10 +11,14 @@ import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETrigger;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETriggerable;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 
 import java.util.Map;
 
@@ -27,6 +31,7 @@ public class PlayMode extends WorldController implements Screen {
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
+    private Texture octopusInkStrip;
 
     /** Controller that handles cephalonaut movement (grappling and inking) */
     private CephalonautController cephalonautController;
@@ -129,10 +134,16 @@ public class PlayMode extends WorldController implements Screen {
         float startX = DEFAULT_STARTING_POS_X;
         float startY = DEFAULT_STARTING_POS_Y;
         for (GameObject object : newObjects) {
-            if(object.getName() != null && object.getName().equals("start")) {
+            if(object.getName() != null &&(((LevelElement) object).getElement().equals(LevelElement.Element.START))) {
                 startX = object.getX();
                 startY = object.getY();
                 continue;
+
+            }
+            if (object instanceof LETrigger) {
+                ((LETrigger) object).setActivated(false);
+            } else if (object instanceof LETriggerable) {
+                ((LETriggerable) object).setActivated(false);
             }
             object.setDrawScale(scale);
             addObject(object);
@@ -142,8 +153,9 @@ public class PlayMode extends WorldController implements Screen {
         // Make the cephalonaut
         float dwidth  = octopusTexture.getRegionWidth()/scale.x;
         float dheight = octopusTexture.getRegionHeight()/scale.y;
-        cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight, scale);
-        cephalonaut.setTexture(octopusTexture);
+
+        FilmStrip cephInkFilm = new FilmStrip(octopusInkStrip,1,7);
+        cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight, scale, cephInkFilm);
         cephalonautController = new CephalonautController(world, cephalonaut);
 
         addObject(cephalonaut);
@@ -168,6 +180,7 @@ public class PlayMode extends WorldController implements Screen {
         // Allocate the tiles
         earthTile = new TextureRegion(directory.getEntry( "earth", Texture.class ));
         octopusTexture = new TextureRegion(directory.getEntry( "octopus.png", Texture.class ));
+        octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
     }
 

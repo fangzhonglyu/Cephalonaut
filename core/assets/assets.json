@@ -8,6 +8,7 @@
     "barrier": "barrier.png",
     "squid.png": "squid.png",
     "octopus.png": "octopus.png",
+    "octopusInk": "A-Michael-Inking.png",
     "crosshair": "crosshair.png",
     "BG-purplespace.png": "BG-purplespace.png",
     "GO-blackhole.png": "GO-blackhole.png",
@@ -45,7 +46,7 @@
     "level6": "music/CephalonautLevel6Mix1.mp3",
     "mainMenu": "music/Cephalonautintromusicmix1.mp3"
   },
-  "sounds":{
+  "sounds": {
     "ink": "sample ink.mp3",
     "suction": "TentacleSuctionSFX.mp3"
   },

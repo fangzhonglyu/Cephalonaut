@@ -33,6 +33,7 @@ public class SoundController {
         }
         musicCache[MENU_MUSIC_INDEX] = directory.getEntry("mainMenu", Music.class);
         inkSound = directory.getEntry("ink", Sound.class);
+        soundCache[0] = directory.getEntry("suction", Sound.class);
         //TODO load the sound effects into the cache
     }
 
@@ -136,7 +137,9 @@ public class SoundController {
         bgmPlaying = null;
     }
 
-    /** Play a Sound by index. The sound effect will play once and stop */
+    /** Play a Sound by index. The sound effect will play once and stop
+     * @param volume a float between 0 and 1
+     * */
     public static void playSound(int i,float volume){
         if (i >= soundCache.length || i < 0 || soundCache[i]==null)
             return;

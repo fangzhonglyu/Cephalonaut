@@ -35,7 +35,8 @@ public class LevelElement extends SimpleObstacle {
         DOOR,
         FINISH,
         MISC,
-        START
+        START,
+        SPIKE
     }
 
     /** Type of element **/

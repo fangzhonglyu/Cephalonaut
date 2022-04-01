@@ -89,7 +89,8 @@
                 "Finish",
                 "Wormhole",
                 "Glass Barrier",
-                "Start"
+                "Start",
+                "Spike"
             ],
             "valuesAsFlags": false
         }
