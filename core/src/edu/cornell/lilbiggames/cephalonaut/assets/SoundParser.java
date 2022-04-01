@@ -43,7 +43,7 @@ public class SoundParser implements AssetParser<Sound> {
      */
     public void reset(JsonValue directory) {
         root = directory;
-        root = root.getChild( "sounds" );
+        root = root.getChild("sounds" );
     }
 
     /**

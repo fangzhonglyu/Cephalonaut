@@ -25,7 +25,7 @@ import java.util.Map;
 public class PlayMode extends WorldController implements Screen {
     /** For knowing we have exited a level */
     public static int EXIT_LEVEL = 20;
-
+    public static int WON_LEVEL = 100;
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
@@ -57,6 +57,7 @@ public class PlayMode extends WorldController implements Screen {
 
     /** Current level name */
     private String level;
+    private String checkpoint;
 
     private float deathRotationCount;
     private float fadeInCount;
@@ -71,14 +72,16 @@ public class PlayMode extends WorldController implements Screen {
     // Honestly I wouldn't be opposed to just reloading a level from scratch every time...
     // TODO: Change
     private Queue<GameObject> defaultObjects;
+    private boolean won;
 
     /**
      * Creates and initialize a new instance of the sandbox
      */
-    public PlayMode(ScreenListener listener, LevelLoader loader, String level) {
+    public PlayMode(ScreenListener listener, LevelLoader loader, String level, String checkpoint) {
         super(DEFAULT_WIDTH, DEFAULT_HEIGHT, 0);
         this.listener = listener;
         this.level = level;
+        this.checkpoint = checkpoint;
         this.loader = loader;
         setDebug(false);
         setComplete(false);
@@ -86,6 +89,7 @@ public class PlayMode extends WorldController implements Screen {
         directionalGrapple = true;
         deathRotationCount = 0;
         fadeInCount = 1;
+        won = false;
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -120,7 +124,7 @@ public class PlayMode extends WorldController implements Screen {
      * This method disposes of the world and creates a new one.
      */
     public void reset() {
-        LevelLoader.LevelDef levelDef = loader.loadLevel(level);
+        LevelLoader.LevelDef levelDef = loader.loadLevel(level, checkpoint);
 
         Vector2 gravity = new Vector2(world.getGravity());
         cleanupLevel();

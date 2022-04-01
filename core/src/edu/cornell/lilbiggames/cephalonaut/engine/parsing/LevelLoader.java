@@ -267,11 +267,12 @@ public class LevelLoader {
         }
     }
 
-    public LevelDef loadLevel(String levelName) {
+    public LevelDef loadLevel(String levelName, String checkpointName) {
         LevelDef levelDef = new LevelDef();
+
+        JsonValue level = assetDirectory.getEntry(levelName+":"+checkpointName, JsonValue.class);
         LevelElement.Def levelElementDef = new LevelElement.Def();
 
-        JsonValue level = assetDirectory.getEntry(levelName, JsonValue.class);
         int levelHeight = level.getInt("height");
         int tileSize = level.getInt("tilewidth");
         assert tileSize == level.getInt("tileheight");

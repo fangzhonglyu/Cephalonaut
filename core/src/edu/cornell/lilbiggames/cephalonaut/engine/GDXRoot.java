@@ -17,6 +17,10 @@ import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
@@ -37,9 +41,11 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	/** Drawing context to display graphics (VIEW CLASS) */
 	private GameCanvas canvas;
+	List<Integer> numCheckpointsCompleted;
 
 	private PlayMode playMode;
 	private MainMenuMode menuMode;
+	private MainMenuNestedMode mainMenuNestedMode;
 	private PauseMode pauseMode;
 	private LevelCompleteMode levelCompleteMode;
 	private StartScreenMode startScreenMode;
@@ -70,8 +76,14 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		SoundController.gatherSoundAssets(directory);
 
+		numCheckpointsCompleted = new ArrayList<>();
+		for(int i = 0; i < 7; i++){
+			numCheckpointsCompleted.add(0);
+		}
+
 		// Initialize the game world
 		menuMode = new MainMenuMode(directory, canvas, this);
+		mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, 5,0, 0, this);
 		startScreenMode = new StartScreenMode(directory, canvas, this);
 		LevelElement.gatherAssets(directory);
 //		playMode.gatherAssets(directory);
@@ -89,7 +101,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	public void selectLevel(){
 		String levelName = menuMode.getCurLevel();
-		playMode = new PlayMode(this, levelLoader, levelName);
+		int curLevel = menuMode.getCurLevelNumber();
+		String checkpointName = "checkpoint_" + numCheckpointsCompleted.get(curLevel);
+		playMode = new PlayMode(this, levelLoader, levelName, checkpointName);
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
 		playMode.reset();
@@ -144,21 +158,34 @@ public class GDXRoot extends Game implements ScreenListener {
 			System.out.println("credits");
 			setScreen(menuMode);
 		} else if(exitCode == MainMenuMode.LEVEL_SELECTED_CODE){
+			int curLevel = menuMode.getCurLevelNumber();
+			mainMenuNestedMode.setLevel(curLevel);
+			mainMenuNestedMode.setNumCheckpoints(5);
+			mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
+			setScreen(mainMenuNestedMode);
+		} else if(exitCode == MainMenuNestedMode.LEVEL_SELECTED_CODE) {
 			selectLevel();
-		} else if (exitCode == PlayMode.EXIT_LEVEL) {
-			SoundController.setPlaying(false);
-			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
-			pauseMode.setDefault();
-			setScreen(pauseMode);
 		} else if (exitCode == PauseMode.EXIT_LEVEL_CODE || exitCode == LevelCompleteMode.EXit_LEVEL_CODE) {
 			SoundController.startMenuMusic();
 			SoundController.setPlaying(false);
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
+			int curLevel = menuMode.getCurLevelNumber();
+			mainMenuNestedMode.setLevel(curLevel);
+			setScreen(mainMenuNestedMode);
+		} else if(exitCode == MainMenuNestedMode.NESTED_MENU_EXIT_CODE){
 			setScreen(menuMode);
-		} else if (exitCode == PauseMode.RESUME_LEVEL_CODE) {
-			SoundController.setPlaying(true);
-			playMode.resume();
-			setScreen(playMode);
+		} else if(exitCode == PlayMode.EXIT_LEVEL){
+			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
+			pauseMode.setDefault();
+			setScreen(pauseMode);
+		} else if(exitCode == PlayMode.WON_LEVEL){
+			int curLevel = menuMode.getCurLevelNumber();
+			numCheckpointsCompleted.set(curLevel, numCheckpointsCompleted.get(curLevel)+1);
+			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
+			mainMenuNestedMode.setLevel(curLevel);
+			mainMenuNestedMode.setNumCheckpoints(5);
+			mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
+			setScreen(mainMenuNestedMode);
 		} else if (exitCode == PauseMode.RESTART_LEVEL_CODE || exitCode == LevelCompleteMode.RESTART_LEVEL_CODE) {
 			SoundController.setPlaying(true);
 			playMode.reset();
