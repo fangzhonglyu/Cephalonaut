@@ -129,9 +129,6 @@ public class LevelController implements ContactListener {
 
     public void finishLevel() {
         if (listener != null) {
-            playMode.setComplete(true);
-            playMode.setFailure(false);
-            SoundController.killAllSound();
             listener.exitScreen(playMode, COMPLETE_LEVEL);
         }
     }
