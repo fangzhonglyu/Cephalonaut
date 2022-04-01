@@ -117,10 +117,10 @@ public class LevelController implements ContactListener {
     public void beginContact(Contact contact) {
         GrappleModel grapple = cephalonaut.getGrapple();
         GameObject contactObject = getOtherBody(contact, cephalonaut);
-        contactObject = contactObject == null ? getOtherBody(contact, grapple) : contactObject;
+        boolean grappleContact = contactObject == null;
+        contactObject = grappleContact ? getOtherBody(contact, grapple) : contactObject;
 
-        if (contactObject != null) {
-
+        if (contactObject != null && (!grappleContact || (grappleContact && contactObject instanceof LETrigger))) {
             if (contactObject instanceof LevelElement) {
                 ((LevelElement) contactObject).setInContact(true);
                 if(((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)) {
@@ -156,9 +156,10 @@ public class LevelController implements ContactListener {
     public void endContact(Contact contact) {
         GrappleModel grapple = cephalonaut.getGrapple();
         GameObject contactObject = getOtherBody(contact, cephalonaut);
-        contactObject = contactObject == null ? getOtherBody(contact, grapple) : contactObject;
+        boolean grappleContact = contactObject == null;
+        contactObject = grappleContact ? getOtherBody(contact, grapple) : contactObject;
 
-        if (contactObject != null) {
+        if (contactObject != null && (!grappleContact || (grappleContact && contactObject instanceof LETrigger))) {
             if (contactObject instanceof LevelElement) {
                 ((LevelElement) contactObject).setInContact(false);
             }
