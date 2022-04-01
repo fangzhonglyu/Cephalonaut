@@ -13,6 +13,8 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
+import java.net.InetSocketAddress;
+
 public class LevelCompleteMode implements Screen {
     public static final int EXit_LEVEL_CODE = 30;
     public static final int RESTART_LEVEL_CODE = 32;
@@ -28,6 +30,8 @@ public class LevelCompleteMode implements Screen {
     private Texture background;
 
     private Texture replayIcon;
+
+    private Texture nextIcon;
 
     private Texture homeIcon;
 
@@ -59,9 +63,10 @@ public class LevelCompleteMode implements Screen {
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.assets = assets;
 
-        replayIcon = assets.getEntry("replayicon", Texture.class);
         homeIcon = assets.getEntry("homeicon", Texture.class);
         starIcon = assets.getEntry("staricon", Texture.class);
+        replayIcon = assets.getEntry("replayicon", Texture.class);
+        nextIcon = assets.getEntry("nexticon", Texture.class);
     }
 
     @Override
@@ -87,11 +92,11 @@ public class LevelCompleteMode implements Screen {
         inputController.readInput(new Rectangle(), new Vector2());
         if (clickedRestart()) {
             listener.exitScreen(this, RESTART_LEVEL_CODE);
+        } else if (clickedNext()) {
+            listener.exitScreen(this, NEXT_LEVEL_CODE);
         } else if (clickedHome()) {
             listener.exitScreen(this, EXit_LEVEL_CODE);
         }
-        // else if next
-            // switch to next level screen
     }
 
     @Override
@@ -135,6 +140,27 @@ public class LevelCompleteMode implements Screen {
         return false;
     }
 
+    private boolean clickedNext() {
+        float mouseX = -10;
+        float mouseY = -10;
+        float height = canvas.getHeight();
+        float width = canvas.getWidth();
+        float nHeight = nextIcon.getHeight();
+        float nWidth = nextIcon.getWidth();
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            mouseX = Gdx.input.getX();
+            mouseY = height - Gdx.input.getY();
+        }
+
+        if (((width / 2f + 100) - nWidth / 2f <= mouseX && mouseX <= (width / 2f + 100) + nWidth / 2f ) &&
+                ((height / 2f - 200) - nHeight / 2f <= mouseY && mouseY <= (height / 2f - 200) + nHeight / 2f )) {
+            return true;
+        }
+
+        return false;
+    }
+
     private boolean clickedHome() {
         float mouseX = -10;
         float mouseY = -10;
@@ -148,8 +174,8 @@ public class LevelCompleteMode implements Screen {
             mouseY = height - Gdx.input.getY();
         }
 
-        if (((width / 2f + 100) - hWidth / 2f <= mouseX && mouseX <= (width / 2f + 100) + hWidth / 2f ) &&
-                ((height / 2f - 200) - hHeight / 2f <= mouseY && mouseY <= (height / 2f - 200) + hHeight / 2f )) {
+        if (((width / 2f - 650) - hWidth / 2f <= mouseX && mouseX <= (width / 2f - 650) + hWidth / 2f ) &&
+                ((height / 2f + 375) - hHeight / 2f <= mouseY && mouseY <= (height / 2f + 375) + hHeight / 2f )) {
             return true;
         }
 
@@ -171,6 +197,11 @@ public class LevelCompleteMode implements Screen {
 
         canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
 
+        canvas.draw(homeIcon, Color.WHITE,
+                homeIcon.getWidth() / 2f, homeIcon.getHeight() / 2f,
+                width / 2f - 650, height / 2f + 375,
+                0, scale.x, scale.y);
+
         for (int i = 0; i < 3; i++) {
             canvas.draw(starIcon, Color.GOLD,
                     starIcon.getWidth() / 2f, starIcon.getHeight() / 2f,
@@ -183,8 +214,8 @@ public class LevelCompleteMode implements Screen {
                 width / 2f - 100, height / 2f - 200,
                 0, scale.x, scale.y);
 
-        canvas.draw(homeIcon, Color.WHITE,
-                homeIcon.getWidth() / 2f, homeIcon.getHeight() / 2f,
+        canvas.draw(nextIcon, Color.WHITE,
+                nextIcon.getWidth() / 2f, nextIcon.getHeight() / 2f,
                 width / 2f + 100, height / 2f - 200,
                 0, scale.x, scale.y);
 
