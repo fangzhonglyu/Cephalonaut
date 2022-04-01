@@ -195,12 +195,12 @@ public class LevelCompleteMode implements Screen {
         canvas.setCameraPos(width / 2, height / 2);
         canvas.drawOverlay(background, true);
 
-        canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
-
         canvas.draw(homeIcon, Color.WHITE,
                 homeIcon.getWidth() / 2f, homeIcon.getHeight() / 2f,
                 width / 2f - 650, height / 2f + 375,
                 0, scale.x, scale.y);
+
+        canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
 
         for (int i = 0; i < 3; i++) {
             canvas.draw(starIcon, Color.GOLD,
