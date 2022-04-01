@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETrigger;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETriggerable;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
@@ -137,6 +139,11 @@ public class PlayMode extends WorldController implements Screen {
                 startY = object.getY();
                 continue;
 
+            }
+            if (object instanceof LETrigger) {
+                ((LETrigger) object).setActivated(false);
+            } else if (object instanceof LETriggerable) {
+                ((LETriggerable) object).setActivated(false);
             }
             object.setDrawScale(scale);
             addObject(object);
