@@ -127,6 +127,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	@Override
 	public void exitScreen(Screen screen, int exitCode) {
+		SoundController.killAllSound();
 		if (exitCode == MainMenuMode.LEVEL_SELECTED_CODE) {
 			selectLevel();
 		} else if (exitCode == PlayMode.EXIT_LEVEL) {
