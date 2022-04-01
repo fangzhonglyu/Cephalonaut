@@ -77,9 +77,9 @@ public class LevelCompleteMode implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        scale.x = canvas.getWidth()/bounds.x;
+        scale.x = canvas.getWidth() / bounds.x;
         scale.y = scale.x;
-        canvas.setCameraPos(0.5f*width,0.5f*height);
+        canvas.setCameraPos(0.5f * width,0.5f * height);
     }
 
     private void update(float delta){
