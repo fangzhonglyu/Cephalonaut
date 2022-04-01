@@ -28,6 +28,7 @@ public class PlayMode extends WorldController implements Screen {
 
     // for knowing we have exited a level
     public static int EXIT_LEVEL = 20;
+    public static int WON_LEVEL = 100;
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
@@ -66,6 +67,7 @@ public class PlayMode extends WorldController implements Screen {
     // Matias: We shouldn't do this bc objects have state which change from loading to restarting
     // TODO: Change
     private Queue<GameObject> defaultObjects;
+    private boolean won;
 
     /**
      * Creates and initialize a new instance of the sandbox
@@ -78,7 +80,10 @@ public class PlayMode extends WorldController implements Screen {
         setComplete(false);
         setFailure(false);
         directionalGrapple = true;
-//        canvasO = new Vector2(1920,1080);
+
+        //        canvasO = new Vector2(1920,1080);
+
+        won = false;
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -207,7 +212,12 @@ public class PlayMode extends WorldController implements Screen {
                 System.err.println("No listener! Did you correctly set the listener for this playmode?");
             }
         } else {
-            if (input.didTertiary()) {
+            if(input.isUpPressed()){
+                exiting = true;
+                won = true;
+                pause();
+                listener.exitScreen(this, WON_LEVEL);
+            } else if (input.didTertiary()) {
                 directionalGrapple = !directionalGrapple;
             }
             cephalonaut.setForce(Vector2.Zero);

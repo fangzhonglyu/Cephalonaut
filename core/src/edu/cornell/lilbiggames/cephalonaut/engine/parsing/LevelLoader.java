@@ -211,12 +211,12 @@ public class LevelLoader {
         def.y = pos.y;
     }
 
-    public void loadLevel(String levelName, PlayMode playMode) {
+    public void loadLevel(String levelName, String checkpointName, PlayMode playMode) {
         LevelElement.Def levelElementDef = new LevelElement.Def();
 
         Map<Integer, LevelElement> objectIds = new HashMap<>();
         Queue<GameObject> objects = new Queue<>();
-        JsonValue level = assetDirectory.getEntry(levelName, JsonValue.class);
+        JsonValue level = assetDirectory.getEntry(levelName+":"+checkpointName, JsonValue.class);
         int levelHeight = level.getInt("height");
         int tileSize = level.getInt("tilewidth");
         assert tileSize == level.getInt("tileheight");
