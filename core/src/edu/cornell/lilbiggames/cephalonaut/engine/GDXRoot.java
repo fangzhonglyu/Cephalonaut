@@ -81,8 +81,8 @@ public class GDXRoot extends Game {
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
 //		playMode.reset(levelLoader.loadLevel("level_1"));
-		playMode.setLevel("Oliver_level2");
-		levelLoader.loadLevel("Oliver_level2", playMode);
+		playMode.setLevel("Oliver_levelt1");
+		levelLoader.loadLevel("Oliver_levelt1", playMode);
 
 
 
