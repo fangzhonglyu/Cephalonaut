@@ -204,9 +204,6 @@ public class LevelLoader {
 
         def.angle = 0;
         def.element = stringToElementType(body.getString("type", null));
-        if (def.element == LevelElement.Element.WORMHOLE) {
-            System.out.println(body);
-        }
         def.canGrapple = body.getBoolean("canGrappleOn", true);
         def.density = body.getFloat("density", 0);
         def.restitution = body.getFloat("restitution", 0.3f);
@@ -320,13 +317,6 @@ public class LevelLoader {
                         int gid = jsonObject.getInt("gid") - 1;
                         mergeJsons(jsonObject, map.get(gid));
 
-                        if (gid == 134) {
-                            System.out.println("MAP:");
-                            System.out.println(map.get(gid));
-                            System.out.println("MERGED:");
-                            System.out.println(jsonObject);
-                        }
-
                         if (jsonObject.has("image")) {
                             Texture fullTexture = assetDirectory.getEntry(jsonObject.getString("image"), Texture.class);
                             fullTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -344,7 +334,6 @@ public class LevelLoader {
                 case "imagelayer":
                     String path = layer.getString("image");
                     String filename = path.substring(path.lastIndexOf("/") + 1);
-                    System.out.println(filename);
                     Texture image = assetDirectory.getEntry(filename, Texture.class);
                     image.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
                     ImageObject imageObject = new ImageObject(image);

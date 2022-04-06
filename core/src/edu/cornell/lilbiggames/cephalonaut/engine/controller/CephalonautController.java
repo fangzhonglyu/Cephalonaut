@@ -56,7 +56,6 @@ public class CephalonautController {
         if ((grappleButton && grapple.isOut()) ||
                 (grapple.isOut() && grapple.isFullyExtended() && !grapple.isAnchored()) ||
                 ungrappleButton) {
-
             if (grappleJoint1 != null) {
                 world.destroyJoint(grappleJoint1);
                 grappleJoint1 = null;

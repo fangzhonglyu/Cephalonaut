@@ -266,7 +266,6 @@ public class PlayMode extends WorldController implements Screen {
      * Draw the physics objects together with foreground and background
      *
      * This is completely overridden to support custom background and foreground art.
-     * This is completely overridden to support custom background and foreground art.
      *
      * @param dt Timing values from parent loop
      */

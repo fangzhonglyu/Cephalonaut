@@ -28,8 +28,7 @@ public class LevelController implements ContactListener {
             ((LETriggerable) object).checkPos();
         } else if (object instanceof LEWormHole && ((LEWormHole) object).getCooldown() > 0) {
             ((LEWormHole) object).setCooldown(((LEWormHole) object).getCooldown() - 1);
-        }
-        else if (object instanceof LEGlassBarrier) {
+        } else if (object instanceof LEGlassBarrier) {
             willHit((LEGlassBarrier) object);
         }
 

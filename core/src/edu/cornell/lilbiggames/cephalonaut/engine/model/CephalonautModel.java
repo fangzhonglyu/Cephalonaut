@@ -46,10 +46,10 @@ public class CephalonautModel extends OctopusObstacle {
 	/** Cache object for transforming the force according the object angle */
 	private final Affine2 affineCache = new Affine2();
 
-	private final float MAX_SPEED = 10.0f;
+	private final float MAX_SPEED = 8.0f;
 
 	/** Magnitude of force to apply */
-	private final float force = 3.0f;
+	private final float force = 4.0f;
 
 	/** The direction of rotation */
 	private float rotation;
