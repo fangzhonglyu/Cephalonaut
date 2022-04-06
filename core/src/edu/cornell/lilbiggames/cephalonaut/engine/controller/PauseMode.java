@@ -1,7 +1,5 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
@@ -9,8 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
-
-import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.*;
 
 public class PauseMode extends MenuMode {
     /** The font for giving messages to the player */
@@ -26,7 +22,7 @@ public class PauseMode extends MenuMode {
 
     private String[] options = {"RESUME PLAYING", "EXIT LEVEL", "RESTART LEVEL" };
 
-    private int optionId;
+    private int selectedOption;
 
     private Vector2 bounds,scale;
 
@@ -43,11 +39,11 @@ public class PauseMode extends MenuMode {
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro",BitmapFont.class);
-        optionId = 0; //default is resume
+        selectedOption = 0; //default is resume
     }
 
     public void setDefault(){
-        optionId = 0;
+        selectedOption = 0;
     }
 
     @Override
@@ -60,18 +56,18 @@ public class PauseMode extends MenuMode {
         inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
 
-        if(optionId == 0 && inputController.isSelectPressed()){
+        if(selectedOption == 0 && inputController.isSelectPressed()){
             listener.exitScreen(this, RESUME_LEVEL_CODE);
-        } else if(optionId == 1 && inputController.isSelectPressed()){
+        } else if(selectedOption == 1 && inputController.isSelectPressed()){
             listener.exitScreen(this, EXIT_LEVEL_CODE);
-        } else if(optionId == 2 && inputController.isSelectPressed()){
+        } else if(selectedOption == 2 && inputController.isSelectPressed()){
             listener.exitScreen(this, RESTART_LEVEL_CODE);
         } else if(inputController.didExit()){
             listener.exitScreen(this, RESUME_LEVEL_CODE);
         } else if(inputController.isUpPressed()){
-            optionId = optionId == 0 ? options.length-1 : optionId-1;
+            selectedOption = selectedOption == 0 ? options.length-1 : selectedOption -1;
         } else if(inputController.isDownPressed()){
-            optionId = (optionId+1)%options.length;
+            selectedOption = (selectedOption +1)%options.length;
         }
 
         draw();
@@ -85,22 +81,11 @@ public class PauseMode extends MenuMode {
         float width = canvas.getWidth();
         canvas.draw(background, 0.5f*canvas.getWidth()-canvas.getCameraX()/scale.x, 0.5f*canvas.getHeight()-canvas.getCameraY()/scale.y , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth()/scale.x, (float)height/(float)background.getHeight()/scale.y);
 
-        drawOptions();
+        super.drawOptions(options, selectedOption);
 
         canvas.end();
     }
 
-    private void drawOptions(){
-        displayFont.getData().setScale(0.5f);
-        float start = (options.length* displayFont.getLineHeight())/2;
-
-        for(int i = 0; i < options.length; i++){
-            if(optionId == i) displayFont.setColor(Color.CYAN);
-            canvas.drawTextCentered(options[i], displayFont, start - displayFont.getLineHeight()*i);
-            if(optionId == i) displayFont.setColor(Color.WHITE);
-        }
-        displayFont.getData().setScale(1.0f);
-    }
 
     @Override
     public void pause() {

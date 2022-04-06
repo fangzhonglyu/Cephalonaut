@@ -87,10 +87,7 @@ public class MenuMode implements Screen {
 
 
     protected void drawOptions(String[] options, int selectedOption){
-        float start = (options.length*0.5f*displayFont.getLineHeight())/2;
-        displayFont.getData().setScale(1.0f);
-        displayFont.setColor(Color.ORANGE);
-        canvas.drawTextCentered("CEPHALONAUT", displayFont, start);
+        float start = (options.length*displayFont.getLineHeight())/2;
         displayFont.setColor(YELLOW);
         displayFont.getData().setScale(0.5f);
 
@@ -102,7 +99,7 @@ public class MenuMode implements Screen {
                         YELLOW,
                         ARROW_WIDTH/2,
                         ARROW_WIDTH/2,
-                        canvas.getWidth() * 3/8,
+                        canvas.getWidth() * 1/3,
                         canvas.getHeight()/2 + start - displayFont.getLineHeight()*i - 2*displayFont.getLineHeight(),
                         ARROW_WIDTH,
                         ARROW_WIDTH

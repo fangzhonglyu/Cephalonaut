@@ -81,6 +81,10 @@ public class StartScreenMode extends MenuMode {
         float width = canvas.getWidth();
         canvas.draw(background, 0.5f*canvas.getWidth()-canvas.getCameraX()/scale.x, 0.5f*canvas.getHeight()-canvas.getCameraY()/scale.y , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth()/scale.x, (float)height/(float)background.getHeight()/scale.y);
 
+        displayFont.getData().setScale(1.0f);
+        displayFont.setColor(Color.ORANGE);
+        float start = (options.length*displayFont.getLineHeight())/2;
+        canvas.drawTextCentered("CEPHALONAUT", displayFont, start);
         super.drawOptions(options, selectedOption);
 
         canvas.end();
