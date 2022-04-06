@@ -19,9 +19,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.controller.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
@@ -95,6 +93,23 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	}
 
+	private void initializeCheckpointSelect(){
+		int curLevel = menuMode.getCurLevelNumber();
+		mainMenuNestedMode.setLevel(curLevel);
+		mainMenuNestedMode.setNumCheckpoints(5);
+		mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
+	}
+
+	private void completeCheckpoint(){
+		playMode.setComplete(true);
+		playMode.setFailure(false);
+		int curLevel = menuMode.getCurLevelNumber();
+		numCheckpointsCompleted.set(curLevel, numCheckpointsCompleted.get(curLevel)+1);
+		mainMenuNestedMode.setLevel(curLevel);
+		mainMenuNestedMode.setNumCheckpoints(5);
+		mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
+	}
+
 	public void selectLevel(){
 		String levelName = menuMode.getCurLevel();
 		int curLevel = menuMode.getCurLevelNumber();
@@ -105,6 +120,8 @@ public class GDXRoot extends Game implements ScreenListener {
 		levelLoader.loadLevel(levelName, checkpointName, playMode);
 		setScreen(playMode);
 	}
+
+
 
 	/** 
 	 * Called when the Application is destroyed. 
@@ -145,56 +162,44 @@ public class GDXRoot extends Game implements ScreenListener {
 	@Override
 	public void exitScreen(Screen screen, int exitCode) {
 		SoundController.killAllSound();
-		if(exitCode == StartScreenMode.START_CODE){
+		if(exitCode == MenuMode.START_CODE){
 			setScreen(menuMode);
-		} else if(exitCode == StartScreenMode.OPTIONS_CODE){
+		} else if(exitCode == MenuMode.OPTIONS_CODE){
 			System.out.println("options");
 			setScreen(menuMode);
-		} else if(exitCode == StartScreenMode.CREDITS_CODE){
+		} else if(exitCode == MenuMode.CREDITS_CODE){
 			System.out.println("credits");
 			setScreen(menuMode);
-		} else if(exitCode == MainMenuMode.LEVEL_SELECTED_CODE){
-			int curLevel = menuMode.getCurLevelNumber();
-			mainMenuNestedMode.setLevel(curLevel);
-			mainMenuNestedMode.setNumCheckpoints(5);
-			mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
+		} else if(exitCode == MenuMode.LEVEL_SELECTED_CODE){
+			initializeCheckpointSelect();
 			setScreen(mainMenuNestedMode);
-		} else if(exitCode == MainMenuNestedMode.LEVEL_SELECTED_CODE) {
+		} else if(exitCode == MenuMode.CHECKPOINT_SELECTED_CODE) {
 			selectLevel();
-		} else if (exitCode == PauseMode.EXIT_LEVEL_CODE || exitCode == LevelCompleteMode.EXit_LEVEL_CODE) {
+		} else if (exitCode == MenuMode.EXIT_LEVEL_CODE) {
 			SoundController.startMenuMusic();
 			SoundController.setPlaying(false);
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			int curLevel = menuMode.getCurLevelNumber();
 			mainMenuNestedMode.setLevel(curLevel);
 			setScreen(mainMenuNestedMode);
-		} else if(exitCode == MainMenuNestedMode.NESTED_MENU_EXIT_CODE){
+		} else if(exitCode == MenuMode.NESTED_MENU_EXIT_CODE){
 			setScreen(menuMode);
 		} else if(exitCode == PlayMode.EXIT_LEVEL){
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			pauseMode.setDefault();
 			setScreen(pauseMode);
-		} else if(exitCode == PlayMode.WON_LEVEL){
-			int curLevel = menuMode.getCurLevelNumber();
-			numCheckpointsCompleted.set(curLevel, numCheckpointsCompleted.get(curLevel)+1);
-			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
-			mainMenuNestedMode.setLevel(curLevel);
-			mainMenuNestedMode.setNumCheckpoints(5);
-			mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
-			setScreen(mainMenuNestedMode);
-		} else if (exitCode == PauseMode.RESTART_LEVEL_CODE || exitCode == LevelCompleteMode.RESTART_LEVEL_CODE) {
-			SoundController.setPlaying(true);
+		} else if (exitCode == MenuMode.RESTART_LEVEL_CODE) {
 			playMode.reset();
 			playMode.resume();
 			setScreen(playMode);
+		} else if (exitCode == MenuMode.RESUME_LEVEL_CODE) {
+			playMode.resume();
+			setScreen(playMode);
 		} else if (exitCode == LevelController.COMPLETE_LEVEL) {
-			SoundController.setPlaying(false);
-			playMode.setComplete(true);
-			playMode.setFailure(false);
+			completeCheckpoint();
+			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			setScreen(levelCompleteMode);
-		} else if (exitCode == LevelCompleteMode.NEXT_LEVEL_CODE) {
-			SoundController.setPlaying(true);
-			menuMode.nextLevel();
+		} else if (exitCode == MenuMode.NEXT_LEVEL_CODE) {
 			selectLevel();
 		}
 	}

@@ -13,12 +13,9 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
-import java.net.InetSocketAddress;
+import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.*;
 
 public class LevelCompleteMode implements Screen {
-    public static final int EXit_LEVEL_CODE = 30;
-    public static final int RESTART_LEVEL_CODE = 32;
-    public static final int NEXT_LEVEL_CODE = 40;
 
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
@@ -95,7 +92,7 @@ public class LevelCompleteMode implements Screen {
         } else if (clickedNext()) {
             listener.exitScreen(this, NEXT_LEVEL_CODE);
         } else if (clickedHome()) {
-            listener.exitScreen(this, EXit_LEVEL_CODE);
+            listener.exitScreen(this, EXIT_LEVEL_CODE);
         }
     }
 

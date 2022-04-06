@@ -212,12 +212,7 @@ public class PlayMode extends WorldController implements Screen {
                 System.err.println("No listener! Did you correctly set the listener for this playmode?");
             }
         } else {
-            if(input.isUpPressed()){
-                exiting = true;
-                won = true;
-                pause();
-                listener.exitScreen(this, WON_LEVEL);
-            } else if (input.didTertiary()) {
+            if (input.didTertiary()) {
                 directionalGrapple = !directionalGrapple;
             }
             cephalonaut.setForce(Vector2.Zero);
