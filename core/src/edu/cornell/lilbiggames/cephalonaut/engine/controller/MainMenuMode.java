@@ -11,10 +11,11 @@ import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
-public class MainMenuMode implements Screen {
-    public static final int LEVEL_SELECTED_CODE = 21;
-    public static final int NUM_LEVELS = 7;
+import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.LEVEL_SELECTED_CODE;
+
+public class MainMenuMode extends MenuMode {
     private static final int DEFAULT_LEVEL = 0;
+    public static final int NUM_LEVELS = 7;
 
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
@@ -49,6 +50,7 @@ public class MainMenuMode implements Screen {
      * @param canvas 	The game canvas to draw to
      */
     public MainMenuMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
+        super(assets, canvas, listener);
         this.canvas  = canvas;
         this.listener = listener;
         this.scale = new Vector2(1,1);
@@ -57,8 +59,6 @@ public class MainMenuMode implements Screen {
 
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-//        background = new ImageObject(assets.getEntry( "main-menu:background", Texture.class));
-//        background.setDrawScale(100, 100);
         this.assets = assets;
 
         curLevel = DEFAULT_LEVEL;
@@ -80,15 +80,6 @@ public class MainMenuMode implements Screen {
             update(delta);
             draw();
         }
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        scale.x = canvas.getWidth()/bounds.x;
-        scale.y = scale.x;
-//        scale.y = canvas.getHeight()/bounds.y;
-//        background.setDrawScale(scale.x, scale.y);
-        canvas.setCameraPos(0.5f*width,0.5f*height);
     }
 
     private void update(float delta){

@@ -10,10 +10,10 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
-public class StartScreenMode implements Screen {
-    public static int START_CODE = 40;
-    public static int OPTIONS_CODE = 41;
-    public static int CREDITS_CODE = 42;
+import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.*;
+
+public class StartScreenMode extends MenuMode {
+
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
 
@@ -35,6 +35,7 @@ public class StartScreenMode implements Screen {
     protected GameCanvas canvas;
 
     public StartScreenMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
+        super(assets, canvas, listener);
         this.canvas = canvas;
         this.listener = listener;
         background = assets.getEntry( "main-menu:background", Texture.class );
@@ -102,13 +103,6 @@ public class StartScreenMode implements Screen {
             if(optionId == i) displayFont.setColor(Color.WHITE);
         }
         displayFont.getData().setScale(1.0f);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        scale.x = canvas.getWidth()/bounds.x;
-        scale.y = canvas.getHeight()/bounds.y;
-        canvas.setCameraPos(0.5f*width,0.5f*height);
     }
 
     @Override

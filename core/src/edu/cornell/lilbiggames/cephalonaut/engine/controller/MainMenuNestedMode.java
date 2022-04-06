@@ -10,9 +10,11 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
-public class MainMenuNestedMode implements Screen {
-    public static final int LEVEL_SELECTED_CODE = 51;
-    public static final int NESTED_MENU_EXIT_CODE = 52;
+import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.CHECKPOINT_SELECTED_CODE;
+import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.NESTED_MENU_EXIT_CODE;
+
+public class MainMenuNestedMode extends MenuMode {
+
 
     private int checkpoints;
 
@@ -53,6 +55,7 @@ public class MainMenuNestedMode implements Screen {
      * @param canvas 	The game canvas to draw to
      */
     public MainMenuNestedMode(AssetDirectory assets, GameCanvas canvas, int checkpoints, int completedCheckpoints, int curLevel, ScreenListener listener){
+        super(assets, canvas, listener);
         this.canvas  = canvas;
         this.listener = listener;
         this.scale = new Vector2(1,1);
@@ -61,8 +64,8 @@ public class MainMenuNestedMode implements Screen {
         this.completedCheckpoints = completedCheckpoints;
         this.checkpoints = checkpoints;
 
-        background = assets.getEntry( "main-menu:background", Texture.class );
-        background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        background = assets.getEntry( "main-menu:background", Texture.class);
+        background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.assets = assets;
 
         this.curLevel = curLevel;
@@ -80,18 +83,11 @@ public class MainMenuNestedMode implements Screen {
     public void render(float delta) {
         if (levelSelected && listener != null) {
             levelSelected = false;
-            listener.exitScreen(this, LEVEL_SELECTED_CODE);
+            listener.exitScreen(this, CHECKPOINT_SELECTED_CODE);
         } else {
             update(delta);
             draw();
         }
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        scale.x = canvas.getWidth()/bounds.x;
-        scale.y = canvas.getHeight()/bounds.y;
-        canvas.setCameraPos(0.5f*width,0.5f*height);
     }
 
     private void update(float delta){
@@ -153,7 +149,6 @@ public class MainMenuNestedMode implements Screen {
             } else {
                 canvas.draw(levelTexture, i*diff+start, height/2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
             }
-
         }
 
         canvas.draw(octopusTexture, start + completedCheckpoints*diff, height/2 + levelTexture.getHeight()*0.1f + 10);

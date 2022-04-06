@@ -10,10 +10,9 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
-public class PauseMode implements Screen {
-    public static int EXIT_LEVEL_CODE = 30;
-    public static int RESUME_LEVEL_CODE = 31;
-    public static int RESTART_LEVEL_CODE = 32;
+import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.*;
+
+public class PauseMode extends MenuMode {
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
 
@@ -35,6 +34,7 @@ public class PauseMode implements Screen {
     protected GameCanvas canvas;
 
     public PauseMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
+        super(assets, canvas, listener);
         this.canvas = canvas;
         this.listener = listener;
         background = assets.getEntry( "main-menu:background", Texture.class );
@@ -100,13 +100,6 @@ public class PauseMode implements Screen {
             if(optionId == i) displayFont.setColor(Color.WHITE);
         }
         displayFont.getData().setScale(1.0f);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        scale.x = canvas.getWidth()/bounds.x;
-        scale.y = canvas.getHeight()/bounds.y;
-        canvas.setCameraPos(0.5f*width,0.5f*height);
     }
 
     @Override
