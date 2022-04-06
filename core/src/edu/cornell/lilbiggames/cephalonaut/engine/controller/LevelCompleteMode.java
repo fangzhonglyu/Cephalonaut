@@ -89,9 +89,9 @@ public class LevelCompleteMode implements Screen {
         inputController.readInput(new Rectangle(), new Vector2());
         if (clickedRestart()) {
             listener.exitScreen(this, RESTART_LEVEL_CODE);
-        } else if (clickedNext()) {
+        } else if (clickedNext() || inputController.isNextPressed()) {
             listener.exitScreen(this, NEXT_LEVEL_CODE);
-        } else if (clickedHome()) {
+        } else if (clickedHome() || inputController.didExit()) {
             listener.exitScreen(this, EXIT_LEVEL_CODE);
         }
     }

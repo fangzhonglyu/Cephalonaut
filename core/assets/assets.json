@@ -26,7 +26,8 @@
     "levelicon:level_5": "levels/level_5.png",
     "levelicon:level_6": "levels/level_6.png",
     "level.png": "circle.png",
-    "completedLevel.png": "circleFilled.png"
+    "completedLevel.png": "circleFilled.png",
+    "arrow": "arrow.png"
   },
   "jsons": {
     "tile-tileset": "tileset.tsj",
