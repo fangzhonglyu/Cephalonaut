@@ -42,11 +42,12 @@ public class GDXRoot extends Game implements ScreenListener {
 	List<Integer> numCheckpointsCompleted;
 
 	private PlayMode playMode;
-	private MainMenuMode menuMode;
+	private MainMenuMode mainMenu;
 	private MainMenuNestedMode mainMenuNestedMode;
 	private PauseMode pauseMode;
 	private LevelCompleteMode levelCompleteMode;
 	private StartScreenMode startScreenMode;
+	private SettingsMode settings;
 	private LevelLoader levelLoader;
 
 	/**
@@ -80,7 +81,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		}
 
 		// Initialize the game world
-		menuMode = new MainMenuMode(directory, canvas, this);
+		mainMenu = new MainMenuMode(directory, canvas, this);
 		mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, 5,0, 0, this);
 		startScreenMode = new StartScreenMode(directory, canvas, this);
 		LevelElement.gatherAssets(directory);
@@ -91,6 +92,7 @@ public class GDXRoot extends Game implements ScreenListener {
 //		levelLoader.loadLevel("Oliver_level2", playMode);
 
 		pauseMode = new PauseMode(directory, canvas, this);
+		settings = new SettingsMode(directory, canvas, this);
 		levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
 
 		SoundController.startMenuMusic();
@@ -98,7 +100,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	}
 
 	private void initializeCheckpointSelect(){
-		int curLevel = menuMode.getCurLevelNumber();
+		int curLevel = mainMenu.getCurLevelNumber();
 		mainMenuNestedMode.setLevel(curLevel);
 		mainMenuNestedMode.setNumCheckpoints(5);
 		mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
@@ -107,7 +109,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private void completeCheckpoint(){
 		playMode.setComplete(true);
 		playMode.setFailure(false);
-		int curLevel = menuMode.getCurLevelNumber();
+		int curLevel = mainMenu.getCurLevelNumber();
 		numCheckpointsCompleted.set(curLevel, numCheckpointsCompleted.get(curLevel)+1);
 		mainMenuNestedMode.setLevel(curLevel);
 		mainMenuNestedMode.setNumCheckpoints(5);
@@ -115,8 +117,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	}
 
 	public void selectLevel(){
-		String levelName = menuMode.getCurLevel();
-		int curLevel = menuMode.getCurLevelNumber();
+		String levelName = mainMenu.getCurLevel();
+		int curLevel = mainMenu.getCurLevelNumber();
 		String checkpointName = "checkpoint_" + numCheckpointsCompleted.get(curLevel);
 		playMode = new PlayMode(this, levelLoader, levelName, checkpointName);
 		playMode.gatherAssets(directory);
@@ -135,7 +137,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void dispose() {
 		// Call dispose on our children
 		setScreen(null);
-		menuMode.dispose();
+		mainMenu.dispose();
 
 		canvas.dispose();
 		canvas = null;
@@ -167,13 +169,13 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void exitScreen(Screen screen, int exitCode) {
 		SoundController.killAllSound();
 		if(exitCode == MenuMode.START_CODE){
-			setScreen(menuMode);
+			setScreen(mainMenu);
 		} else if(exitCode == MenuMode.OPTIONS_CODE){
-			System.out.println("options");
-			setScreen(menuMode);
+			System.out.println("settings");
+			setScreen(settings);
 		} else if(exitCode == MenuMode.CREDITS_CODE){
 			System.out.println("credits");
-			setScreen(menuMode);
+			setScreen(mainMenu);
 		} else if(exitCode == MenuMode.LEVEL_SELECTED_CODE){
 			initializeCheckpointSelect();
 			setScreen(mainMenuNestedMode);
@@ -183,11 +185,11 @@ public class GDXRoot extends Game implements ScreenListener {
 			SoundController.startMenuMusic();
 			SoundController.setPlaying(false);
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
-			int curLevel = menuMode.getCurLevelNumber();
+			int curLevel = mainMenu.getCurLevelNumber();
 			mainMenuNestedMode.setLevel(curLevel);
 			setScreen(mainMenuNestedMode);
 		} else if(exitCode == MenuMode.NESTED_MENU_EXIT_CODE){
-			setScreen(menuMode);
+			setScreen(mainMenu);
 		} else if(exitCode == PlayMode.EXIT_LEVEL){
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			pauseMode.setDefault();
