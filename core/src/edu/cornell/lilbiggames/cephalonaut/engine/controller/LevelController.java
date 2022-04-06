@@ -29,6 +29,10 @@ public class LevelController implements ContactListener {
         } else if (object instanceof LEWormHole && ((LEWormHole) object).getCooldown() > 0) {
             ((LEWormHole) object).setCooldown(((LEWormHole) object).getCooldown() - 1);
         }
+        else if (object instanceof LEGlassBarrier) {
+            willHit((LEGlassBarrier) object);
+        }
+
 
         if (object instanceof LevelElement) {
             LevelElement levelElement = ((LevelElement) object);
@@ -37,7 +41,12 @@ public class LevelController implements ContactListener {
             }
         }
 
-        if(cephalonaut.getShouldTeleport()) {
+        // TODO: Consider:
+        // Do we need to string in a CephalonautController though the update function? I think that's more for player
+        // controlled movement. I would be fine having the LevelController do all the teleporting without involving it.
+        // Maybe we should be able to 'removeGrapple' from the cephalonaut model itself, as that is the model that is
+        // storing all the cephalonaut data.
+        if (cephalonaut.getShouldTeleport()) {
             teleport(cephalonautController);
         }
 
@@ -68,16 +77,17 @@ public class LevelController implements ContactListener {
         Vector2 blackHolePos = blackHole.getBody().getWorldCenter();
         Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
 
-        if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange()) {
-            Vector2 force = blackHolePos.sub(cephalonautPos).clamp(1, 5).nor();
-            float strength = blackHole.getBlackHoleAttractFactor() * cephalonaut.getMass() / force.len2();
-            cephalonaut.addForce(force.scl(strength));
+        if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange() /*||
+                blackHolePos.dst(cephalonaut.getGrapple().getPosition()) < blackHole.getBlackHoleRange()*/) {
+            Vector2 delta = blackHolePos.sub(cephalonautPos).clamp(1f, 50f);
+            float strength = 10f * blackHole.getBlackHoleAttractFactor() * cephalonaut.getMass() / delta.len2();
+            cephalonaut.addForce(delta.setLength(strength));
         }
     }
 
     public void teleport(CephalonautController cephalonautController) {
         GrappleModel grapple = cephalonaut.getGrapple();
-        if(grapple.isOut()) {
+        if (grapple.isOut()) {
             cephalonautController.removeGrapple(grapple);
         }
         cephalonaut.setPosition(cephalonaut.getTeleportLocation());
@@ -90,11 +100,24 @@ public class LevelController implements ContactListener {
     }
 
     public void boost(LEBoostPad obj) {
-        if(!obj.getInContact()) return;
+        if (!obj.getInContact()) return;
 
         Vector2 force = new Vector2(0, obj.getBoostPadFactor()).setAngleRad(obj.getAngle() + obj.getBoostPadAngle());
         cephalonaut.addForce(force);
     }
+
+    public void hit(LEGlassBarrier obj) {
+        float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
+        obj.hit(hitSpeed);
+    }
+
+    public void willHit(LEGlassBarrier obj) {
+        Vector2 glassBarrierPos = obj.getBody().getWorldCenter();
+        Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
+        float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
+        obj.willBreak(hitSpeed, glassBarrierPos.dst(cephalonautPos));
+    }
+
 
     public void finishLevel() {
         System.out.println("Level finished!");
@@ -117,14 +140,23 @@ public class LevelController implements ContactListener {
     }
 
     public void beginContact(Contact contact) {
+        GrappleModel grapple = cephalonaut.getGrapple();
         GameObject contactObject = getOtherBody(contact, cephalonaut);
-        if (contactObject != null) {
+
+        // TODO: These next few lines are kinda off-putting to me, can we refactor this?
+        boolean grappleContact = contactObject == null;
+        contactObject = grappleContact ? getOtherBody(contact, grapple) : contactObject;
+
+        if (contactObject != null && (!grappleContact || contactObject instanceof LETrigger)) {
             if (contactObject instanceof LevelElement) {
                 ((LevelElement) contactObject).setInContact(true);
+                if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)) {
+                    System.out.println("SPIKE");
+                }
             }
 
             if (contactObject instanceof LEBlackHole) {
-                playMode.setDead(true);
+                cephalonaut.setAlive(false);
             }
 
             if (contactObject instanceof LETrigger) {
@@ -136,19 +168,25 @@ public class LevelController implements ContactListener {
             if (contactObject instanceof LEWormHole) {
                 LEWormHole hole1 = (LEWormHole) contactObject;
                 LEWormHole hole2 = (LEWormHole) playMode.getObject(hole1.getTarget());
-                if(hole1.getCooldown() == 0 && hole2.getCooldown() == 0) {
+                if (hole1.getCooldown() == 0 && hole2.getCooldown() == 0) {
                     setTeleport(hole2);
                     hole1.setCooldown(hole1.getWormHoleCooldown());
                     hole2.setCooldown(hole2.getWormHoleCooldown());
                 }
             }
+
+            if (contactObject instanceof LEGlassBarrier) {
+                LEGlassBarrier glassBarrier = (LEGlassBarrier) contactObject;
+                hit(glassBarrier);
+            }
+
         }
 
-        GrappleModel grapple = cephalonaut.getGrapple();
         if (!grapple.isAnchored()) {
             contactObject = getOtherBody(contact, grapple);
             if (contactObject != null && contactObject.canGrapple()) {
                 grapple.setAnchored(true);
+                SoundController.playSound(0,1);
                 grapple.setExtensionLength(1 + cephalonaut.getPosition().dst(contactObject.getPosition()));
                 grapple.setAnchorLocation(contactObject.getName());
             }
@@ -157,20 +195,14 @@ public class LevelController implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-        Body body1 = contact.getFixtureA().getBody();
-        Body body2 = contact.getFixtureB().getBody();
+        GrappleModel grapple = cephalonaut.getGrapple();
+        GameObject contactObject = getOtherBody(contact, cephalonaut);
 
-        GameObject bd1 = (GameObject) body1.getUserData();
-        GameObject bd2 = (GameObject) body2.getUserData();
+        // TODO: Same comment as above in beginContact
+        boolean grappleContact = contactObject == null;
+        contactObject = grappleContact ? getOtherBody(contact, grapple) : contactObject;
 
-        GameObject contactObject = null;
-        if (bd1 instanceof CephalonautModel) {
-            contactObject = bd2;
-        } else if (bd2 instanceof CephalonautModel) {
-            contactObject = bd1;
-        }
-
-        if (contactObject != null) {
+        if (contactObject != null && (!grappleContact || contactObject instanceof LETrigger)) {
             if (contactObject instanceof LevelElement) {
                 ((LevelElement) contactObject).setInContact(false);
             }
@@ -178,9 +210,22 @@ public class LevelController implements ContactListener {
     }
 
     @Override
-    public void preSolve(Contact contact, Manifold oldManifold) { }
+    public void preSolve(Contact contact, Manifold oldManifold) {
+        GameObject contactObject = getOtherBody(contact, cephalonaut);
+        if (contactObject != null) {
+            if (contactObject instanceof LEGlassBarrier) {
+                LEGlassBarrier glassBarrier = (LEGlassBarrier) contactObject;
+                if(glassBarrier.isBroken()) {
+                    contact.setEnabled(false);
+                    cephalonaut.setVX(cephalonaut.getVX() * .7f);
+                }
+            }
+        }
+    }
 
     @Override
-    public void postSolve(Contact contact, ContactImpulse impulse) { }
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
+    }
 
 }

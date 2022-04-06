@@ -30,6 +30,15 @@ public class LETrigger extends LevelElement {
         }
     }
 
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+        if (this.activated) {
+            setTint(Color.GREEN);
+        } else {
+            setTint(originalTint);
+        }
+    }
+
     public boolean isActivated() {
         return activated;
     }

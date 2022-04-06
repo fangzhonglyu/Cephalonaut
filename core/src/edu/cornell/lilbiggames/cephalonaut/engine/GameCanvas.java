@@ -243,7 +243,8 @@ public class GameCanvas {
 			Gdx.graphics.setWindowedMode(width, height);
 		}
 		resize();
-
+		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+		shapeRen.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 	}
 	
 	/**
@@ -289,6 +290,8 @@ public class GameCanvas {
 	 public void resize() {
 		// Resizing screws up the spriteBatch projection matrix
 		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
+		shapeRen.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
+		camera.setToOrtho(false, getWidth(), getHeight());
 	}
 	
 	/**
@@ -296,7 +299,7 @@ public class GameCanvas {
 	 *
 	 * Textures draw to this canvas will be composited according
 	 * to the rules of this blend state.
-	 *
+	 *a
 	 * @return the current color blending state for this canvas
 	 */
 	public BlendState getBlendState() {
@@ -354,7 +357,6 @@ public class GameCanvas {
 		global.setAsAffine(affine);
     	global.mulLeft(camera.combined);
 		spriteBatch.setProjectionMatrix(global);
-		
 		setBlendState(BlendState.NO_PREMULT);
 		spriteBatch.begin();
     	active = DrawPass.STANDARD;
@@ -386,6 +388,7 @@ public class GameCanvas {
     public void begin() {
 		spriteBatch.setProjectionMatrix(camera.combined);
     	spriteBatch.begin();
+    	shapeRen.setProjectionMatrix(camera.combined);
     	active = DrawPass.STANDARD;
     }
 
@@ -695,13 +698,15 @@ public class GameCanvas {
 		spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
 	}
 
-	public void drawSimpleFuelBar(float ink, float x, float y){
+	public void drawSimpleFuelBar(float ink){
+		float x = getWidth()*0.43f+getCameraX();
+		float y = getHeight()*0.47f+getCameraY();
 		spriteBatch.end();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(Color.WHITE);
-		shapeRen.rect(x, y, 100, 12);
-		shapeRen.setColor(ink > 0.6  ? Color.CYAN : ink > 0.3 ? Color.ORANGE : Color.RED);
-		shapeRen.rect(x + 2, y + 1, ink * 96.0f, 10);
+		shapeRen.rect(x, y, getWidth()/19f, 12);
+		shapeRen.setColor(ink > 0.6  ? Color.PURPLE : ink > 0.3 ? Color.ORANGE : Color.RED);
+		shapeRen.rect(x + 1, y + 1, getWidth()/19f*ink-2, 10);
 		shapeRen.end();
 		spriteBatch.begin();
 	}

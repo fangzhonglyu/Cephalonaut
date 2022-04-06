@@ -15,10 +15,11 @@
 
 import com.badlogic.gdx.*;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
-import edu.cornell.lilbiggames.cephalonaut.engine.controller.PlayMode;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import java.util.Map;
-import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
+
+import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 
 /**
@@ -30,7 +31,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
  * plaforms. In addition, this functions as the root class all intents and purposes, 
  * and you would draw it as a root class in an architecture specification.  
  */
-public class GDXRoot extends Game {
+public class GDXRoot extends Game implements ScreenListener {
 	/** AssetManager to load game assets (textures, sounds, etc.) */
 	AssetDirectory directory;
 
@@ -38,9 +39,9 @@ public class GDXRoot extends Game {
 	private GameCanvas canvas;
 
 	private PlayMode playMode;
+	private MainMenuMode menuMode;
+	private PauseMode pauseMode;
 	private LevelLoader levelLoader;
-	private final String[] levelNames = {"level_0", "level_1"};
-	private Map<String, PlayMode> levels;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -63,31 +64,32 @@ public class GDXRoot extends Game {
 		levelLoader = new LevelLoader();
 		directory = levelLoader.getAssetDirectory();
 
-		// TODO: This should be cleaner when we have a main menu
-		// Load in levels
-//		try{
-//			levels = levelLoader.loadLevels(levelNames);
-//		} catch(Exception e){
-//			System.out.println(e);
-//		}
+		canvas.resize();
 
 		SoundController.gatherSoundAssets(directory);
 
-
 		// Initialize the game world
-		playMode = new PlayMode();
-//		playMode = levelLoader.loadLevel("level_1");
+		menuMode = new MainMenuMode(directory, canvas, this);
 		LevelElement.gatherAssets(directory);
+//		playMode.gatherAssets(directory);
+//		playMode.setCanvas(canvas);
+//		playMode.reset(levelLoader.loadLevel("level_1"));
+//		playMode.setLevel("Oliver_level2");
+//		levelLoader.loadLevel("Oliver_level2", playMode);
+
+		pauseMode = new PauseMode(directory, canvas, this);
+
+		SoundController.startMenuMusic();
+		setScreen(menuMode);
+	}
+
+	public void selectLevel(){
+		String levelName = menuMode.getCurLevel();
+		playMode = new PlayMode(this, levelLoader, levelName);
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
-//		playMode.reset(levelLoader.loadLevel("level_1"));
-		playMode.setLevel("Oliver_level2");
-		levelLoader.loadLevel("Oliver_level2", playMode);
-
-
-
+		playMode.reset();
 		setScreen(playMode);
-
 	}
 
 	/** 
@@ -98,7 +100,7 @@ public class GDXRoot extends Game {
 	public void dispose() {
 		// Call dispose on our children
 		setScreen(null);
-		playMode.dispose();
+		menuMode.dispose();
 
 		canvas.dispose();
 		canvas = null;
@@ -125,4 +127,27 @@ public class GDXRoot extends Game {
 		canvas.resize();
 		super.resize(width,height);
 	}
+
+	@Override
+	public void exitScreen(Screen screen, int exitCode) {
+		if (exitCode == MainMenuMode.LEVEL_SELECTED_CODE) {
+			selectLevel();
+		} else if (exitCode == PlayMode.EXIT_LEVEL){
+			canvas.setCameraPos(canvas.getWidth() / 2f, canvas.getHeight() / 2f);
+			pauseMode.setDefault();
+			setScreen(pauseMode);
+		} else if (exitCode == PauseMode.EXIT_LEVEL_CODE) {
+			SoundController.startMenuMusic();
+			canvas.setCameraPos(canvas.getWidth() / 2f, canvas.getHeight() / 2f);
+			setScreen(menuMode);
+		} else if (exitCode == PauseMode.RESUME_LEVEL_CODE) {
+			playMode.resume();
+			setScreen(playMode);
+		} else if (exitCode == PauseMode.RESTART_LEVEL_CODE) {
+			playMode.reset();
+			playMode.resume();
+			setScreen(playMode);
+		}
+	}
+
 }

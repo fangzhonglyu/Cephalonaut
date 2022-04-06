@@ -17,14 +17,10 @@ public class LevelElement extends SimpleObstacle {
     /** Triangles for this element */
     private PolygonShape[] triangles;
 
-    // TODO: We probably don't need shape and geometry? What's this about a resizing cache?
-//    protected Shape shape;
-//    /** A cache value for the fixture (for resizing) */
-//    private Fixture geometry;
-
     protected boolean inContact = false;
 
     public enum Element {
+        GLASS_BARRIER,
         BLACK_HOLE,
         FLYING_METEOR,
         WALL,
@@ -34,7 +30,9 @@ public class LevelElement extends SimpleObstacle {
         DOOR,
         FINISH,
         WORMHOLE,
-        MISC
+        MISC,
+        START,
+        SPIKE
     }
 
     /** Type of element **/
@@ -95,6 +93,8 @@ public class LevelElement extends SimpleObstacle {
                 return new LETrigger(def);
             case WORMHOLE:
                 return new LEWormHole(def);
+            case GLASS_BARRIER:
+                return new LEGlassBarrier(def);
             default:
                 return new LevelElement(def);
         }
@@ -168,21 +168,6 @@ public class LevelElement extends SimpleObstacle {
         updateScale();
     }
 
-//    private void createFlyingMeteor() {
-//        createFlyingMeteor(METEOR_RADIUS);
-//    }
-//
-//    private void createFlyingMeteor(float radius) {
-//        shape = new CircleShape();
-//        shape.setRadius(radius);
-//        setName("meteor" + meteor_count);
-//        setGrapple(true);
-//        setTexture(crosshairTexture);
-//        setBodyType(BodyDef.BodyType.KinematicBody);
-//        setTint(Color.PURPLE);
-//    }
-
-
     /**
      * Create new fixtures for this body, defining the shape
      *
@@ -222,8 +207,10 @@ public class LevelElement extends SimpleObstacle {
      * @param canvas Drawing context
      */
     public void drawDebug(GameCanvas canvas) {
+        float offsetX = canvas.getCameraX() * parallaxFactor.x / drawScale.x;
+        float offsetY = canvas.getCameraY() * parallaxFactor.y / drawScale.y;
         for (PolygonShape tri : triangles) {
-            canvas.drawPhysics(tri,Color.YELLOW,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+            canvas.drawPhysics(tri,Color.YELLOW,getX() + offsetX,getY() + offsetY,getAngle(),drawScale.x,drawScale.y);
         }
     }
 }

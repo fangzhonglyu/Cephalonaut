@@ -43,6 +43,7 @@ public class LevelLoader {
         }
 
         for (JsonValue tile : object_tileset.get("tiles")) {
+            // TODO: Maybe make this '128' not a constant? It's derived from the 'firstgid' of objects.tsj in a level.
             map.put(tile.getInt("id") + 128, tile);
         }
     }
@@ -81,6 +82,12 @@ public class LevelLoader {
                 return LevelElement.Element.FINISH;
             case "Wormhole":
                 return LevelElement.Element.WORMHOLE;
+            case "Start":
+                return LevelElement.Element.START;
+            case "Glass Barrier":
+                return LevelElement.Element.GLASS_BARRIER;
+            case "Spike":
+                return LevelElement.Element.SPIKE;
             default:
                 System.out.printf("WARNING: Unknown LevelElement type '%s'\n", element);
                 return LevelElement.Element.WALL;
@@ -113,6 +120,27 @@ public class LevelLoader {
         return color;
     }
 
+    private JsonValue mergeProperties(JsonValue a, JsonValue b) {
+        for (JsonValue bChild : b) {
+            String bName = bChild.getString("name");
+
+            boolean merged = false;
+            for (JsonValue aChild : a) {
+                merged = bName.equals(aChild.getString("name"));
+                if (merged) {
+                    mergeJsons(aChild.get("value"), bChild.get("value"));
+                    break;
+                }
+            }
+
+            if (!merged) {
+                a.addChild(bChild);
+            }
+        }
+
+        return a;
+    }
+
     /** Merges json [b] into json [a]. **/
     private JsonValue mergeJsons(JsonValue a, JsonValue b) {
         if (a == null) return b;
@@ -122,7 +150,11 @@ public class LevelLoader {
         for (JsonValue bChild : b) {
             JsonValue aChild = a.get(bChild.name);
             if (aChild != null) {
-                mergeJsons(aChild, bChild);
+                if (aChild.name.equals("properties")) {
+                    mergeProperties(aChild, bChild);
+                } else {
+                    mergeJsons(aChild, bChild);
+                }
             } else {
                 a.addChild(bChild);
             }
@@ -172,6 +204,9 @@ public class LevelLoader {
 
         def.angle = 0;
         def.element = stringToElementType(body.getString("type", null));
+        if (def.element == LevelElement.Element.WORMHOLE) {
+            System.out.println(body);
+        }
         def.canGrapple = body.getBoolean("canGrappleOn", true);
         def.density = body.getFloat("density", 0);
         def.restitution = body.getFloat("restitution", 0.3f);
@@ -207,11 +242,38 @@ public class LevelLoader {
         def.y = pos.y;
     }
 
-    public void loadLevel(String levelName, PlayMode playMode) {
+    public static class LevelDef {
+        // TODO: GameObject/LevelElement separation is kinda gross
+        private final Queue<GameObject> objects;
+        private final Map<Integer, LevelElement> idToObject;
+
+        public LevelDef() {
+            objects = new Queue<>();
+            idToObject = new HashMap<>();
+        }
+
+        public void addObject(GameObject obj) {
+            objects.addLast(obj);
+        }
+
+        public void addObject(int id, LevelElement obj) {
+            addObject(obj);
+            idToObject.put(id, obj);
+        }
+
+        public Iterable<GameObject> getObjects() {
+            return objects;
+        }
+
+        public Map<Integer, LevelElement> getIdToObject() {
+            return idToObject;
+        }
+    }
+
+    public LevelDef loadLevel(String levelName) {
+        LevelDef levelDef = new LevelDef();
         LevelElement.Def levelElementDef = new LevelElement.Def();
 
-        Map<Integer, LevelElement> objectIds = new HashMap<>();
-        Queue<GameObject> objects = new Queue<>();
         JsonValue level = assetDirectory.getEntry(levelName, JsonValue.class);
         int levelHeight = level.getInt("height");
         int tileSize = level.getInt("tilewidth");
@@ -249,7 +311,7 @@ public class LevelLoader {
                             loadTile(levelElementDef, tile);
                             LevelElement element = LevelElement.create(levelElementDef);
                             element.setParallaxFactor(parallax);
-                            objects.addLast(element);
+                            levelDef.addObject(element);
                         }
                     }
                     break;
@@ -257,6 +319,13 @@ public class LevelLoader {
                     for (JsonValue jsonObject : layer.get("objects")) {
                         int gid = jsonObject.getInt("gid") - 1;
                         mergeJsons(jsonObject, map.get(gid));
+
+                        if (gid == 134) {
+                            System.out.println("MAP:");
+                            System.out.println(map.get(gid));
+                            System.out.println("MERGED:");
+                            System.out.println(jsonObject);
+                        }
 
                         if (jsonObject.has("image")) {
                             Texture fullTexture = assetDirectory.getEntry(jsonObject.getString("image"), Texture.class);
@@ -269,16 +338,18 @@ public class LevelLoader {
                         loadObject(levelElementDef, jsonObject, tileSize, levelHeight);
                         LevelElement newObject = LevelElement.create(levelElementDef);
                         newObject.setParallaxFactor(parallax);
-                        objects.addLast(newObject);
-                        objectIds.put(jsonObject.getInt("id"), newObject);
+                        levelDef.addObject(jsonObject.getInt("id"), newObject);
                     }
                     break;
                 case "imagelayer":
-                    Texture image = assetDirectory.getEntry(layer.getString("image"), Texture.class);
+                    String path = layer.getString("image");
+                    String filename = path.substring(path.lastIndexOf("/") + 1);
+                    System.out.println(filename);
+                    Texture image = assetDirectory.getEntry(filename, Texture.class);
                     image.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
                     ImageObject imageObject = new ImageObject(image);
                     imageObject.setParallaxFactor(parallax);
-                    objects.addLast(imageObject);
+                    levelDef.addObject(imageObject);
                     break;
                 default:
                     System.out.printf("ERROR: Cannot parse layer type '%s'\n", type);
@@ -286,7 +357,6 @@ public class LevelLoader {
             }
         }
 
-        playMode.setObjectMap(objectIds);
-        playMode.reset(objects);
+        return levelDef;
     }
 }

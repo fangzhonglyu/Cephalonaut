@@ -17,13 +17,15 @@ public class LEWormHole extends LevelElement {
         assert target >= 0;
         originalTint = getTint();
         cooldown = 0;
+        System.out.println(getElement());
+        System.out.println(isSensor());
     }
 
     public int getTarget() { return target; }
 
-    public void setCooldown(int cool) {cooldown = cool;}
+    public void setCooldown(int cooldown) { this.cooldown = cooldown; }
 
-    public int getCooldown() {return cooldown;}
+    public int getCooldown() { return cooldown; }
 
     public int getWormHoleCooldown() { return WORMHOLE_COOLDOWN; }
 

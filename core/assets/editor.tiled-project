@@ -87,7 +87,10 @@
                 "Door",
                 "Misc",
                 "Finish",
-                "Wormhole"
+                "Wormhole",
+                "Glass Barrier",
+                "Start",
+                "Spike"
             ],
             "valuesAsFlags": false
         }

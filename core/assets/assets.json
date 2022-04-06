@@ -7,25 +7,53 @@
     },
     "barrier": "barrier.png",
     "squid.png": "squid.png",
-    "octopus": "octopus.png",
+    "octopus.png": "octopus.png",
+    "octopusInk": "A-Michael-Inking.png",
     "crosshair": "crosshair.png",
     "BG-purplespace.png": "BG-purplespace.png",
     "GO-blackhole.png": "GO-blackhole.png",
-    "GO-wormhole.png": "GO-wormhole.png"
+    "GO-wormhole.png": "GO-wormhole.png",
+    "main-menu:background": "BG-purplespace.png",
+    "levelicon:level_0": "levels/level_0.png",
+    "levelicon:level_1": "levels/level_1.png",
+    "levelicon:level_2": "levels/level_2.png",
+    "levelicon:level_3": "levels/level_3.png",
+    "levelicon:level_4": "levels/level_4.png",
+    "levelicon:level_5": "levels/level_5.png",
+    "levelicon:level_6": "levels/level_6.png"
   },
   "jsons": {
     "tile-tileset": "tileset.tsj",
     "object-tileset": "objects.tsj",
-    "level_0": "level_0.tmj",
-    "level_1": "level_1.tmj",
+    "level_0": "levels/level_0.tmj",
+    "level_1": "levels/level_1.tmj",
+    "level_2": "levels/level_2.tmj",
+    "level_3": "levels/level_3.tmj",
+    "level_4": "levels/level_4.tmj",
+    "level_5": "levels/level_5.tmj",
+    "level_6": "levels/level_6.tmj",
     "wormhole_test": "wormhole_test.tmj",
     "Oliver_level1": "Oliver_level1.tmj",
     "Oliver_level2": "Oliver_level2-4.tmj"
   },
   "music": {
-    "level1": "CephalonautLevel1Mix1.mp3"
+    "level0": "music/CephalonautLevel7Mix1.mp3",
+    "level1": "music/CephalonautLevel1Mix1.mp3",
+    "level2": "music/CephalonautLevel9Mix1.mp3",
+    "level3": "music/CephalonautLevel3Mix1.mp3",
+    "level4": "music/CephalonautLevel4Mix1.mp3",
+    "level5": "music/CephalonautLevel5Mix1.mp3",
+    "level6": "music/CephalonautLevel6Mix1.mp3",
+    "mainMenu": "music/Cephalonautintromusicmix1.mp3"
   },
-  "sounds":{
-    "ink": "sample ink.mp3"
+  "sounds": {
+    "ink": "sample ink.mp3",
+    "suction": "TentacleSuctionSFX.mp3"
+  },
+  "fonts": {
+    "retro": {
+      "file": "RetroGame.ttf",
+      "size": 64
+    }
   }
 }

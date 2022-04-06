@@ -60,6 +60,12 @@ public class InputController {
 	private boolean secondaryPrevious;
 	/** Whether the teritiary action button was pressed. */
 	private boolean tertiaryPressed;
+
+	private boolean selectPressed;
+	private boolean prevPressed;
+	private boolean nextPressed;
+	private boolean upPressed;
+	private boolean downPressed;
 	/** Whether the debug toggle was pressed. */
 	private boolean debugPressed;
 	private boolean debugPrevious;
@@ -196,6 +202,51 @@ public class InputController {
 	}
 
 	/**
+	 * Returns true if the player just selected something
+	 *
+	 * @return true if the select button was pressed
+	 */
+	public boolean isSelectPressed(){
+		return selectPressed;
+	}
+
+	/**
+	 * Returns true if the player indicated to go to next
+	 *
+	 * @return true if the next button was pressed
+	 */
+	public boolean isNextPressed(){
+		return nextPressed;
+	}
+
+	/**
+	 * Returns true if the player indicated to go to previous
+	 *
+	 * @return true if the prev button was pressed
+	 */
+	public boolean isPrevPressed(){
+		return prevPressed;
+	}
+
+	/**
+	 * Returns true if the player indicated to go to previous
+	 *
+	 * @return true if the prev button was pressed
+	 */
+	public boolean isUpPressed(){
+		return upPressed;
+	}
+
+	/**
+	 * Returns true if the player indicated to go to previous
+	 *
+	 * @return true if the prev button was pressed
+	 */
+	public boolean isDownPressed(){
+		return downPressed;
+	}
+
+	/**
 	 * Gets the rotation of the octopus
 	 * Returns 1.0 for clockwise rotation, 0 for no rotation, and -1.0 for counterclockwise rotation
 	 *
@@ -241,6 +292,8 @@ public class InputController {
 		resetPrevious  = resetPressed;
 		debugPrevious  = debugPressed;
 		exitPrevious = exitPressed;
+		selectPressed = selectPressed;
+		nextPressed = nextPressed;
 		thrusterApplied = thrusterApplied;
 		
 		// Check to see if a GamePad is connected
@@ -303,9 +356,14 @@ public class InputController {
 		debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
 		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
 		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT));
-		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
+		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) && !selectPressed;;
+		selectPressed = ((secondary && selectPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))) && !exitPressed;
+		nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || (Gdx.input.isKeyJustPressed(Input.Keys.D)));
+		prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || (Gdx.input.isKeyJustPressed(Input.Keys.A)));
 		tertiaryPressed = (secondary && tertiaryPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) ||
-				(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) ;
+				(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT));
+		upPressed = (secondary && upPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.UP) || (Gdx.input.isKeyJustPressed(Input.Keys.W)));
+		downPressed = (secondary && downPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || (Gdx.input.isKeyJustPressed(Input.Keys.S)));
 
 		// Directional controls
 		rotation = (secondary ? rotation : 0.0f);
@@ -319,10 +377,10 @@ public class InputController {
 		thrusterApplied = Gdx.input.isKeyPressed(Input.Keys.W);
 		
 		// Mouse results
-		crosshair.set(Gdx.input.getX(), Gdx.input.getY());
-		crosshair.scl(1/scale.x,-1/scale.y);
-		crosshair.y += bounds.height;
-		clampPosition(bounds);
+		crosshair.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+		crosshair.scl(1/scale.x,1/scale.y);
+		// TODO: Clamp correctly
+//		clampPosition(bounds);
 	}
 	
 	/**
