@@ -522,7 +522,6 @@ public abstract class WorldController implements Screen {
 		scale.x = canvas.getWidth() / tilesPerRow;
 		scale.y = scale.x;
 //		scale.y = canvas.getHeight() / bounds.getHeight();
-		System.out.println(scale);
 		canvas.setSize(width, height);
 		canvas.resize();
 	}
