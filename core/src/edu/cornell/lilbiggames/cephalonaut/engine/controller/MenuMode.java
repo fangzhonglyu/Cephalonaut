@@ -22,6 +22,9 @@ public class MenuMode implements Screen {
     public static final int NESTED_MENU_EXIT_CODE = 52;
     public static final int NEXT_LEVEL_CODE = 53;
 
+    private final Color YELLOW = new Color(255.0f/256.0f, 232.0f/256.0f, 132.0f/256.0f, 1.0f);
+    private final float ARROW_WIDTH = 20.0f;
+
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
 
@@ -35,6 +38,7 @@ public class MenuMode implements Screen {
     protected GameCanvas canvas;
 
     private AssetDirectory assets;
+    private Texture arrow;
 
     private Vector2 bounds,scale;
 
@@ -53,6 +57,8 @@ public class MenuMode implements Screen {
 
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        arrow = assets.getEntry("arrow", Texture.class);
+
         this.assets = assets;
 
     }
@@ -77,6 +83,34 @@ public class MenuMode implements Screen {
 
     private void update(float delta){
 
+    }
+
+
+    protected void drawOptions(String[] options, int selectedOption){
+        float start = (options.length*0.5f*displayFont.getLineHeight())/2;
+        displayFont.getData().setScale(1.0f);
+        displayFont.setColor(Color.ORANGE);
+        canvas.drawTextCentered("CEPHALONAUT", displayFont, start);
+        displayFont.setColor(YELLOW);
+        displayFont.getData().setScale(0.5f);
+
+        for(int i = 0; i < options.length; i++){
+            canvas.drawTextCentered(options[i], displayFont, start - displayFont.getLineHeight()*i - 2*displayFont.getLineHeight());
+            if(selectedOption == i) {
+                canvas.draw(
+                        arrow,
+                        YELLOW,
+                        ARROW_WIDTH/2,
+                        ARROW_WIDTH/2,
+                        canvas.getWidth() * 3/8,
+                        canvas.getHeight()/2 + start - displayFont.getLineHeight()*i - 2*displayFont.getLineHeight(),
+                        ARROW_WIDTH,
+                        ARROW_WIDTH
+                );
+            }
+        }
+        displayFont.setColor(Color.WHITE);
+        displayFont.getData().setScale(1.0f);
     }
 
     @Override
