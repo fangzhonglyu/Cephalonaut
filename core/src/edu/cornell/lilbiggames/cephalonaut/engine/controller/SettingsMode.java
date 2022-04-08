@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.engine.ui.Slider;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 import java.util.Map;
@@ -34,6 +35,7 @@ public class SettingsMode extends MenuMode {
     private String[] options;
 
     private int SLIDER_HEIGHT = 18;
+    private Slider musicVolumeSlider;
 
     public SettingsMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, Map<String,Integer> keyBindings){
         super(assets, canvas, listener);
@@ -51,6 +53,8 @@ public class SettingsMode extends MenuMode {
 
         volumeDown = assets.getEntry("volume-down", Texture.class);
         volumeUp = assets.getEntry("volume-up", Texture.class);
+
+        musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, 0.5f, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x);
     }
 
     @Override
@@ -132,9 +136,12 @@ public class SettingsMode extends MenuMode {
         displayFont.setColor(YELLOW);
         canvas.drawText("VOLUME", displayFont, width/4, start);
 
-        float sliderHeight = SLIDER_HEIGHT * scale.x;
+        float sliderHeight = SLIDER_HEIGHT*scale.x;
 
-        canvas.drawSlider(YELLOW,0.0f, 1.0f, 0.5f, width/2, start - 2f*displayFont.getLineHeight(), width/3.0f, sliderHeight);
+        musicVolumeSlider.updatePosition(width/2f, start-2*displayFont.getLineHeight());
+        musicVolumeSlider.updateSize(width/3f, sliderHeight);
+        musicVolumeSlider.draw();
+
         float halfSliderWidth = width/3.0f * 0.5f;
 
         // draw volume icons
