@@ -28,9 +28,12 @@ public class SettingsMode extends MenuMode {
     protected GameCanvas canvas;
 
     private Map<String,Integer> keyBindings;
+    Texture volumeDown, volumeUp;
 
     private int selectedOption;
     private String[] options;
+
+    private int SLIDER_HEIGHT = 18;
 
     public SettingsMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, Map<String,Integer> keyBindings){
         super(assets, canvas, listener);
@@ -45,6 +48,9 @@ public class SettingsMode extends MenuMode {
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro",BitmapFont.class);
+
+        volumeDown = assets.getEntry("volume-down", Texture.class);
+        volumeUp = assets.getEntry("volume-up", Texture.class);
     }
 
     @Override
@@ -91,7 +97,6 @@ public class SettingsMode extends MenuMode {
         float subtitleHeight = (3.0f/4.0f)*height - displayFont.getLineHeight();
         displayFont.getData().setScale(0.6f*scale.x);
         displayFont.setColor(YELLOW);
-
         canvas.drawText("KEYBINDINGS", displayFont, width/4, subtitleHeight);
 
         float start = subtitleHeight - 1.5f * displayFont.getLineHeight();
@@ -102,7 +107,6 @@ public class SettingsMode extends MenuMode {
         for(String binding : keyBindings.keySet()){
             float textHeight = start - 2*displayFont.getLineHeight()*i;
             canvas.drawText(binding, displayFont, width/4, textHeight);
-            canvas.drawText(Input.Keys.toString(keyBindings.get(binding)), displayFont, 0.75f*width, textHeight);
 
             if(i == selectedOption){
                 canvas.draw(
@@ -115,9 +119,27 @@ public class SettingsMode extends MenuMode {
                         ARROW_WIDTH,
                         ARROW_WIDTH
                 );
+                displayFont.setColor(Color.CYAN);
             }
+            canvas.drawText(Input.Keys.toString(keyBindings.get(binding)), displayFont, 0.75f*width, textHeight);
+            displayFont.setColor(YELLOW);
             i++;
         }
+
+        start = start - 2*displayFont.getLineHeight()*i;
+
+        displayFont.getData().setScale(0.6f*scale.x);
+        displayFont.setColor(YELLOW);
+        canvas.drawText("VOLUME", displayFont, width/4, start);
+
+        float sliderHeight = SLIDER_HEIGHT * scale.x;
+
+        canvas.drawSlider(YELLOW,0.0f, 1.0f, 0.5f, width/2, start - 2f*displayFont.getLineHeight(), width/3.0f, sliderHeight);
+        float halfSliderWidth = width/3.0f * 0.5f;
+
+        // draw volume icons
+        canvas.draw(volumeDown, Color.WHITE, 0, sliderHeight/2, width/2 - halfSliderWidth - 3*sliderHeight, start - 2f*displayFont.getLineHeight(), 2*sliderHeight, 2*sliderHeight);
+        canvas.draw(volumeUp, Color.WHITE, 0, sliderHeight/2, width/2 + halfSliderWidth + 2*sliderHeight, start - 2f*displayFont.getLineHeight(), 2*sliderHeight, 2*sliderHeight);
 
         canvas.end();
     }

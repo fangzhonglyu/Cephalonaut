@@ -27,7 +27,9 @@
     "levelicon:level_6": "levels/level_6.png",
     "level.png": "circle.png",
     "completedLevel.png": "circleFilled.png",
-    "arrow": "arrow.png"
+    "arrow": "arrow.png",
+    "volume-down": "volume-down (1).png",
+    "volume-up": "volume-up.png"
   },
   "jsons": {
     "keybindings": "keybindings.json",

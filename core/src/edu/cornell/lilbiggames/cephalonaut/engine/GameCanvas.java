@@ -711,6 +711,19 @@ public class GameCanvas {
 		spriteBatch.begin();
 	}
 
+	public void drawSlider(Color color, float min, float max, float value, float x, float y, float sliderWidth, float sliderHeight){
+		spriteBatch.end();
+		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRen.setColor(Color.WHITE);
+		shapeRen.rect(x - sliderWidth/2.0f, y, sliderWidth, sliderHeight);
+		shapeRen.setColor(color);
+		shapeRen.rect((x-sliderWidth/2.0f), y, sliderWidth*value-2, sliderHeight);
+		shapeRen.setColor(color);
+		shapeRen.circle((x-sliderWidth/2.0f) + sliderWidth*value, y + sliderHeight/2f, (sliderHeight+6)/2f, 1000);
+		shapeRen.end();
+		spriteBatch.begin();
+	}
+
 	/**
 	 * Draws the tinted texture with the given transformations
 	 *
