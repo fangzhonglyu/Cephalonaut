@@ -15,6 +15,7 @@ public class MenuMode implements Screen {
     public static int EXIT_LEVEL_CODE = 30;
     public static int RESUME_LEVEL_CODE = 31;
     public static int RESTART_LEVEL_CODE = 32;
+    public static int RETURN_TO_START_CODE = 33;
     public static int START_CODE = 40;
     public static int OPTIONS_CODE = 41;
     public static int CREDITS_CODE = 42;
@@ -22,8 +23,8 @@ public class MenuMode implements Screen {
     public static final int NESTED_MENU_EXIT_CODE = 52;
     public static final int NEXT_LEVEL_CODE = 53;
 
-    private final Color YELLOW = new Color(255.0f/256.0f, 232.0f/256.0f, 132.0f/256.0f, 1.0f);
-    private final float ARROW_WIDTH = 20.0f;
+    protected final Color YELLOW = new Color(255.0f/256.0f, 232.0f/256.0f, 132.0f/256.0f, 1.0f);
+    protected final float ARROW_WIDTH = 20.0f;
 
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
@@ -38,9 +39,9 @@ public class MenuMode implements Screen {
     protected GameCanvas canvas;
 
     private AssetDirectory assets;
-    private Texture arrow;
+    protected Texture arrow;
 
-    private Vector2 bounds,scale;
+    protected Vector2 bounds,scale;
 
     /**
      * Creates a MainMenuMode with the default size and position.
@@ -89,7 +90,7 @@ public class MenuMode implements Screen {
     protected void drawOptions(String[] options, int selectedOption){
         float start = (options.length*displayFont.getLineHeight())/2;
         displayFont.setColor(YELLOW);
-        displayFont.getData().setScale(0.5f);
+        displayFont.getData().setScale(0.5f*scale.x);
 
         for(int i = 0; i < options.length; i++){
             canvas.drawTextCentered(options[i], displayFont, start - displayFont.getLineHeight()*i - 2*displayFont.getLineHeight());
@@ -107,7 +108,7 @@ public class MenuMode implements Screen {
             }
         }
         displayFont.setColor(Color.WHITE);
-        displayFont.getData().setScale(1.0f);
+        displayFont.getData().setScale(scale.x);
     }
 
     @Override

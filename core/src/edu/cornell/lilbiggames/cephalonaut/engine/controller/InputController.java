@@ -20,6 +20,9 @@ import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class for reading player input. 
  *
@@ -36,18 +39,6 @@ public class InputController {
 	/** The singleton instance of the input controller */
 	private static InputController theController = null;
 	
-	/** 
-	 * Return the singleton instance of the input controller
-	 *
-	 * @return the singleton instance of the input controller
-	 */
-	public static InputController getInstance() {
-		if (theController == null) {
-			theController = new InputController();
-		}
-		return theController;
-	}
-	
 	// Fields to manage buttons
 	/** Whether the reset button was pressed. */
 	private boolean resetPressed;
@@ -62,8 +53,11 @@ public class InputController {
 	private boolean tertiaryPressed;
 
 	private boolean selectPressed;
+	private boolean selectPrevious;
 	private boolean prevPressed;
+	private boolean prevPrevious;
 	private boolean nextPressed;
+	private boolean nextPrevious;
 	private boolean upPressed;
 	private boolean downPressed;
 	/** Whether the debug toggle was pressed. */
@@ -88,9 +82,80 @@ public class InputController {
 	private boolean thrusterApplied;
 	/** Rotation applied (-1 for counterclockwise, 0 for no rotation, 1 for clockwise */
 	private float rotation;
+	private Map<String, Integer> keyBindings;
 	
 	/** An X-Box controller (if it is connected) */
 	XBoxController xbox;
+
+	private int currentKey;
+
+	private void setDefaultBindings(){
+		keyBindings.put("thrust",Input.Keys.valueOf("W"));
+		keyBindings.put("rotate-counterclockwise",Input.Keys.valueOf("A"));
+		keyBindings.put("rotate-clockwise",Input.Keys.valueOf("D"));
+	}
+
+	/**
+	 * Return the singleton instance of the input controller
+	 *
+	 * @return the singleton instance of the input controller
+	 */
+	public static InputController getInstance() {
+		if (theController == null) {
+			theController = new InputController();
+			theController.setDefaultBindings();
+		}
+		return theController;
+	}
+
+	public void setBindings(Map<String,Integer> keyBindings){
+		this.keyBindings = keyBindings;
+	}
+
+	private class InputProcessorCurrentKey implements InputProcessor {
+
+		@Override
+		public boolean keyDown(int i) {
+			currentKey = i;
+			return false;
+		}
+
+		@Override
+		public boolean keyUp(int i) {
+			currentKey = Input.Keys.ANY_KEY;
+			return false;
+		}
+
+		@Override
+		public boolean keyTyped(char c) {
+			return false;
+		}
+
+		@Override
+		public boolean touchDown(int i, int i1, int i2, int i3) {
+			return false;
+		}
+
+		@Override
+		public boolean touchUp(int i, int i1, int i2, int i3) {
+			return false;
+		}
+
+		@Override
+		public boolean touchDragged(int i, int i1, int i2) {
+			return false;
+		}
+
+		@Override
+		public boolean mouseMoved(int i, int i1) {
+			return false;
+		}
+
+		@Override
+		public boolean scrolled(float v, float v1) {
+			return false;
+		}
+	}
 	
 	/**
 	 * Returns the amount of sideways movement. 
@@ -207,7 +272,7 @@ public class InputController {
 	 * @return true if the select button was pressed
 	 */
 	public boolean isSelectPressed(){
-		return selectPressed;
+		return selectPressed && !selectPrevious;
 	}
 
 	/**
@@ -216,7 +281,7 @@ public class InputController {
 	 * @return true if the next button was pressed
 	 */
 	public boolean isNextPressed(){
-		return nextPressed;
+		return nextPressed && !nextPrevious;
 	}
 
 	/**
@@ -225,7 +290,7 @@ public class InputController {
 	 * @return true if the prev button was pressed
 	 */
 	public boolean isPrevPressed(){
-		return prevPressed;
+		return prevPressed && !prevPrevious;
 	}
 
 	/**
@@ -270,6 +335,12 @@ public class InputController {
 		} else {
 			xbox = null;
 		}
+
+		Gdx.input.setInputProcessor(new InputProcessorCurrentKey());
+
+		currentKey = Input.Keys.ANY_KEY;
+
+		keyBindings = new HashMap<>();
 		crosshair = new Vector2();
 		crosscache = new Vector2();
 	}
@@ -292,9 +363,9 @@ public class InputController {
 		resetPrevious  = resetPressed;
 		debugPrevious  = debugPressed;
 		exitPrevious = exitPressed;
-		selectPressed = selectPressed;
-		nextPressed = nextPressed;
-		thrusterApplied = thrusterApplied;
+		selectPrevious = selectPressed;
+		nextPrevious = nextPressed;
+		prevPrevious = prevPressed;
 		
 		// Check to see if a GamePad is connected
 		if (xbox != null && xbox.isConnected()) {
@@ -367,14 +438,14 @@ public class InputController {
 
 		// Directional controls
 		rotation = (secondary ? rotation : 0.0f);
-		if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+		if (Gdx.input.isKeyPressed(keyBindings.get("rotate-clockwise"))) {
 			rotation += 1.0f;
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+		if (Gdx.input.isKeyPressed((keyBindings.get("rotate-counterclockwise")))){
 			rotation -= 1.0f;
 		}
 
-		thrusterApplied = Gdx.input.isKeyPressed(Input.Keys.W);
+		thrusterApplied = Gdx.input.isKeyPressed((keyBindings.get("thrust")));
 		
 		// Mouse results
 		crosshair.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
@@ -392,6 +463,10 @@ public class InputController {
 	private void clampPosition(Rectangle bounds) {
 		crosshair.x = Math.max(bounds.x, Math.min(bounds.x+bounds.width, crosshair.x));
 		crosshair.y = Math.max(bounds.y, Math.min(bounds.y+bounds.height, crosshair.y));
+	}
+
+	public int getCurrentKey(){
+		return Gdx.input.isKeyJustPressed(currentKey) ? currentKey : Input.Keys.ANY_KEY;
 	}
 
 

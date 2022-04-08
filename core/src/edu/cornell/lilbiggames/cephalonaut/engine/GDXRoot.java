@@ -14,12 +14,16 @@
  package edu.cornell.lilbiggames.cephalonaut.engine;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
@@ -41,6 +45,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private GameCanvas canvas;
 	List<Integer> numCheckpointsCompleted;
 
+	Map<String, Integer> keyBindings;
+
 	private PlayMode playMode;
 	private MainMenuMode mainMenu;
 	private MainMenuNestedMode mainMenuNestedMode;
@@ -60,6 +66,26 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	}
 
+	private void initializeCheckpointsMap(){
+		numCheckpointsCompleted = new ArrayList<>();
+		for(int i = 0; i < 7; i++){
+			numCheckpointsCompleted.add(0);
+		}
+	}
+
+	/**
+	 * directory must not be null when this is called
+	 */
+	private void initializeKeybindings(){
+		JsonValue bindings = directory.getEntry("keybindings", JsonValue.class);
+
+		System.out.println(bindings);
+		keyBindings = new HashMap<>();
+		keyBindings.put("thrust", Input.Keys.valueOf(bindings.getString("thrust","W")));
+		keyBindings.put("rotate-counterclockwise", Input.Keys.valueOf(bindings.getString("rotate-counterclockwise","A")));
+		keyBindings.put("rotate-clockwise", Input.Keys.valueOf(bindings.getString("rotate-clockwise","D")));
+	}
+
 	/** 
 	 * Called when the Application is first created.
 	 * 
@@ -75,24 +101,17 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		SoundController.gatherSoundAssets(directory);
 
-		numCheckpointsCompleted = new ArrayList<>();
-		for(int i = 0; i < 7; i++){
-			numCheckpointsCompleted.add(0);
-		}
+		initializeCheckpointsMap();
+		initializeKeybindings();
 
 		// Initialize the game world
 		mainMenu = new MainMenuMode(directory, canvas, this);
 		mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, 5,0, 0, this);
 		startScreenMode = new StartScreenMode(directory, canvas, this);
 		LevelElement.gatherAssets(directory);
-//		playMode.gatherAssets(directory);
-//		playMode.setCanvas(canvas);
-//		playMode.reset(levelLoader.loadLevel("level_1"));
-//		playMode.setLevel("Oliver_level2");
-//		levelLoader.loadLevel("Oliver_level2", playMode);
 
 		pauseMode = new PauseMode(directory, canvas, this);
-		settings = new SettingsMode(directory, canvas, this);
+		settings = new SettingsMode(directory, canvas, this, keyBindings);
 		levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
 
 		SoundController.startMenuMusic();
@@ -120,7 +139,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		String levelName = mainMenu.getCurLevel();
 		int curLevel = mainMenu.getCurLevelNumber();
 		String checkpointName = "checkpoint_" + numCheckpointsCompleted.get(curLevel);
-		playMode = new PlayMode(this, levelLoader, levelName, checkpointName);
+		playMode = new PlayMode(this, levelLoader, levelName, checkpointName, keyBindings);
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
 		playMode.reset();
@@ -172,6 +191,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			setScreen(mainMenu);
 		} else if(exitCode == MenuMode.OPTIONS_CODE){
 			System.out.println("settings");
+			settings.setDefault();
 			setScreen(settings);
 		} else if(exitCode == MenuMode.CREDITS_CODE){
 			System.out.println("credits");
@@ -207,6 +227,8 @@ public class GDXRoot extends Game implements ScreenListener {
 			setScreen(levelCompleteMode);
 		} else if (exitCode == MenuMode.NEXT_LEVEL_CODE) {
 			selectLevel();
+		} else if (exitCode == MenuMode.RETURN_TO_START_CODE){
+			setScreen(startScreenMode);
 		}
 	}
 

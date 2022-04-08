@@ -93,6 +93,8 @@ public class MainMenuMode extends MenuMode {
         } else if (inputController.isPrevPressed()){
             curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
             levelIcon = assets.getEntry("levelicon:level_"+curLevel, Texture.class);
+        } else if (inputController.didExit()){
+            listener.exitScreen(this, RETURN_TO_START_CODE);
         }
     }
 
@@ -134,7 +136,6 @@ public class MainMenuMode extends MenuMode {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
-//        background.draw(canvas);
 
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),

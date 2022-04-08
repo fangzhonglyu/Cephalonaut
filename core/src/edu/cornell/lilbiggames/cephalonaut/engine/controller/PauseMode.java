@@ -24,8 +24,6 @@ public class PauseMode extends MenuMode {
 
     private int selectedOption;
 
-    private Vector2 bounds,scale;
-
     /** Reference to the game canvas */
     protected GameCanvas canvas;
 

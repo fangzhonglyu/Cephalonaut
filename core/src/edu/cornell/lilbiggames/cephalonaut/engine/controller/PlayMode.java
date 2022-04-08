@@ -77,12 +77,14 @@ public class PlayMode extends WorldController implements Screen {
     /**
      * Creates and initialize a new instance of the sandbox
      */
-    public PlayMode(ScreenListener listener, LevelLoader loader, String level, String checkpoint) {
+    public PlayMode(ScreenListener listener, LevelLoader loader, String level, String checkpoint, Map<String, Integer> keyBindings) {
         super(DEFAULT_WIDTH, DEFAULT_HEIGHT, 0);
         this.listener = listener;
         this.level = level;
         this.checkpoint = checkpoint;
         this.loader = loader;
+
+        InputController.getInstance().setBindings(keyBindings);
         setDebug(false);
         setComplete(false);
         setFailure(false);

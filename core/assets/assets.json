@@ -30,6 +30,7 @@
     "arrow": "arrow.png"
   },
   "jsons": {
+    "keybindings": "keybindings.json",
     "tile-tileset": "tileset.tsj",
     "object-tileset": "objects.tsj",
     "wormhole_test": "wormhole_test.tmj",
