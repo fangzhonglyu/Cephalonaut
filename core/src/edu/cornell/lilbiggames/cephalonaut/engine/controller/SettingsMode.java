@@ -1,6 +1,5 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -39,6 +38,7 @@ public class SettingsMode extends MenuMode {
         this.listener = listener;
         this.keyBindings = keyBindings;
         options = keyBindings.keySet().toArray(new String[0]);
+
         background = assets.getEntry( "main-menu:background", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
@@ -72,7 +72,6 @@ public class SettingsMode extends MenuMode {
                 keyBindings.put(options[selectedOption], inputController.getCurrentKey());
             }
         }
-
         draw();
     }
 
