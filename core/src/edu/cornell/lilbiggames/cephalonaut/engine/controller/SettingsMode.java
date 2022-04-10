@@ -46,6 +46,43 @@ public class SettingsMode extends MenuMode {
     private final float DEFAULT_VOLUME = 0.5f;
     private float musicVolume;
 
+    private InputAdapter settingsInput = new InputAdapter() {
+        @Override
+        public boolean keyDown(int i) {
+            currentKey = i;
+            return true;
+        }
+
+        @Override
+        public boolean touchDown (int x, int y, int pointer, int button) {
+            startPosition = new Vector2(x,getCanvas().getHeight()-y);
+            dragging = true;
+            if(musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
+                musicVolumeSlider.movedX(startPosition.x);
+                musicVolume = musicVolumeSlider.getValue();
+            }
+            return true;
+        }
+
+        @Override
+        public boolean touchUp (int x, int y, int pointer, int button) {
+            dragging = false;
+            return true;
+        }
+
+        @Override
+        public boolean touchDragged(int screenX, int screenY, int button){
+            if(dragging && musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
+                musicVolumeSlider.movedX(screenX);
+                startPosition.x = screenX;
+                musicVolume = musicVolumeSlider.getValue();
+                SoundController.setMusicVolume(musicVolume);
+            }
+
+            return true;
+        }
+    };
+
     public SettingsMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, Map<String,Integer> keyBindings){
         super(assets, canvas, listener);
         this.canvas = canvas;
@@ -67,42 +104,7 @@ public class SettingsMode extends MenuMode {
         dragging = false;
         musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
 
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyDown(int i) {
-                currentKey = Gdx.input.isKeyJustPressed(currentKey) ? currentKey : Input.Keys.ANY_KEY;;
-                return true;
-            }
-
-            @Override
-            public boolean touchDown (int x, int y, int pointer, int button) {
-                startPosition = new Vector2(x,getCanvas().getHeight()-y);
-                dragging = true;
-                if(musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
-                    musicVolumeSlider.movedX(startPosition.x);
-                    musicVolume = musicVolumeSlider.getValue();
-                }
-                return true;
-            }
-
-            @Override
-            public boolean touchUp (int x, int y, int pointer, int button) {
-                dragging = false;
-                return true;
-            }
-
-            @Override
-            public boolean touchDragged(int screenX, int screenY, int button){
-                if(dragging && musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
-                    musicVolumeSlider.movedX(screenX);
-                    startPosition.x = screenX;
-                    musicVolume = musicVolumeSlider.getValue();
-                    SoundController.setMusicVolume(musicVolume);
-                }
-
-                return true;
-            }
-        });
+        Gdx.input.setInputProcessor(settingsInput);
     }
 
     public GameCanvas getCanvas(){
@@ -119,7 +121,7 @@ public class SettingsMode extends MenuMode {
     }
 
     public void setDefault(){
-        selectedOption = 0;
+        Gdx.input.setInputProcessor(settingsInput); selectedOption = 0;
     }
 
     @Override
@@ -133,6 +135,10 @@ public class SettingsMode extends MenuMode {
             selectedOption = (selectedOption +1)%options.length;
         } else if(inputController.didExit()){
             listener.exitScreen(this, RETURN_TO_START_CODE);
+        } else {
+            if(Gdx.input.isKeyJustPressed(currentKey)) {
+                keyBindings.put(options[selectedOption], currentKey);
+            }
         }
 
         draw();

@@ -225,6 +225,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		} else if (exitCode == MenuMode.NEXT_LEVEL_CODE) {
 			selectLevel();
 		} else if (exitCode == MenuMode.RETURN_TO_START_CODE){
+			Gdx.input.setInputProcessor(new InputAdapter());
 			setScreen(startScreenMode);
 		}
 	}
