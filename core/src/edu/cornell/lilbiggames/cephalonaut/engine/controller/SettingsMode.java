@@ -217,7 +217,7 @@ public class SettingsMode extends MenuMode {
 
     @Override
     public void resume() {
-        Gdx.input.setInputProcessor(inputProcessor);
+
     }
 
     @Override
