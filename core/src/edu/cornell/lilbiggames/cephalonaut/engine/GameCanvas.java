@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.physics.box2d.*;
+import edu.cornell.lilbiggames.cephalonaut.engine.ui.Slider;
 
 /**
  * Primary view class for the game, abstracting the basic graphics calls.
@@ -711,15 +712,17 @@ public class GameCanvas {
 		spriteBatch.begin();
 	}
 
-	public void drawSlider(Color color, float min, float max, float value, float x, float y, float sliderWidth, float sliderHeight){
+	public void drawSlider(Slider slider){
+		float x = slider.getPosition().x;
+		float y = slider.getPosition().y;
 		spriteBatch.end();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(Color.WHITE);
-		shapeRen.rect(x - sliderWidth/2.0f, y, sliderWidth, sliderHeight);
-		shapeRen.setColor(color);
-		shapeRen.rect((x-sliderWidth/2.0f), y, sliderWidth*value-2, sliderHeight);
-		shapeRen.setColor(color);
-		shapeRen.circle((x-sliderWidth/2.0f) + sliderWidth*value, y + sliderHeight/2f, (sliderHeight+6)/2f, 1000);
+		shapeRen.rect(x - slider.getWidth()/2.0f, y, slider.getWidth(), slider.getHeight());
+		shapeRen.setColor(slider.getColor());
+		shapeRen.rect((x-slider.getWidth()/2.0f), y, slider.getWidth()*slider.getValue(), slider.getHeight());
+		shapeRen.setColor(slider.getColor());
+		shapeRen.circle(slider.getKnobPosition().x, y + slider.getHeight()/2f, slider.getKnobRadius(), 1000);
 		shapeRen.end();
 		spriteBatch.begin();
 	}

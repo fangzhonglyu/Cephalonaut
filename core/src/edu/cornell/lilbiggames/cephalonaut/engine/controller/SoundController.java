@@ -29,6 +29,9 @@ public class SoundController {
     /** Whether someone is playing */
     private static boolean playing = false;
 
+    /** volume of the music */
+    private static float musicVolume;
+
     /** Gather assets. NEEDS TO BE CALLED BEFORE USE*/
     public synchronized static void gatherSoundAssets(AssetDirectory directory) {
         for (int i = 0; i < MENU_MUSIC_INDEX; i++) {
@@ -72,7 +75,7 @@ public class SoundController {
             return;
         bgmPlaying = musicCache[level];
         bgmPlaying.setLooping(true);
-        bgmPlaying.setVolume(1);
+        bgmPlaying.setVolume(musicVolume);
         bgmPlaying.play();
 
     }
@@ -168,5 +171,14 @@ public class SoundController {
             killSound(i);
         }
         setInkSound(false);
+    }
+
+    /* set volume */
+    public static void setMusicVolume(float volume){
+        musicVolume = volume;
+
+        if(bgmPlaying != null){
+            bgmPlaying.setVolume(musicVolume);
+        }
     }
 }

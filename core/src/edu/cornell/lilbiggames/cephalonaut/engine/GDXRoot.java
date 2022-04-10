@@ -14,7 +14,6 @@
  package edu.cornell.lilbiggames.cephalonaut.engine;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.*;
@@ -78,8 +77,6 @@ public class GDXRoot extends Game implements ScreenListener {
 	 */
 	private void initializeKeybindings(){
 		JsonValue bindings = directory.getEntry("keybindings", JsonValue.class);
-
-		System.out.println(bindings);
 		keyBindings = new HashMap<>();
 		keyBindings.put("thrust", Input.Keys.valueOf(bindings.getString("thrust","W")));
 		keyBindings.put("rotate-counterclockwise", Input.Keys.valueOf(bindings.getString("rotate-counterclockwise","A")));
@@ -114,6 +111,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		settings = new SettingsMode(directory, canvas, this, keyBindings);
 		levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
 
+		SoundController.setMusicVolume(0.5f);
 		SoundController.startMenuMusic();
 		setScreen(startScreenMode);
 	}
@@ -190,7 +188,6 @@ public class GDXRoot extends Game implements ScreenListener {
 		if(exitCode == MenuMode.START_CODE){
 			setScreen(mainMenu);
 		} else if(exitCode == MenuMode.OPTIONS_CODE){
-			System.out.println("settings");
 			settings.setDefault();
 			setScreen(settings);
 		} else if(exitCode == MenuMode.CREDITS_CODE){

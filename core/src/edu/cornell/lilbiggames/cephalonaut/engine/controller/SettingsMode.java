@@ -1,6 +1,8 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -37,11 +39,19 @@ public class SettingsMode extends MenuMode {
     private int SLIDER_HEIGHT = 18;
     private Slider musicVolumeSlider;
 
+    private int currentKey;
+    private Vector2 startPosition;
+    private boolean dragging;
+
+    private final float DEFAULT_VOLUME = 0.5f;
+    private float musicVolume;
+
     public SettingsMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, Map<String,Integer> keyBindings){
         super(assets, canvas, listener);
         this.canvas = canvas;
         this.listener = listener;
         this.keyBindings = keyBindings;
+        this.musicVolume = DEFAULT_VOLUME;
         options = keyBindings.keySet().toArray(new String[0]);
 
         background = assets.getEntry( "main-menu:background", Texture.class );
@@ -54,7 +64,53 @@ public class SettingsMode extends MenuMode {
         volumeDown = assets.getEntry("volume-down", Texture.class);
         volumeUp = assets.getEntry("volume-up", Texture.class);
 
-        musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, 0.5f, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x);
+        dragging = false;
+        musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
+
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean keyDown(int i) {
+                currentKey = Gdx.input.isKeyJustPressed(currentKey) ? currentKey : Input.Keys.ANY_KEY;;
+                return true;
+            }
+
+            @Override
+            public boolean touchDown (int x, int y, int pointer, int button) {
+                startPosition = new Vector2(x,getCanvas().getHeight()-y);
+                dragging = true;
+                if(musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
+                    musicVolumeSlider.movedX(startPosition.x);
+                    musicVolume = musicVolumeSlider.getValue();
+                }
+                return true;
+            }
+
+            @Override
+            public boolean touchUp (int x, int y, int pointer, int button) {
+                dragging = false;
+                return true;
+            }
+
+            @Override
+            public boolean touchDragged(int screenX, int screenY, int button){
+                if(dragging && musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
+                    musicVolumeSlider.movedX(screenX);
+                    startPosition.x = screenX;
+                    musicVolume = musicVolumeSlider.getValue();
+                    SoundController.setMusicVolume(musicVolume);
+                }
+
+                return true;
+            }
+        });
+    }
+
+    public GameCanvas getCanvas(){
+        return canvas;
+    }
+
+    public float getMusicVolume(){
+        return  musicVolume;
     }
 
     @Override
@@ -77,11 +133,8 @@ public class SettingsMode extends MenuMode {
             selectedOption = (selectedOption +1)%options.length;
         } else if(inputController.didExit()){
             listener.exitScreen(this, RETURN_TO_START_CODE);
-        } else {
-            if(inputController.getCurrentKey() != Input.Keys.ANY_KEY) {
-                keyBindings.put(options[selectedOption], inputController.getCurrentKey());
-            }
         }
+
         draw();
     }
 
@@ -151,6 +204,11 @@ public class SettingsMode extends MenuMode {
         canvas.end();
     }
 
+    @Override
+    public void resize(int w, int h){
+        super.resize(w,h);
+    }
+
 
     @Override
     public void pause() {
@@ -159,7 +217,7 @@ public class SettingsMode extends MenuMode {
 
     @Override
     public void resume() {
-
+        Gdx.input.setInputProcessor(inputProcessor);
     }
 
     @Override

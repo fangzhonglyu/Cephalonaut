@@ -87,7 +87,11 @@ public class InputController {
 	/** An X-Box controller (if it is connected) */
 	XBoxController xbox;
 
-	private int currentKey;
+	// slider mouse control
+	private Vector2 startPosition;
+	private Vector2 endPosition;
+	private boolean isDragging;
+	private boolean didDrag;
 
 	private void setDefaultBindings(){
 		keyBindings.put("thrust",Input.Keys.valueOf("W"));
@@ -112,50 +116,6 @@ public class InputController {
 		this.keyBindings = keyBindings;
 	}
 
-	private class InputProcessorCurrentKey implements InputProcessor {
-
-		@Override
-		public boolean keyDown(int i) {
-			currentKey = i;
-			return false;
-		}
-
-		@Override
-		public boolean keyUp(int i) {
-			currentKey = Input.Keys.ANY_KEY;
-			return false;
-		}
-
-		@Override
-		public boolean keyTyped(char c) {
-			return false;
-		}
-
-		@Override
-		public boolean touchDown(int i, int i1, int i2, int i3) {
-			return false;
-		}
-
-		@Override
-		public boolean touchUp(int i, int i1, int i2, int i3) {
-			return false;
-		}
-
-		@Override
-		public boolean touchDragged(int i, int i1, int i2) {
-			return false;
-		}
-
-		@Override
-		public boolean mouseMoved(int i, int i1) {
-			return false;
-		}
-
-		@Override
-		public boolean scrolled(float v, float v1) {
-			return false;
-		}
-	}
 	
 	/**
 	 * Returns the amount of sideways movement. 
@@ -336,10 +296,6 @@ public class InputController {
 			xbox = null;
 		}
 
-		Gdx.input.setInputProcessor(new InputProcessorCurrentKey());
-
-		currentKey = Input.Keys.ANY_KEY;
-
 		keyBindings = new HashMap<>();
 		crosshair = new Vector2();
 		crosscache = new Vector2();
@@ -464,10 +420,5 @@ public class InputController {
 		crosshair.x = Math.max(bounds.x, Math.min(bounds.x+bounds.width, crosshair.x));
 		crosshair.y = Math.max(bounds.y, Math.min(bounds.y+bounds.height, crosshair.y));
 	}
-
-	public int getCurrentKey(){
-		return Gdx.input.isKeyJustPressed(currentKey) ? currentKey : Input.Keys.ANY_KEY;
-	}
-
 
 }
