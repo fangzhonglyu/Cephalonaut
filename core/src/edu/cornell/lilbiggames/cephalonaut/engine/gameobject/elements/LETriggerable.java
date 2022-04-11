@@ -10,13 +10,20 @@ public class LETriggerable extends LevelElement {
 
     final protected Vector2 originalPos;
     final protected Vector2 activatedPos;
+    final protected float dx;
+    final protected float dy;
+
+
     protected Vector2 targetPos;
 
     public LETriggerable(Def def) {
         super(def);
+
+        dx = def.properties.getFloat("dx", 0);
+        dy = def.properties.getFloat("dy", 3);
         originalPos = getPosition().cpy();
         // TODO: Make these adjustable parameters
-        activatedPos = getPosition().cpy().add(0, 3);
+        activatedPos = getPosition().cpy().add(dx, dy);
         targetPos = originalPos;
     }
 
@@ -31,4 +38,5 @@ public class LETriggerable extends LevelElement {
         targetPos = activated ? activatedPos : originalPos;
         setLinearVelocity(targetPos.cpy().sub(getPosition()).setLength(MOVE_SPEED));
     }
+
 }

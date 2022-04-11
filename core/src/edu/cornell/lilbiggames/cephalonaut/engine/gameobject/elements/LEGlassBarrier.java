@@ -12,6 +12,7 @@ public class LEGlassBarrier extends LevelElement {
     private float health;
     private Color tint;
     private Color indicator;
+    private final float INDICATOR_DISTANCE = 5.0f;
 
     public LEGlassBarrier(LevelElement.Def def) {
         super(def);
@@ -31,7 +32,7 @@ public class LEGlassBarrier extends LevelElement {
     }
 
     public void willBreak(float damage, float distance) {
-        if(distance < 5.0f && health - damage <= 0) {
+        if(distance < INDICATOR_DISTANCE && health - damage <= 0) {
             setTint(indicator);
         }
         else {
@@ -41,6 +42,12 @@ public class LEGlassBarrier extends LevelElement {
 
     public boolean isBroken() {
         return health <= 0;
+    }
+
+    public void reset() {
+        health = glassBarrierHardness;
+        tint.a = 1.0f;
+        this.markRemoved(false);
     }
 }
 
