@@ -49,8 +49,7 @@ public class SoundController {
      * @param thrust whether to play the sound or not
      */
     public synchronized static void setInkSound(boolean thrust) {
-        if (playing) {
-            if (inkPlaying && !thrust) {
+            if (!thrust) {
                 inkPlaying = false;
                 inkSound.stop();
             }
@@ -58,7 +57,6 @@ public class SoundController {
                 inkPlaying = true;
                 inkSound.loop();
             }
-        }
     }
 
     public synchronized static void setPlaying(boolean play) {
@@ -111,7 +109,7 @@ public class SoundController {
                 } else {
                     i--;
                     if(bgmPlaying!=fading)
-                        fading.setVolume((float) i / 10);
+                        fading.setVolume((float) i*musicVolume/ 10);
                 }
             }
         }, 0f, 0.1f, 10);

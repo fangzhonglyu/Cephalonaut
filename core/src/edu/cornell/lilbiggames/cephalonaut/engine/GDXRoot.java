@@ -200,6 +200,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			selectLevel();
 		} else if (exitCode == MenuMode.EXIT_LEVEL_CODE) {
 			SoundController.startMenuMusic();
+			playMode.pause();
 			SoundController.setPlaying(false);
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			int curLevel = mainMenu.getCurLevelNumber();
@@ -220,6 +221,8 @@ public class GDXRoot extends Game implements ScreenListener {
 			setScreen(playMode);
 		} else if (exitCode == LevelController.COMPLETE_LEVEL) {
 			completeCheckpoint();
+			playMode.pause();
+			SoundController.killAllSound();
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			setScreen(levelCompleteMode);
 		} else if (exitCode == MenuMode.NEXT_LEVEL_CODE) {

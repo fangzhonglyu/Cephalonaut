@@ -85,6 +85,7 @@ public class LevelCompleteMode implements Screen {
     }
 
     private void update(float delta){
+        SoundController.killAllSound();
         inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
         if (clickedRestart()) {
