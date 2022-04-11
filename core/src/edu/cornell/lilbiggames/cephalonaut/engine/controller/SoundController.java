@@ -109,7 +109,7 @@ public class SoundController {
                 } else {
                     i--;
                     if(bgmPlaying!=fading)
-                        fading.setVolume((float) i / 10);
+                        fading.setVolume((float) i*musicVolume/ 10);
                 }
             }
         }, 0f, 0.1f, 10);
