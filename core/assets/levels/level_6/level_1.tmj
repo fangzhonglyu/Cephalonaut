@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":9,
-         "image":"BG-purplespace.png",
+         "image":"../../BG-purplespace.png",
          "name":"Background",
          "opacity":1,
          "parallaxx":0.5,
@@ -242,11 +242,11 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"tileset.tsj"
+         "source":"../../tileset.tsj"
         }, 
         {
          "firstgid":129,
-         "source":"objects.tsj"
+         "source":"../../objects.tsj"
         }],
  "tilewidth":16,
  "type":"map",
