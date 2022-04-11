@@ -103,8 +103,6 @@ public class SettingsMode extends MenuMode {
 
         dragging = false;
         musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
-
-        Gdx.input.setInputProcessor(settingsInput);
     }
 
     public GameCanvas getCanvas(){
