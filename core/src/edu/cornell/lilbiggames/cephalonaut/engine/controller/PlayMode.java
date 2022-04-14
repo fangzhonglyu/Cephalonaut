@@ -256,8 +256,11 @@ public class PlayMode extends WorldController implements Screen {
         if (fadeInCount > 0) {
             fadeInCount -= .05f;
         }
-
         if (!cephalonaut.isAlive()) {
+
+            cephalonaut.setLinearVelocity(Vector2.Zero);
+            cephalonaut.setDrawScale(scale.cpy().scl((float)((4 * Math.PI - deathRotationCount) / (4 * Math.PI)))); //(float)((4 * Math.PI - deathRotationCount) / 4 * Math.PI)
+
             final float BLACK_HOLE_DEATH_SPINNY_CONSTANT = 5f;
             cephalonaut.getBody().applyTorque(BLACK_HOLE_DEATH_SPINNY_CONSTANT, false);
             deathRotationCount += Math.PI / 16;
@@ -289,10 +292,7 @@ public class PlayMode extends WorldController implements Screen {
 
         canvas.begin();
 
-        canvas.drawFade(fadeInCount);
-        if (!cephalonaut.isAlive()) {
-            canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
-        }
+
 
         for (GameObject obj : objects) {
             obj.draw(canvas);
@@ -300,7 +300,13 @@ public class PlayMode extends WorldController implements Screen {
 
         selector.draw(canvas);
         cephalonaut.draw(canvas);
+
         canvas.drawSimpleFuelBar(cephalonaut.getInk());
+        canvas.drawFade(fadeInCount);
+        if (!cephalonaut.isAlive()) {
+            canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
+        }
+
         canvas.end();
 
         if (isDebug()) {

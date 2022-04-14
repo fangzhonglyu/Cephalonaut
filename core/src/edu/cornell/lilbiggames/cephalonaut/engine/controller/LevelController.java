@@ -164,6 +164,9 @@ public class LevelController implements ContactListener {
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)) {
                     cephalonaut.setAlive(false);
                 }
+                if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.REFILL)) {
+                    cephalonaut.refillInk();
+                }
             }
 
             if (contactObject instanceof LEBlackHole) {

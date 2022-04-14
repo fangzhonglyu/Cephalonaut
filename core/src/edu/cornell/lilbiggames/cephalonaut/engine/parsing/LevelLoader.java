@@ -88,6 +88,8 @@ public class LevelLoader {
                 return LevelElement.Element.GLASS_BARRIER;
             case "Spike":
                 return LevelElement.Element.SPIKE;
+            case "Refill":
+                return LevelElement.Element.REFILL;
             default:
                 System.out.printf("WARNING: Unknown LevelElement type '%s'\n", element);
                 return LevelElement.Element.WALL;

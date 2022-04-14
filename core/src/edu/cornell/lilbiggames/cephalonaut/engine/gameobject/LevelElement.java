@@ -32,7 +32,8 @@ public class LevelElement extends SimpleObstacle {
         WORMHOLE,
         MISC,
         START,
-        SPIKE
+        SPIKE,
+        REFILL
     }
 
     /** Type of element **/

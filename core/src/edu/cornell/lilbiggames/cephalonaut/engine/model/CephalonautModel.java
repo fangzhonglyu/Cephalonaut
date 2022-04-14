@@ -46,10 +46,10 @@ public class CephalonautModel extends OctopusObstacle {
 	/** Cache object for transforming the force according the object angle */
 	private final Affine2 affineCache = new Affine2();
 
-	private final float MAX_SPEED = 8.0f;
+	private final float MAX_SPEED = 16.0f;
 
 	/** Magnitude of force to apply */
-	private final float force = 4.0f;
+	private final float force = 8.0f;
 
 	/** The direction of rotation */
 	private float rotation;
@@ -239,6 +239,12 @@ public class CephalonautModel extends OctopusObstacle {
 	public void setRotationalDirection(float rotation){
 		this.rotation = rotation;
 	}
+
+
+	public void refillInk() {
+		ink = 1.0f;
+	}
+
 	
 	/**
 	 * Updates the object's physics state (NOT GAME LOGIC).
@@ -262,12 +268,13 @@ public class CephalonautModel extends OctopusObstacle {
 		}
 
 		if (inking && ink > 0.0f) {
-			ink -= 0.006f;
-			if(filmstrip.getFrame()==0)
+			ink -= 0.007f;
+			if (filmstrip.getFrame() == 0)
 				filmstrip.setFrame(1);
-		} else if (!inking && ink < 1.0f) {
-			ink += 0.004f;
 		}
+//		else if (!inking && ink < 1.0f) {
+//			ink += 0.004f;
+//		}
 		ink = Math.min(ink, 1.0f);
 	}
 
