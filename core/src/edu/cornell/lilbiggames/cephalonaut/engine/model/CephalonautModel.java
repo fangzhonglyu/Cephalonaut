@@ -249,22 +249,37 @@ public class CephalonautModel extends OctopusObstacle {
 	 */
 	public void update(float dt) {
 		super.update(dt);
-		frame += dt*10f;
-		if(frame>1) {
-			frame--;
-			if(filmstrip.getFrame()!=0) {
-				if (filmstrip.getFrame() < filmstrip.getSize() - 1)
-					filmstrip.setFrame(filmstrip.getFrame() + 1);
-				else {
-					filmstrip.setFrame(0);
-				}
-			}
+		if(frame>8&&frame<18){
+			frame += dt*10f;
+			if(frame>=18)
+				frame = 0;
 		}
+		else if(frame>=18&&frame<25){
+			frame += dt*10f;
+			if(frame>=25)
+				frame = 0;
+		}
+		else if(frame>=27&&frame<34){
+			frame += dt*10f;
+			if(frame>=34)
+				frame = 0;
+		}
+		else if(frame>=36){
+			frame += dt*10f;
+			if(frame>=filmstrip.getSize())
+				frame = 0;
+		}
+		if(frame<5){
+			frame += dt*5f;
+			if(frame>=5)
+				frame = 0;
+			if(inking && ink > 0.0f)
+				frame = 36;
+		}
+		filmstrip.setFrame((int)frame);
 
 		if (inking && ink > 0.0f) {
 			ink -= 0.006f;
-			if(filmstrip.getFrame()==0)
-				filmstrip.setFrame(1);
 		} else if (!inking && ink < 1.0f) {
 			ink += 0.004f;
 		}
@@ -282,10 +297,10 @@ public class CephalonautModel extends OctopusObstacle {
 		//animation
 
 		float ox = 0.5f * filmstrip.getRegionWidth();
-		float oy = 0.55f * filmstrip.getRegionHeight();
+		float oy = 0.8f * filmstrip.getRegionHeight();
 		canvas.draw(filmstrip, Color.WHITE, ox, oy,
 				getX() * drawScale.x, getY() * drawScale.y,
-				getAngle(), 0.004f* drawScale.x, 0.004f*drawScale.y);
+				getAngle(), 0.052f* drawScale.x, 0.052f*drawScale.y);
 
 		//fuel bar
 		canvas.drawSimpleFuelBar(ink);

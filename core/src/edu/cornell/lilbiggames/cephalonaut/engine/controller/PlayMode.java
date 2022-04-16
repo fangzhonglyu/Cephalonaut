@@ -32,7 +32,7 @@ public class PlayMode extends WorldController implements Screen {
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
-    private Texture octopusInkStrip;
+    private Texture octopusInkStrip,octopusStrip;
 
     /** Controller that handles cephalonaut movement (grappling and inking) */
     private CephalonautController cephalonautController;
@@ -175,10 +175,11 @@ public class PlayMode extends WorldController implements Screen {
 
 
         // Make the cephalonaut
-        float dwidth  = octopusTexture.getRegionWidth()/scale.x;
-        float dheight = octopusTexture.getRegionHeight()/scale.y;
-        FilmStrip cephInkFilm = new FilmStrip(octopusInkStrip,1,7);
-        cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight, scale, cephInkFilm);
+        float dwidth  = octopusTexture.getRegionWidth()/scale.x*1.2f;
+        float dheight = octopusTexture.getRegionHeight()/scale.y*1.6f;
+        //FilmStrip cephInkFilm = new FilmStrip(octopusInkStrip,1,7);
+        FilmStrip cephFilm = new FilmStrip(octopusStrip,5,9);
+        cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight, scale, cephFilm);
         cephalonautController = new CephalonautController(world, cephalonaut);
 
         addObject(cephalonaut);
@@ -204,6 +205,8 @@ public class PlayMode extends WorldController implements Screen {
         earthTile = new TextureRegion(directory.getEntry( "earth", Texture.class ));
         octopusTexture = new TextureRegion(directory.getEntry( "octopus.png", Texture.class ));
         octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
+        octopusStrip = directory.getEntry("octopus",Texture.class);
+        octopusStrip.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
     }
 
