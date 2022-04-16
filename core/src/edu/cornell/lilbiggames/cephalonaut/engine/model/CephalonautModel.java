@@ -49,7 +49,7 @@ public class CephalonautModel extends OctopusObstacle {
 	private final float MAX_SPEED = 8.0f;
 
 	/** Magnitude of force to apply */
-	private final float force = 4.0f;
+	private final float force = 8.0f;
 
 	/** The direction of rotation */
 	private float rotation;
