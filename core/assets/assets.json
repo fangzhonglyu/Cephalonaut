@@ -76,13 +76,13 @@
     "level_6:checkpoint_4": "levels/level_6/level_4.tmj"
   },
   "music": {
-    "level0": "music/CephalonautLevel7Mix1.mp3",
-    "level1": "music/CephalonautLevel1Mix1.mp3",
-    "level2": "music/CephalonautLevel9Mix1.mp3",
-    "level3": "music/CephalonautLevel3Mix1.mp3",
-    "level4": "music/CephalonautLevel4Mix1.mp3",
-    "level5": "music/CephalonautLevel5Mix1.mp3",
-    "level6": "music/CephalonautLevel6Mix1.mp3",
+    "level0": "music/CephalonautLevel7mix1.mp3",
+    "level1": "music/CephalonautLevel1mix1.mp3",
+    "level2": "music/CephalonautLevel9mix1.mp3",
+    "level3": "music/CephalonautLevel3mix1.mp3",
+    "level4": "music/CephalonautLevel4mix1.mp3",
+    "level5": "music/CephalonautLevel5mix1.mp3",
+    "level6": "music/CephalonautLevel6mix1.mp3",
     "mainMenu": "music/Cephalonautintromusicmix1.mp3"
   },
   "sounds": {
