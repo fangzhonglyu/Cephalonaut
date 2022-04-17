@@ -20,29 +20,6 @@
          "name":"Objects",
          "objects":[
                 {
-                 "gid":131,
-                 "height":16,
-                 "id":22,
-                 "name":"finish",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "type":"Finish"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":64,
-                 "y":64
-                }, 
-                {
                  "gid":65,
                  "height":2,
                  "id":41,
@@ -1680,6 +1657,18 @@
                  "width":48,
                  "x":400,
                  "y":32
+                }, 
+                {
+                 "gid":137,
+                 "height":44,
+                 "id":184,
+                 "name":"finish",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":59,
+                 "x":78.6363636363636,
+                 "y":84.1818181818182
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1713,7 +1702,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":182,
+ "nextobjectid":185,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
@@ -1721,11 +1710,11 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"tileset.tsj"
+         "source":"..\/..\/tileset.tsj"
         }, 
         {
          "firstgid":129,
-         "source":"objects.tsj"
+         "source":"..\/..\/objects.tsj"
         }],
  "tilewidth":16,
  "type":"map",

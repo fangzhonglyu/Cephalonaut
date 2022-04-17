@@ -63,7 +63,7 @@ public class GrappleModel extends WheelObstacle {
         setSensor(true);
         setBullet(true);
 
-        int pixDiameter = 4;
+        int pixDiameter = 5;
         Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.valueOf("ff9947"));
         pixmap.fillRectangle(0,0,pixDiameter , pixDiameter);
@@ -255,14 +255,15 @@ public class GrappleModel extends WheelObstacle {
      *
      * @param canvas Drawing context
      */
-    public void draw(GameCanvas canvas, Vector2 cephP) {
+    public void draw(GameCanvas canvas, Vector2 cephP, float cephA) {
         if (isOut) {
             Affine2 tr = new Affine2();
             tr.preTranslate(cephP.x, cephP.y);
             float angle = getPosition().sub(cephP).angleDeg();
             tr.rotate(angle);
+            angle-=cephA;
             float dist = getPosition().dst(cephP);
-            for (float i = 0; i < getPosition().dst(cephP) / 2; i += 2 / drawScale.x) {
+            for (float i = 0; i < getPosition().dst(cephP) / 2; i += 2.4 / drawScale.x) {
                 Vector2 t = new Vector2(i * 2, (float) (-Math.sin(i * 5) - Math.cos(i * 4)) / (dist + 0.3f) / 2f * (float) Math.sqrt(Math.sqrt(1 - i * 2 / dist)));
                 if (isLocked > 0)
                     t.set(t.x, t.y * (8 - isLocked) / 8);
@@ -277,8 +278,9 @@ public class GrappleModel extends WheelObstacle {
             tr.preTranslate(cephP.x, cephP.y);
             float angle = vertex.cpy().sub(cephP).angleDeg();
             tr.rotate(angle);
+            angle-=cephA;
             float dist = vertex.dst(cephP);
-            for (float i = 0; i < vertex.dst(cephP) / 2; i += 2 / drawScale.x) {
+            for (float i = 0; i < vertex.dst(cephP) / 2; i += 2.4 / drawScale.x) {
                 Vector2 t = new Vector2(i * 2, (float) (-Math.sin(i * 5) - Math.cos(i * 4)) / (dist + 0.7f) / 2f * (float) Math.sqrt(Math.sqrt(1 - i * 2 / dist)));
                 t.y = (angle>=270||angle<90)?t.y:-t.y;
                 tr.applyTo(t);
