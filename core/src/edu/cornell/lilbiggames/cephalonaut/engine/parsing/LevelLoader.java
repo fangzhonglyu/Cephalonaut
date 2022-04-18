@@ -53,7 +53,7 @@ public class LevelLoader {
 
         for (JsonValue tile : space_tileset.get("tiles")) {
             // TODO: Maybe make this '128' not a constant? It's derived from the 'firstgid' of objects.tsj in a level.
-            map.put(tile.getInt("id") + 137, tile);
+            map.put(tile.getInt("id") + 138, tile);
         }
     }
 
@@ -77,7 +77,7 @@ public class LevelLoader {
             int id = tile.getInt("id");
             int x = (id % columns)*tileSize;
             int y = (id / columns)*tileSize;
-            textures.put(id+137, new TextureRegion(spaceTexture, x, y, tileSize, tileSize));
+            textures.put(id+138, new TextureRegion(spaceTexture, x, y, tileSize, tileSize));
         }
     }
 
