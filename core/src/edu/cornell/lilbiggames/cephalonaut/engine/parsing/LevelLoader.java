@@ -24,18 +24,22 @@ public class LevelLoader {
     private AssetDirectory assetDirectory;
     private Map<Integer, JsonValue> map = new HashMap<>();
     private Map<Integer, TextureRegion> textures = new HashMap<>();
-    private Texture tilesetTexture;
+    private Texture tilesetTexture,spaceTexture;
     private JsonValue tile_tileset;
     private JsonValue object_tileset;
+    private JsonValue space_tileset;
 
     public LevelLoader() {
         assetDirectory = new AssetDirectory("assets.json");
         assetDirectory.loadAssets();
         assetDirectory.finishLoading();
         tilesetTexture = new Texture("TS-meteroid-space.png");
+        spaceTexture = new Texture("TS-space-tiles.png");
         tilesetTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        spaceTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         tile_tileset = assetDirectory.getEntry("tile-tileset", JsonValue.class);
         object_tileset = assetDirectory.getEntry("object-tileset", JsonValue.class);
+        space_tileset = assetDirectory.getEntry("space-tileset", JsonValue.class);
         getTextures();
 
         for (JsonValue tile : tile_tileset.get("tiles")) {
@@ -45,6 +49,11 @@ public class LevelLoader {
         for (JsonValue tile : object_tileset.get("tiles")) {
             // TODO: Maybe make this '128' not a constant? It's derived from the 'firstgid' of objects.tsj in a level.
             map.put(tile.getInt("id") + 128, tile);
+        }
+
+        for (JsonValue tile : space_tileset.get("tiles")) {
+            // TODO: Maybe make this '128' not a constant? It's derived from the 'firstgid' of objects.tsj in a level.
+            map.put(tile.getInt("id") + 137, tile);
         }
     }
 
@@ -61,6 +70,14 @@ public class LevelLoader {
             int x = (id % columns)*tileSize;
             int y = (id / columns)*tileSize;
             textures.put(id, new TextureRegion(tilesetTexture, x, y, tileSize, tileSize));
+        }
+        tileSize = space_tileset.getInt("tilewidth");
+        columns = space_tileset.getInt("columns");
+        for (JsonValue tile : space_tileset.get("tiles")) {
+            int id = tile.getInt("id");
+            int x = (id % columns)*tileSize;
+            int y = (id / columns)*tileSize;
+            textures.put(id+137, new TextureRegion(spaceTexture, x, y, tileSize, tileSize));
         }
     }
 

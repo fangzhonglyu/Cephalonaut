@@ -38,6 +38,7 @@
     "keybindings": "keybindings.json",
     "tile-tileset": "tileset.tsj",
     "object-tileset": "objects.tsj",
+    "space-tileset": "space-tiles.tsj",
     "wormhole_test": "wormhole_test.tmj",
     "Oliver_level1": "Oliver_level1.tmj",
     "Oliver_level2": "Oliver_level2-4.tmj",
