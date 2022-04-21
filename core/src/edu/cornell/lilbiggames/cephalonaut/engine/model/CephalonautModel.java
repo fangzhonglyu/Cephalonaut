@@ -255,12 +255,26 @@ public class CephalonautModel extends OctopusObstacle {
 				frame = 0;
 		}
 		else if(frame>=18&&frame<25){
-			frame += dt*10f;
+			if(frame<23||(inking && ink > 0.0f))
+				frame += dt*20f;
+			else if (rotation>-0.8f){
+				frame += dt*15f;
+			}
+			else if (frame>24 && rotation<-0.8f){
+				frame -= dt*15f;
+			}
 			if(frame>=25)
 				frame = 0;
 		}
 		else if(frame>=27&&frame<34){
-			frame += dt*10f;
+			if(frame<32||(inking && ink > 0.0f))
+				frame += dt*20f;
+			else if (rotation<0.8f){
+				frame += dt*15f;
+			}
+			else if (frame>33 && rotation>0.8f){
+				frame -= dt*15f;
+			}
 			if(frame>=34)
 				frame = 0;
 		}
@@ -275,6 +289,10 @@ public class CephalonautModel extends OctopusObstacle {
 				frame = 0;
 			if(inking && ink > 0.0f)
 				frame = 36;
+			else if(rotation>0.8f)
+				frame = 27;
+			else if (rotation<-0.8f)
+				frame = 18;
 		}
 		filmstrip.setFrame((int)frame);
 

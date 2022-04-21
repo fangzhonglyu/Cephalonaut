@@ -109,7 +109,7 @@ public class CephalonautController {
                     cephalonaut.setLinearVelocity(cephalonaut.getLinearVelocity().setAngleRad(newAngle));
                 }
 
-
+                cephalonaut.setRotationalDirection(0);
                 DistanceJointDef anchor1 = new DistanceJointDef();
                 DistanceJointDef anchor2 = new DistanceJointDef();
                 DistanceJointDef anchor3 = new DistanceJointDef();
