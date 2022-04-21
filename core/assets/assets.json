@@ -102,8 +102,8 @@
     "suction": "TentacleSuctionSFX.mp3"
   },
   "fonts": {
-    "retro": {
-      "file": "RetroGame.ttf",
+    "gothamo": {
+      "file": "Gothamonov0.2-Regular.ttf",
       "size": 64
     }
   }

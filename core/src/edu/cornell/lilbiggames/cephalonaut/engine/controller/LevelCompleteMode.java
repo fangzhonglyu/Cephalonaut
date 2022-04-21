@@ -61,8 +61,7 @@ public class LevelCompleteMode extends MenuMode {
         this.listener = listener;
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
-
-        displayFont = assets.getEntry("retro", BitmapFont.class);
+        displayFont = assets.getEntry("gothamo", BitmapFont.class);
 
         frame = 0;
         starScoring = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class),1,19);

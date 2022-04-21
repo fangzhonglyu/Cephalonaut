@@ -54,7 +54,7 @@ public class MenuMode implements Screen {
         this.listener = listener;
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
-        displayFont = assets.getEntry("retro",BitmapFont.class);
+        displayFont = assets.getEntry("gothamo",BitmapFont.class);
 
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -93,8 +93,7 @@ public class MenuMode implements Screen {
     protected void drawOptions(String[] options, int selectedOption, int offset){
         float start = (options.length*displayFont.getLineHeight())/2 - offset;
         displayFont.setColor(Color.ORANGE);
-
-        displayFont.getData().setScale(0.5f*scale.x);
+        displayFont.getData().setScale(0.7f*scale.x);
 
         for(int i = 0; i < options.length; i++){
             if(selectedOption == i) {

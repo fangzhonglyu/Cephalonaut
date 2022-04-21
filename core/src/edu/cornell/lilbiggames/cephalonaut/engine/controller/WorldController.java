@@ -289,7 +289,7 @@ public abstract class WorldController implements Screen {
 	 */
 	public void gatherAssets(AssetDirectory directory) {
 		// Allocate the tiles
-//		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
+//		displayFont = directory.getEntry( "shared:gothamo" ,BitmapFont.class);
 	}
 
 	/**

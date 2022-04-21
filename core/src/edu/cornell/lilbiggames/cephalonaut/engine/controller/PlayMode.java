@@ -247,7 +247,7 @@ public class PlayMode extends WorldController implements Screen {
         octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
         octopusStrip = directory.getEntry("octopus",Texture.class);
         octopusStrip.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
-//		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
+//		displayFont = directory.getEntry( "shared:gothamo" ,BitmapFont.class);
     }
 
     private boolean isDialogueMode() {
