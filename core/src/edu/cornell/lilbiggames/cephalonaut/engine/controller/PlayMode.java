@@ -1,8 +1,11 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -32,7 +35,7 @@ public class PlayMode extends WorldController implements Screen {
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
-    private Texture octopusInkStrip,octopusStrip;
+    private Texture octopusInkStrip,octopusStrip,nextIcon;
 
     /** Controller that handles cephalonaut movement (grappling and inking) */
     private CephalonautController cephalonautController;
@@ -77,6 +80,9 @@ public class PlayMode extends WorldController implements Screen {
     private Queue<GameObject> defaultObjects;
     private boolean won;
 
+    private DialogueMode dialogueMode;
+    private boolean paused;
+
     /**
      * Creates and initialize a new instance of the sandbox
      */
@@ -95,6 +101,12 @@ public class PlayMode extends WorldController implements Screen {
         deathRotationCount = 0;
         fadeInCount = 1;
         won = false;
+        paused = true;
+    }
+
+    public void nextDialogue() {
+        dialogueMode.nextDialogue();
+        paused = true;
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -112,7 +124,6 @@ public class PlayMode extends WorldController implements Screen {
     public void resume(){
         exiting = false;
     }
-
 
     public void cleanupLevel(){
         for(GameObject obj : objects) {
@@ -149,6 +160,12 @@ public class PlayMode extends WorldController implements Screen {
         SoundController.switchTrack(1);
         deathRotationCount = 0;
         fadeInCount = 1;
+        String[][] dialogue = new String[][]{
+                {"welcome to the gmme, press right to continue", "use the controller  blah"},
+                {"aaa", "bbb", "ccc", "ddd"},
+                {"xx", "yy"}};
+
+        dialogueMode = new DialogueMode(displayFont, nextIcon, canvas, dialogue);
     }
 
     private void populateLevel(Iterable<GameObject> newObjects) {
@@ -207,7 +224,8 @@ public class PlayMode extends WorldController implements Screen {
         octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
         octopusStrip = directory.getEntry("octopus",Texture.class);
         octopusStrip.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
-//		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
+        displayFont = directory.getEntry("retro", BitmapFont.class);
+        nextIcon = directory.getEntry("nexticon", Texture.class);
     }
 
     /**
@@ -221,8 +239,19 @@ public class PlayMode extends WorldController implements Screen {
      * @param dt 	Number of seconds since last animation frame
      */
     public void update(float dt) {
+
+        if(paused) {
+            canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+            paused  = dialogueMode.update(dt);
+            return;
+        }
+
         // Move an object if touched
         InputController input = InputController.getInstance();
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            nextDialogue();
+        }
 
         if (input.didExit()) {
             if (listener != null) {
@@ -304,6 +333,11 @@ public class PlayMode extends WorldController implements Screen {
         selector.draw(canvas);
         cephalonaut.draw(canvas);
         canvas.drawSimpleFuelBar(cephalonaut.getInk());
+
+        if(paused) {
+            dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+        }
+
         canvas.end();
 
         if (isDebug()) {
@@ -314,5 +348,4 @@ public class PlayMode extends WorldController implements Screen {
             canvas.endDebug();
         }
     }
-
 }

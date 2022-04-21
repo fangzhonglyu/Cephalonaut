@@ -412,6 +412,17 @@ public class GameCanvas {
 		spriteBatch.begin();
 	}
 
+	public void drawDialogueBox() {
+		spriteBatch.end();
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRen.setColor(0, 0, 0, .75f);
+		shapeRen.rect(getCameraX() - getWidth() / 2, getCameraY() - getHeight() / 2 , getWidth(), 300f);
+		shapeRen.end();
+		spriteBatch.begin();
+	}
+
 
 	/**
 	 * Draws the tinted texture at the given position.
