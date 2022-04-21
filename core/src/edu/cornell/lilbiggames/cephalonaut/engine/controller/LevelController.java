@@ -133,9 +133,8 @@ public class LevelController implements ContactListener {
         }
     }
 
-    private void openDialogue() {
-        playMode.nextDialogue();
-        // playMode.nextDialogue(part);
+    private void openDialogue(int part) {
+        playMode.nextDialogue(part);
     }
 
     private GameObject getOtherBody(Contact contact, GameObject object) {
@@ -168,6 +167,14 @@ public class LevelController implements ContactListener {
                 ((LevelElement) contactObject).setInContact(true);
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)) {
                     cephalonaut.setAlive(false);
+                }
+            }
+
+            if (contactObject instanceof  LEDialogueTrigger) {
+                LEDialogueTrigger dialogueTrigger = (LEDialogueTrigger) contactObject;
+                if(dialogueTrigger.isActive()) {
+                    openDialogue(dialogueTrigger.getTarget());
+                    dialogueTrigger.deactivate();
                 }
             }
 

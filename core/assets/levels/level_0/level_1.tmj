@@ -104,6 +104,66 @@
                  "width":48,
                  "x":56.6467782359121,
                  "y":103.392998625596
+                }, 
+                {
+                 "gid":18,
+                 "height":5.28129723787271,
+                 "id":120,
+                 "name":"d1",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "tint":"#00ffffff",
+                             "type":"Dialogue Trigger"
+                            }
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"int",
+                         "value":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":82.0939468134793,
+                 "x":719.701423144677,
+                 "y":341.89324044219
+                }, 
+                {
+                 "gid":18,
+                 "height":5.2813,
+                 "id":121,
+                 "name":"d2",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "tint":"#00ffffff",
+                             "type":"Dialogue Trigger"
+                            }
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":5.3808269434996,
+                 "type":"",
+                 "visible":true,
+                 "width":82.0939,
+                 "x":595.107964917083,
+                 "y":151.641972483974
                 }],
          "offsetx":-0.646778235912365,
          "offsety":1.94033470773709,
@@ -126,7 +186,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":118,
+ "nextobjectid":122,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

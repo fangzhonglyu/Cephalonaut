@@ -90,7 +90,8 @@
                 "Wormhole",
                 "Glass Barrier",
                 "Start",
-                "Spike"
+                "Spike",
+                "Dialogue Trigger"
             ],
             "valuesAsFlags": false
         }
