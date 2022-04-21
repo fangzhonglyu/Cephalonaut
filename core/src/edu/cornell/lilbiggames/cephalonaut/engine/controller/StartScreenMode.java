@@ -85,7 +85,7 @@ public class StartScreenMode extends MenuMode {
         displayFont.getData().setScale(scale.x);
         displayFont.setColor(Color.ORANGE);
         float start = (options.length*displayFont.getLineHeight())/2;
-        canvas.draw(banner, width/2 - 0.5f*banner.getWidth()/2, height/2+start, 0,0, banner.getWidth(), banner.getHeight(), 0.5f, 0.5f);
+        canvas.draw(banner, width/2 - scale.x*0.5f*banner.getWidth()/2, height/2+start, 0,0, banner.getWidth(), banner.getHeight(), scale.x*0.5f, scale.y*0.5f);
         super.drawOptions(options, selectedOption);
 
         canvas.end();

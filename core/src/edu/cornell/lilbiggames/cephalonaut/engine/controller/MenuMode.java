@@ -102,7 +102,7 @@ public class MenuMode implements Screen {
                         YELLOW,
                         ARROW_WIDTH/2,
                         ARROW_WIDTH/2,
-                        canvas.getWidth() * 1/3,
+                        canvas.getWidth() * 2/5,
                         canvas.getHeight()/2 + start - 1.2f*displayFont.getLineHeight()*i - 2*displayFont.getLineHeight(),
                         ARROW_WIDTH,
                         ARROW_WIDTH
