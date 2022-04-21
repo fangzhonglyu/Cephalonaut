@@ -321,16 +321,16 @@ public class PlayMode extends WorldController implements Screen {
         cephalonaut.draw(canvas);
 
         canvas.drawSimpleFuelBar(cephalonaut.getInk());
-        canvas.drawFade(fadeInCount);
-        if (!cephalonaut.isAlive()) {
-            canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
-        }
 
         int minutes = (timer % 3600) / 60;
         int seconds = timer % 60;
         timeString = String.format("%02d:%02d", minutes, seconds);
 
         canvas.drawTextTopLeft(timeString, displayFont);
+        canvas.drawFade(fadeInCount);
+        if (!cephalonaut.isAlive()) {
+            canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
+        }
 
         canvas.end();
 
