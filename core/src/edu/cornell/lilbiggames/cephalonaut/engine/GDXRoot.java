@@ -53,6 +53,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private LevelCompleteMode levelCompleteMode;
 	private StartScreenMode startScreenMode;
 	private SettingsMode settings;
+	private CreditsScreen credits;
 	private LevelLoader levelLoader;
 	private DialogueMode dialogueMode;
 
@@ -122,6 +123,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		pauseMode = new PauseMode(directory, canvas, this);
 		settings = new SettingsMode(directory, canvas, this, keyBindings);
+		credits = new CreditsScreen(directory, canvas);
 		levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
 
 		SoundController.setMusicVolume(0.5f);
@@ -224,8 +226,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			settings.setDefault();
 			startScreenTransition(settings);
 		} else if(exitCode == MenuMode.CREDITS_CODE){
-			System.out.println("credits");
-			startScreenTransition(mainMenu);
+			startScreenTransition(credits);
 		} else if(exitCode == MenuMode.LEVEL_SELECTED_CODE){
 			initializeCheckpointSelect();
 			startScreenTransition(mainMenuNestedMode);
