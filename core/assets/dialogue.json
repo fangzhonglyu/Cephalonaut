@@ -1,0 +1,9 @@
+{
+  "level_0:checkpoint_0": {
+      "part_0": ["hi my name is michael the octopus!", "welcome to my game :)", "press the space bar for fun!"],
+      "part_1": ["the next thing is this!", "ok :)", "press the left arrow key!"]
+    },
+  "level_1:checkpoint_0": {
+      "part_0": ["only one dialogue for level 1"]
+    }
+}

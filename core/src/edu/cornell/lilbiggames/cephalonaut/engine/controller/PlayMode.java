@@ -83,15 +83,17 @@ public class PlayMode extends WorldController implements Screen {
     private DialogueMode dialogueMode;
     private boolean paused;
 
+
     /**
      * Creates and initialize a new instance of the sandbox
      */
-    public PlayMode(ScreenListener listener, LevelLoader loader, String level, String checkpoint, Map<String, Integer> keyBindings) {
+    public PlayMode(ScreenListener listener, LevelLoader loader, String level, String checkpoint, Map<String, Integer> keyBindings ,DialogueMode dialogueMode) {
         super(DEFAULT_WIDTH, DEFAULT_HEIGHT, 0);
         this.listener = listener;
         this.level = level;
         this.checkpoint = checkpoint;
         this.loader = loader;
+        this.dialogueMode = dialogueMode;
 
         InputController.getInstance().setBindings(keyBindings);
         setDebug(false);
@@ -101,7 +103,7 @@ public class PlayMode extends WorldController implements Screen {
         deathRotationCount = 0;
         fadeInCount = 1;
         won = false;
-        paused = true;
+        paused = false;
     }
 
     public void nextDialogue() {
@@ -165,12 +167,7 @@ public class PlayMode extends WorldController implements Screen {
         SoundController.switchTrack(1);
         deathRotationCount = 0;
         fadeInCount = 1;
-        String[][] dialogue = new String[][]{
-                {"welcome to the gmme, press right to continue", "use the controller  blah"},
-                {"aaa", "bbb", "ccc", "ddd"},
-                {"xx", "yy"}};
-
-        dialogueMode = new DialogueMode(displayFont, nextIcon, canvas, dialogue);
+        dialogueMode.load(level, checkpoint);
     }
 
     private void populateLevel(Iterable<GameObject> newObjects) {
@@ -229,8 +226,25 @@ public class PlayMode extends WorldController implements Screen {
         octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
         octopusStrip = directory.getEntry("octopus",Texture.class);
         octopusStrip.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
-        displayFont = directory.getEntry("retro", BitmapFont.class);
-        nextIcon = directory.getEntry("nexticon", Texture.class);
+    }
+
+    private boolean isDialogueMode() {
+        if(paused) {
+            canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+            cephalonaut.setBodyType(BodyDef.BodyType.StaticBody);
+            paused  = dialogueMode.update();
+
+            if(!paused) {
+                cephalonaut.setBodyType(BodyDef.BodyType.DynamicBody);
+                float[] forces = cephalonautController.getForces();
+                cephalonaut.setVX(forces[0]);
+                cephalonaut.setVY(forces[1]);
+                cephalonaut.setAngularVelocity(forces[2]);
+            }
+
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -245,18 +259,10 @@ public class PlayMode extends WorldController implements Screen {
      */
     public void update(float dt) {
 
-        if(paused) {
-            canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
-            paused  = dialogueMode.update(dt);
-            return;
-        }
 
+        if(isDialogueMode()) return;
         // Move an object if touched
         InputController input = InputController.getInstance();
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            nextDialogue();
-        }
 
         if (input.didExit()) {
             if (listener != null) {
