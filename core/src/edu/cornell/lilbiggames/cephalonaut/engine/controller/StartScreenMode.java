@@ -19,6 +19,7 @@ public class StartScreenMode extends MenuMode {
 
     /** Background texture for start-up */
     private Texture background;
+    private Texture banner;
 
     private InputController inputController;
 
@@ -35,6 +36,8 @@ public class StartScreenMode extends MenuMode {
         this.listener = listener;
         background = assets.getEntry( "main-menu:background", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        banner = assets.getEntry( "banner", Texture.class );
+
         
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
@@ -82,7 +85,7 @@ public class StartScreenMode extends MenuMode {
         displayFont.getData().setScale(scale.x);
         displayFont.setColor(Color.ORANGE);
         float start = (options.length*displayFont.getLineHeight())/2;
-        canvas.drawTextCentered("CEPHALONAUT", displayFont, start);
+        canvas.draw(banner, width/2 - 0.5f*banner.getWidth()/2, height/2+start, 0,0, banner.getWidth(), banner.getHeight(), 0.5f, 0.5f);
         super.drawOptions(options, selectedOption);
 
         canvas.end();

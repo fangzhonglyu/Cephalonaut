@@ -360,9 +360,10 @@ public class PlayMode extends WorldController implements Screen {
      * @param dt Timing values from parent loop
      */
     public void draw(float dt) {
-        canvas.clear();
 
         if (exiting) return;
+
+        canvas.clear();
 
         canvas.begin();
 

@@ -56,6 +56,11 @@ public class GDXRoot extends Game implements ScreenListener {
 	private LevelLoader levelLoader;
 	private DialogueMode dialogueMode;
 
+	private float alpha;
+	private boolean fadeDirection;
+	private boolean transitioning;
+	private Screen nextScreen;
+
 	/**
 	 * Creates a new game from the configuration settings.
 	 *
@@ -107,6 +112,8 @@ public class GDXRoot extends Game implements ScreenListener {
 		initializeKeybindings();
 		initializeDialogue();
 
+		transitioning = false;
+
 		// Initialize the game world
 		mainMenu = new MainMenuMode(directory, canvas, this);
 		mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, 5,0, 0, this);
@@ -147,7 +154,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
 		playMode.reset();
-		setScreen(playMode);
+		startScreenTransition(playMode);
 	}
 
 
@@ -212,16 +219,16 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void exitScreen(Screen screen, int exitCode) {
 		SoundController.killAllSound();
 		if(exitCode == MenuMode.START_CODE){
-			setScreen(mainMenu);
+			startScreenTransition(mainMenu);
 		} else if(exitCode == MenuMode.OPTIONS_CODE){
 			settings.setDefault();
-			setScreen(settings);
+			startScreenTransition(settings);
 		} else if(exitCode == MenuMode.CREDITS_CODE){
 			System.out.println("credits");
-			setScreen(mainMenu);
+			startScreenTransition(mainMenu);
 		} else if(exitCode == MenuMode.LEVEL_SELECTED_CODE){
 			initializeCheckpointSelect();
-			setScreen(mainMenuNestedMode);
+			startScreenTransition(mainMenuNestedMode);
 		} else if(exitCode == MenuMode.CHECKPOINT_SELECTED_CODE) {
 			selectLevel();
 		} else if (exitCode == MenuMode.EXIT_LEVEL_CODE) {
@@ -231,33 +238,61 @@ public class GDXRoot extends Game implements ScreenListener {
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			int curLevel = mainMenu.getCurLevelNumber();
 			mainMenuNestedMode.setLevel(curLevel);
-			setScreen(mainMenuNestedMode);
+			startScreenTransition(mainMenuNestedMode);
 		} else if(exitCode == MenuMode.NESTED_MENU_EXIT_CODE){
-			setScreen(mainMenu);
+			startScreenTransition(mainMenu);
 		} else if(exitCode == PlayMode.EXIT_LEVEL){
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			pauseMode.setDefault();
-			setScreen(pauseMode);
+			startScreenTransition(pauseMode);
 		} else if (exitCode == MenuMode.RESTART_LEVEL_CODE) {
 			playMode.reset();
 			playMode.resume();
-			setScreen(playMode);
+			startScreenTransition(playMode);
 		} else if (exitCode == MenuMode.RESUME_LEVEL_CODE) {
 			playMode.resume();
-			setScreen(playMode);
+			startScreenTransition(playMode);
 		} else if (exitCode == LevelController.COMPLETE_LEVEL) {
 			playMode.pause();
 			SoundController.killAllSound();
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			levelCompleteMode.setSelectedOption(0);
 			levelCompleteMode.setTimeString(playMode.getTimeString());
-			setScreen(levelCompleteMode);
+			startScreenTransition(levelCompleteMode);
 		} else if (exitCode == MenuMode.NEXT_LEVEL_CODE) {
 			selectLevel();
 		} else if (exitCode == MenuMode.RETURN_TO_START_CODE){
 			Gdx.input.setInputProcessor(new InputAdapter());
-			setScreen(startScreenMode);
+			startScreenTransition(startScreenMode);
 		}
+	}
+
+	private void startScreenTransition(Screen nextScreen){
+		transitioning = true;
+		this.nextScreen = nextScreen;
+		fadeDirection = true;
+	}
+
+	private void performScreenTransition(Screen nextScreen){
+		if (alpha >= 1) {
+			setScreen(nextScreen);
+			fadeDirection = false;
+		}
+		else if (alpha <= 0 && fadeDirection == false) {
+			transitioning = false;
+		}
+		alpha += fadeDirection == true ? 0.05 : -0.05;
+	}
+
+	public void render(){
+		super.render();
+		if(transitioning){
+			performScreenTransition(nextScreen);
+			canvas.begin();
+			canvas.drawFade(alpha);
+			canvas.end();
+		}
+
 	}
 
 }

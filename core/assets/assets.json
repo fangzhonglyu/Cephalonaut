@@ -38,7 +38,8 @@
     "completedLevel.png": "circleFilled.png",
     "arrow": "arrow.png",
     "volume-down": "volume-down (1).png",
-    "volume-up": "volume-up.png"
+    "volume-up": "volume-up.png",
+    "banner": "banner.png"
   },
   "jsons": {
     "dialogue": "dialogue.json",
