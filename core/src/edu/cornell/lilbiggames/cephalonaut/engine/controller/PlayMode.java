@@ -3,6 +3,7 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -21,6 +22,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 
 import javax.management.Query;
+import java.lang.invoke.StringConcatFactory;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -71,6 +73,10 @@ public class PlayMode extends WorldController implements Screen {
     static private final float DEFAULT_STARTING_POS_X = 10.0f;
     static private final float DEFAULT_STARTING_POS_Y = 10.0f;
 
+    private String timeString;
+    private float timeCount;
+    private int timer;
+
     // Matias: We shouldn't do this bc objects have state which change from loading to restarting.
     // Honestly I wouldn't be opposed to just reloading a level from scratch every time...
     // TODO: Change
@@ -91,10 +97,14 @@ public class PlayMode extends WorldController implements Screen {
         setDebug(false);
         setComplete(false);
         setFailure(false);
+
+        displayFont = this.loader.getAssetDirectory().getEntry("retro",BitmapFont.class);
         directionalGrapple = true;
         deathRotationCount = 0;
         fadeInCount = 1;
         won = false;
+        timeCount = 0;
+        timer = 0;
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -149,6 +159,8 @@ public class PlayMode extends WorldController implements Screen {
         SoundController.switchTrack(1);
         deathRotationCount = 0;
         fadeInCount = 1;
+        timeCount = 0;
+        timer = 0;
     }
 
     private void populateLevel(Iterable<GameObject> newObjects) {
@@ -191,6 +203,10 @@ public class PlayMode extends WorldController implements Screen {
         world.setGravity(Vector2.Zero);
     }
 
+    public String getTimeString() {
+        return timeString;
+    }
+
     /**
      * Gather the assets for this controller.
      *
@@ -218,6 +234,11 @@ public class PlayMode extends WorldController implements Screen {
      * @param dt 	Number of seconds since last animation frame
      */
     public void update(float dt) {
+        timeCount += dt;
+        if (timeCount >= 1) {
+            timer += 1;
+            timeCount = 0;
+        }
         // Move an object if touched
         InputController input = InputController.getInstance();
 
@@ -292,8 +313,6 @@ public class PlayMode extends WorldController implements Screen {
 
         canvas.begin();
 
-
-
         for (GameObject obj : objects) {
             obj.draw(canvas);
         }
@@ -306,6 +325,12 @@ public class PlayMode extends WorldController implements Screen {
         if (!cephalonaut.isAlive()) {
             canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
         }
+
+        int minutes = (timer % 3600) / 60;
+        int seconds = timer % 60;
+        timeString = String.format("%02d:%02d", minutes, seconds);
+
+        canvas.drawTextTopLeft(timeString, displayFont);
 
         canvas.end();
 

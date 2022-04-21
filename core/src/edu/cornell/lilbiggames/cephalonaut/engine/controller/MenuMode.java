@@ -86,9 +86,12 @@ public class MenuMode implements Screen {
 
     }
 
+    protected void drawOptions(String[] options, int selectedOption) {
+        drawOptions(options, selectedOption, 0);
+    }
 
-    protected void drawOptions(String[] options, int selectedOption){
-        float start = (options.length*displayFont.getLineHeight())/2;
+    protected void drawOptions(String[] options, int selectedOption, int offset){
+        float start = (options.length*displayFont.getLineHeight())/2 - offset;
         displayFont.setColor(YELLOW);
         displayFont.getData().setScale(0.5f*scale.x);
 

@@ -15,7 +15,7 @@ import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.*;
 
-public class LevelCompleteMode implements Screen {
+public class LevelCompleteMode extends MenuMode {
 
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
@@ -26,11 +26,9 @@ public class LevelCompleteMode implements Screen {
     /** Background texture for start-up */
     private Texture background;
 
-    private Texture replayIcon;
+    private String[] options = {"NEXT LEVEL", "REPLAY LEVEL", "LEVEL SELECT" };
 
-    private Texture nextIcon;
-
-    private Texture homeIcon;
+    private int selectedOption;
 
     private Texture starIcon;
 
@@ -43,6 +41,8 @@ public class LevelCompleteMode implements Screen {
 
     private Vector2 bounds, scale;
 
+    private String timeString;
+
     /**
      * Creates a MainMenuMode with the default size and position.
      *
@@ -50,6 +50,7 @@ public class LevelCompleteMode implements Screen {
      * @param canvas 	The game canvas to draw to
      */
     public LevelCompleteMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
+        super(assets, canvas, listener);
         this.canvas  = canvas;
         this.listener = listener;
         this.scale = new Vector2(1,1);
@@ -60,10 +61,8 @@ public class LevelCompleteMode implements Screen {
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.assets = assets;
 
-        homeIcon = assets.getEntry("homeicon", Texture.class);
         starIcon = assets.getEntry("staricon", Texture.class);
-        replayIcon = assets.getEntry("replayicon", Texture.class);
-        nextIcon = assets.getEntry("nexticon", Texture.class);
+        selectedOption = 0;
     }
 
     @Override
@@ -84,16 +83,24 @@ public class LevelCompleteMode implements Screen {
         canvas.setCameraPos(0.5f * width,0.5f * height);
     }
 
+    public void setTimeString(String timeString) {
+        this.timeString = timeString;
+    }
+
     private void update(float delta){
         SoundController.killAllSound();
         inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
-        if (clickedRestart()) {
-            listener.exitScreen(this, RESTART_LEVEL_CODE);
-        } else if (clickedNext() || inputController.isNextPressed()) {
+        if (selectedOption == 0 && inputController.isSelectPressed()){
             listener.exitScreen(this, NEXT_LEVEL_CODE);
-        } else if (clickedHome() || inputController.didExit()) {
+        } else if(selectedOption == 1 && inputController.isSelectPressed()){
+            listener.exitScreen(this, RESTART_LEVEL_CODE);
+        } else if(selectedOption == 2 && inputController.isSelectPressed() || inputController.didExit()){
             listener.exitScreen(this, EXIT_LEVEL_CODE);
+        } else if(inputController.isUpPressed()){
+            selectedOption = selectedOption == 0 ? options.length-1 : selectedOption -1;
+        } else if(inputController.isDownPressed()){
+            selectedOption = (selectedOption + 1 ) % options.length;
         }
     }
 
@@ -117,69 +124,6 @@ public class LevelCompleteMode implements Screen {
 
     }
 
-    private boolean clickedRestart() {
-        float mouseX = -10;
-        float mouseY = -10;
-        float height = canvas.getHeight();
-        float width = canvas.getWidth();
-        float rHeight = replayIcon.getHeight();
-        float rWidth = replayIcon.getWidth();
-
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            mouseX = Gdx.input.getX();
-            mouseY = height - Gdx.input.getY();
-        }
-
-        if (((width / 2f - 100) - rWidth / 2f <= mouseX && mouseX <= (width / 2f - 100) + rWidth / 2f ) &&
-                ((height / 2f - 200) - rHeight / 2f <= mouseY && mouseY <= (height / 2f - 200) + rHeight / 2f )) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean clickedNext() {
-        float mouseX = -10;
-        float mouseY = -10;
-        float height = canvas.getHeight();
-        float width = canvas.getWidth();
-        float nHeight = nextIcon.getHeight();
-        float nWidth = nextIcon.getWidth();
-
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            mouseX = Gdx.input.getX();
-            mouseY = height - Gdx.input.getY();
-        }
-
-        if (((width / 2f + 100) - nWidth / 2f <= mouseX && mouseX <= (width / 2f + 100) + nWidth / 2f ) &&
-                ((height / 2f - 200) - nHeight / 2f <= mouseY && mouseY <= (height / 2f - 200) + nHeight / 2f )) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean clickedHome() {
-        float mouseX = -10;
-        float mouseY = -10;
-        float height = canvas.getHeight();
-        float width = canvas.getWidth();
-        float hHeight = homeIcon.getHeight();
-        float hWidth = homeIcon.getWidth();
-
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            mouseX = Gdx.input.getX();
-            mouseY = height - Gdx.input.getY();
-        }
-
-        if (((width / 2f - 650) - hWidth / 2f <= mouseX && mouseX <= (width / 2f - 650) + hWidth / 2f ) &&
-                ((height / 2f + 375) - hHeight / 2f <= mouseY && mouseY <= (height / 2f + 375) + hHeight / 2f )) {
-            return true;
-        }
-
-        return false;
-    }
-
     public void draw() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -193,29 +137,18 @@ public class LevelCompleteMode implements Screen {
         canvas.setCameraPos(width / 2, height / 2);
         canvas.drawOverlay(background, true);
 
-        canvas.draw(homeIcon, Color.WHITE,
-                homeIcon.getWidth() / 2f, homeIcon.getHeight() / 2f,
-                width / 2f - 650, height / 2f + 375,
-                0, scale.x, scale.y);
-
         canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
 
         for (int i = 0; i < 3; i++) {
             canvas.draw(starIcon, Color.GOLD,
                     starIcon.getWidth() / 2f, starIcon.getHeight() / 2f,
-                    width / 2f - 100 + 100 * i, height / 2f + 50,
+                    width / 2f - 100 + 100 * i, height / 2f + 150,
                     0, scale.x, scale.y);
         }
 
-        canvas.draw(replayIcon, Color.WHITE,
-                replayIcon.getWidth() / 2f, replayIcon.getHeight() / 2f,
-                width / 2f - 100, height / 2f - 200,
-                0, scale.x, scale.y);
+        canvas.drawTextCentered(timeString, displayFont, 0f);
 
-        canvas.draw(nextIcon, Color.WHITE,
-                nextIcon.getWidth() / 2f, nextIcon.getHeight() / 2f,
-                width / 2f + 100, height / 2f - 200,
-                0, scale.x, scale.y);
+        super.drawOptions(options, selectedOption, 200);
 
         canvas.end();
     }
