@@ -133,6 +133,11 @@ public class LevelController implements ContactListener {
         }
     }
 
+    private void openDialogue() {
+        playMode.nextDialogue();
+        // playMode.nextDialogue(part);
+    }
+
     private GameObject getOtherBody(Contact contact, GameObject object) {
         Body body1 = contact.getFixtureA().getBody();
         Body body2 = contact.getFixtureB().getBody();

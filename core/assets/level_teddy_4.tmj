@@ -9,8 +9,6 @@
          "opacity":1,
          "parallaxx":0.5,
          "parallaxy":0.5,
-         "repeatx":true,
-         "repeaty":true,
          "type":"imagelayer",
          "visible":false,
          "x":0,

@@ -69,6 +69,14 @@ public class DialogueMode {
         return true;
     }
 
+    public void nextDialogue(int part) {
+        this.part = part;
+        index = 0;
+        if(part >= dialogue.length) {
+            throw new RuntimeException("Dialogue does not exists.");
+        }
+    }
+
     public void nextDialogue() {
         part += 1;
         index = 0;

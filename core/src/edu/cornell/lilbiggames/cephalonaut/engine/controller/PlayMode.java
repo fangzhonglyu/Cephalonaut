@@ -109,6 +109,11 @@ public class PlayMode extends WorldController implements Screen {
         paused = true;
     }
 
+    public void nextDialogue(int part) {
+        dialogueMode.nextDialogue(part);
+        paused = true;
+    }
+
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
         this.objectMap = objectMap;
     }
