@@ -83,6 +83,10 @@ public class LevelCompleteMode extends MenuMode {
         canvas.setCameraPos(0.5f * width,0.5f * height);
     }
 
+    public void setSelectedOption(int option) {
+        selectedOption = option;
+    }
+
     public void setTimeString(String timeString) {
         this.timeString = timeString;
     }
