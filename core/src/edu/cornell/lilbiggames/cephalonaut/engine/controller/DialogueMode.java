@@ -47,6 +47,7 @@ public class DialogueMode {
     final private int X_OFFSET = 250;
     final private int Y_OFFSET = 100;
 
+
     /**
      * Creates a DialogueMode with the default size and position.
      *
@@ -142,8 +143,9 @@ public class DialogueMode {
         return false;
     }
 
-    public void draw(float cx, float cy) {
-        canvas.drawDialogueBox();
+    public void draw(float cx, float cy, float fade) {
+
+        canvas.drawDialogueBox(fade);
         displayFont.getData().setScale(.5f * scale.x);
         canvas.drawText(dialogue.get(part).get(index), displayFont, cx - canvas.getWidth() * .25f, cy - 200);
 

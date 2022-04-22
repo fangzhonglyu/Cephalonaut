@@ -82,6 +82,7 @@ public class PlayMode extends WorldController implements Screen {
 
     private DialogueMode dialogueMode;
     private boolean paused;
+    private float dialogueFade;
 
 
     /**
@@ -104,6 +105,7 @@ public class PlayMode extends WorldController implements Screen {
         fadeInCount = 1;
         won = false;
         paused = false;
+        dialogueFade = 0;
     }
 
     public void nextDialogue() {
@@ -230,6 +232,10 @@ public class PlayMode extends WorldController implements Screen {
 
     private boolean isDialogueMode() {
         if(paused) {
+            if (dialogueFade < .5f) {
+                dialogueFade += .05f;
+                return false;
+            }
             canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
             cephalonaut.setBodyType(BodyDef.BodyType.StaticBody);
             paused  = dialogueMode.update();
@@ -240,6 +246,7 @@ public class PlayMode extends WorldController implements Screen {
                 cephalonaut.setVX(forces[0]);
                 cephalonaut.setVY(forces[1]);
                 cephalonaut.setAngularVelocity(forces[2]);
+                dialogueFade = 0.0f;
             }
 
             return true;
@@ -346,7 +353,7 @@ public class PlayMode extends WorldController implements Screen {
         canvas.drawSimpleFuelBar(cephalonaut.getInk());
 
         if(paused) {
-            dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+            dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y, dialogueFade);
         }
 
         canvas.end();

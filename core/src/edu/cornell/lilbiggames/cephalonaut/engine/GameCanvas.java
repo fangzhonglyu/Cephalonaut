@@ -412,14 +412,30 @@ public class GameCanvas {
 		spriteBatch.begin();
 	}
 
-	public void drawDialogueBox() {
+	public void drawDialogueBox(float fade) {
 		spriteBatch.end();
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		// dim background
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRen.setColor(0, 0, 0, .75f);
+		shapeRen.setColor(0, 0, 0, fade);
+		shapeRen.rect(getCameraX() - getWidth() * .5f, getCameraY() - getHeight() / 2 , getWidth(), getHeight());
+		shapeRen.end();
+
+		// draw box outline
+		shapeRen.begin(ShapeRenderer.ShapeType.Line);
+		Gdx.gl.glLineWidth(10f);
+		shapeRen.setColor(255, 255, 255, 2f * fade);
 		shapeRen.rect(getCameraX() - getWidth() * .4f, getCameraY() - getHeight() / 2 , getWidth() * .8f, 300f);
 		shapeRen.end();
+
+		// draw actual box
+		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRen.setColor(0, 0, 0,  1.5f * fade);
+		shapeRen.rect(getCameraX() - getWidth() * .4f, getCameraY() - getHeight() / 2 , getWidth() * .8f, 300f);
+		shapeRen.end();
+
 		spriteBatch.begin();
 	}
 
