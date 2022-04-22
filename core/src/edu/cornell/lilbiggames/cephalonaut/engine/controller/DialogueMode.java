@@ -147,7 +147,9 @@ public class DialogueMode {
 
         canvas.drawDialogueBox(fade);
         displayFont.getData().setScale(.5f * scale.x);
-        canvas.drawText(dialogue.get(part).get(index), displayFont, cx - canvas.getWidth() * .25f, cy - 200);
+        float text_pos_x = cx - canvas.getWidth() * .008f * dialogue.get(part).get(index).length();
+        //cx - canvas.getWidth() * .33f
+        canvas.drawText(dialogue.get(part).get(index), displayFont, text_pos_x, cy - 200);
 
         canvas.draw(nextIcon, Color.WHITE,
                 nextIcon.getWidth() / 2f, nextIcon.getHeight() / 2f,

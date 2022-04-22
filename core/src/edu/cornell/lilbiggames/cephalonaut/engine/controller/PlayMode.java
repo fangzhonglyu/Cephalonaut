@@ -170,6 +170,7 @@ public class PlayMode extends WorldController implements Screen {
         deathRotationCount = 0;
         fadeInCount = 1;
         dialogueMode.load(level, checkpoint);
+        paused = false;
     }
 
     private void populateLevel(Iterable<GameObject> newObjects) {
