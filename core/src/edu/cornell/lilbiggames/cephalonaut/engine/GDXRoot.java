@@ -123,7 +123,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		pauseMode = new PauseMode(directory, canvas, this);
 		settings = new SettingsMode(directory, canvas, this, keyBindings);
-		credits = new CreditsScreen(directory, canvas);
+		credits = new CreditsScreen(directory, canvas, this);
 		levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
 
 		SoundController.setMusicVolume(0.5f);

@@ -1,18 +1,23 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
+import edu.cornell.lilbiggames.cephalonaut.engine.GDXRoot;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
-public class CreditsScreen implements Screen {
+public class CreditsScreen extends MenuMode implements Screen {
     private Credit[] credits;
     private GameCanvas canvas;
     private Texture background;
     protected Vector2 bounds,scale;
+    private ScreenListener listener;
 
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
@@ -29,8 +34,10 @@ public class CreditsScreen implements Screen {
         }
     }
 
-    public CreditsScreen(AssetDirectory assets, GameCanvas canvas){
+    public CreditsScreen(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
+        super(assets, canvas, listener);
         this.canvas = canvas;
+        this.listener = listener;
 
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -58,6 +65,9 @@ public class CreditsScreen implements Screen {
 
     @Override
     public void render(float v) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            listener.exitScreen(this, MenuMode.RETURN_TO_START_CODE);
+        }
         canvas.begin();
         float width = canvas.getWidth();
         float height = canvas.getHeight();
