@@ -148,6 +148,7 @@ public class PlayMode extends WorldController implements Screen {
         // TODO: Switch track to a map property based off Tiled
         SoundController.switchTrack(1);
         deathRotationCount = 0;
+        cephalonaut.setDeathScale(1);
         fadeInCount = 1;
     }
 
@@ -257,9 +258,9 @@ public class PlayMode extends WorldController implements Screen {
             fadeInCount -= .05f;
         }
         if (!cephalonaut.isAlive()) {
-
             cephalonaut.setLinearVelocity(Vector2.Zero);
-            cephalonaut.setDrawScale(scale.cpy().scl((float)((4 * Math.PI - deathRotationCount) / (4 * Math.PI)))); //(float)((4 * Math.PI - deathRotationCount) / 4 * Math.PI)
+            cephalonaut.setDeathScale((float)((4 * Math.PI - deathRotationCount) / (4 * Math.PI)));
+            //(float)((4 * Math.PI - deathRotationCount) / 4 * Math.PI)
 
             final float BLACK_HOLE_DEATH_SPINNY_CONSTANT = 5f;
             cephalonaut.getBody().applyTorque(BLACK_HOLE_DEATH_SPINNY_CONSTANT, false);

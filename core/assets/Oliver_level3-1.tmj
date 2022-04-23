@@ -447,11 +447,6 @@
                              "isSensor":true,
                              "type":"Wormhole"
                             }
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"object",
-                         "value":30
                         }],
                  "rotation":0,
                  "type":"",
