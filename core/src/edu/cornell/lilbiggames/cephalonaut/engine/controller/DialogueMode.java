@@ -175,10 +175,11 @@ public class DialogueMode {
                 cx + canvas.getWidth() / 2 - X_OFFSET, cy - canvas.getHeight() / 2 + Y_OFFSET,
                 0, scale.x, scale.y);
 
+        if(index == 0) { return; }
         canvas.draw(nextIcon, Color.WHITE,
                 nextIcon.getWidth() / 2f, nextIcon.getHeight() / 2f,
                 cx - canvas.getWidth() / 2 + X_OFFSET, cy - canvas.getHeight() / 2 + Y_OFFSET,
-                3.14f, scale.x, scale.y);
+                (float)Math.PI, scale.x, scale.y);
     }
 }
 
