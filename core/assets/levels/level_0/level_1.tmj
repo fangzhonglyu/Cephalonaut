@@ -132,8 +132,8 @@
                  "type":"",
                  "visible":true,
                  "width":82.0939468134793,
-                 "x":719.701423144677,
-                 "y":341.89324044219
+                 "x":717.83028237252,
+                 "y":449.171978045883
                 }, 
                 {
                  "gid":18,
@@ -158,12 +158,42 @@
                          "type":"int",
                          "value":1
                         }],
-                 "rotation":5.3808269434996,
+                 "rotation":359.632856552496,
                  "type":"",
                  "visible":true,
                  "width":82.0939,
-                 "x":595.107964917083,
-                 "y":151.641972483974
+                 "x":720.10958879559,
+                 "y":248.30003232558
+                }, 
+                {
+                 "gid":18,
+                 "height":5.2813,
+                 "id":122,
+                 "name":"d3",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "tint":"#00ffffff",
+                             "type":"Dialogue Trigger"
+                            }
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":10.0874454606088,
+                 "type":"",
+                 "visible":true,
+                 "width":82.0939,
+                 "x":597.07563037058,
+                 "y":151.929995106674
                 }],
          "offsetx":-0.646778235912365,
          "offsety":1.94033470773709,
@@ -186,7 +216,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":122,
+ "nextobjectid":123,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

@@ -118,6 +118,7 @@ public class DialogueMode {
     }
 
     private boolean clickedBack() {
+
         return checkClicked(X_OFFSET, canvas.getHeight() - Y_OFFSET);
     }
 
@@ -143,13 +144,31 @@ public class DialogueMode {
         return false;
     }
 
+    private void displayText(float cx, float cy) {
+        displayFont.getData().setScale(.5f * scale.x);
+        int cutoff = 40;
+        int y_offset = 200;
+
+        String text = dialogue.get(part).get(index);
+        int text_length = text.length();
+
+        while(text_length / cutoff > 0) {
+            cutoff = text.substring(0, cutoff + 1).lastIndexOf(' ');
+            float text_pos_x = cx - canvas.getWidth() * .008f * cutoff;
+            canvas.drawText(text.substring(0, cutoff), displayFont, text_pos_x, cy - y_offset);
+            y_offset += 50;
+            text = text.substring(cutoff);
+            text_length = text.length();
+        }
+
+        float text_pos_x = cx - canvas.getWidth() * .008f * text_length;
+        canvas.drawText(text, displayFont, text_pos_x, cy - y_offset);
+    }
+
     public void draw(float cx, float cy, float fade) {
 
         canvas.drawDialogueBox(fade);
-        displayFont.getData().setScale(.5f * scale.x);
-        float text_pos_x = cx - canvas.getWidth() * .008f * dialogue.get(part).get(index).length();
-        //cx - canvas.getWidth() * .33f
-        canvas.drawText(dialogue.get(part).get(index), displayFont, text_pos_x, cy - 200);
+        displayText(cx, cy);
 
         canvas.draw(nextIcon, Color.WHITE,
                 nextIcon.getWidth() / 2f, nextIcon.getHeight() / 2f,

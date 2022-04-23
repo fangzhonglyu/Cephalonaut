@@ -1,8 +1,11 @@
 {
   "level_0:checkpoint_0": {
-      "part_0": ["hi my name is michael the octopus!", "welcome to my game :)", "press the space bar for fun!"],
-      "part_1": ["the next thing is this!", "ok :)", "press the left arrow key!"]
-    },
+      "part_0": ["hi my name is michael the octopus!", "press [w] to thrust.",
+        "i am a really long message for no reason. I wonder how the parser will deal with such a long message."],
+      "part_1": ["well done! press [a] to rotate left and [d] to rotate right."],
+      "part_2": ["you can grapple by clicking your mouse in the desired location.",
+        "Right click to release or press the space bar!"]
+  },
   "level_1:checkpoint_0": {
       "part_0": ["only one dialogue for level 1"]
     }
