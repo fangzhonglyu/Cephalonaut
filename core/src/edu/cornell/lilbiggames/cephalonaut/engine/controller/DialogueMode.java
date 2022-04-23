@@ -118,7 +118,7 @@ public class DialogueMode {
     }
 
     private boolean clickedBack() {
-
+        if(index == 0) { return false; }
         return checkClicked(X_OFFSET, canvas.getHeight() - Y_OFFSET);
     }
 
@@ -176,6 +176,7 @@ public class DialogueMode {
                 0, scale.x, scale.y);
 
         if(index == 0) { return; }
+
         canvas.draw(nextIcon, Color.WHITE,
                 nextIcon.getWidth() / 2f, nextIcon.getHeight() / 2f,
                 cx - canvas.getWidth() / 2 + X_OFFSET, cy - canvas.getHeight() / 2 + Y_OFFSET,
