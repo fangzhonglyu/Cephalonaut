@@ -46,10 +46,10 @@ public class CephalonautModel extends OctopusObstacle {
 	/** Cache object for transforming the force according the object angle */
 	private final Affine2 affineCache = new Affine2();
 
-	private final float MAX_SPEED = 8.0f;
+	private final float MAX_SPEED = 16.0f;
 
 	/** Magnitude of force to apply */
-	private final float force = 8.0f;
+	private final float force = 5.0f;
 
 	/** The direction of rotation */
 	private float rotation;
@@ -60,7 +60,11 @@ public class CephalonautModel extends OctopusObstacle {
 	/** How much ink the cephalonaut has left */
 	private float ink;
 
+	private float max_ink;
+
 	private boolean alive = true;
+
+	private float deathScale;
 
 	public boolean isAlive() {
 		return alive;
@@ -112,14 +116,14 @@ public class CephalonautModel extends OctopusObstacle {
 	 *
 	 * @param ink the amount of ink in the cephalonaut's sac.
 	 */
-	public void setInk(int ink) { this.ink = Math.min(1, ink); }
+	public void setInk(int ink) { this.ink = ink*max_ink; }
 
 	/**
 	 * Returns the amount of ink in the cephalonaut's sac.
 	 *
 	 * @returns the amount of ink in the cephalonaut's sac.
 	 */
-	public float getInk() { return ink; }
+	public float getInk() { return ink/max_ink; }
 
 	/**
 	 * Sets whether the cephalonaut is actively inking.
@@ -148,7 +152,7 @@ public class CephalonautModel extends OctopusObstacle {
 	 * converts the physics units to pixels.
 	 *
 	 */
-	public CephalonautModel(float x, float y, float width, float height, Vector2 drawScale,FilmStrip filmstrip) {
+	public CephalonautModel(float x, float y, float width, float height,float max_ink, Vector2 drawScale,FilmStrip filmstrip) {
 		// The shrink factors fit the image to a tighter hitbox
 		super(x, y, width, height);
 		setName("michael");
@@ -159,16 +163,19 @@ public class CephalonautModel extends OctopusObstacle {
 		setFixedRotation(false);
 		this.filmstrip = filmstrip;
 		this.filmstrip.setFrame(0);
+		this.max_ink = max_ink;
+		ink = max_ink;
 		frame = 0;
 		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.WHITE);
 		pixmap.fillRectangle(0, 0, 1, 1);
 		tentacleTexture = new Texture(pixmap);
+		deathScale = 1;
 
 		// Matias: I don't think this line of code matters bc it's being overwritten by the setTexture call
 		// in the SandboxController.
 		origin.set(width / 2f, height / 2f);
-		ink = 1f;
+
 		grapple = new GrappleModel(x, y, drawScale);
 	}
 
@@ -209,6 +216,14 @@ public class CephalonautModel extends OctopusObstacle {
 	public void applyRotation(){
 		body.setAngularVelocity(-5f * rotation);
 	}
+
+	public void setDeathScale(float deathScaleVal) {
+		deathScale = deathScaleVal;
+	}
+
+	public float getDeathScale() {
+		return deathScale;
+	}
 	
 
 	/**
@@ -239,6 +254,12 @@ public class CephalonautModel extends OctopusObstacle {
 	public void setRotationalDirection(float rotation){
 		this.rotation = rotation;
 	}
+
+
+	public void refillInk() {
+		ink = max_ink;
+	}
+
 	
 	/**
 	 * Updates the object's physics state (NOT GAME LOGIC).
@@ -298,10 +319,11 @@ public class CephalonautModel extends OctopusObstacle {
 
 		if (inking && ink > 0.0f) {
 			ink -= 0.006f;
-		} else if (!inking && ink < 1.0f) {
-			ink += 0.004f;
 		}
-		ink = Math.min(ink, 1.0f);
+//		else if (!inking && ink < 1.0f) {
+//			ink += 0.004f;
+//		}
+		ink = Math.min(ink, max_ink);
 	}
 
 	/**
@@ -317,8 +339,7 @@ public class CephalonautModel extends OctopusObstacle {
 		float oy = 0.75f * filmstrip.getRegionHeight();
 		canvas.draw(filmstrip, Color.WHITE, ox, oy,
 				getX() * drawScale.x, getY() * drawScale.y,
-				getAngle(), 0.052f * drawScale.x, 0.052f * drawScale.y);
-
+				getAngle(), 0.052f* drawScale.x * deathScale, 0.052f*drawScale.y * deathScale);
 		canvas.drawSimpleFuelBar(ink, getX() * drawScale.x - 37, getY() * drawScale.y - 60);
 	}
 

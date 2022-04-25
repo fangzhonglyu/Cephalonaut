@@ -9,76 +9,86 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
-import edu.cornell.lilbiggames.cephalonaut.engine.controller.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 
 public class LevelLoader {
 
-    private AssetDirectory assetDirectory;
-    private Map<Integer, JsonValue> map = new HashMap<>();
-    private Map<Integer, TextureRegion> textures = new HashMap<>();
-    private Texture tilesetTexture,spaceTexture;
-    private JsonValue tile_tileset;
-    private JsonValue object_tileset;
-    private JsonValue space_tileset;
+    enum TiledFile {
+        METEOR_TILESET,
+        SPACESHIP_TILESET,
+        OBJECTS
+    }
+
+    private TiledFile stringToTiledFile(String str) {
+        if (str.contains("space")) {
+            return TiledFile.SPACESHIP_TILESET;
+        } else if (str.contains("objects")) {
+            return TiledFile.OBJECTS;
+        } else if (str.contains("tileset")) {
+            return TiledFile.METEOR_TILESET;
+        } else {
+            throw new IllegalArgumentException("Unknown tiled file '" + str + "' required\n");
+        }
+    }
+
+    final private AssetDirectory assetDirectory;
+    final private Map<TiledFile, Map<Integer, JsonValue>> map = new HashMap<>();
+    final private Map<TiledFile, Map<Integer, TextureRegion>> textures = new HashMap<>();
 
     public LevelLoader() {
         assetDirectory = new AssetDirectory("assets.json");
         assetDirectory.loadAssets();
         assetDirectory.finishLoading();
-        tilesetTexture = new Texture("TS-meteroid-space.png");
-        spaceTexture = new Texture("TS-space-tiles.png");
-        tilesetTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        spaceTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        tile_tileset = assetDirectory.getEntry("tile-tileset", JsonValue.class);
-        object_tileset = assetDirectory.getEntry("object-tileset", JsonValue.class);
-        space_tileset = assetDirectory.getEntry("space-tileset", JsonValue.class);
-        getTextures();
 
-        for (JsonValue tile : tile_tileset.get("tiles")) {
-            map.put(tile.getInt("id"), tile);
+        loadTileset("tile-tileset", TiledFile.METEOR_TILESET);
+        loadTileset("space-tileset", TiledFile.SPACESHIP_TILESET);
+        loadTileset("object-tileset", TiledFile.OBJECTS);
+    }
+
+    private void loadTileset(String asset, TiledFile tiledFile) {
+        JsonValue tileset = assetDirectory.getEntry(asset, JsonValue.class);
+        Map<Integer, JsonValue> fileMap = new HashMap<>();
+        Map<Integer, TextureRegion> textureMap = new HashMap<>();
+
+        for (JsonValue tile : tileset.get("tiles")) {
+            fileMap.put(tile.getInt("id"), tile);
         }
 
-        for (JsonValue tile : object_tileset.get("tiles")) {
-            // TODO: Maybe make this '128' not a constant? It's derived from the 'firstgid' of objects.tsj in a level.
-            map.put(tile.getInt("id") + 128, tile);
+        if (tileset.has("image")) {
+            // Get atlas and set up texture regions
+            Texture atlas = new Texture(tileset.getString("image"));
+            atlas.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+            int tileSize = tileset.getInt("tilewidth");
+            int columns = tileset.getInt("columns");
+            for (JsonValue tile : tileset.get("tiles")) {
+                int id = tile.getInt("id");
+                int x = (id % columns)*tileSize;
+                int y = (id / columns)*tileSize;
+                textureMap.put(id, new TextureRegion(atlas, x, y, tileSize, tileSize));
+            }
+        } else {
+            // Get each tile's individual textures at set up regions
+            for (JsonValue tile : tileset.get("tiles")) {
+                Texture fullTexture = assetDirectory.getEntry(tile.getString("image"), Texture.class);
+                if (fullTexture == null) continue;
+                fullTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+                textureMap.put(tile.getInt("id"), new TextureRegion(fullTexture));
+            }
         }
 
-        for (JsonValue tile : space_tileset.get("tiles")) {
-            // TODO: Maybe make this '128' not a constant? It's derived from the 'firstgid' of objects.tsj in a level.
-            map.put(tile.getInt("id") + 138, tile);
-        }
+        map.put(tiledFile, fileMap);
+        textures.put(tiledFile, textureMap);
     }
 
     public AssetDirectory getAssetDirectory() {
         return assetDirectory;
-    }
-
-    // Maps tileset tiles to texture regions
-    private void getTextures() {
-        int tileSize = tile_tileset.getInt("tilewidth");
-        int columns = tile_tileset.getInt("columns");
-        for (JsonValue tile : tile_tileset.get("tiles")) {
-            int id = tile.getInt("id");
-            int x = (id % columns)*tileSize;
-            int y = (id / columns)*tileSize;
-            textures.put(id, new TextureRegion(tilesetTexture, x, y, tileSize, tileSize));
-        }
-        tileSize = space_tileset.getInt("tilewidth");
-        columns = space_tileset.getInt("columns");
-        for (JsonValue tile : space_tileset.get("tiles")) {
-            int id = tile.getInt("id");
-            int x = (id % columns)*tileSize;
-            int y = (id / columns)*tileSize;
-            textures.put(id+138, new TextureRegion(spaceTexture, x, y, tileSize, tileSize));
-        }
     }
 
     private LevelElement.Element stringToElementType(String element) {
@@ -105,6 +115,10 @@ public class LevelLoader {
                 return LevelElement.Element.GLASS_BARRIER;
             case "Spike":
                 return LevelElement.Element.SPIKE;
+            case "Refill":
+                return LevelElement.Element.REFILL;
+            case "Dialogue Trigger":
+                return LevelElement.Element.DIALOGUE_TRIGGER;
             default:
                 System.out.printf("WARNING: Unknown LevelElement type '%s'\n", element);
                 return LevelElement.Element.WALL;
@@ -251,7 +265,7 @@ public class LevelLoader {
 
         // Need to account that rotation is around the bottom-left origin in Tiled instead of the center origin here
         def.angle = -MathUtils.degreesToRadians * json.getFloat("rotation", 0);
-        Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x, y), def.angle);
+        Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x-def.width/2f, y-def.height/2f), def.angle);
         def.x = pos.x;
         def.y = pos.y;
     }
@@ -282,6 +296,37 @@ public class LevelLoader {
         public Map<Integer, LevelElement> getIdToObject() {
             return idToObject;
         }
+    }
+
+    class Pair {
+        public TiledFile tiledFile;
+        public int firstgid;
+        public Pair(TiledFile tiledFile, int firstgid) {
+            this.tiledFile = tiledFile;
+            this.firstgid = firstgid;
+        }
+    }
+
+    private Pair getTileset(JsonValue level, int gid) {
+        JsonValue ret = null;
+        for (JsonValue tileset : level.get("tilesets")) {
+            if (gid < tileset.getInt("firstgid")) {
+                break;
+            } else {
+                ret = tileset;
+            }
+        }
+        return new Pair(stringToTiledFile(ret.getString("source")), ret.getInt("firstgid"));
+    }
+
+    private JsonValue getTiledObj(JsonValue level, int gid) {
+        Pair tileset = getTileset(level, gid);
+        return map.get(tileset.tiledFile).get(gid - tileset.firstgid);
+    }
+
+    private TextureRegion getTexture(JsonValue level, int gid) {
+        Pair tileset = getTileset(level, gid);
+        return textures.get(tileset.tiledFile).get(gid - tileset.firstgid);
     }
 
     public LevelDef loadLevel(String levelName, String checkpointName) {
@@ -315,33 +360,29 @@ public class LevelLoader {
                     for (int i = 0; i < data.length; i++) {
                         // need to convert to game object, for now, its JsonValue object
                         int id = data[i];
-                        JsonValue tile = map.get(id - 1);
-                        if (tile != null) {
-                            int tiledX = i % layerWidth;
-                            int tiledY = i / layerWidth;
-                            levelElementDef.name = String.format("Tile #%d (%d, %d)", id, tiledX, tiledY);
-                            levelElementDef.x = tiledX;
-                            levelElementDef.y = layerHeight - tiledY - 1;
-                            levelElementDef.texture = textures.get(id - 1);
-                            loadTile(levelElementDef, tile);
-                            LevelElement element = LevelElement.create(levelElementDef);
-                            element.setParallaxFactor(parallax);
-                            levelDef.addObject(element);
-                        }
+                        if (id == 0) continue;
+                        JsonValue tile = getTiledObj(level, id);
+                        if (tile == null) continue;
+                        int tiledX = i % layerWidth;
+                        int tiledY = i / layerWidth;
+                        levelElementDef.name = String.format("Tile #%d (%d, %d)", id, tiledX, tiledY);
+                        levelElementDef.x = tiledX;
+                        levelElementDef.y = layerHeight - tiledY - 1;
+                        levelElementDef.texture = getTexture(level, id);
+                        loadTile(levelElementDef, tile);
+                        LevelElement element = LevelElement.create(levelElementDef);
+                        element.setParallaxFactor(parallax);
+                        levelDef.addObject(element);
                     }
                     break;
                 case "objectgroup":
                     for (JsonValue jsonObject : layer.get("objects")) {
-                        int gid = jsonObject.getInt("gid") - 1;
-                        mergeJsons(jsonObject, map.get(gid));
+                        int gid = jsonObject.getInt("gid");
+                        mergeJsons(jsonObject, getTiledObj(level, gid));
 
-                        if (jsonObject.has("image")) {
-                            Texture fullTexture = assetDirectory.getEntry(jsonObject.getString("image"), Texture.class);
-                            fullTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-                            levelElementDef.texture = new TextureRegion(fullTexture);
-                        } else {
-                            levelElementDef.texture = textures.get(gid);
-                        }
+                        levelElementDef.texture = getTexture(level, gid);
+                        // TODO: Can we do this cleaner? Maybe in tiled?
+                        levelElementDef.triggerTexture = textures.get(TiledFile.SPACESHIP_TILESET).get(57);
 
                         loadObject(levelElementDef, jsonObject, tileSize, levelHeight);
                         LevelElement newObject = LevelElement.create(levelElementDef);

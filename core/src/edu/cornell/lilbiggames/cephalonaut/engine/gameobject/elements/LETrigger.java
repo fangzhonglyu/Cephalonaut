@@ -1,19 +1,23 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 public class LETrigger extends LevelElement {
     private final int target;
-    private final Color originalTint;
+    private final TextureRegion originalTexture;
+    private final TextureRegion triggerTexture;
 
     private boolean activated = false;
+
 
     public LETrigger(Def def) {
         super(def);
         target = def.properties.getInt("target", -1);
         assert target >= 0;
-        originalTint = getTint();
+        originalTexture = getTexture();
+        this.triggerTexture = def.triggerTexture;
     }
 
     public int getTarget() { return target; }
@@ -24,18 +28,18 @@ public class LETrigger extends LevelElement {
         // trigger behavior as data in this class, parsed from Tiled parameters. That might be nicer.
         activated = !activated;
         if (activated) {
-            setTint(Color.GREEN);
+            setTexture(triggerTexture);
         } else {
-            setTint(originalTint);
+            setTexture(originalTexture);
         }
     }
 
     public void setActivated(boolean activated) {
         this.activated = activated;
         if (this.activated) {
-            setTint(Color.GREEN);
+            setTexture(triggerTexture);
         } else {
-            setTint(originalTint);
+            setTexture(originalTexture);
         }
     }
 

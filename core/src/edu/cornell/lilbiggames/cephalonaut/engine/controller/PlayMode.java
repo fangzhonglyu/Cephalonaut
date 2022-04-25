@@ -1,9 +1,13 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Queue;
@@ -11,6 +15,7 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEGlassBarrier;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEStart;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETrigger;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETriggerable;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
@@ -32,7 +37,7 @@ public class PlayMode extends WorldController implements Screen {
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
-    private Texture octopusInkStrip,octopusStrip;
+    private Texture octopusInkStrip,octopusStrip,nextIcon;
 
     /** Controller that handles cephalonaut movement (grappling and inking) */
     private CephalonautController cephalonautController;
@@ -77,15 +82,21 @@ public class PlayMode extends WorldController implements Screen {
     private Queue<GameObject> defaultObjects;
     private boolean won;
 
+    private DialogueMode dialogueMode;
+    private boolean paused;
+    private float dialogueFade;
+
+
     /**
      * Creates and initialize a new instance of the sandbox
      */
-    public PlayMode(ScreenListener listener, LevelLoader loader, String level, String checkpoint, Map<String, Integer> keyBindings) {
+    public PlayMode(ScreenListener listener, LevelLoader loader, String level, String checkpoint, Map<String, Integer> keyBindings ,DialogueMode dialogueMode) {
         super(DEFAULT_WIDTH, DEFAULT_HEIGHT, 0);
         this.listener = listener;
         this.level = level;
         this.checkpoint = checkpoint;
         this.loader = loader;
+        this.dialogueMode = dialogueMode;
 
         InputController.getInstance().setBindings(keyBindings);
         setDebug(false);
@@ -95,6 +106,18 @@ public class PlayMode extends WorldController implements Screen {
         deathRotationCount = 0;
         fadeInCount = 1;
         won = false;
+        paused = false;
+        dialogueFade = 0;
+    }
+
+    public void nextDialogue() {
+        dialogueMode.nextDialogue();
+        paused = true;
+    }
+
+    public void nextDialogue(int part) {
+        dialogueMode.nextDialogue(part);
+        paused = true;
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -112,7 +135,6 @@ public class PlayMode extends WorldController implements Screen {
     public void resume(){
         exiting = false;
     }
-
 
     public void cleanupLevel(){
         for(GameObject obj : objects) {
@@ -148,21 +170,26 @@ public class PlayMode extends WorldController implements Screen {
         // TODO: Switch track to a map property based off Tiled
         SoundController.switchTrack(1);
         deathRotationCount = 0;
+        cephalonaut.setDeathScale(1);
         fadeInCount = 1;
+        dialogueMode.load(level, checkpoint);
+        paused = false;
     }
 
     private void populateLevel(Iterable<GameObject> newObjects) {
         float startX = DEFAULT_STARTING_POS_X;
         float startY = DEFAULT_STARTING_POS_Y;
+        float startInk = 1f;
         for (GameObject object : newObjects) {
 
-            if(object instanceof LevelElement &&(((LevelElement) object).getElement().equals(LevelElement.Element.START))) {
+
+            if (object instanceof LEStart){
                 startX = object.getX();
                 startY = object.getY();
+                startInk = ((LEStart) object).getInk();
                 continue;
             }
-
-            if (object instanceof LETrigger) {
+            else if (object instanceof LETrigger) {
                 ((LETrigger) object).setActivated(false);
             } else if (object instanceof LETriggerable) {
                 ((LETriggerable) object).setActivated(false);
@@ -179,7 +206,7 @@ public class PlayMode extends WorldController implements Screen {
         float dheight = octopusTexture.getRegionHeight()/scale.y*1.6f;
         //FilmStrip cephInkFilm = new FilmStrip(octopusInkStrip,1,7);
         FilmStrip cephFilm = new FilmStrip(octopusStrip,5,9);
-        cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight, scale, cephFilm);
+        cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight,startInk, scale, cephFilm);
         cephalonautController = new CephalonautController(world, cephalonaut);
 
         addObject(cephalonaut);
@@ -207,7 +234,30 @@ public class PlayMode extends WorldController implements Screen {
         octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
         octopusStrip = directory.getEntry("octopus",Texture.class);
         octopusStrip.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
-//		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
+    }
+
+    private boolean isDialogueMode() {
+        if(paused) {
+            if (dialogueFade < .5f) {
+                dialogueFade += .05f;
+                return false;
+            }
+            canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+            cephalonaut.setBodyType(BodyDef.BodyType.StaticBody);
+            paused  = dialogueMode.update();
+
+            if(!paused) {
+                cephalonaut.setBodyType(BodyDef.BodyType.DynamicBody);
+                float[] forces = cephalonautController.getForces();
+                cephalonaut.setVX(forces[0]);
+                cephalonaut.setVY(forces[1]);
+                cephalonaut.setAngularVelocity(forces[2]);
+                dialogueFade = 0.0f;
+            }
+
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -223,6 +273,7 @@ public class PlayMode extends WorldController implements Screen {
     public void update(float dt) {
         // Move an object if touched
         InputController input = InputController.getInstance();
+        if(isDialogueMode()) return;
 
         if (input.didExit()) {
             if (listener != null) {
@@ -254,13 +305,16 @@ public class PlayMode extends WorldController implements Screen {
                 (canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
 
         cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
-        canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+        canvas.setCameraPos(MathUtils.roundPositive(cephalonaut.getX()* scale.x), MathUtils.roundPositive(cephalonaut.getY()* scale.y));
 
         if (fadeInCount > 0) {
             fadeInCount -= .05f;
         }
-
         if (!cephalonaut.isAlive()) {
+            cephalonaut.setLinearVelocity(Vector2.Zero);
+            cephalonaut.setDeathScale((float)((4 * Math.PI - deathRotationCount) / (4 * Math.PI)));
+            //(float)((4 * Math.PI - deathRotationCount) / 4 * Math.PI)
+
             final float BLACK_HOLE_DEATH_SPINNY_CONSTANT = 5f;
             cephalonaut.getBody().applyTorque(BLACK_HOLE_DEATH_SPINNY_CONSTANT, false);
             deathRotationCount += Math.PI / 16;
@@ -292,10 +346,7 @@ public class PlayMode extends WorldController implements Screen {
 
         canvas.begin();
 
-        canvas.drawFade(fadeInCount);
-        if (!cephalonaut.isAlive()) {
-            canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
-        }
+
 
         for (GameObject obj : objects) {
             obj.draw(canvas);
@@ -303,6 +354,15 @@ public class PlayMode extends WorldController implements Screen {
 
         selector.draw(canvas);
         cephalonaut.draw(canvas);
+        canvas.drawFade(fadeInCount);
+        if (!cephalonaut.isAlive()) {
+            canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
+        }
+        if(paused) {
+            cephalonaut.setInking(false);
+            dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y, dialogueFade);
+        }
+
         canvas.end();
 
         if (isDebug()) {
@@ -313,5 +373,4 @@ public class PlayMode extends WorldController implements Screen {
             canvas.endDebug();
         }
     }
-
 }

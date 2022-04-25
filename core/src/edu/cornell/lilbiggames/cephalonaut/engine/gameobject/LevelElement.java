@@ -32,7 +32,9 @@ public class LevelElement extends SimpleObstacle {
         WORMHOLE,
         MISC,
         START,
-        SPIKE
+        SPIKE,
+        REFILL,
+        DIALOGUE_TRIGGER
     }
 
     /** Type of element **/
@@ -58,6 +60,7 @@ public class LevelElement extends SimpleObstacle {
 
         public float[] vertices;
         public TextureRegion texture;
+        public TextureRegion triggerTexture;
         public Properties properties;
     }
 
@@ -95,6 +98,10 @@ public class LevelElement extends SimpleObstacle {
                 return new LEWormHole(def);
             case GLASS_BARRIER:
                 return new LEGlassBarrier(def);
+            case DIALOGUE_TRIGGER:
+                return new LEDialogueTrigger(def);
+            case START:
+                return new LEStart(def);
             default:
                 return new LevelElement(def);
         }

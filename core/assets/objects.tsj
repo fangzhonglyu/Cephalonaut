@@ -8,7 +8,7 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":8,
+ "tilecount":10,
  "tiledversion":"1.8.2",
  "tileheight":66,
  "tiles":[
@@ -485,7 +485,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":3,
              "name":"",
              "objects":[
                     {
@@ -537,7 +536,141 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "type":"Refill"
+                    }
+                }],
+         "type":"GameObject"
+        }, 
+        {
+         "id":12,
+         "image":"boost.png",
+         "imageheight":24,
+         "imagewidth":32,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":-15.625,
+                             "y":15.5
+                            }, 
+                            {
+                             "x":-11.125,
+                             "y":23.25
+                            }, 
+                            {
+                             "x":14.125,
+                             "y":23.25
+                            }, 
+                            {
+                             "x":16.5,
+                             "y":18.25
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":15.5,
+                     "y":0.625
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "type":"Boost Pad"
+                    }
+                }]
+        }, 
+        {
+         "id":13,
+         "image":"bounce.png",
+         "imageheight":16,
+         "imagewidth":16,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":-2.25,
+                             "y":2
+                            }, 
+                            {
+                             "x":-2.375,
+                             "y":4
+                            }, 
+                            {
+                             "x":13.75,
+                             "y":3.9375
+                            }, 
+                            {
+                             "x":13.6875,
+                             "y":1.9375
+                            }, 
+                            {
+                             "x":10.75,
+                             "y":0.0625
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":2.25,
+                     "y":12
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "restitution":3
+                    }
+                }]
         }],
  "tilewidth":59,
  "type":"tileset",
