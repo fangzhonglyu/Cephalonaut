@@ -164,6 +164,7 @@ public class PlayMode extends WorldController implements Screen {
                 continue;
             }
 
+
             if (object instanceof LETrigger) {
                 ((LETrigger) object).setActivated(false);
             } else if (object instanceof LETriggerable) {

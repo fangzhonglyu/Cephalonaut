@@ -544,9 +544,11 @@
                  "type":"class",
                  "value":
                     {
-                     "canGrappleOn":false
+                     "canGrappleOn":false,
+                     "type":"Refill"
                     }
-                }]
+                }],
+         "type":"GameObject"
         }, 
         {
          "id":12,
@@ -615,7 +617,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {

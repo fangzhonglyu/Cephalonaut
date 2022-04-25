@@ -46,18 +46,6 @@
          "name":"objects",
          "objects":[
                 {
-                 "gid":258,
-                 "height":23.9933333333332,
-                 "id":126,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20.3333333333333,
-                 "x":748.333333333333,
-                 "y":454
-                }, 
-                {
                  "gid":264,
                  "height":48,
                  "id":127,
@@ -246,6 +234,188 @@
                  "width":16,
                  "x":800,
                  "y":48
+                }, 
+                {
+                 "gid":266,
+                 "height":12,
+                 "id":154,
+                 "name":"refill",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12,
+                 "x":746.666666666667,
+                 "y":271.333333333333
+                }, 
+                {
+                 "gid":250,
+                 "height":16,
+                 "id":158,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "type":"Glass Barrier"
+                            }
+                        }, 
+                        {
+                         "name":"glassBarrierHardness",
+                         "type":"string",
+                         "value":"10"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":80,
+                 "x":720,
+                 "y":352
+                }, 
+                {
+                 "gid":258,
+                 "height":27,
+                 "id":160,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "type":"Start"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":22.8813559322034,
+                 "x":751.5,
+                 "y":463
+                }, 
+                {
+                 "gid":266,
+                 "height":12,
+                 "id":162,
+                 "name":"refill",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12,
+                 "x":581,
+                 "y":229
+                }, 
+                {
+                 "gid":266,
+                 "height":12,
+                 "id":163,
+                 "name":"refill",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12,
+                 "x":347.5,
+                 "y":391.5
+                }, 
+                {
+                 "gid":266,
+                 "height":12,
+                 "id":164,
+                 "name":"refill",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12,
+                 "x":131.5,
+                 "y":404.5
+                }, 
+                {
+                 "gid":263,
+                 "height":32,
+                 "id":165,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"target",
+                         "type":"object",
+                         "value":166
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":638.5,
+                 "y":405
+                }, 
+                {
+                 "gid":263,
+                 "height":32,
+                 "id":166,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"target",
+                         "type":"object",
+                         "value":165
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":60.5,
+                 "y":308.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -254,7 +424,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":154,
+ "nextobjectid":168,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
