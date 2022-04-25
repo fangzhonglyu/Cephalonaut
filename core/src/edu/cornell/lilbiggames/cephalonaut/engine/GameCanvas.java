@@ -427,13 +427,13 @@ public class GameCanvas {
 		shapeRen.begin(ShapeRenderer.ShapeType.Line);
 		Gdx.gl.glLineWidth(10f);
 		shapeRen.setColor(255, 255, 255, 2f * fade);
-		shapeRen.rect(getCameraX() - getWidth() * .4f, getCameraY() - getHeight() / 2 , getWidth() * .8f, 300f);
+		shapeRen.rect(getCameraX() - getWidth() * .4f, getCameraY() - getHeight() / 2 , getWidth() * .8f, 300f*getHeight()/1080f);
 		shapeRen.end();
 
 		// draw actual box
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(0, 0, 0,  1.5f * fade);
-		shapeRen.rect(getCameraX() - getWidth() * .4f, getCameraY() - getHeight() / 2 , getWidth() * .8f, 300f);
+		shapeRen.rect(getCameraX() - getWidth() * .4f, getCameraY() - getHeight() / 2 , getWidth() * .8f, 300f*getHeight()/1080f);
 		shapeRen.end();
 
 		spriteBatch.begin();

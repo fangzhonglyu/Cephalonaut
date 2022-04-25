@@ -180,7 +180,7 @@ public class DialogueMode {
     private void displayText(float cx, float cy) {
         displayFont.getData().setScale(.5f * scale.x);
         int cutoff = 40;
-        int y_offset = 200;
+        int y_offset = (int)(290f*Gdx.graphics.getHeight()/1080f);
 
         String text = dialogue.get(part).get(index);
         int text_length = text.length();
@@ -189,7 +189,7 @@ public class DialogueMode {
             cutoff = text.substring(0, cutoff + 1).lastIndexOf(' ');
             float text_pos_x = cx - canvas.getWidth() * .008f * cutoff;
             canvas.drawText(text.substring(0, cutoff), displayFont, text_pos_x, cy - y_offset);
-            y_offset += 50;
+            y_offset += (int)(50*Gdx.graphics.getHeight()/720f);
             text = text.substring(cutoff);
             text_length = text.length();
         }
@@ -199,20 +199,22 @@ public class DialogueMode {
     }
 
     public void draw(float cx, float cy, float fade) {
+        scale.x = Gdx.graphics.getWidth()/1920f;
+        scale.y = Gdx.graphics.getHeight()/1080f;
 
         canvas.drawDialogueBox(fade);
         displayText(cx, cy);
 
         canvas.draw(nextIcon, Color.WHITE,
                 nextIcon.getWidth() / 2f, nextIcon.getHeight() / 2f,
-                cx + canvas.getWidth() / 2 - X_OFFSET, cy - canvas.getHeight() / 2 + Y_OFFSET,
+                cx + canvas.getWidth() / 2f - X_OFFSET*scale.x, cy - canvas.getHeight() / 2f + Y_OFFSET*scale.y,
                 0, scale.x, scale.y);
 
         if(index == 0) { return; }
 
         canvas.draw(nextIcon, Color.WHITE,
                 nextIcon.getWidth() / 2f, nextIcon.getHeight() / 2f,
-                cx - canvas.getWidth() / 2 + X_OFFSET, cy - canvas.getHeight() / 2 + Y_OFFSET,
+                cx - canvas.getWidth() / 2f + X_OFFSET*scale.x, cy - canvas.getHeight() / 2f + Y_OFFSET*scale.y,
                 (float)Math.PI, scale.x, scale.y);
     }
 }

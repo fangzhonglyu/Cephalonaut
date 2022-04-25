@@ -354,6 +354,7 @@ public class PlayMode extends WorldController implements Screen {
         canvas.drawSimpleFuelBar(cephalonaut.getInk());
 
         if(paused) {
+            cephalonaut.setInking(false);
             dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y, dialogueFade);
         }
 
