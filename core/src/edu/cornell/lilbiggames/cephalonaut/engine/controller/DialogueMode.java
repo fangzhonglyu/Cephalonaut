@@ -45,7 +45,7 @@ public class DialogueMode {
 
     private final AssetDirectory directory;
 
-    final private int X_OFFSET = 250;
+    final private int X_OFFSET = 280;
     final private int Y_OFFSET = 100;
 
 
@@ -152,18 +152,18 @@ public class DialogueMode {
 
     private boolean clickedBack() {
         if(index == 0) { return false; }
-        return checkClicked(X_OFFSET, canvas.getHeight() - Y_OFFSET);
+        return checkClicked(X_OFFSET*scale.x, canvas.getHeight() - Y_OFFSET*scale.y);
     }
 
     private boolean clickedNext() {
-        return checkClicked(canvas.getWidth() - X_OFFSET, canvas.getHeight() - Y_OFFSET);
+        return checkClicked(canvas.getWidth() - X_OFFSET*scale.x, canvas.getHeight() - Y_OFFSET*scale.y);
     }
 
     private boolean checkClicked(float posX, float posY) {
         float mouseX = -10;
         float mouseY = -10;
-        float rHeight = nextIcon.getHeight();
-        float rWidth = nextIcon.getWidth();
+        float rHeight = nextIcon.getHeight()*scale.y;
+        float rWidth = nextIcon.getWidth()*scale.x;
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             mouseX = Gdx.input.getX();
@@ -187,14 +187,14 @@ public class DialogueMode {
 
         while(text_length / cutoff > 0) {
             cutoff = text.substring(0, cutoff + 1).lastIndexOf(' ');
-            float text_pos_x = cx - canvas.getWidth() * .008f * cutoff;
+            float text_pos_x = cx - canvas.getWidth() * .007f * cutoff;
             canvas.drawText(text.substring(0, cutoff), displayFont, text_pos_x, cy - y_offset);
             y_offset += (int)(50*Gdx.graphics.getHeight()/720f);
             text = text.substring(cutoff);
             text_length = text.length();
         }
 
-        float text_pos_x = cx - canvas.getWidth() * .008f * text_length;
+        float text_pos_x = cx - canvas.getWidth() * .007f * text_length;
         canvas.drawText(text, displayFont, text_pos_x, cy - y_offset);
     }
 

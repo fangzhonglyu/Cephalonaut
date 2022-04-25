@@ -33,7 +33,7 @@ public class LevelElement extends SimpleObstacle {
         MISC,
         START,
         SPIKE,
-        REFILL
+        REFILL,
         DIALOGUE_TRIGGER
     }
 
@@ -100,6 +100,8 @@ public class LevelElement extends SimpleObstacle {
                 return new LEGlassBarrier(def);
             case DIALOGUE_TRIGGER:
                 return new LEDialogueTrigger(def);
+            case START:
+                return new LEStart(def);
             default:
                 return new LevelElement(def);
         }

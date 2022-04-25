@@ -91,7 +91,7 @@
                 "Glass Barrier",
                 "Start",
                 "Spike",
-                "Refill"
+                "Refill",
                 "Dialogue Trigger"
             ],
             "valuesAsFlags": false

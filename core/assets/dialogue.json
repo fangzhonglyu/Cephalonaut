@@ -10,7 +10,7 @@
     },
     "part_2": {
       "text": ["you can grapple by [left clicking] your mouse in the desired location.",
-        "[Right click] to release or press the [space bar]!"],
+        "[Right click] to release or press the [space bar]!","you can activate a button with your body or tentacle"],
       "escape_keys": ["SPACE", "BUTTON_LEFT", "BUTTON_RIGHT"]
     }
   },

@@ -435,7 +435,7 @@ public class GameCanvas {
 		shapeRen.setColor(0, 0, 0,  1.5f * fade);
 		shapeRen.rect(getCameraX() - getWidth() * .4f, getCameraY() - getHeight() / 2 , getWidth() * .8f, 300f*getHeight()/1080f);
 		shapeRen.end();
-
+		Gdx.gl.glLineWidth(1f);
 		spriteBatch.begin();
 	}
 

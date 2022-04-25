@@ -15,6 +15,7 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEGlassBarrier;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEStart;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETrigger;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETriggerable;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
@@ -178,16 +179,17 @@ public class PlayMode extends WorldController implements Screen {
     private void populateLevel(Iterable<GameObject> newObjects) {
         float startX = DEFAULT_STARTING_POS_X;
         float startY = DEFAULT_STARTING_POS_Y;
+        float startInk = 1f;
         for (GameObject object : newObjects) {
 
-            if(object instanceof LevelElement &&(((LevelElement) object).getElement().equals(LevelElement.Element.START))) {
+
+            if (object instanceof LEStart){
                 startX = object.getX();
                 startY = object.getY();
+                startInk = ((LEStart) object).getInk();
                 continue;
             }
-
-
-            if (object instanceof LETrigger) {
+            else if (object instanceof LETrigger) {
                 ((LETrigger) object).setActivated(false);
             } else if (object instanceof LETriggerable) {
                 ((LETriggerable) object).setActivated(false);
@@ -204,7 +206,7 @@ public class PlayMode extends WorldController implements Screen {
         float dheight = octopusTexture.getRegionHeight()/scale.y*1.6f;
         //FilmStrip cephInkFilm = new FilmStrip(octopusInkStrip,1,7);
         FilmStrip cephFilm = new FilmStrip(octopusStrip,5,9);
-        cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight, scale, cephFilm);
+        cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight,startInk, scale, cephFilm);
         cephalonautController = new CephalonautController(world, cephalonaut);
 
         addObject(cephalonaut);
@@ -269,7 +271,6 @@ public class PlayMode extends WorldController implements Screen {
      * @param dt 	Number of seconds since last animation frame
      */
     public void update(float dt) {
-
         // Move an object if touched
         InputController input = InputController.getInstance();
         if(isDialogueMode()) return;
@@ -358,7 +359,7 @@ public class PlayMode extends WorldController implements Screen {
         canvas.drawFade(fadeInCount);
         if (!cephalonaut.isAlive()) {
             canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
-
+        }
         if(paused) {
             cephalonaut.setInking(false);
             dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y, dialogueFade);
