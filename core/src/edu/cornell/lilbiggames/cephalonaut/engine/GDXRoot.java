@@ -52,6 +52,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private PauseMode pauseMode;
 	private LevelCompleteMode levelCompleteMode;
 	private StartScreenMode startScreenMode;
+	private LoadingScreen loadingScreen;
 	private SettingsMode settings;
 	private CreditsScreen credits;
 	private LevelLoader levelLoader;
@@ -61,6 +62,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private boolean fadeDirection;
 	private boolean transitioning;
 	private Screen nextScreen;
+	private Screen postLoadingScreen;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -119,6 +121,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		mainMenu = new MainMenuMode(directory, canvas, this);
 		mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, 5,0, 0, this);
 		startScreenMode = new StartScreenMode(directory, canvas, this);
+		loadingScreen = new LoadingScreen(directory, canvas, this,100f);
 		LevelElement.gatherAssets(directory);
 
 		pauseMode = new PauseMode(directory, canvas, this);
@@ -259,13 +262,21 @@ public class GDXRoot extends Game implements ScreenListener {
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			levelCompleteMode.setSelectedOption(0);
 			levelCompleteMode.setTimeString(playMode.getTimeString());
-			startScreenTransition(levelCompleteMode);
+			loadingScreenTransition(levelCompleteMode);
 		} else if (exitCode == MenuMode.NEXT_LEVEL_CODE) {
 			selectLevel();
 		} else if (exitCode == MenuMode.RETURN_TO_START_CODE){
 			Gdx.input.setInputProcessor(new InputAdapter());
 			startScreenTransition(startScreenMode);
+		} else if(exitCode == MenuMode.EXIT_LOADING_CODE){
+			startScreenTransition(postLoadingScreen);
 		}
+	}
+
+	private void loadingScreenTransition(Screen nextScreen){
+		postLoadingScreen = nextScreen;
+		loadingScreen.setLoadingTime(100);
+		startScreenTransition(loadingScreen);
 	}
 
 	private void startScreenTransition(Screen nextScreen){
