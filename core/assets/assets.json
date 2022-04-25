@@ -39,6 +39,7 @@
     "volume-up": "volume-up.png"
   },
   "jsons": {
+    "dialogue": "dialogue.json",
     "keybindings": "keybindings.json",
     "tile-tileset": "tileset.tsj",
     "object-tileset": "objects.tsj",

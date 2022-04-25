@@ -1,8 +1,11 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -33,7 +36,7 @@ public class PlayMode extends WorldController implements Screen {
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
-    private Texture octopusInkStrip,octopusStrip;
+    private Texture octopusInkStrip,octopusStrip,nextIcon;
 
     /** Controller that handles cephalonaut movement (grappling and inking) */
     private CephalonautController cephalonautController;
@@ -78,15 +81,21 @@ public class PlayMode extends WorldController implements Screen {
     private Queue<GameObject> defaultObjects;
     private boolean won;
 
+    private DialogueMode dialogueMode;
+    private boolean paused;
+    private float dialogueFade;
+
+
     /**
      * Creates and initialize a new instance of the sandbox
      */
-    public PlayMode(ScreenListener listener, LevelLoader loader, String level, String checkpoint, Map<String, Integer> keyBindings) {
+    public PlayMode(ScreenListener listener, LevelLoader loader, String level, String checkpoint, Map<String, Integer> keyBindings ,DialogueMode dialogueMode) {
         super(DEFAULT_WIDTH, DEFAULT_HEIGHT, 0);
         this.listener = listener;
         this.level = level;
         this.checkpoint = checkpoint;
         this.loader = loader;
+        this.dialogueMode = dialogueMode;
 
         InputController.getInstance().setBindings(keyBindings);
         setDebug(false);
@@ -96,6 +105,18 @@ public class PlayMode extends WorldController implements Screen {
         deathRotationCount = 0;
         fadeInCount = 1;
         won = false;
+        paused = false;
+        dialogueFade = 0;
+    }
+
+    public void nextDialogue() {
+        dialogueMode.nextDialogue();
+        paused = true;
+    }
+
+    public void nextDialogue(int part) {
+        dialogueMode.nextDialogue(part);
+        paused = true;
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -113,7 +134,6 @@ public class PlayMode extends WorldController implements Screen {
     public void resume(){
         exiting = false;
     }
-
 
     public void cleanupLevel(){
         for(GameObject obj : objects) {
@@ -151,6 +171,8 @@ public class PlayMode extends WorldController implements Screen {
         deathRotationCount = 0;
         cephalonaut.setDeathScale(1);
         fadeInCount = 1;
+        dialogueMode.load(level, checkpoint);
+        paused = false;
     }
 
     private void populateLevel(Iterable<GameObject> newObjects) {
@@ -210,7 +232,30 @@ public class PlayMode extends WorldController implements Screen {
         octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
         octopusStrip = directory.getEntry("octopus",Texture.class);
         octopusStrip.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
-//		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
+    }
+
+    private boolean isDialogueMode() {
+        if(paused) {
+            if (dialogueFade < .5f) {
+                dialogueFade += .05f;
+                return false;
+            }
+            canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+            cephalonaut.setBodyType(BodyDef.BodyType.StaticBody);
+            paused  = dialogueMode.update();
+
+            if(!paused) {
+                cephalonaut.setBodyType(BodyDef.BodyType.DynamicBody);
+                float[] forces = cephalonautController.getForces();
+                cephalonaut.setVX(forces[0]);
+                cephalonaut.setVY(forces[1]);
+                cephalonaut.setAngularVelocity(forces[2]);
+                dialogueFade = 0.0f;
+            }
+
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -224,8 +269,10 @@ public class PlayMode extends WorldController implements Screen {
      * @param dt 	Number of seconds since last animation frame
      */
     public void update(float dt) {
+
         // Move an object if touched
         InputController input = InputController.getInstance();
+        if(isDialogueMode()) return;
 
         if (input.didExit()) {
             if (listener != null) {
@@ -311,6 +358,10 @@ public class PlayMode extends WorldController implements Screen {
         canvas.drawFade(fadeInCount);
         if (!cephalonaut.isAlive()) {
             canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
+
+        if(paused) {
+            cephalonaut.setInking(false);
+            dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y, dialogueFade);
         }
 
         canvas.end();
@@ -323,5 +374,4 @@ public class PlayMode extends WorldController implements Screen {
             canvas.endDebug();
         }
     }
-
 }

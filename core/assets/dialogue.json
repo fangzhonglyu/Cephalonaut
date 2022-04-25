@@ -1,0 +1,27 @@
+{
+  "level_0:checkpoint_0": {
+    "part_0": {
+        "text": ["hi my name is michael the octopus!", "press [w] to thrust."],
+        "escape_keys": ["W"]
+      },
+    "part_1": {
+      "text": ["well done! press [a] to rotate left and [d] to rotate right."],
+      "escape_keys": ["A", "D"]
+    },
+    "part_2": {
+      "text": ["you can grapple by [left clicking] your mouse in the desired location.",
+        "[Right click] to release or press the [space bar]!"],
+      "escape_keys": ["SPACE", "BUTTON_LEFT", "BUTTON_RIGHT"]
+    }
+  },
+  "level_1:checkpoint_0": {
+    "part_0": {
+      "text": [
+        "only one dialogue for level 1"
+      ],
+      "escape_keys": [
+        "w"
+      ]
+    }
+  }
+}

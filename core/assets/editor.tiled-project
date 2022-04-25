@@ -92,6 +92,7 @@
                 "Start",
                 "Spike",
                 "Refill"
+                "Dialogue Trigger"
             ],
             "valuesAsFlags": false
         }

@@ -9,8 +9,6 @@
          "opacity":1,
          "parallaxx":0.5,
          "parallaxy":0.5,
-         "repeatx":true,
-         "repeaty":true,
          "type":"imagelayer",
          "visible":true,
          "x":0,
@@ -21,29 +19,6 @@
          "id":10,
          "name":"Objects",
          "objects":[
-                {
-                 "gid":131,
-                 "height":16,
-                 "id":22,
-                 "name":"finish",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "type":"Finish"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":64,
-                 "y":64
-                }, 
                 {
                  "gid":65,
                  "height":2,
@@ -262,7 +237,7 @@
                  "gid":17,
                  "height":16,
                  "id":96,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -286,7 +261,7 @@
                  "gid":17,
                  "height":16,
                  "id":97,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -310,7 +285,7 @@
                  "gid":17,
                  "height":16,
                  "id":98,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -334,7 +309,7 @@
                  "gid":17,
                  "height":16,
                  "id":99,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -358,7 +333,7 @@
                  "gid":17,
                  "height":16,
                  "id":100,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -382,7 +357,7 @@
                  "gid":17,
                  "height":16,
                  "id":101,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -406,7 +381,7 @@
                  "gid":17,
                  "height":16,
                  "id":102,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -430,7 +405,7 @@
                  "gid":17,
                  "height":16,
                  "id":103,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -454,7 +429,7 @@
                  "gid":17,
                  "height":16,
                  "id":104,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -478,7 +453,7 @@
                  "gid":17,
                  "height":16,
                  "id":105,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -502,7 +477,7 @@
                  "gid":17,
                  "height":16,
                  "id":106,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -526,7 +501,7 @@
                  "gid":17,
                  "height":16,
                  "id":107,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -550,7 +525,7 @@
                  "gid":17,
                  "height":16,
                  "id":108,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -574,7 +549,7 @@
                  "gid":17,
                  "height":16,
                  "id":109,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -598,7 +573,7 @@
                  "gid":17,
                  "height":16,
                  "id":110,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -622,7 +597,7 @@
                  "gid":17,
                  "height":16,
                  "id":111,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -646,7 +621,7 @@
                  "gid":17,
                  "height":16,
                  "id":112,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -670,7 +645,7 @@
                  "gid":17,
                  "height":16,
                  "id":113,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -694,7 +669,7 @@
                  "gid":17,
                  "height":16,
                  "id":116,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -718,7 +693,7 @@
                  "gid":17,
                  "height":16,
                  "id":117,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -742,7 +717,7 @@
                  "gid":17,
                  "height":16,
                  "id":118,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -766,7 +741,7 @@
                  "gid":17,
                  "height":16,
                  "id":119,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -790,7 +765,7 @@
                  "gid":17,
                  "height":16,
                  "id":120,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -814,7 +789,7 @@
                  "gid":17,
                  "height":16,
                  "id":121,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -838,7 +813,7 @@
                  "gid":17,
                  "height":16,
                  "id":122,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -862,7 +837,7 @@
                  "gid":17,
                  "height":16,
                  "id":123,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -886,7 +861,7 @@
                  "gid":17,
                  "height":16,
                  "id":124,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -910,7 +885,7 @@
                  "gid":17,
                  "height":16,
                  "id":125,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -934,7 +909,7 @@
                  "gid":17,
                  "height":16,
                  "id":126,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -958,7 +933,7 @@
                  "gid":17,
                  "height":16,
                  "id":127,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -982,7 +957,7 @@
                  "gid":17,
                  "height":16,
                  "id":128,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1006,7 +981,7 @@
                  "gid":17,
                  "height":16,
                  "id":129,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1030,7 +1005,7 @@
                  "gid":17,
                  "height":16,
                  "id":130,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1054,7 +1029,7 @@
                  "gid":17,
                  "height":16,
                  "id":131,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1142,7 +1117,7 @@
                  "gid":17,
                  "height":16,
                  "id":136,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1166,7 +1141,7 @@
                  "gid":2,
                  "height":16,
                  "id":159,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1191,7 +1166,7 @@
                  "gid":2,
                  "height":16,
                  "id":160,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1216,7 +1191,7 @@
                  "gid":2,
                  "height":16,
                  "id":161,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1241,7 +1216,7 @@
                  "gid":2,
                  "height":16,
                  "id":162,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1266,7 +1241,7 @@
                  "gid":2,
                  "height":16,
                  "id":163,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1291,7 +1266,7 @@
                  "gid":2,
                  "height":16,
                  "id":164,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1316,7 +1291,7 @@
                  "gid":2,
                  "height":16,
                  "id":165,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1341,7 +1316,7 @@
                  "gid":2,
                  "height":16,
                  "id":166,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1366,7 +1341,7 @@
                  "gid":2,
                  "height":16,
                  "id":167,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1391,7 +1366,7 @@
                  "gid":2,
                  "height":16,
                  "id":168,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1416,7 +1391,7 @@
                  "gid":2,
                  "height":16,
                  "id":169,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1441,7 +1416,7 @@
                  "gid":2,
                  "height":16,
                  "id":170,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1466,7 +1441,7 @@
                  "gid":2,
                  "height":16,
                  "id":171,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1491,7 +1466,7 @@
                  "gid":2,
                  "height":16,
                  "id":172,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1516,7 +1491,7 @@
                  "gid":2,
                  "height":16,
                  "id":173,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1541,7 +1516,7 @@
                  "gid":2,
                  "height":16,
                  "id":174,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1566,7 +1541,7 @@
                  "gid":2,
                  "height":16,
                  "id":175,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1591,7 +1566,7 @@
                  "gid":2,
                  "height":16,
                  "id":176,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1616,7 +1591,7 @@
                  "gid":1,
                  "height":16,
                  "id":177,
-                 "name":"",
+                 "name":"spike",
                  "properties":[
                         {
                          "name":"body",
@@ -1682,6 +1657,18 @@
                  "width":48,
                  "x":400,
                  "y":32
+                }, 
+                {
+                 "gid":137,
+                 "height":44,
+                 "id":184,
+                 "name":"finish",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":59,
+                 "x":78.6363636363636,
+                 "y":84.1818181818182
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1715,7 +1702,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":182,
+ "nextobjectid":185,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
@@ -1723,11 +1710,11 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"tileset.tsj"
+         "source":"..\/..\/tileset.tsj"
         }, 
         {
          "firstgid":129,
-         "source":"objects.tsj"
+         "source":"..\/..\/objects.tsj"
         }],
  "tilewidth":16,
  "type":"map",

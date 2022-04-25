@@ -107,6 +107,8 @@ public class LevelLoader {
                 return LevelElement.Element.SPIKE;
             case "Refill":
                 return LevelElement.Element.REFILL;
+            case "Dialogue Trigger":
+                return LevelElement.Element.DIALOGUE_TRIGGER;
             default:
                 System.out.printf("WARNING: Unknown LevelElement type '%s'\n", element);
                 return LevelElement.Element.WALL;
