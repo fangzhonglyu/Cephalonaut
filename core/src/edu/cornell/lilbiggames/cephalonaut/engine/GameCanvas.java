@@ -699,9 +699,7 @@ public class GameCanvas {
 		spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
 	}
 
-	public void drawSimpleFuelBar(float ink){
-		float x = getWidth()*0.43f+getCameraX();
-		float y = getHeight()*0.47f+getCameraY();
+	public void drawSimpleFuelBar(float ink, float x, float y){
 		spriteBatch.end();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(Color.WHITE);
@@ -710,6 +708,12 @@ public class GameCanvas {
 		shapeRen.rect(x + 1, y + 1, getWidth()/19f*ink-2, 10);
 		shapeRen.end();
 		spriteBatch.begin();
+	}
+
+	public void drawSimpleFuelBar(float ink){
+		float x = getWidth()*0.43f+getCameraX();
+		float y = getHeight()*0.47f+getCameraY();
+		drawSimpleFuelBar(ink, x, y);
 	}
 
 	public void drawSlider(Slider slider){
