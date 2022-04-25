@@ -268,10 +268,9 @@ public class PlayMode extends WorldController implements Screen {
      */
     public void update(float dt) {
 
-
-        if(isDialogueMode()) return;
         // Move an object if touched
         InputController input = InputController.getInstance();
+        if(isDialogueMode()) return;
 
         if (input.didExit()) {
             if (listener != null) {

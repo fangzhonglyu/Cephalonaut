@@ -35,6 +35,7 @@ public class DialogueMode {
     private Vector2 scale;
 
     private ArrayList<ArrayList<String>> dialogue;
+    private ArrayList<ArrayList<String>> escape_keys;
 
     /** The row index in dialogue. */
     private int part;
@@ -60,6 +61,7 @@ public class DialogueMode {
         this.scale = new Vector2(1,1);
         this.nextIcon = directory.getEntry("nexticon", Texture.class);
         this.displayFont = directory.getEntry("retro", BitmapFont.class);
+        this.inputController = InputController.getInstance();
     }
 
     public void load(String levelName, String checkpointName) {
@@ -70,29 +72,60 @@ public class DialogueMode {
         try {
             JsonValue level = dialogueDirectory.get(levelName + ":" + checkpointName);
             dialogue = new ArrayList<>();
+            escape_keys = new ArrayList<>();
             Iterator<JsonValue> part_itr = level.iterator();
+            // get each dialogue part in a single level
             while(part_itr.hasNext()) {
+                // get part object
                 JsonValue part = part_itr.next();
-                Iterator<JsonValue> itr = part.iterator();
+
+                // get text from part and parse array
+                JsonValue text = part.get("text");
+                Iterator<JsonValue> itr = text.iterator();
                 ArrayList<String> part_dialogue = new ArrayList<>();
                 while (itr.hasNext()) {
                     String s = itr.next().toString();
                     part_dialogue.add(s);
                 }
                 dialogue.add(part_dialogue);
+
+                // get escape keys from part and parse array
+                JsonValue keys = part.get("escape_keys");
+                itr = keys.iterator();
+                ArrayList<String> part_escape_keys = new ArrayList<>();
+                while (itr.hasNext()) {
+                    String s = itr.next().toString();
+                    part_escape_keys.add(s);
+                }
+                escape_keys.add(part_escape_keys);
             }
         } catch (Exception e) {
             System.out.println("Failed to load dialogue. Check to see there is a dialogue for " + levelName + ":" + checkpointName + ":::" + e);
         }
     }
 
+    private boolean clickedEscape() {
+        for(String s : escape_keys.get(part)) {
+            if(s.equals("BUTTON_LEFT") && Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                return true;
+            }
+            if(s.equals("BUTTON_RIGHT") && Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+                return true;
+            }
+            if(Gdx.input.isKeyJustPressed(Input.Keys.valueOf(s))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public boolean update(){
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
-        if (clickedBack()) {
+        if(index == dialogue.get(part).size() - 1 && clickedEscape()) {
+            return false;
+        } else if (inputController.isPrevPressed() || clickedBack()) {
             index = index > 0 ? index - 1 : 0;
-        } else if (clickedNext() || inputController.isNextPressed()) {
+        } else if (inputController.isNextPressed() || clickedNext()) {
             index+=1;
             if(index >= dialogue.get(part).size()) {
                 return false;
