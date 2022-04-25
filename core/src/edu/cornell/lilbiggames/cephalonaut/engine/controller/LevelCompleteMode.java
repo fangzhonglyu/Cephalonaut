@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.*;
@@ -29,6 +30,10 @@ public class LevelCompleteMode extends MenuMode {
     private String[] options = {"NEXT LEVEL", "REPLAY LEVEL", "LEVEL SELECT" };
 
     private int selectedOption;
+
+    private float frame;
+
+    private FilmStrip starScoring;
 
     private Texture starIcon;
 
@@ -51,17 +56,22 @@ public class LevelCompleteMode extends MenuMode {
      */
     public LevelCompleteMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
         super(assets, canvas, listener);
+        this.assets = assets;
         this.canvas  = canvas;
         this.listener = listener;
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
+
         displayFont = assets.getEntry("retro", BitmapFont.class);
+
+        frame = 0;
+        starScoring = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class),1,19);
+        starScoring.setFrame(0);
+        starIcon = assets.getEntry("ui:star", Texture.class);
 
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        this.assets = assets;
 
-        starIcon = assets.getEntry("staricon", Texture.class);
         selectedOption = 0;
     }
 
@@ -106,6 +116,12 @@ public class LevelCompleteMode extends MenuMode {
         } else if(inputController.isDownPressed()){
             selectedOption = (selectedOption + 1 ) % options.length;
         }
+
+        frame += delta * 10f;
+        if (frame > 1) {
+            frame--;
+            starScoring.setFrame((starScoring.getFrame() + 1) % starScoring.getSize());
+        }
     }
 
     @Override
@@ -144,10 +160,10 @@ public class LevelCompleteMode extends MenuMode {
         canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
 
         for (int i = 0; i < 3; i++) {
-            canvas.draw(starIcon, Color.GOLD,
-                    starIcon.getWidth() / 2f, starIcon.getHeight() / 2f,
-                    width / 2f - 100 + 100 * i, height / 2f + 150,
-                    0, scale.x, scale.y);
+            canvas.draw(starScoring, Color.WHITE,
+                    starScoring.getFwidth() / 2f, starScoring.getFheight() / 2f,
+                    width / 2f - 110 + 110 * i, height / 2f + 150,
+                    0, 0.5f * scale.x, 0.5f * scale.y);
         }
 
         canvas.drawTextCentered(timeString, displayFont, 0f);

@@ -148,7 +148,7 @@ public class CephalonautModel extends OctopusObstacle {
 	 * converts the physics units to pixels.
 	 *
 	 */
-	public CephalonautModel(float x, float y, float width, float height, Vector2 drawScale,FilmStrip filmstrip) {
+	public CephalonautModel(float x, float y, float width, float height, Vector2 drawScale, FilmStrip filmstrip) {
 		// The shrink factors fit the image to a tighter hitbox
 		super(x, y, width, height);
 		setName("michael");

@@ -219,7 +219,7 @@ public class PlayMode extends WorldController implements Screen {
         // Allocate the tiles
         earthTile = new TextureRegion(directory.getEntry( "earth", Texture.class ));
         octopusTexture = new TextureRegion(directory.getEntry( "octopus.png", Texture.class ));
-        octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
+        octopusInkStrip = directory.getEntry("octopusInk", Texture.class);
 //		displayFont = directory.getEntry( "shared:retro" ,BitmapFont.class);
     }
 
