@@ -88,7 +88,11 @@
                 "Misc",
                 "Finish",
                 "Wormhole",
-                "Refill"
+                "Glass Barrier",
+                "Start",
+                "Spike",
+                "Refill",
+                "Dialogue Trigger"
             ],
             "valuesAsFlags": false
         }

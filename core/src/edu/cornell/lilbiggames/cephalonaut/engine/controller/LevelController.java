@@ -139,6 +139,10 @@ public class LevelController implements ContactListener {
         }
     }
 
+    private void openDialogue(int part) {
+        playMode.nextDialogue(part);
+    }
+
     private GameObject getOtherBody(Contact contact, GameObject object) {
         Body body1 = contact.getFixtureA().getBody();
         Body body2 = contact.getFixtureB().getBody();
@@ -172,6 +176,14 @@ public class LevelController implements ContactListener {
                 }
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.REFILL)) {
                     cephalonaut.refillInk();
+                }
+            }
+
+            if (contactObject instanceof  LEDialogueTrigger) {
+                LEDialogueTrigger dialogueTrigger = (LEDialogueTrigger) contactObject;
+                if(dialogueTrigger.isActive()) {
+                    openDialogue(dialogueTrigger.getTarget());
+                    dialogueTrigger.deactivate();
                 }
             }
 

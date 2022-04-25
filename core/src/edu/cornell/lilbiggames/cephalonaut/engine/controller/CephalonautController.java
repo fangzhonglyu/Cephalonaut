@@ -5,11 +5,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
-import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
 
 public class CephalonautController {
     /** The box2d world **/
@@ -23,10 +20,13 @@ public class CephalonautController {
     private DistanceJointDef grappleJoint1Def, grappleJoint2Def;
     private float lastRotation;
 
+    private float[] forces;
+
     public CephalonautController(World world, CephalonautModel cephalonaut) {
         this.world = world;
         this.cephalonaut = cephalonaut;
         lastRotation = 0f;
+        forces = new float[3];
     }
 
     public void update(boolean grappleButton, boolean ungrappleButton, Vector2 crossHair, boolean thrusterApplied,
@@ -40,6 +40,10 @@ public class CephalonautController {
             cephalonaut.applyRotation();
         }
 
+        forces[0] = cephalonaut.getVX();
+        forces[1] = cephalonaut.getVY();
+        forces[2] = cephalonaut.getAngularVelocity();
+
         cephalonaut.applyForce();
 
         if(rotation != 0) {
@@ -48,6 +52,11 @@ public class CephalonautController {
 
         lastRotation = rotation;
     }
+
+    public float[] getForces() {
+        return forces;
+    }
+
 
     private void updateGrapple(boolean grappleButton, boolean ungrappleButton, Vector2 crossHair) {
         GrappleModel grapple = cephalonaut.getGrapple();
@@ -109,7 +118,7 @@ public class CephalonautController {
                     cephalonaut.setLinearVelocity(cephalonaut.getLinearVelocity().setAngleRad(newAngle));
                 }
 
-
+                cephalonaut.setRotationalDirection(0);
                 DistanceJointDef anchor1 = new DistanceJointDef();
                 DistanceJointDef anchor2 = new DistanceJointDef();
                 DistanceJointDef anchor3 = new DistanceJointDef();

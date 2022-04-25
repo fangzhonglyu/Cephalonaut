@@ -49,7 +49,7 @@ public class CephalonautModel extends OctopusObstacle {
 	private final float MAX_SPEED = 16.0f;
 
 	/** Magnitude of force to apply */
-	private final float force = 8.0f;
+	private final float force = 5.0f;
 
 	/** The direction of rotation */
 	private float rotation;
@@ -59,6 +59,8 @@ public class CephalonautModel extends OctopusObstacle {
 
 	/** How much ink the cephalonaut has left */
 	private float ink;
+
+	private float max_ink;
 
 	private boolean alive = true;
 
@@ -114,14 +116,14 @@ public class CephalonautModel extends OctopusObstacle {
 	 *
 	 * @param ink the amount of ink in the cephalonaut's sac.
 	 */
-	public void setInk(int ink) { this.ink = Math.min(1, ink); }
+	public void setInk(int ink) { this.ink = ink*max_ink; }
 
 	/**
 	 * Returns the amount of ink in the cephalonaut's sac.
 	 *
 	 * @returns the amount of ink in the cephalonaut's sac.
 	 */
-	public float getInk() { return ink; }
+	public float getInk() { return ink/max_ink; }
 
 	/**
 	 * Sets whether the cephalonaut is actively inking.
@@ -150,7 +152,7 @@ public class CephalonautModel extends OctopusObstacle {
 	 * converts the physics units to pixels.
 	 *
 	 */
-	public CephalonautModel(float x, float y, float width, float height, Vector2 drawScale,FilmStrip filmstrip) {
+	public CephalonautModel(float x, float y, float width, float height,float max_ink, Vector2 drawScale,FilmStrip filmstrip) {
 		// The shrink factors fit the image to a tighter hitbox
 		super(x, y, width, height);
 		setName("michael");
@@ -161,6 +163,8 @@ public class CephalonautModel extends OctopusObstacle {
 		setFixedRotation(false);
 		this.filmstrip = filmstrip;
 		this.filmstrip.setFrame(0);
+		this.max_ink = max_ink;
+		ink = max_ink;
 		frame = 0;
 		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 		pixmap.setColor(Color.WHITE);
@@ -171,7 +175,7 @@ public class CephalonautModel extends OctopusObstacle {
 		// Matias: I don't think this line of code matters bc it's being overwritten by the setTexture call
 		// in the SandboxController.
 		origin.set(width / 2f, height / 2f);
-		ink = 1f;
+
 		grapple = new GrappleModel(x, y, drawScale);
 	}
 
@@ -253,7 +257,7 @@ public class CephalonautModel extends OctopusObstacle {
 
 
 	public void refillInk() {
-		ink = 1.0f;
+		ink = max_ink;
 	}
 
 	
@@ -266,27 +270,60 @@ public class CephalonautModel extends OctopusObstacle {
 	 */
 	public void update(float dt) {
 		super.update(dt);
-		frame += dt*10f;
-		if(frame>1) {
-			frame--;
-			if(filmstrip.getFrame()!=0) {
-				if (filmstrip.getFrame() < filmstrip.getSize() - 1)
-					filmstrip.setFrame(filmstrip.getFrame() + 1);
-				else {
-					filmstrip.setFrame(0);
-				}
-			}
+		if(frame>8&&frame<18){
+			frame += dt*10f;
+			if(frame>=18)
+				frame = 0;
 		}
+		else if(frame>=18&&frame<25){
+			if(frame<23||(inking && ink > 0.0f))
+				frame += dt*20f;
+			else if (rotation>-0.8f){
+				frame += dt*15f;
+			}
+			else if (frame>24 && rotation<-0.8f){
+				frame -= dt*15f;
+			}
+			if(frame>=25)
+				frame = 0;
+		}
+		else if(frame>=27&&frame<34){
+			if(frame<32||(inking && ink > 0.0f))
+				frame += dt*20f;
+			else if (rotation<0.8f){
+				frame += dt*15f;
+			}
+			else if (frame>33 && rotation>0.8f){
+				frame -= dt*15f;
+			}
+			if(frame>=34)
+				frame = 0;
+		}
+		else if(frame>=36){
+			frame += dt*10f;
+			if(frame>=filmstrip.getSize())
+				frame = 0;
+		}
+		if(frame<5){
+			frame += dt*5f;
+			if(frame>=5)
+				frame = 0;
+			if(inking && ink > 0.0f)
+				frame = 36;
+			else if(rotation>0.8f)
+				frame = 27;
+			else if (rotation<-0.8f)
+				frame = 18;
+		}
+		filmstrip.setFrame((int)frame);
 
 		if (inking && ink > 0.0f) {
-			ink -= 0.007f;
-			if (filmstrip.getFrame() == 0)
-				filmstrip.setFrame(1);
+			ink -= 0.006f;
 		}
 //		else if (!inking && ink < 1.0f) {
 //			ink += 0.004f;
 //		}
-		ink = Math.min(ink, 1.0f);
+		ink = Math.min(ink, max_ink);
 	}
 
 	/**
@@ -295,18 +332,15 @@ public class CephalonautModel extends OctopusObstacle {
 	 * @param canvas Drawing context
 	 */
 	public void draw(GameCanvas canvas) {
-		grapple.draw(canvas, getPosition());
+		grapple.draw(canvas, getPosition(), (float) Math.toDegrees(getAngle()));
 
 		//animation
 
 		float ox = 0.5f * filmstrip.getRegionWidth();
-		float oy = 0.55f * filmstrip.getRegionHeight();
+		float oy = 0.75f * filmstrip.getRegionHeight();
 		canvas.draw(filmstrip, Color.WHITE, ox, oy,
 				getX() * drawScale.x, getY() * drawScale.y,
-				getAngle(), 0.004f* drawScale.x * deathScale, 0.004f*drawScale.y * deathScale);
-
-		//fuel bar
-		canvas.drawSimpleFuelBar(ink);
+				getAngle(), 0.052f* drawScale.x * deathScale, 0.052f*drawScale.y * deathScale);
 	}
 	
 	/**
