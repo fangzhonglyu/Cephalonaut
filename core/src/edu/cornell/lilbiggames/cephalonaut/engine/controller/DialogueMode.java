@@ -180,6 +180,7 @@ public class DialogueMode {
     private void displayText(float cx, float cy) {
         displayFont.getData().setScale(.5f * scale.x);
         int cutoff = 40;
+        float x_offset = 0.006f;
         int y_offset = (int)(290f*Gdx.graphics.getHeight()/1080f);
 
         String text = dialogue.get(part).get(index);
@@ -187,14 +188,14 @@ public class DialogueMode {
 
         while(text_length / cutoff > 0) {
             cutoff = text.substring(0, cutoff + 1).lastIndexOf(' ');
-            float text_pos_x = cx - canvas.getWidth() * .007f * cutoff;
+            float text_pos_x = cx - canvas.getWidth() * x_offset * cutoff;
             canvas.drawText(text.substring(0, cutoff), displayFont, text_pos_x, cy - y_offset);
             y_offset += (int)(50*Gdx.graphics.getHeight()/720f);
             text = text.substring(cutoff);
             text_length = text.length();
         }
 
-        float text_pos_x = cx - canvas.getWidth() * .007f * text_length;
+        float text_pos_x = cx - canvas.getWidth() * x_offset * text_length;
         canvas.drawText(text, displayFont, text_pos_x, cy - y_offset);
     }
 
