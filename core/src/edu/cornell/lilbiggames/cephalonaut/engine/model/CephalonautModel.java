@@ -62,6 +62,8 @@ public class CephalonautModel extends OctopusObstacle {
 
 	private boolean alive = true;
 
+	private float deathScale;
+
 	public boolean isAlive() {
 		return alive;
 	}
@@ -164,6 +166,7 @@ public class CephalonautModel extends OctopusObstacle {
 		pixmap.setColor(Color.WHITE);
 		pixmap.fillRectangle(0, 0, 1, 1);
 		tentacleTexture = new Texture(pixmap);
+		deathScale = 1;
 
 		// Matias: I don't think this line of code matters bc it's being overwritten by the setTexture call
 		// in the SandboxController.
@@ -209,6 +212,14 @@ public class CephalonautModel extends OctopusObstacle {
 	public void applyRotation(){
 		body.setAngularVelocity(-5f * rotation);
 	}
+
+	public void setDeathScale(float deathScaleVal) {
+		deathScale = deathScaleVal;
+	}
+
+	public float getDeathScale() {
+		return deathScale;
+	}
 	
 
 	/**
@@ -239,6 +250,12 @@ public class CephalonautModel extends OctopusObstacle {
 	public void setRotationalDirection(float rotation){
 		this.rotation = rotation;
 	}
+
+
+	public void refillInk() {
+		ink = 1.0f;
+	}
+
 	
 	/**
 	 * Updates the object's physics state (NOT GAME LOGIC).
@@ -298,9 +315,10 @@ public class CephalonautModel extends OctopusObstacle {
 
 		if (inking && ink > 0.0f) {
 			ink -= 0.006f;
-		} else if (!inking && ink < 1.0f) {
-			ink += 0.004f;
 		}
+//		else if (!inking && ink < 1.0f) {
+//			ink += 0.004f;
+//		}
 		ink = Math.min(ink, 1.0f);
 	}
 
@@ -318,7 +336,7 @@ public class CephalonautModel extends OctopusObstacle {
 		float oy = 0.75f * filmstrip.getRegionHeight();
 		canvas.draw(filmstrip, Color.WHITE, ox, oy,
 				getX() * drawScale.x, getY() * drawScale.y,
-				getAngle(), 0.052f* drawScale.x, 0.052f*drawScale.y);
+				getAngle(), 0.052f* drawScale.x * deathScale, 0.052f*drawScale.y * * deathScale);
 
 		//fuel bar
 		canvas.drawSimpleFuelBar(ink);

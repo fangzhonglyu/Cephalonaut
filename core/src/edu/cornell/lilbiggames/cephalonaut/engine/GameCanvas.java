@@ -407,7 +407,7 @@ public class GameCanvas {
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(0, 0, 0,fadeOut);
-		shapeRen.rect(-1, -1, getWidth() + 2, getHeight() + 2);
+		shapeRen.rect(getCameraX() - getWidth() / 2 - 1, getCameraY() - getHeight() / 2 - 1, getWidth() + 2, getHeight() + 2);
 		shapeRen.end();
 		spriteBatch.begin();
 	}

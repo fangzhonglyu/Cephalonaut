@@ -178,8 +178,28 @@ public class GDXRoot extends Game implements ScreenListener {
 	 * @param height The new height in pixels
 	 */
 	public void resize(int width, int height) {
+
+//		int new_width = Math.max(1280, width);
+//		int new_height = Math.max(720, height);
+//		if(width > 1280 || height > 720) {
+//		if(new_width/1280 > new_height / 720) {
+//
+//		}
+//		if(width > 1280) {
+//			super.resize(new_width, new_height);
+//			canvas.resize();
+//		}
+		super.resize(width, height);
 		canvas.resize();
-		super.resize(width,height);
+//		canvas.resize();
+//		if(new_height == height && new_width == width) {
+//			canvas.resize();
+//		}
+//		System.out.println(new_width);
+//		System.out.println(new_height);
+//		}
+//		super.resize(width, height);
+//		canvas.resize();
 	}
 
 	@Override
