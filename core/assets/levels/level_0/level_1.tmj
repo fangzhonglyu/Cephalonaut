@@ -260,33 +260,6 @@
                  "y":271.333333333333
                 }, 
                 {
-                 "gid":250,
-                 "height":16,
-                 "id":158,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"string",
-                         "value":"10"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":80,
-                 "x":720,
-                 "y":352
-                }, 
-                {
                  "gid":258,
                  "height":27,
                  "id":160,
@@ -416,6 +389,33 @@
                  "width":32,
                  "x":60.5,
                  "y":308.5
+                }, 
+                {
+                 "gid":250,
+                 "height":16,
+                 "id":171,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "type":"Glass Barrier"
+                            }
+                        }, 
+                        {
+                         "name":"glassBarrierHardness",
+                         "type":"float",
+                         "value":10
+                        }],
+                 "rotation":0,
+                 "type":"GameObject",
+                 "visible":true,
+                 "width":16,
+                 "x":735.75,
+                 "y":338
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -424,7 +424,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":168,
+ "nextobjectid":173,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

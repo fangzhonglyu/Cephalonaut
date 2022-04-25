@@ -172,7 +172,6 @@ public class LevelController implements ContactListener {
                 }
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.REFILL)) {
                     cephalonaut.refillInk();
-                    contact.setEnabled(false);
                 }
             }
 
