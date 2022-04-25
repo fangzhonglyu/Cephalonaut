@@ -129,6 +129,8 @@ public class MainMenuNestedMode extends MenuMode {
         this.checkpoints = checkpoints;
     }
 
+    public int getNumCompletedCheckpoints() {return this.completedCheckpoints; }
+
     public void setLevel(int level){
         this.curLevel = level;
     }

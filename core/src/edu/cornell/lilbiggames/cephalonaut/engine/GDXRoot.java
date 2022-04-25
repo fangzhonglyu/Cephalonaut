@@ -154,7 +154,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void selectLevel(){
 		String levelName = mainMenu.getCurLevel();
 		int curLevel = mainMenu.getCurLevelNumber();
-		String checkpointName = "checkpoint_" + numCheckpointsCompleted.get(curLevel);
+		System.out.println(mainMenuNestedMode.getNumCompletedCheckpoints());
+		String checkpointName = "checkpoint_" + mainMenuNestedMode.getNumCompletedCheckpoints();
 		playMode = new PlayMode(this, levelLoader, levelName, checkpointName, keyBindings, dialogueMode);
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
@@ -264,6 +265,13 @@ public class GDXRoot extends Game implements ScreenListener {
 			levelCompleteMode.setTimeString(playMode.getTimeString());
 			loadingScreenTransition(levelCompleteMode);
 		} else if (exitCode == MenuMode.NEXT_LEVEL_CODE) {
+			if(mainMenuNestedMode.getNumCompletedCheckpoints() == 4){
+				mainMenu.nextLevel();
+				mainMenuNestedMode.setNumCompletedCheckpoints(0);
+			} else {
+				mainMenuNestedMode.setNumCompletedCheckpoints(mainMenuNestedMode.getNumCompletedCheckpoints()
+				+1);
+			}
 			selectLevel();
 		} else if (exitCode == MenuMode.RETURN_TO_START_CODE){
 			Gdx.input.setInputProcessor(new InputAdapter());
