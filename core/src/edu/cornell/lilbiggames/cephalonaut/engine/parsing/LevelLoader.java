@@ -9,14 +9,12 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
-import edu.cornell.lilbiggames.cephalonaut.engine.controller.PlayMode;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 
 public class LevelLoader {
@@ -28,7 +26,8 @@ public class LevelLoader {
     private JsonValue tile_tileset;
     private JsonValue object_tileset;
     private JsonValue space_tileset;
-    private final int SPACE_TILESET_GIT = 142;
+    private int SPACE_TILESET_GID = 129;
+    private int OBJECT_GID = 257;
 
     public LevelLoader() {
         assetDirectory = new AssetDirectory("assets.json");
@@ -49,12 +48,12 @@ public class LevelLoader {
 
         for (JsonValue tile : object_tileset.get("tiles")) {
             // TODO: Maybe make this '128' not a constant? It's derived from the 'firstgid' of objects.tsj in a level.
-            map.put(tile.getInt("id") + 128, tile);
+            map.put(tile.getInt("id") + OBJECT_GID - 1, tile);
         }
 
         for (JsonValue tile : space_tileset.get("tiles")) {
             // TODO: Maybe make this '128' not a constant? It's derived from the 'firstgid' of objects.tsj in a level.
-            map.put(tile.getInt("id") + SPACE_TILESET_GIT-1, tile);
+            map.put(tile.getInt("id") + SPACE_TILESET_GID -1, tile);
         }
     }
 
@@ -78,7 +77,7 @@ public class LevelLoader {
             int id = tile.getInt("id");
             int x = (id % columns)*tileSize;
             int y = (id / columns)*tileSize;
-            textures.put(id+SPACE_TILESET_GIT-1, new TextureRegion(spaceTexture, x, y, tileSize, tileSize));
+            textures.put(id+ SPACE_TILESET_GID -1, new TextureRegion(spaceTexture, x, y, tileSize, tileSize));
         }
     }
 
@@ -252,7 +251,7 @@ public class LevelLoader {
 
         // Need to account that rotation is around the bottom-left origin in Tiled instead of the center origin here
         def.angle = -MathUtils.degreesToRadians * json.getFloat("rotation", 0);
-        Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x, y), def.angle);
+        Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x-def.width/2f, y-def.height/2f), def.angle);
         def.x = pos.x;
         def.y = pos.y;
     }
@@ -294,7 +293,15 @@ public class LevelLoader {
         int levelHeight = level.getInt("height");
         int tileSize = level.getInt("tilewidth");
         assert tileSize == level.getInt("tileheight");
-
+        /**
+        for (JsonValue tileset:level.get("tilesets")){
+            if(tileset.getString("source").contains("objects"))
+                OBJECT_GID = tileset.getInt("firstgid");
+            if(tileset.getString("source").contains("space"));
+                SPACE_TILESET_GID = tileset.getInt("firstgid");
+        }
+         */
+        getTextures();
         for (JsonValue layer : level.get("layers")) {
             String type = layer.getString("type");
             // TODO: Transfer coordinates from parallaxed layers from Tiled more accurately
@@ -342,6 +349,7 @@ public class LevelLoader {
                             levelElementDef.texture = new TextureRegion(fullTexture);
                         } else {
                             levelElementDef.texture = textures.get(gid);
+                            levelElementDef.triggerTexture = textures.get(SPACE_TILESET_GID + 56);
                         }
 
                         loadObject(levelElementDef, jsonObject, tileSize, levelHeight);
