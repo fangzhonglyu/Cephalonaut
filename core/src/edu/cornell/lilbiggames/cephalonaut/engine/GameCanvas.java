@@ -700,14 +700,14 @@ public class GameCanvas {
 	}
 
 	public void drawSimpleFuelBar(float ink){
-		float x = getWidth()*0.43f+getCameraX();
-		float y = getHeight()*0.47f+getCameraY();
+		float x = -getWidth()/3f+getCameraX();
+		float y = -getHeight()*0.47f+getCameraY();
 		spriteBatch.end();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(Color.WHITE);
-		shapeRen.rect(x, y, getWidth()/19f, 12);
+		shapeRen.rect(x, y, getWidth()/1.5f, 30*Gdx.graphics.getHeight()/1080f);
 		shapeRen.setColor(ink > 0.6  ? Color.PURPLE : ink > 0.3 ? Color.ORANGE : Color.RED);
-		shapeRen.rect(x + 1, y + 1, getWidth()/19f*ink-2, 10);
+		shapeRen.rect(x + 1, y + 1, getWidth()/1.5f*ink-2, 30*Gdx.graphics.getHeight()/1080f-2);
 		shapeRen.end();
 		spriteBatch.begin();
 	}

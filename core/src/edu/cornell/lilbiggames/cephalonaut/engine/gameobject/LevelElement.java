@@ -58,6 +58,7 @@ public class LevelElement extends SimpleObstacle {
 
         public float[] vertices;
         public TextureRegion texture;
+        public TextureRegion triggerTexture;
         public Properties properties;
     }
 
