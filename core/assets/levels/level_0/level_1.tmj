@@ -402,13 +402,14 @@
                          "type":"class",
                          "value":
                             {
+                             "tint":"#ff93bde5",
                              "type":"Glass Barrier"
                             }
                         }, 
                         {
                          "name":"glassBarrierHardness",
                          "type":"float",
-                         "value":10
+                         "value":20
                         }],
                  "rotation":0,
                  "type":"GameObject",
@@ -424,7 +425,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":173,
+ "nextobjectid":177,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
