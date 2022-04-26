@@ -117,7 +117,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		settings = new SettingsMode(directory, canvas, this, keyBindings);
 		levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
 
-		SoundController.setMusicVolume(0f);
+		SoundController.setMusicVolume(0.5f);
 		SoundController.startMenuMusic();
 		setScreen(startScreenMode);
 	}
