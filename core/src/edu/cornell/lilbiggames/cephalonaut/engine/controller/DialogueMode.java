@@ -72,7 +72,16 @@ public class DialogueMode {
         this.RIGHT_CLICK = directory.getEntry("RIGHT-click", Texture.class);
         this.LEFT_CLICK = directory.getEntry("LEFT-click", Texture.class);
 
+        nextIcon.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        W_KEY.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        AD_KEY.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        SPACE_KEY.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        RIGHT_CLICK.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        LEFT_CLICK.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+
         W_KEY_strip = new FilmStrip(this.W_KEY, 1, 2);
+
         W_KEY_strip.setFrame(0);
         frame = 0;
 
@@ -136,20 +145,20 @@ public class DialogueMode {
     }
 
     private void drawVisual(Texture texture, float cx, float cy) {
-        float Y_OFFSET = 375f;
-        float X_OFFSET = 300f;
+        float Y_OFFSET = 395f;
+        float X_OFFSET = 410f;
         canvas.draw(texture, Color.WHITE,
                 texture.getWidth() / 2f, texture.getHeight() / 2f,
-                cx - canvas.getWidth() / 2 + X_OFFSET, cy - Y_OFFSET * scale.y,
+                cx - canvas.getWidth() / 2 + X_OFFSET * scale.x, cy - Y_OFFSET * scale.y,
                 0, scale.x * KEY_WIDTH, scale.y * KEY_WIDTH);
     }
 
     private void drawVisual(FilmStrip filmStrip, float cx, float cy){
-        float Y_OFFSET = 400f;
-        float X_OFFSET = 300f;
+        float Y_OFFSET = 425f;
+        float X_OFFSET = 350f;
         canvas.draw(filmStrip, Color.WHITE,
                 filmStrip.getRegionWidth() / 2f / filmStrip.getSize(), filmStrip.getRegionHeight() / 2f / filmStrip.getSize(),
-                cx - canvas.getWidth() / 2 + X_OFFSET, cy - Y_OFFSET * scale.y,
+                cx - canvas.getWidth() / 2 + X_OFFSET * scale.x, cy - Y_OFFSET * scale.y,
                 0, scale.x * KEY_WIDTH, scale.y * KEY_WIDTH);
     }
 
