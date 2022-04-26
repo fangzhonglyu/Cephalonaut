@@ -171,14 +171,13 @@ public class OctopusObstacle extends SimpleObstacle {
      */
     private void resize(float width, float height) {
         updateScale();
-
         // Make the box with the center in the center
         vertices[0] = -width/2.0f;
-        vertices[1] = -height/2.0f;
+        vertices[1] = -height/3.0f;
         vertices[2] = 0.0f;
         vertices[3] =  height/4.0f;
         vertices[4] =  width/2.0f;
-        vertices[5] =  -height/2.0f;
+        vertices[5] =  -height/3.0f;
 //		vertices[6] =  width/2.0f;
 //		vertices[7] = -height/2.0f;
         triangleShape.set(vertices);

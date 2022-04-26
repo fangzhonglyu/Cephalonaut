@@ -208,8 +208,10 @@ public class PlayMode extends WorldController implements Screen {
 
 
         // Make the cephalonaut
-        float dwidth  = octopusTexture.getRegionWidth()/scale.x*1.2f;
-        float dheight = octopusTexture.getRegionHeight()/scale.y*1.6f;
+//        float dwidth  = octopusTexture.getRegionWidth()/scale.x*1.2f;
+//        float dheight = octopusTexture.getRegionHeight()/scale.y*1.6f;
+        float dwidth = octopusTexture.getRegionWidth() * .02625f;
+        float dheight = octopusTexture.getRegionHeight() * .035f;
         //FilmStrip cephInkFilm = new FilmStrip(octopusInkStrip,1,7);
         FilmStrip cephFilm = new FilmStrip(octopusStrip,5,9);
         cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight,startInk, scale, cephFilm);

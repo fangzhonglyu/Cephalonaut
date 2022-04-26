@@ -44,7 +44,7 @@ public class LevelController implements ContactListener {
 
         if (object instanceof LevelElement) {
             LevelElement levelElement = ((LevelElement) object);
-            if (levelElement.getElement() == LevelElement.Element.FINISH && levelElement.getInContact()) {
+            if (levelElement.getElement() == LevelElement.Element.FINISH && levelElement.getInContact() && cephalonaut.isAlive()) {
                 finishLevel();
             }
         }
