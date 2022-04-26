@@ -221,8 +221,8 @@
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":483.879892510807,
-                 "y":144.698212407992
+                 "x":223.273831904746,
+                 "y":146.213363923144
                 }, 
                 {
                  "gid":42,
@@ -248,8 +248,8 @@
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":640.440238345601,
-                 "y":480.017759084005
+                 "x":637.409935315298,
+                 "y":233.048062114308
                 }, 
                 {
                  "gid":42,
@@ -275,8 +275,8 @@
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":334.329711414885,
-                 "y":784.95992522491
+                 "x":575.238802323976,
+                 "y":791.020531285516
                 }, 
                 {
                  "gid":271,
@@ -1003,6 +1003,18 @@
                  "height":24,
                  "id":145,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1015,6 +1027,18 @@
                  "height":24,
                  "id":146,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
