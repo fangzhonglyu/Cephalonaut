@@ -160,6 +160,14 @@ public class FilmStrip extends TextureRegion {
 		setRegion(x,y,fwidth,fheight);
 	}
 
+	public float getFheight() {
+		return (float) fheight;
+	}
+
+	public float getFwidth() {
+		return (float) fwidth;
+	}
+
 	/**
 	 * Returns a copy of this filmstrip.
 	 *

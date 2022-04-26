@@ -1121,6 +1121,18 @@ public class GameCanvas {
 		font.draw(spriteBatch, layout, x, y);
     }
 
+	/**
+	 * Draws text in top left of the screen.
+	 *
+	 * @param text The string to draw
+	 * @param font The font to use
+	 */
+	public void drawTextTopLeft( String text, BitmapFont font) {
+		float x = getCameraX() - getWidth() * 0.49f;
+		float y = getCameraY() + getHeight() * 0.47f;
+		drawText(text, font, x, y);
+	}
+
     /**
      * Draws text centered on the screen.
      *
