@@ -110,11 +110,6 @@ public class PlayMode extends WorldController implements Screen {
         dialogueFade = 0;
     }
 
-    public void nextDialogue() {
-        dialogueMode.nextDialogue();
-        paused = true;
-    }
-
     public void nextDialogue(int part) {
         dialogueMode.nextDialogue(part);
         paused = true;
@@ -236,25 +231,38 @@ public class PlayMode extends WorldController implements Screen {
         octopusStrip.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
     }
 
+    private void exitPauseMode() {
+        for (GameObject obj : objects) {
+            obj.setActive(true);
+        }
+    }
+
+    private void enterPauseMode() {
+        canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+        for (GameObject obj : objects) {
+            obj.setActive(false);
+        }
+        cephalonaut.setInking(false);
+    }
+
+
     private boolean isDialogueMode() {
         if(paused) {
+            // don't freeze world until fade is done
             if (dialogueFade < .5f) {
                 dialogueFade += .05f;
                 return false;
             }
-            canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
-            cephalonaut.setBodyType(BodyDef.BodyType.StaticBody);
+            if(fadeInCount >= .1) { return false; }
+
+            // freeze world here
+            enterPauseMode();
             paused  = dialogueMode.update();
 
+            // unfreeze world if paused is false
             if(!paused) {
-                cephalonaut.setBodyType(BodyDef.BodyType.DynamicBody);
-                float[] forces = cephalonautController.getForces();
-                cephalonaut.setVX(forces[0]);
-                cephalonaut.setVY(forces[1]);
-                cephalonaut.setAngularVelocity(forces[2]);
-                dialogueFade = 0.0f;
+                exitPauseMode();
             }
-
             return true;
         }
         return false;
@@ -346,8 +354,6 @@ public class PlayMode extends WorldController implements Screen {
 
         canvas.begin();
 
-
-
         for (GameObject obj : objects) {
             obj.draw(canvas);
         }
@@ -357,11 +363,12 @@ public class PlayMode extends WorldController implements Screen {
 
         canvas.drawSimpleFuelBar(cephalonaut.getInk());
         canvas.drawFade(fadeInCount);
+        
         if (!cephalonaut.isAlive()) {
             canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
         }
+
         if(paused) {
-            cephalonaut.setInking(false);
             dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y, dialogueFade);
         }
 
