@@ -129,6 +129,31 @@ public class GameCanvas {
 		camera.update();
 	}
 
+	public void setCameraPos(Rectangle bounds, Vector2 scale, float x, float y) {
+		float bounds_width = (bounds.width - 0.5f) * scale.x;
+		float bounds_height = (bounds.height - 0.5f) * scale.x;
+		float bounds_x = (bounds.x - 0.5f) * scale.y;
+		float bounds_y = (bounds.y - 0.5f) * scale.y;
+
+
+		if (x + camera.viewportWidth / 2 > bounds_width) {
+			camera.position.x = bounds_width - camera.viewportWidth / 2;
+		} else if (x - camera.viewportWidth / 2 < bounds_x) {
+			camera.position.x = bounds_x + camera.viewportWidth / 2;
+		} else {
+			camera.position.x = x;
+		}
+
+		if (y + camera.viewportHeight / 2 > bounds_height) {
+			camera.position.y = bounds_height - camera.viewportHeight / 2;
+		} else if (y - camera.viewportHeight / 2 < bounds_y) {
+			camera.position.y = bounds_y + camera.viewportHeight / 2;
+		} else {
+			camera.position.y = y;
+		}
+		camera.update();
+	}
+
 	public float getCameraX() {
 		return camera.position.x;
 	}
