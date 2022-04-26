@@ -151,10 +151,10 @@ public class DialogueMode {
     }
 
     private void drawVisual(FilmStrip filmStrip, float cx, float cy){
-        float Y_OFFSET = 425f;
-        float X_OFFSET = 350f;
+        float Y_OFFSET = 395f;
+        float X_OFFSET = 410f;
         canvas.draw(filmStrip, Color.WHITE,
-                filmStrip.getRegionWidth() / 2f / filmStrip.getSize(), filmStrip.getRegionHeight() / 2f / filmStrip.getSize(),
+                filmStrip.getFwidth() / 2f, filmStrip.getFheight() / 2f,
                 cx - canvas.getWidth() / 2 + X_OFFSET * scale.x, cy - Y_OFFSET * scale.y,
                 0, scale.x * KEY_WIDTH, scale.y * KEY_WIDTH);
     }
