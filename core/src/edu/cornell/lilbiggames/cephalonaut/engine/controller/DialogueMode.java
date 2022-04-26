@@ -83,7 +83,7 @@ public class DialogueMode {
         W_KEY_strip.setFrame(0);
         frame = 0;
 
-        this.displayFont = directory.getEntry("retro", BitmapFont.class);
+        this.displayFont = directory.getEntry("gothamo", BitmapFont.class);
     }
 
     public void load(String levelName, String checkpointName) {

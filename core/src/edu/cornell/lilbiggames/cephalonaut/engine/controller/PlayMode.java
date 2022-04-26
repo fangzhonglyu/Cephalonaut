@@ -250,7 +250,7 @@ public class PlayMode extends WorldController implements Screen {
     }
 
     private void enterPauseMode() {
-        canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+        //canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
         for (GameObject obj : objects) {
             obj.setActive(false);
         }
@@ -291,14 +291,15 @@ public class PlayMode extends WorldController implements Screen {
      * @param dt 	Number of seconds since last animation frame
      */
     public void update(float dt) {
+        // Move an object if touched
+        InputController input = InputController.getInstance();
+        if(isDialogueMode(dt)) return;
+
         timeCount += dt;
         if (timeCount >= 1) {
             timer += 1;
             timeCount = 0;
         }
-        // Move an object if touched
-        InputController input = InputController.getInstance();
-        if(isDialogueMode(dt)) return;
 
         if (input.didExit()) {
             if (listener != null) {
@@ -394,7 +395,7 @@ public class PlayMode extends WorldController implements Screen {
         }
 
         if(paused) {
-          dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y, dialogueFade);
+          dialogueMode.draw(canvas.getCameraX(), canvas.getCameraY(), dialogueFade);
         }
 
         canvas.end();
