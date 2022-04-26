@@ -390,8 +390,10 @@ public class PlayMode extends WorldController implements Screen {
         int minutes = (timer % 3600) / 60;
         int seconds = timer % 60;
         timeString = String.format("%02d:%02d", minutes, seconds);
-        displayFont.getData().setScale(0.4f);
-        canvas.drawTextTopLeft(timeString, displayFont);
+        displayFont.getData().setScale(0.5f);
+        displayFont.setColor(Color.ORANGE);
+        canvas.drawTextTopRight(timeString, displayFont);
+        displayFont.setColor(Color.WHITE);
         canvas.drawFade(fadeInCount);
       
         if (!cephalonaut.isAlive()) {

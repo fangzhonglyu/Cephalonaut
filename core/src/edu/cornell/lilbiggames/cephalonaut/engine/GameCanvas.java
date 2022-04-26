@@ -1140,9 +1140,9 @@ public class GameCanvas {
 	 * @param text The string to draw
 	 * @param font The font to use
 	 */
-	public void drawTextTopLeft( String text, BitmapFont font) {
-		float x = getCameraX() - getWidth() * 0.49f;
-		float y = getCameraY() + getHeight() * 0.47f;
+	public void drawTextTopRight( String text, BitmapFont font) {
+		float x = getWidth() * 0.40f + getCameraX();
+		float y = getHeight() * 0.47f + getCameraY();
 		drawText(text, font, x, y);
 	}
 
