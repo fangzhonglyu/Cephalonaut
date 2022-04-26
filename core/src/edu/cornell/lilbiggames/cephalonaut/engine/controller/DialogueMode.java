@@ -25,7 +25,7 @@ public class DialogueMode {
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
 
-    private Texture nextIcon;
+    private Texture nextIcon, AD_KEY, W_KEY, SPACE_KEY, RIGHT_CLICK, LEFT_CLICK;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -45,8 +45,9 @@ public class DialogueMode {
     private final AssetDirectory directory;
 
     final private int X_OFFSET = 280;
-    final private int Y_OFFSET = 50;
+    final private int Y_OFFSET = 25;
     final private float ARROW_WIDTH = 7.5f;
+    final private float KEY_WIDTH = 5f;
 
 
     /**
@@ -60,6 +61,13 @@ public class DialogueMode {
         this.directory = directory;
         this.scale = new Vector2(1,1);
         this.nextIcon = directory.getEntry("arrow", Texture.class);
+
+        this.W_KEY = directory.getEntry("W-key", Texture.class);
+        this.AD_KEY = directory.getEntry("AD-key", Texture.class);
+        this.SPACE_KEY = directory.getEntry("SPACE-key", Texture.class);
+        this.RIGHT_CLICK = directory.getEntry("RIGHT-click", Texture.class);
+        this.LEFT_CLICK = directory.getEntry("LEFT-click", Texture.class);
+
         this.displayFont = directory.getEntry("retro", BitmapFont.class);
         this.inputController = InputController.getInstance();
     }
@@ -111,6 +119,40 @@ public class DialogueMode {
         }
     }
 
+    private void drawVisual(Texture texture, float cx, float cy) {
+        float Y_OFFSET = 375f;
+        float X_OFFSET = 300f;
+        canvas.draw(texture, Color.WHITE,
+                texture.getWidth() / 2f, texture.getHeight() / 2f,
+                cx - canvas.getWidth() / 2 + X_OFFSET, cy - Y_OFFSET * scale.y,
+                0, scale.x * KEY_WIDTH, scale.y * KEY_WIDTH);
+    }
+
+    private String displayVisual(String text, float cx, float cy) {
+        String visualText = text.substring(0, text.indexOf(' '));
+        if(visualText.equals("[W]")) {
+            drawVisual(W_KEY, cx, cy);
+            return text.substring(text.indexOf(' ') + 1);
+        }
+        else if(visualText.equals("[AD]")) {
+            drawVisual(AD_KEY, cx, cy);
+            return text.substring(text.indexOf(' ') + 1);
+        }
+        else if(visualText.equals("[SPACE]")) {
+            drawVisual(SPACE_KEY, cx, cy);
+            return text.substring(text.indexOf(' ') + 1);
+        }
+        else if(visualText.equals("[LEFT_CLICK]")) {
+            drawVisual(LEFT_CLICK, cx, cy);
+            return text.substring(text.indexOf(' ') + 1);
+        }
+        else if(visualText.equals("[RIGHT_CLICK]")) {
+            drawVisual(RIGHT_CLICK, cx, cy);
+            return text.substring(text.indexOf(' ') + 1);
+        }
+        return text;
+    }
+
     private void displayText(float cx, float cy) {
         displayFont.getData().setScale(.5f * scale.x);
         int cutoff = 40;
@@ -118,6 +160,8 @@ public class DialogueMode {
         int y_offset = (int)(310f*Gdx.graphics.getHeight()/1080f);
 
         String text = dialogue.get(part).get(index);
+        text = displayVisual(text, cx, cy);
+
         int text_length = text.length();
 
         while(text_length / cutoff > 0) {

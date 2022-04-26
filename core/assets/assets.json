@@ -36,7 +36,12 @@
     "completedLevel.png": "circleFilled.png",
     "arrow": "arrow.png",
     "volume-down": "volume-down (1).png",
-    "volume-up": "volume-up.png"
+    "volume-up": "volume-up.png",
+    "AD-key": "UI-AD-key.png",
+    "W-key": "UI-W-key.png",
+    "LEFT-click": "UI-left-click.png",
+    "RIGHT-click": "UI-right-click.png",
+    "SPACE-key": "UI-space-key.png"
   },
   "jsons": {
     "dialogue": "dialogue.json",
