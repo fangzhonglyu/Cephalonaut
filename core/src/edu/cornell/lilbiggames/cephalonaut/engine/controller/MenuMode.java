@@ -98,16 +98,6 @@ public class MenuMode implements Screen {
 
         for(int i = 0; i < options.length; i++){
             if(selectedOption == i) {
-                canvas.draw(
-                        arrow,
-                        YELLOW,
-                        ARROW_WIDTH/2,
-                        ARROW_WIDTH/2,
-                        canvas.getWidth() * 1/3,
-                        canvas.getHeight()/2 + start - 1.2f*displayFont.getLineHeight()*i - 2*displayFont.getLineHeight(),
-                        ARROW_WIDTH,
-                        ARROW_WIDTH
-                );
                 displayFont.setColor(YELLOW);
             }
             canvas.drawTextCentered(options[i], displayFont, start - 1.2f*displayFont.getLineHeight()*i - 2*displayFont.getLineHeight());
