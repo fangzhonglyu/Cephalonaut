@@ -237,7 +237,7 @@
                 }, 
                 {
                  "gid":266,
-                 "height":12,
+                 "height":24,
                  "id":154,
                  "name":"refill",
                  "properties":[
@@ -255,7 +255,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":12,
+                 "width":24,
                  "x":746.666666666667,
                  "y":271.333333333333
                 }, 
@@ -289,7 +289,7 @@
                 }, 
                 {
                  "gid":266,
-                 "height":12,
+                 "height":24,
                  "id":162,
                  "name":"refill",
                  "properties":[
@@ -307,13 +307,13 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":12,
+                 "width":24,
                  "x":581,
                  "y":229
                 }, 
                 {
                  "gid":266,
-                 "height":12,
+                 "height":24,
                  "id":163,
                  "name":"refill",
                  "properties":[
@@ -331,13 +331,13 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":12,
-                 "x":347.5,
-                 "y":391.5
+                 "width":24,
+                 "x":338.5,
+                 "y":402.5
                 }, 
                 {
                  "gid":266,
-                 "height":12,
+                 "height":24,
                  "id":164,
                  "name":"refill",
                  "properties":[
@@ -355,7 +355,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":12,
+                 "width":24,
                  "x":131.5,
                  "y":404.5
                 }, 
@@ -548,6 +548,18 @@
                  "width":16,
                  "x":800,
                  "y":240
+                }, 
+                {
+                 "gid":262,
+                 "height":32,
+                 "id":186,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":341.5,
+                 "y":476
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -556,7 +568,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":186,
+ "nextobjectid":187,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
