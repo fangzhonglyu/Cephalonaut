@@ -365,7 +365,7 @@ public class PlayMode extends WorldController implements Screen {
         }
         if(paused) {
             cephalonaut.setInking(false);
-            dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y, dialogueFade);
+            dialogueMode.draw(canvas.getCameraX(), canvas.getCameraY(),dialogueFade);
         }
 
         canvas.end();
