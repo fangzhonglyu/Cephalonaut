@@ -148,102 +148,6 @@
                  "y":893.908289875921
                 }, 
                 {
-                 "gid":17,
-                 "height":16,
-                 "id":30,
-                 "name":"spike",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0,
-                             "tint":"#ffd65d53",
-                             "type":"Spike"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":783.840656057908,
-                 "y":97.6125337403293
-                }, 
-                {
-                 "gid":17,
-                 "height":16,
-                 "id":31,
-                 "name":"spike",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0,
-                             "tint":"#ffd65d53",
-                             "type":"Spike"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":783.840656057909,
-                 "y":32.2774844052799
-                }, 
-                {
-                 "gid":17,
-                 "height":16,
-                 "id":32,
-                 "name":"spike",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0,
-                             "tint":"#ffd65d53",
-                             "type":"Spike"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":782.43329043329,
-                 "y":224.065208065208
-                }, 
-                {
-                 "gid":17,
-                 "height":16,
-                 "id":35,
-                 "name":"spike",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0,
-                             "tint":"#ffd65d53",
-                             "type":"Spike"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":782.43329043329,
-                 "y":176.065208065208
-                }, 
-                {
                  "gid":135,
                  "height":32,
                  "id":48,
@@ -442,102 +346,6 @@
                  "y":896.087837162837
                 }, 
                 {
-                 "gid":17,
-                 "height":16,
-                 "id":59,
-                 "name":"spike",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0,
-                             "tint":"#ffd65d53",
-                             "type":"Spike"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":705.918713286713,
-                 "y":578.823867382618
-                }, 
-                {
-                 "gid":17,
-                 "height":16,
-                 "id":60,
-                 "name":"spike",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0,
-                             "tint":"#ffd65d53",
-                             "type":"Spike"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":705.918713286713,
-                 "y":513.488867382618
-                }, 
-                {
-                 "gid":17,
-                 "height":16,
-                 "id":61,
-                 "name":"spike",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0,
-                             "tint":"#ffd65d53",
-                             "type":"Spike"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":704.510713286713,
-                 "y":705.276367382617
-                }, 
-                {
-                 "gid":17,
-                 "height":16,
-                 "id":62,
-                 "name":"spike",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0,
-                             "tint":"#ffd65d53",
-                             "type":"Spike"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":704.510713286713,
-                 "y":657.276367382617
-                }, 
-                {
                  "gid":135,
                  "height":32,
                  "id":63,
@@ -596,7 +404,7 @@
                  "y":895.088911088911
                 }, 
                 {
-                 "gid":253,
+                 "gid":255,
                  "height":78.7685770846409,
                  "id":72,
                  "name":"",
@@ -618,7 +426,7 @@
                  "y":706.666501766304
                 }, 
                 {
-                 "gid":253,
+                 "gid":255,
                  "height":88.9081393752112,
                  "id":74,
                  "name":"",
@@ -640,7 +448,7 @@
                  "y":581.058942721259
                 }, 
                 {
-                 "gid":253,
+                 "gid":255,
                  "height":78.7686,
                  "id":75,
                  "name":"",
@@ -662,7 +470,7 @@
                  "y":710.377491329204
                 }, 
                 {
-                 "gid":253,
+                 "gid":255,
                  "height":78.7686,
                  "id":76,
                  "name":"",
@@ -684,7 +492,7 @@
                  "y":573.407505621725
                 }, 
                 {
-                 "gid":253,
+                 "gid":255,
                  "height":78.7686,
                  "id":77,
                  "name":"",
@@ -706,7 +514,7 @@
                  "y":334.251300335852
                 }, 
                 {
-                 "gid":253,
+                 "gid":255,
                  "height":78.7686,
                  "id":78,
                  "name":"",
@@ -1038,6 +846,102 @@
                  "width":59,
                  "x":876.95340811044,
                  "y":902.06902502157
+                }, 
+                {
+                 "gid":144,
+                 "height":20.4078,
+                 "id":96,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":19.8827,
+                 "x":781.225842429022,
+                 "y":175.285058990536
+                }, 
+                {
+                 "gid":144,
+                 "height":20.4078,
+                 "id":97,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":19.8827,
+                 "x":781.225842429022,
+                 "y":227.020074763407
+                }, 
+                {
+                 "gid":144,
+                 "height":20.4078,
+                 "id":98,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":19.8827,
+                 "x":781.977557503872,
+                 "y":97.4970714205266
+                }, 
+                {
+                 "gid":144,
+                 "height":20.4078,
+                 "id":99,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":19.8827,
+                 "x":781.977557503872,
+                 "y":32.7357029846544
+                }, 
+                {
+                 "gid":144,
+                 "height":20.4078,
+                 "id":100,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":19.8827,
+                 "x":702.339691323914,
+                 "y":511.42582999129
+                }, 
+                {
+                 "gid":144,
+                 "height":20.4078,
+                 "id":101,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":19.8827,
+                 "x":702.339691323914,
+                 "y":578.202177615407
+                }, 
+                {
+                 "gid":144,
+                 "height":20.4078,
+                 "id":102,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":19.8827,
+                 "x":702.339691323914,
+                 "y":656.591803087196
+                }, 
+                {
+                 "gid":144,
+                 "height":20.4078,
+                 "id":103,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":19.8827,
+                 "x":702.339691323914,
+                 "y":706.916007093777
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1046,7 +950,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":96,
+ "nextobjectid":104,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
@@ -1061,7 +965,7 @@
          "source":"objects.tsj"
         }, 
         {
-         "firstgid":143,
+         "firstgid":145,
          "source":"space-tiles.tsj"
         }],
  "tilewidth":16,

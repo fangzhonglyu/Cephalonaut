@@ -6,5 +6,8 @@
       "[RIGHT_CLICK] Mouse click right to release.",
       "[SPACE] You can also press the space bar to release the grapple.",
       "you can activate a button with your body or tentacle"]
+  },
+  "level_0:checkpoint_4": {
+    "part_0": ["Welcome to the Black Hole Lab"]
   }
 }
