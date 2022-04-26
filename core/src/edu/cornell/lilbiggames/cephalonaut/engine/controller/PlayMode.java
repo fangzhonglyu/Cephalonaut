@@ -112,14 +112,10 @@ public class PlayMode extends WorldController implements Screen {
         dialogueFade = 0;
     }
 
-    public void nextDialogue() {
-        dialogueMode.nextDialogue();
-        paused = true;
-    }
-
     public void nextDialogue(int part) {
         dialogueMode.nextDialogue(part);
         paused = true;
+        dialogueFade = 0;
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -247,26 +243,38 @@ public class PlayMode extends WorldController implements Screen {
 //		displayFont = directory.getEntry( "shared:gothamo" ,BitmapFont.class);
     }
 
-    private boolean isDialogueMode() {
+    private void exitPauseMode() {
+        for (GameObject obj : objects) {
+            obj.setActive(true);
+        }
+    }
+
+    private void enterPauseMode() {
+        //canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+        for (GameObject obj : objects) {
+            obj.setActive(false);
+        }
+        cephalonaut.setInking(false);
+    }
+
+
+    private boolean isDialogueMode(float dt) {
         if(paused) {
+            // don't freeze world until fade is done
             if (dialogueFade < .5f) {
                 dialogueFade += .05f;
                 return false;
             }
-//            canvas.setCameraPos(bounds, cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+            if(fadeInCount >= .1) { return false; }
 
-            cephalonaut.setBodyType(BodyDef.BodyType.StaticBody);
-            paused  = dialogueMode.update();
+            // freeze world here
+            enterPauseMode();
+            paused  = dialogueMode.update(dt);
 
+            // unfreeze world if paused is false
             if(!paused) {
-                cephalonaut.setBodyType(BodyDef.BodyType.DynamicBody);
-                float[] forces = cephalonautController.getForces();
-                cephalonaut.setVX(forces[0]);
-                cephalonaut.setVY(forces[1]);
-                cephalonaut.setAngularVelocity(forces[2]);
-                dialogueFade = 0.0f;
+                exitPauseMode();
             }
-
             return true;
         }
         return false;
@@ -283,14 +291,15 @@ public class PlayMode extends WorldController implements Screen {
      * @param dt 	Number of seconds since last animation frame
      */
     public void update(float dt) {
+        // Move an object if touched
+        InputController input = InputController.getInstance();
+        if(isDialogueMode(dt)) return;
+
         timeCount += dt;
         if (timeCount >= 1) {
             timer += 1;
             timeCount = 0;
         }
-        // Move an object if touched
-        InputController input = InputController.getInstance();
-        if(isDialogueMode()) return;
 
         if (input.didExit()) {
             if (listener != null) {
@@ -359,9 +368,8 @@ public class PlayMode extends WorldController implements Screen {
     public void draw(float dt) {
 
         if (exiting) return;
-
+      
         canvas.clear();
-
         canvas.begin();
 
         for (GameObject obj : objects) {
@@ -381,13 +389,13 @@ public class PlayMode extends WorldController implements Screen {
 
         canvas.drawTextTopLeft(timeString, displayFont);
         canvas.drawFade(fadeInCount);
-        
+      
         if (!cephalonaut.isAlive()) {
             canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
         }
+
         if(paused) {
-            cephalonaut.setInking(false);
-            dialogueMode.draw(canvas.getCameraX(), canvas.getCameraY(),dialogueFade);
+          dialogueMode.draw(canvas.getCameraX(), canvas.getCameraY(), dialogueFade);
         }
 
         canvas.end();

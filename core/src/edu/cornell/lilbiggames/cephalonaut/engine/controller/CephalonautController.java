@@ -20,13 +20,11 @@ public class CephalonautController {
     private DistanceJointDef grappleJoint1Def, grappleJoint2Def;
     private float lastRotation;
 
-    private float[] forces;
 
     public CephalonautController(World world, CephalonautModel cephalonaut) {
         this.world = world;
         this.cephalonaut = cephalonaut;
         lastRotation = 0f;
-        forces = new float[3];
     }
 
     public void update(boolean grappleButton, boolean ungrappleButton, Vector2 crossHair, boolean thrusterApplied,
@@ -39,11 +37,6 @@ public class CephalonautController {
             cephalonaut.setRotationalDirection(rotation);
             cephalonaut.applyRotation();
         }
-
-        forces[0] = cephalonaut.getVX();
-        forces[1] = cephalonaut.getVY();
-        forces[2] = cephalonaut.getAngularVelocity();
-
         cephalonaut.applyForce();
 
         if(rotation != 0) {
@@ -52,12 +45,6 @@ public class CephalonautController {
 
         lastRotation = rotation;
     }
-
-    public float[] getForces() {
-        return forces;
-    }
-
-
     private void updateGrapple(boolean grappleButton, boolean ungrappleButton, Vector2 crossHair) {
         GrappleModel grapple = cephalonaut.getGrapple();
         // "pull in" the grapple if requested, or if it has stretched its max length

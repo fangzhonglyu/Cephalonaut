@@ -1,27 +1,10 @@
 {
   "level_0:checkpoint_0": {
-    "part_0": {
-        "text": ["hi my name is michael the octopus!", "press [w] to thrust."],
-        "escape_keys": ["W"]
-      },
-    "part_1": {
-      "text": ["well done! press [a] to rotate left and [d] to rotate right."],
-      "escape_keys": ["A", "D"]
-    },
-    "part_2": {
-      "text": ["you can grapple by [left clicking] your mouse in the desired location.",
-        "[Right click] to release or press the [space bar]!","you can activate a button with your body or tentacle"],
-      "escape_keys": ["SPACE", "BUTTON_LEFT", "BUTTON_RIGHT"]
-    }
-  },
-  "level_1:checkpoint_0": {
-    "part_0": {
-      "text": [
-        "Welcome to the blackhole lab!"
-      ],
-      "escape_keys": [
-        "w"
-      ]
-    }
+    "part_0": ["hi my name is michael the octopus!", "[W] press W to thrust.", "[AD] press A to rotate left and D to rotate right."],
+    "part_1": ["Well Done!", "[AD] press A to rotate left and D to rotate right."],
+    "part_2": ["[LEFT_CLICK] Mouse click left to grapple!",
+      "[RIGHT_CLICK] Mouse click right to release.",
+      "[SPACE] You can also press the space bar to release the grapple.",
+      "you can activate a button with your body or tentacle"]
   }
 }

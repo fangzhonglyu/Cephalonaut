@@ -170,7 +170,6 @@ public class GDXRoot extends Game implements ScreenListener {
 	}
 
 
-
 	/** 
 	 * Called when the Application is destroyed. 
 	 *
