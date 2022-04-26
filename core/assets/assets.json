@@ -16,6 +16,7 @@
     "GO-blackhole.png": "GO-blackhole.png",
     "GO-wormhole.png": "GO-wormhole.png",
     "GO-spikes.png": "GO-spikes.png",
+    "GO-spikeball.png": "GO-spikeball.png",
     "boost.png": "boost.png",
     "bounce.png": "bounce.png",
     "reactor.png": "reactor.png",
@@ -27,6 +28,9 @@
     "ui:star_scoring": "UI-star-scoring.png",
     "replayicon": "replay.png",
     "nexticon": "arrowRight.png",
+    "loadingAnimation1": "UI-transition-star1-15.png",
+    "loadingAnimation2": "UI-transition-star16-30.png",
+    "loadingAnimation3": "UI-transition-star31-43.png",
     "levelicon:level_0": "levels/level_0.png",
     "levelicon:level_1": "levels/level_1.png",
     "levelicon:level_2": "levels/level_2.png",
@@ -38,7 +42,14 @@
     "completedLevel.png": "circleFilled.png",
     "arrow": "arrow.png",
     "volume-down": "volume-down (1).png",
-    "volume-up": "volume-up.png"
+    "volume-up": "volume-up.png",
+    "AD-key": "UI-AD-key.png",
+    "W-key": "UI-W-key.png",
+    "LEFT-click": "UI-left-click.png",
+    "RIGHT-click": "UI-right-click.png",
+    "SPACE-key": "UI-space-key.png",
+    "white-arrow": "UI-arrow-white.png"
+    "banner": "banner.png"
   },
   "jsons": {
     "dialogue": "dialogue.json",
@@ -51,7 +62,7 @@
     "Oliver_level2": "Oliver_level2-4.tmj",
     "Oliver_levelt1": "Oliver_levelt1.tmj",
     "level_0:checkpoint_0": "levels/level_0/level_1.tmj",
-    "level_0:checkpoint_1": "levels/level_0/level_0.tmj",
+    "level_0:checkpoint_1": "levels/level_0/level_1_angelina.tmj",
     "level_0:checkpoint_2": "levels/level_0/level_2.tmj",
     "level_0:checkpoint_3": "levels/level_0/level_3.tmj",
     "level_0:checkpoint_4": "levels/level_0/level_4.tmj",
@@ -101,7 +112,7 @@
     "suction": "TentacleSuctionSFX.mp3"
   },
   "fonts": {
-    "retro": {
+    "gothamo": {
       "file": "RetroGame.ttf",
       "size": 64
     }

@@ -156,20 +156,19 @@ public class SettingsMode extends MenuMode {
         canvas.drawTextCentered("SETTINGS", displayFont, height/4);
 
         float subtitleHeight = (3.0f/4.0f)*height - displayFont.getLineHeight();
-        displayFont.getData().setScale(0.6f*scale.x);
-        displayFont.setColor(YELLOW);
+        displayFont.getData().setScale(0.7f*scale.x);
         canvas.drawText("KEYBINDINGS", displayFont, width/4, subtitleHeight);
 
         float start = subtitleHeight - 1.5f * displayFont.getLineHeight();
 
-        displayFont.getData().setScale(0.4f*scale.x);
+        displayFont.getData().setScale(0.5f*scale.x);
+        displayFont.setColor(Color.ORANGE);
 
         int i = 0;
         for(String binding : keyBindings.keySet()){
             float textHeight = start - 2*displayFont.getLineHeight()*i;
-            canvas.drawText(binding, displayFont, width/4, textHeight);
-
             if(i == selectedOption){
+                displayFont.setColor(YELLOW);
                 canvas.draw(
                         arrow,
                         YELLOW,
@@ -180,17 +179,18 @@ public class SettingsMode extends MenuMode {
                         ARROW_WIDTH,
                         ARROW_WIDTH
                 );
-                displayFont.setColor(Color.CYAN);
             }
+            canvas.drawText(binding, displayFont, width/4, textHeight);
+            if(i == selectedOption) displayFont.setColor(Color.CYAN);
             canvas.drawText(Input.Keys.toString(keyBindings.get(binding)), displayFont, 0.75f*width, textHeight);
-            displayFont.setColor(YELLOW);
+            displayFont.setColor(Color.ORANGE);
             i++;
         }
 
         start = start - 2*displayFont.getLineHeight()*i;
 
-        displayFont.getData().setScale(0.6f*scale.x);
-        displayFont.setColor(YELLOW);
+        displayFont.getData().setScale(0.7f*scale.x);
+        displayFont.setColor(Color.ORANGE);
         canvas.drawText("VOLUME", displayFont, width/4, start);
 
         float sliderHeight = SLIDER_HEIGHT*scale.x;
