@@ -14,19 +14,13 @@ import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEGlassBarrier;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEStart;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETrigger;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETriggerable;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
-
-import javax.management.Query;
-import java.util.Iterator;
 import java.util.Map;
 
 /** Game mode for playing a level */
@@ -37,7 +31,7 @@ public class PlayMode extends WorldController implements Screen {
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
-    private Texture octopusInkStrip,octopusStrip,nextIcon;
+    private Texture octopusInkStrip, octopusStrip, nextIcon;
 
     /** Controller that handles cephalonaut movement (grappling and inking) */
     private CephalonautController cephalonautController;
@@ -76,6 +70,10 @@ public class PlayMode extends WorldController implements Screen {
     static private final float DEFAULT_STARTING_POS_X = 10.0f;
     static private final float DEFAULT_STARTING_POS_Y = 10.0f;
 
+    private String timeString;
+    private float timeCount;
+    private int timer;
+
     // Matias: We shouldn't do this bc objects have state which change from loading to restarting.
     // Honestly I wouldn't be opposed to just reloading a level from scratch every time...
     // TODO: Change
@@ -102,10 +100,14 @@ public class PlayMode extends WorldController implements Screen {
         setDebug(false);
         setComplete(false);
         setFailure(false);
+
+        displayFont = this.loader.getAssetDirectory().getEntry("gothamo",BitmapFont.class);
         directionalGrapple = true;
         deathRotationCount = 0;
         fadeInCount = 1;
         won = false;
+        timeCount = 0;
+        timer = 0;
         paused = false;
         dialogueFade = 0;
     }
@@ -149,6 +151,8 @@ public class PlayMode extends WorldController implements Screen {
     public void reset() {
         LevelLoader.LevelDef levelDef = loader.loadLevel(level, checkpoint);
 
+        this.bounds.set(0, 0, levelDef.width, levelDef.height);
+
         Vector2 gravity = new Vector2(world.getGravity());
         cleanupLevel();
 
@@ -168,6 +172,8 @@ public class PlayMode extends WorldController implements Screen {
         deathRotationCount = 0;
         cephalonaut.setDeathScale(1);
         fadeInCount = 1;
+        timeCount = 0;
+        timer = 0;
         dialogueMode.load(level, checkpoint);
         paused = false;
     }
@@ -215,6 +221,10 @@ public class PlayMode extends WorldController implements Screen {
         world.setGravity(Vector2.Zero);
     }
 
+    public String getTimeString() {
+        return timeString;
+    }
+
     /**
      * Gather the assets for this controller.
      *
@@ -230,6 +240,7 @@ public class PlayMode extends WorldController implements Screen {
         octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
         octopusStrip = directory.getEntry("octopus",Texture.class);
         octopusStrip.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
+//		displayFont = directory.getEntry( "shared:gothamo" ,BitmapFont.class);
     }
 
     private void exitPauseMode() {
@@ -280,6 +291,11 @@ public class PlayMode extends WorldController implements Screen {
      * @param dt 	Number of seconds since last animation frame
      */
     public void update(float dt) {
+        timeCount += dt;
+        if (timeCount >= 1) {
+            timer += 1;
+            timeCount = 0;
+        }
         // Move an object if touched
         InputController input = InputController.getInstance();
         if(isDialogueMode(dt)) return;
@@ -314,7 +330,7 @@ public class PlayMode extends WorldController implements Screen {
                 (canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
 
         cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
-        canvas.setCameraPos(MathUtils.roundPositive(cephalonaut.getX()* scale.x), MathUtils.roundPositive(cephalonaut.getY()* scale.y));
+        canvas.setCameraPos(bounds, scale, MathUtils.roundPositive(cephalonaut.getX()* scale.x), MathUtils.roundPositive(cephalonaut.getY()* scale.y));
 
         if (fadeInCount > 0) {
             fadeInCount -= .05f;
@@ -349,28 +365,36 @@ public class PlayMode extends WorldController implements Screen {
      * @param dt Timing values from parent loop
      */
     public void draw(float dt) {
-        canvas.clear();
 
         if (exiting) return;
-
+      
+        canvas.clear();
         canvas.begin();
 
         for (GameObject obj : objects) {
             obj.draw(canvas);
+            if(obj instanceof LEBlackHole) {
+                canvas.drawBlackHoleOutline(obj.getX() * scale.x, obj.getY() * scale.y,
+                        ((LEBlackHole) obj).getBlackHoleRange() * scale.x);
+            }
         }
 
         selector.draw(canvas);
         cephalonaut.draw(canvas);
 
-        canvas.drawSimpleFuelBar(cephalonaut.getInk());
-        canvas.drawFade(fadeInCount);
+        int minutes = (timer % 3600) / 60;
+        int seconds = timer % 60;
+        timeString = String.format("%02d:%02d", minutes, seconds);
 
+        canvas.drawTextTopLeft(timeString, displayFont);
+        canvas.drawFade(fadeInCount);
+      
         if (!cephalonaut.isAlive()) {
             canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
         }
 
         if(paused) {
-            dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y, dialogueFade);
+          dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y, dialogueFade);
         }
 
         canvas.end();

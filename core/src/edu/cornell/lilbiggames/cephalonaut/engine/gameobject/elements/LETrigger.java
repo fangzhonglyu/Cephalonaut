@@ -26,12 +26,9 @@ public class LETrigger extends LevelElement {
         // Kinda arbitrary to do this for a trigger. Maybe LETrigger could be an abstract class or an interface which
         // can be used by something like LEDoor which will define more specific functionality. Or we can encode
         // trigger behavior as data in this class, parsed from Tiled parameters. That might be nicer.
-        activated = !activated;
-        if (activated) {
+        if(!activated)
+            activated = true;
             setTexture(triggerTexture);
-        } else {
-            setTexture(originalTexture);
-        }
     }
 
     public void setActivated(boolean activated) {
