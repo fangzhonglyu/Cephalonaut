@@ -60,7 +60,7 @@ public class MainMenuNestedMode extends MenuMode {
         this.listener = listener;
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
-        displayFont = assets.getEntry("retro",BitmapFont.class);
+        displayFont = assets.getEntry("gothamo",BitmapFont.class);
         this.completedCheckpoints = completedCheckpoints;
         this.checkpoints = checkpoints;
 
@@ -95,7 +95,11 @@ public class MainMenuNestedMode extends MenuMode {
         inputController.readInput(new Rectangle(), new Vector2());
         if(inputController.isSelectPressed()){
             levelSelected = true;
-        } if(inputController.didExit()){
+        } else if (inputController.isNextPressed()){
+            completedCheckpoints = (completedCheckpoints+1)%checkpoints;
+        } else if(inputController.isPrevPressed()){
+            completedCheckpoints = completedCheckpoints == 0 ? checkpoints - 1 : completedCheckpoints - 1;
+        } else if(inputController.didExit()){
             listener.exitScreen(this, NESTED_MENU_EXIT_CODE);
         }
     }
@@ -125,6 +129,8 @@ public class MainMenuNestedMode extends MenuMode {
         this.checkpoints = checkpoints;
     }
 
+    public int getNumCompletedCheckpoints() {return this.completedCheckpoints; }
+
     public void setLevel(int level){
         this.curLevel = level;
     }
@@ -144,7 +150,7 @@ public class MainMenuNestedMode extends MenuMode {
         float diff = 100;
         float start = width/2 - diff * (checkpoints/2);
         for(int i = 0; i < checkpoints; i++){
-            if(i < completedCheckpoints){
+            if(i <= completedCheckpoints){
                 canvas.draw(levelCompletedTexture, i*diff+start, height/2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
             } else {
                 canvas.draw(levelTexture, i*diff+start, height/2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);

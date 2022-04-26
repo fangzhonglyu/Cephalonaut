@@ -55,7 +55,7 @@ public class MainMenuMode extends MenuMode {
         this.listener = listener;
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
-        displayFont = assets.getEntry("retro",BitmapFont.class);
+        displayFont = assets.getEntry("gothamo",BitmapFont.class);
 
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);

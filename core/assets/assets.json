@@ -28,6 +28,9 @@
     "ui:star_scoring": "UI-star-scoring.png",
     "replayicon": "replay.png",
     "nexticon": "arrowRight.png",
+    "loadingAnimation1": "UI-transition-star1-15.png",
+    "loadingAnimation2": "UI-transition-star16-30.png",
+    "loadingAnimation3": "UI-transition-star31-43.png",
     "levelicon:level_0": "levels/level_0.png",
     "levelicon:level_1": "levels/level_1.png",
     "levelicon:level_2": "levels/level_2.png",
@@ -39,7 +42,8 @@
     "completedLevel.png": "circleFilled.png",
     "arrow": "arrow.png",
     "volume-down": "volume-down (1).png",
-    "volume-up": "volume-up.png"
+    "volume-up": "volume-up.png",
+    "banner": "banner.png"
   },
   "jsons": {
     "dialogue": "dialogue.json",
@@ -51,8 +55,8 @@
     "Oliver_level1": "Oliver_level1.tmj",
     "Oliver_level2": "Oliver_level2-4.tmj",
     "Oliver_levelt1": "Oliver_levelt1.tmj",
-    "level_0:checkpoint_0": "levels/level_0/level_1.tmj",
-    "level_0:checkpoint_1": "levels/level_0/level_0.tmj",
+    "level_0:checkpoint_0": "levels/level_0/level_0_angelina.tmj",
+    "level_0:checkpoint_1": "levels/level_0/level_1_angelina.tmj",
     "level_0:checkpoint_2": "levels/level_0/level_2.tmj",
     "level_0:checkpoint_3": "levels/level_0/level_3.tmj",
     "level_0:checkpoint_4": "levels/level_0/level_4.tmj",
@@ -102,8 +106,8 @@
     "suction": "TentacleSuctionSFX.mp3"
   },
   "fonts": {
-    "retro": {
-      "file": "RetroGame.ttf",
+    "gothamo": {
+      "file": "CozetteVector.ttf",
       "size": 64
     }
   }
