@@ -35,7 +35,6 @@ public class DialogueMode {
     private Vector2 scale;
 
     private ArrayList<ArrayList<String>> dialogue;
-    private ArrayList<ArrayList<String>> escape_keys;
 
     /** The row index in dialogue. */
     private int part;
@@ -46,7 +45,8 @@ public class DialogueMode {
     private final AssetDirectory directory;
 
     final private int X_OFFSET = 280;
-    final private int Y_OFFSET = 100;
+    final private int Y_OFFSET = 50;
+    final private float ARROW_WIDTH = 7.5f;
 
 
     /**
@@ -59,7 +59,7 @@ public class DialogueMode {
         this.canvas  = canvas;
         this.directory = directory;
         this.scale = new Vector2(1,1);
-        this.nextIcon = directory.getEntry("nexticon", Texture.class);
+        this.nextIcon = directory.getEntry("arrow", Texture.class);
         this.displayFont = directory.getEntry("retro", BitmapFont.class);
         this.inputController = InputController.getInstance();
     }
@@ -72,60 +72,29 @@ public class DialogueMode {
         try {
             JsonValue level = dialogueDirectory.get(levelName + ":" + checkpointName);
             dialogue = new ArrayList<>();
-            escape_keys = new ArrayList<>();
             Iterator<JsonValue> part_itr = level.iterator();
             // get each dialogue part in a single level
             while(part_itr.hasNext()) {
-                // get part object
+                // get part
                 JsonValue part = part_itr.next();
-
-                // get text from part and parse array
-                JsonValue text = part.get("text");
-                Iterator<JsonValue> itr = text.iterator();
+                Iterator<JsonValue> itr = part.iterator();
                 ArrayList<String> part_dialogue = new ArrayList<>();
                 while (itr.hasNext()) {
                     String s = itr.next().toString();
                     part_dialogue.add(s);
                 }
                 dialogue.add(part_dialogue);
-
-                // get escape keys from part and parse array
-                JsonValue keys = part.get("escape_keys");
-                itr = keys.iterator();
-                ArrayList<String> part_escape_keys = new ArrayList<>();
-                while (itr.hasNext()) {
-                    String s = itr.next().toString();
-                    part_escape_keys.add(s);
-                }
-                escape_keys.add(part_escape_keys);
             }
         } catch (Exception e) {
             System.out.println("Failed to load dialogue. Check to see there is a dialogue for " + levelName + ":" + checkpointName + ":::" + e);
         }
     }
 
-    private boolean clickedEscape() {
-        for(String s : escape_keys.get(part)) {
-            if(s.equals("BUTTON_LEFT") && Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                return true;
-            }
-            if(s.equals("BUTTON_RIGHT") && Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
-                return true;
-            }
-            if(Gdx.input.isKeyJustPressed(Input.Keys.valueOf(s))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     public boolean update(){
-        if(index == dialogue.get(part).size() - 1 && clickedEscape()) {
-            return false;
-        } else if (inputController.isPrevPressed() || clickedBack()) {
-            index = index > 0 ? index - 1 : 0;
-        } else if (inputController.isNextPressed() || inputController.isSelectPressed() || clickedNext()) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) ||
+                Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) ||
+                Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+
             index+=1;
             if(index >= dialogue.get(part).size()) {
                 return false;
@@ -142,39 +111,11 @@ public class DialogueMode {
         }
     }
 
-
-    private boolean clickedBack() {
-        if(index == 0) { return false; }
-        return checkClicked(X_OFFSET*scale.x, canvas.getHeight() - Y_OFFSET*scale.y);
-    }
-
-    private boolean clickedNext() {
-        return checkClicked(canvas.getWidth() - X_OFFSET*scale.x, canvas.getHeight() - Y_OFFSET*scale.y);
-    }
-
-    private boolean checkClicked(float posX, float posY) {
-        float mouseX = -10;
-        float mouseY = -10;
-        float rHeight = nextIcon.getHeight()*scale.y;
-        float rWidth = nextIcon.getWidth()*scale.x;
-
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            mouseX = Gdx.input.getX();
-            mouseY = Gdx.input.getY();
-        }
-
-        if (posX - rWidth / 2f <= mouseX && mouseX <= posX + rWidth / 2f
-                && posY - rHeight / 2f <= mouseY && mouseY <= posY + rHeight / 2f ) {
-            return true;
-        }
-        return false;
-    }
-
     private void displayText(float cx, float cy) {
         displayFont.getData().setScale(.5f * scale.x);
         int cutoff = 40;
         float x_offset = 0.006f;
-        int y_offset = (int)(290f*Gdx.graphics.getHeight()/1080f);
+        int y_offset = (int)(310f*Gdx.graphics.getHeight()/1080f);
 
         String text = dialogue.get(part).get(index);
         int text_length = text.length();
@@ -200,16 +141,9 @@ public class DialogueMode {
         displayText(cx, cy);
 
         canvas.draw(nextIcon, Color.WHITE,
-                nextIcon.getWidth() / 2f, nextIcon.getHeight() / 2f,
+                nextIcon.getWidth(), nextIcon.getHeight() / 2f,
                 cx + canvas.getWidth() / 2f - X_OFFSET*scale.x, cy - canvas.getHeight() / 2f + Y_OFFSET*scale.y,
-                0, scale.x, scale.y);
-
-        if(index == 0) { return; }
-
-        canvas.draw(nextIcon, Color.WHITE,
-                nextIcon.getWidth() / 2f, nextIcon.getHeight() / 2f,
-                cx - canvas.getWidth() / 2f + X_OFFSET*scale.x, cy - canvas.getHeight() / 2f + Y_OFFSET*scale.y,
-                (float)Math.PI, scale.x, scale.y);
+                (float)Math.PI / -2f, scale.x * ARROW_WIDTH, scale.y * ARROW_WIDTH);
     }
 }
 
