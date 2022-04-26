@@ -125,7 +125,7 @@ public class DialogueMode {
             return false;
         } else if (inputController.isPrevPressed() || clickedBack()) {
             index = index > 0 ? index - 1 : 0;
-        } else if (inputController.isNextPressed() || clickedNext()) {
+        } else if (inputController.isNextPressed() || inputController.isSelectPressed() || clickedNext()) {
             index+=1;
             if(index >= dialogue.get(part).size()) {
                 return false;
@@ -142,13 +142,6 @@ public class DialogueMode {
         }
     }
 
-    public void nextDialogue() {
-        part += 1;
-        index = 0;
-        if(part >= dialogue.size()) {
-            throw new RuntimeException("Dialogue does not exist.");
-        }
-    }
 
     private boolean clickedBack() {
         if(index == 0) { return false; }
