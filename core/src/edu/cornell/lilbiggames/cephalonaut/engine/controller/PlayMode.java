@@ -101,7 +101,7 @@ public class PlayMode extends WorldController implements Screen {
         setComplete(false);
         setFailure(false);
 
-        displayFont = this.loader.getAssetDirectory().getEntry("gothamo",BitmapFont.class);
+        displayFont = this.loader.getAssetDirectory().getEntry("retro", BitmapFont.class);
         directionalGrapple = true;
         deathRotationCount = 0;
         fadeInCount = 1;
@@ -240,7 +240,7 @@ public class PlayMode extends WorldController implements Screen {
         octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
         octopusStrip = directory.getEntry("octopus",Texture.class);
         octopusStrip.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
-//		displayFont = directory.getEntry( "shared:gothamo" ,BitmapFont.class);
+//		displayFont = directory.getEntry( "retro", BitmapFont.class);
     }
 
     private void exitPauseMode() {
