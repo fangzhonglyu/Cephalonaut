@@ -2088,41 +2088,7 @@
         }, 
         {
          "id":64,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "name":"",
-             "objects":[
-                    {
-                     "height":0,
-                     "id":1,
-                     "name":"",
-                     "polygon":[
-                            {
-                             "x":0,
-                             "y":0
-                            }, 
-                            {
-                             "x":0.0683249706416141,
-                             "y":0.409949823849685
-                            }, 
-                            {
-                             "x":0.102487455962421,
-                             "y":-0.0683249706416141
-                            }],
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":0,
-                     "x":0.341624853208071,
-                     "y":0.409949823849685
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            },
+         "probability":0.25,
          "type":"Background"
         }, 
         {
@@ -3005,6 +2971,7 @@
         }, 
         {
          "id":96,
+         "probability":0.100000001490116,
          "type":"Background"
         }, 
         {

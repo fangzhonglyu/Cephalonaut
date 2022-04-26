@@ -7,6 +7,8 @@
          "image":"BG-4-violet.png",
          "name":"Image Layer 1",
          "opacity":1,
+         "parallaxx":0.5,
+         "parallaxy":0.5,
          "repeatx":true,
          "repeaty":true,
          "type":"imagelayer",

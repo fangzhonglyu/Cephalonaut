@@ -48,7 +48,7 @@
     "LEFT-click": "UI-left-click.png",
     "RIGHT-click": "UI-right-click.png",
     "SPACE-key": "UI-space-key.png",
-    "white-arrow": "UI-arrow-white.png"
+    "white-arrow": "UI-arrow-white.png",
     "banner": "banner.png"
   },
   "jsons": {
@@ -61,10 +61,10 @@
     "Oliver_level1": "Oliver_level1.tmj",
     "Oliver_level2": "Oliver_level2-4.tmj",
     "Oliver_levelt1": "Oliver_levelt1.tmj",
-    "level_0:checkpoint_0": "levels/level_0/level_1.tmj",
+    "level_0:checkpoint_0": "levels/level_0/teddy_level_0.tmj",
     "level_0:checkpoint_1": "levels/level_0/level_1_angelina.tmj",
     "level_0:checkpoint_2": "Oliver_spikeIntro.tmj",
-    "level_0:checkpoint_3": "levels/level_0/level_3.tmj",
+    "level_0:checkpoint_3": "world2_level3.tmj",
     "level_0:checkpoint_4": "levels/level_0/Barry_tut1-1.tmj",
     "level_1:checkpoint_0": "levels/level_1/level_0.tmj",
     "level_1:checkpoint_1": "levels/level_1/level_1.tmj",

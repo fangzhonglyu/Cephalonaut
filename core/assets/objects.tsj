@@ -50,6 +50,11 @@
                      "canGrappleOn":false,
                      "type":"Start"
                     }
+                }, 
+                {
+                 "name":"ink",
+                 "type":"float",
+                 "value":1
                 }],
          "type":"GameObject"
         }, 

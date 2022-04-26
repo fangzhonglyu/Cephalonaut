@@ -32,6 +32,9 @@ public class SoundController {
     /** volume of the music */
     private static float musicVolume;
 
+    /** volume of the music */
+    private static float sfxVolume = .3f;
+
     /** Gather assets. NEEDS TO BE CALLED BEFORE USE*/
     public synchronized static void gatherSoundAssets(AssetDirectory directory) {
         for (int i = 0; i < MENU_MUSIC_INDEX; i++) {
@@ -55,7 +58,7 @@ public class SoundController {
             }
             if (!inkPlaying && thrust) {
                 inkPlaying = true;
-                inkSound.loop();
+                inkSound.loop(sfxVolume);
             }
     }
 
@@ -153,7 +156,7 @@ public class SoundController {
     public static void playSound(int i,float volume){
         if (i >= soundCache.length || i < 0 || soundCache[i]==null)
             return;
-        soundCache[i].play(volume);
+        soundCache[i].play(sfxVolume);
     }
 
     /** Kill all sounds related of that index */
