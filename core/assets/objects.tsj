@@ -8,7 +8,7 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":10,
+ "tilecount":11,
  "tiledversion":"1.8.2",
  "tileheight":66,
  "tiles":[
@@ -677,6 +677,59 @@
                  "value":
                     {
                      "restitution":3
+                    }
+                }]
+        }, 
+        {
+         "id":14,
+         "image":"GO-spikes.png",
+         "imageheight":16,
+         "imagewidth":16,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":-7.72727272727273,
+                             "y":15.3636363636364
+                            }, 
+                            {
+                             "x":8.45454545454545,
+                             "y":15.5454545454545
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":7.63636363636364,
+                     "y":0.454545454545455
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "type":"Spike"
                     }
                 }]
         }],
