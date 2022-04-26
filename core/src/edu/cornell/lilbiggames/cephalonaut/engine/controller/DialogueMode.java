@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class DialogueMode {
     private BitmapFont displayFont;
 
     private Texture nextIcon, AD_KEY, W_KEY, SPACE_KEY, RIGHT_CLICK, LEFT_CLICK;
+
+    private FilmStrip W_KEY_strip;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -49,6 +52,7 @@ public class DialogueMode {
     final private float ARROW_WIDTH = 7.5f;
     final private float KEY_WIDTH = 5f;
 
+    private float frame;
 
     /**
      * Creates a DialogueMode with the default size and position.
@@ -67,6 +71,10 @@ public class DialogueMode {
         this.SPACE_KEY = directory.getEntry("SPACE-key", Texture.class);
         this.RIGHT_CLICK = directory.getEntry("RIGHT-click", Texture.class);
         this.LEFT_CLICK = directory.getEntry("LEFT-click", Texture.class);
+
+        W_KEY_strip = new FilmStrip(this.W_KEY, 1, 2);
+        W_KEY_strip.setFrame(0);
+        frame = 0;
 
         this.displayFont = directory.getEntry("retro", BitmapFont.class);
         this.inputController = InputController.getInstance();
@@ -98,17 +106,25 @@ public class DialogueMode {
         }
     }
 
-    public boolean update(){
+    public boolean update(float dt){
+        frame += 2.5 * dt;
+        if (frame >= 1) {
+            frame--;
+            W_KEY_strip.setFrame((W_KEY_strip.getFrame() + 1) % W_KEY_strip.getSize());
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) ||
                 Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) ||
                 Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
-
             index+=1;
+
             if(index >= dialogue.get(part).size()) {
                 return false;
             }
         }
         return true;
+
+
     }
 
     public void nextDialogue(int part) {
@@ -128,10 +144,20 @@ public class DialogueMode {
                 0, scale.x * KEY_WIDTH, scale.y * KEY_WIDTH);
     }
 
+    private void drawVisual(FilmStrip filmStrip, float cx, float cy){
+        float Y_OFFSET = 400f;
+        float X_OFFSET = 300f;
+        canvas.draw(filmStrip, Color.WHITE,
+                filmStrip.getRegionWidth() / 2f / filmStrip.getSize(), filmStrip.getRegionHeight() / 2f / filmStrip.getSize(),
+                cx - canvas.getWidth() / 2 + X_OFFSET, cy - Y_OFFSET * scale.y,
+                0, scale.x * KEY_WIDTH, scale.y * KEY_WIDTH);
+    }
+
     private String displayVisual(String text, float cx, float cy) {
         String visualText = text.substring(0, text.indexOf(' '));
         if(visualText.equals("[W]")) {
-            drawVisual(W_KEY, cx, cy);
+//            drawVisual(W_KEY, cx, cy);
+            drawVisual(W_KEY_strip, cx, cy);
             return text.substring(text.indexOf(' ') + 1);
         }
         else if(visualText.equals("[AD]")) {

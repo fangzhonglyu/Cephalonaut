@@ -247,7 +247,7 @@ public class PlayMode extends WorldController implements Screen {
     }
 
 
-    private boolean isDialogueMode() {
+    private boolean isDialogueMode(float dt) {
         if(paused) {
             // don't freeze world until fade is done
             if (dialogueFade < .5f) {
@@ -258,7 +258,7 @@ public class PlayMode extends WorldController implements Screen {
 
             // freeze world here
             enterPauseMode();
-            paused  = dialogueMode.update();
+            paused  = dialogueMode.update(dt);
 
             // unfreeze world if paused is false
             if(!paused) {
@@ -282,7 +282,7 @@ public class PlayMode extends WorldController implements Screen {
     public void update(float dt) {
         // Move an object if touched
         InputController input = InputController.getInstance();
-        if(isDialogueMode()) return;
+        if(isDialogueMode(dt)) return;
 
         if (input.didExit()) {
             if (listener != null) {
