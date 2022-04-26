@@ -92,23 +92,29 @@ public class MenuMode implements Screen {
 
     protected void drawOptions(String[] options, int selectedOption, int offset){
         float start = (options.length*displayFont.getLineHeight())/2 - offset;
-        displayFont.setColor(YELLOW);
+        displayFont.setColor(Color.ORANGE);
         displayFont.getData().setScale(0.5f*scale.x);
 
         for(int i = 0; i < options.length; i++){
+            if(selectedOption == i)
+                displayFont.setColor(YELLOW);
+            else
+                displayFont.setColor(Color.ORANGE);
             canvas.drawTextCentered(options[i], displayFont, start - displayFont.getLineHeight()*i - 2*displayFont.getLineHeight());
-            if(selectedOption == i) {
+            /*if(selectedOption == i) {
                 canvas.draw(
                         arrow,
                         YELLOW,
                         ARROW_WIDTH/2,
                         ARROW_WIDTH/2,
-                        canvas.getWidth() * 1/3,
+                        canvas.getWidth() * 0.4f,
                         canvas.getHeight()/2 + start - displayFont.getLineHeight()*i - 2*displayFont.getLineHeight(),
                         ARROW_WIDTH,
                         ARROW_WIDTH
                 );
             }
+
+             */
         }
         displayFont.setColor(Color.WHITE);
         displayFont.getData().setScale(scale.x);
