@@ -340,7 +340,7 @@ public class CephalonautModel extends OctopusObstacle {
 		canvas.draw(filmstrip, Color.WHITE, ox, oy,
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 0.052f* drawScale.x * deathScale, 0.052f*drawScale.y * deathScale);
-		canvas.drawSimpleFuelBar(ink, getX() * drawScale.x - 37, getY() * drawScale.y - 60);
+		canvas.drawSimpleFuelBar(ink / max_ink, getX() * drawScale.x, (getY() - getHeight() * 1.0f) * drawScale.y);
 	}
 
 	/**

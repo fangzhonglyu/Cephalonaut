@@ -730,9 +730,11 @@ public class GameCanvas {
 		spriteBatch.end();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(Color.WHITE);
-		shapeRen.rect(x, y, getWidth()/1.5f, 30*Gdx.graphics.getHeight()/1080f);
+		float width = getWidth() / 18f;
+		float height = getHeight() * 15f / 1080f;
+		shapeRen.rect(x - width / 2, y, width, height);
 		shapeRen.setColor(ink > 0.6  ? Color.PURPLE : ink > 0.3 ? Color.ORANGE : Color.RED);
-		shapeRen.rect(x + 1, y + 1, getWidth()/1.5f*ink-2, 30*Gdx.graphics.getHeight()/1080f-2);
+		shapeRen.rect(x - width / 2 + 1, y + 1, width * ink - 2, height - 2);
 		shapeRen.end();
 		spriteBatch.begin();
 	}
