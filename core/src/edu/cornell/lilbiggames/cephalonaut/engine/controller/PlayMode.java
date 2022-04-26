@@ -24,10 +24,6 @@ import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
-
-import javax.management.Query;
-import java.lang.invoke.StringConcatFactory;
-import java.util.Iterator;
 import java.util.Map;
 
 /** Game mode for playing a level */
