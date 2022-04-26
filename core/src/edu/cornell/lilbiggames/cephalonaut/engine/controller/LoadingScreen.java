@@ -15,10 +15,12 @@ public class LoadingScreen extends MenuMode implements Screen {
     private ScreenListener listener;
 
 
-    private Texture loadingAnimation;
     private Texture background;
-    private FilmStrip filmStrip;
-    private int frame;
+
+    private final int NUM_FRAMES = 42;
+    private final int FILM_STRIP_SIZE = 15;
+    private FilmStrip[] filmStrips;
+    private float frame;
     private float loadingTime;
     private float totalLoadingTime;
     /**
@@ -41,13 +43,15 @@ public class LoadingScreen extends MenuMode implements Screen {
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
 
-        loadingAnimation = assets.getEntry("loadingAnimation",Texture.class);
-        System.out.println(loadingAnimation);
-        filmStrip = new FilmStrip(loadingAnimation, 1, 15, 15,
-        0, 0, loadingAnimation.getWidth(), loadingAnimation.getHeight());
+        filmStrips = new FilmStrip[NUM_FRAMES/FILM_STRIP_SIZE + 1];
+        for(int i = 0; i <= NUM_FRAMES/FILM_STRIP_SIZE; i++) {
+            Texture loadingAnimation = assets.getEntry("loadingAnimation"+(i+1), Texture.class);
+            filmStrips[i] = new FilmStrip(loadingAnimation, 1, 15, 15,
+                    0, 0, loadingAnimation.getWidth(), loadingAnimation.getHeight());
+        }
 
         frame = 0;
-        filmStrip.setFrame(0);
+        filmStrips[0].setFrame(0);
     }
 
     public void setLoadingTime(float time){
@@ -61,9 +65,13 @@ public class LoadingScreen extends MenuMode implements Screen {
             listener.exitScreen(this,MenuMode.EXIT_LOADING_CODE);
         }
         loadingTime -= 1;
-        frame = frame+1;
+        frame = (frame+delta*10f)%NUM_FRAMES;
 
-        filmStrip.setFrame((int)(frame/5)%15);
+        int currentFilmStripId = (int)(frame/FILM_STRIP_SIZE);
+
+        FilmStrip filmStrip = filmStrips[currentFilmStripId];
+
+        filmStrip.setFrame((int)frame - (int)(frame/FILM_STRIP_SIZE)*FILM_STRIP_SIZE);
 
         canvas.clear();
         canvas.begin();

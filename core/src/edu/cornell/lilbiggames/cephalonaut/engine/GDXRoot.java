@@ -154,7 +154,6 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void selectLevel(){
 		String levelName = mainMenu.getCurLevel();
 		int curLevel = mainMenu.getCurLevelNumber();
-		System.out.println(mainMenuNestedMode.getNumCompletedCheckpoints());
 		String checkpointName = "checkpoint_" + mainMenuNestedMode.getNumCompletedCheckpoints();
 		playMode = new PlayMode(this, levelLoader, levelName, checkpointName, keyBindings, dialogueMode);
 		playMode.gatherAssets(directory);
