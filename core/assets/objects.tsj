@@ -9,7 +9,7 @@
  "name":"objects",
  "spacing":0,
  "tilecount":11,
- "tiledversion":"1.8.2",
+ "tiledversion":"1.8.4",
  "tileheight":66,
  "tiles":[
         {
@@ -615,6 +615,11 @@
                  "name":"boostPadAngle",
                  "type":"float",
                  "value":-90
+                }, 
+                {
+                 "name":"boostPadFactor",
+                 "type":"float",
+                 "value":8
                 }]
         }, 
         {
@@ -688,7 +693,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {

@@ -14,10 +14,7 @@ import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEGlassBarrier;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEStart;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETrigger;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LETriggerable;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
@@ -369,6 +366,10 @@ public class PlayMode extends WorldController implements Screen {
 
         for (GameObject obj : objects) {
             obj.draw(canvas);
+            if(obj instanceof LEBlackHole) {
+                canvas.drawBlackHoleOutline(obj.getX() * scale.x, obj.getY() * scale.y,
+                        ((LEBlackHole) obj).getBlackHoleRange() * scale.x);
+            }
         }
 
         selector.draw(canvas);

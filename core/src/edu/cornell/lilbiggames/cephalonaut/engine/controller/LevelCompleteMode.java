@@ -64,7 +64,7 @@ public class LevelCompleteMode extends MenuMode {
         displayFont = assets.getEntry("gothamo", BitmapFont.class);
 
         frame = 0;
-        starScoring = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class),1,19);
+        starScoring = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class),1,20);
         starScoring.setFrame(0);
         starIcon = assets.getEntry("ui:star", Texture.class);
 
@@ -100,6 +100,10 @@ public class LevelCompleteMode extends MenuMode {
         this.timeString = timeString;
     }
 
+    public void resetFrame() {
+        starScoring.setFrame(0);
+    }
+
     private void update(float delta){
         SoundController.killAllSound();
         inputController = InputController.getInstance();
@@ -119,7 +123,10 @@ public class LevelCompleteMode extends MenuMode {
         frame += delta * 10f;
         if (frame > 1) {
             frame--;
-            starScoring.setFrame((starScoring.getFrame() + 1) % starScoring.getSize());
+            if (starScoring.getFrame() == starScoring.getSize() - 1) {
+                return;
+            }
+            starScoring.setFrame(starScoring.getFrame() + 1);
         }
     }
 

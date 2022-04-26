@@ -90,168 +90,6 @@
                  "y":895.706527602949
                 }, 
                 {
-                 "gid":5,
-                 "height":36.0347,
-                 "id":8,
-                 "name":"boost pad",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "tint":"#ffffaa21",
-                             "type":"Boost Pad"
-                            }
-                        }, 
-                        {
-                         "name":"boostPadAngle",
-                         "type":"float",
-                         "value":45
-                        }, 
-                        {
-                         "name":"boostPadFactor",
-                         "type":"float",
-                         "value":6
-                        }],
-                 "rotation":315,
-                 "type":"",
-                 "visible":true,
-                 "width":36.0347,
-                 "x":66.4998231702931,
-                 "y":147.420520886531
-                }, 
-                {
-                 "gid":65,
-                 "height":2,
-                 "id":9,
-                 "name":"glass barrier",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "restitution":0.3,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"string",
-                         "value":"10"
-                        }],
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":78.2757509081101,
-                 "x":471.561639021759,
-                 "y":266.138004954944
-                }, 
-                {
-                 "gid":5,
-                 "height":36.0347,
-                 "id":11,
-                 "name":"boost pad",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "tint":"#ffffaa21",
-                             "type":"Boost Pad"
-                            }
-                        }, 
-                        {
-                         "name":"boostPadAngle",
-                         "type":"float",
-                         "value":45
-                        }, 
-                        {
-                         "name":"boostPadFactor",
-                         "type":"float",
-                         "value":6
-                        }],
-                 "rotation":135,
-                 "type":"",
-                 "visible":true,
-                 "width":36.0347,
-                 "x":590.189045295048,
-                 "y":275.296600929488
-                }, 
-                {
-                 "gid":2,
-                 "height":16,
-                 "id":13,
-                 "name":"refill",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "isSensor":true,
-                             "restitution":0,
-                             "tint":"#ffc665ff",
-                             "type":"Refill"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":393.80642949929,
-                 "y":887.322623788727
-                }, 
-                {
-                 "gid":2,
-                 "height":16,
-                 "id":14,
-                 "name":"refill",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "isSensor":true,
-                             "restitution":0,
-                             "tint":"#ffc665ff",
-                             "type":"Refill"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":618.186616835781,
-                 "y":887.522388059702
-                }, 
-                {
-                 "gid":131,
-                 "height":66,
-                 "id":15,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":54,
-                 "x":863.127674878619,
-                 "y":905.145297608344
-                }, 
-                {
                  "gid":135,
                  "height":32,
                  "id":16,
@@ -404,236 +242,6 @@
                  "width":16,
                  "x":782.43329043329,
                  "y":176.065208065208
-                }, 
-                {
-                 "gid":5,
-                 "height":36.0347,
-                 "id":36,
-                 "name":"boost pad",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "tint":"#ffffaa21",
-                             "type":"Boost Pad"
-                            }
-                        }, 
-                        {
-                         "name":"boostPadAngle",
-                         "type":"float",
-                         "value":45
-                        }, 
-                        {
-                         "name":"boostPadFactor",
-                         "type":"float",
-                         "value":3
-                        }],
-                 "rotation":315,
-                 "type":"",
-                 "visible":true,
-                 "width":36.0347,
-                 "x":189.774857792208,
-                 "y":901.063569080919
-                }, 
-                {
-                 "gid":5,
-                 "height":36.0347,
-                 "id":37,
-                 "name":"boost pad",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "tint":"#ffffaa21",
-                             "type":"Boost Pad"
-                            }
-                        }, 
-                        {
-                         "name":"boostPadAngle",
-                         "type":"float",
-                         "value":45
-                        }, 
-                        {
-                         "name":"boostPadFactor",
-                         "type":"float",
-                         "value":3
-                        }],
-                 "rotation":315,
-                 "type":"",
-                 "visible":true,
-                 "width":36.0347,
-                 "x":303.660971678322,
-                 "y":903.061571078921
-                }, 
-                {
-                 "gid":5,
-                 "height":36.0347,
-                 "id":38,
-                 "name":"boost pad",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "tint":"#ffffaa21",
-                             "type":"Boost Pad"
-                            }
-                        }, 
-                        {
-                         "name":"boostPadAngle",
-                         "type":"float",
-                         "value":45
-                        }, 
-                        {
-                         "name":"boostPadFactor",
-                         "type":"float",
-                         "value":3
-                        }],
-                 "rotation":315,
-                 "type":"",
-                 "visible":true,
-                 "width":36.0347,
-                 "x":417.547085564436,
-                 "y":907.057575074925
-                }, 
-                {
-                 "gid":5,
-                 "height":36.0347,
-                 "id":39,
-                 "name":"boost pad",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "tint":"#ffffaa21",
-                             "type":"Boost Pad"
-                            }
-                        }, 
-                        {
-                         "name":"boostPadAngle",
-                         "type":"float",
-                         "value":45
-                        }, 
-                        {
-                         "name":"boostPadFactor",
-                         "type":"float",
-                         "value":3
-                        }],
-                 "rotation":315,
-                 "type":"",
-                 "visible":true,
-                 "width":36.0347,
-                 "x":527.437195454545,
-                 "y":903.061571078921
-                }, 
-                {
-                 "gid":5,
-                 "height":36.0347,
-                 "id":40,
-                 "name":"boost pad",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "tint":"#ffffaa21",
-                             "type":"Boost Pad"
-                            }
-                        }, 
-                        {
-                         "name":"boostPadAngle",
-                         "type":"float",
-                         "value":45
-                        }, 
-                        {
-                         "name":"boostPadFactor",
-                         "type":"float",
-                         "value":3
-                        }],
-                 "rotation":315,
-                 "type":"",
-                 "visible":true,
-                 "width":36.0347,
-                 "x":645.319313336663,
-                 "y":905.059573076923
-                }, 
-                {
-                 "gid":65,
-                 "height":2,
-                 "id":46,
-                 "name":"glass barrier",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "restitution":0.3,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"string",
-                         "value":"10"
-                        }],
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":78.2758,
-                 "x":472.350611488512,
-                 "y":406.592407592408
-                }, 
-                {
-                 "gid":65,
-                 "height":2,
-                 "id":47,
-                 "name":"glass barrier",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "restitution":0.3,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"string",
-                         "value":"10"
-                        }],
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":78.2758,
-                 "x":231.516363736264,
-                 "y":503.886083416584
                 }, 
                 {
                  "gid":135,
@@ -834,66 +442,6 @@
                  "y":896.087837162837
                 }, 
                 {
-                 "gid":65,
-                 "height":2,
-                 "id":57,
-                 "name":"glass barrier",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "restitution":0.3,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"string",
-                         "value":"10"
-                        }],
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":78.2758,
-                 "x":728.094867232767,
-                 "y":504.494505494506
-                }, 
-                {
-                 "gid":65,
-                 "height":2,
-                 "id":58,
-                 "name":"glass barrier",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "restitution":0.3,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"string",
-                         "value":"10"
-                        }],
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":78.2758,
-                 "x":730.092869230769,
-                 "y":648.350649350649
-                }, 
-                {
                  "gid":17,
                  "height":16,
                  "id":59,
@@ -1019,74 +567,6 @@
                  "y":622.054367382617
                 }, 
                 {
-                 "gid":5,
-                 "height":36.0347,
-                 "id":64,
-                 "name":"boost pad",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "tint":"#ffffaa21",
-                             "type":"Boost Pad"
-                            }
-                        }, 
-                        {
-                         "name":"boostPadAngle",
-                         "type":"float",
-                         "value":45
-                        }, 
-                        {
-                         "name":"boostPadFactor",
-                         "type":"float",
-                         "value":6
-                        }],
-                 "rotation":135,
-                 "type":"",
-                 "visible":true,
-                 "width":36.0347,
-                 "x":827.137495154845,
-                 "y":523.441191458541
-                }, 
-                {
-                 "gid":5,
-                 "height":36.0347,
-                 "id":65,
-                 "name":"boost pad",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "tint":"#ffffaa21",
-                             "type":"Boost Pad"
-                            }
-                        }, 
-                        {
-                         "name":"boostPadAngle",
-                         "type":"float",
-                         "value":45
-                        }, 
-                        {
-                         "name":"boostPadFactor",
-                         "type":"float",
-                         "value":6
-                        }],
-                 "rotation":135,
-                 "type":"",
-                 "visible":true,
-                 "width":36.0347,
-                 "x":827.137495154845,
-                 "y":669.295337312687
-                }, 
-                {
                  "gid":135,
                  "height":32,
                  "id":66,
@@ -1116,10 +596,10 @@
                  "y":895.088911088911
                 }, 
                 {
-                 "gid":65,
-                 "height":2,
-                 "id":67,
-                 "name":"glass barrier",
+                 "gid":253,
+                 "height":78.7685770846409,
+                 "id":72,
+                 "name":"",
                  "properties":[
                         {
                          "name":"body",
@@ -1127,91 +607,437 @@
                          "type":"class",
                          "value":
                             {
-                             "canGrappleOn":false,
-                             "restitution":0.3,
-                             "tint":"#ff93bde5",
                              "type":"Glass Barrier"
                             }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":722.220192631471,
+                 "y":706.666501766304
+                }, 
+                {
+                 "gid":253,
+                 "height":88.9081393752112,
+                 "id":74,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":722.529670223553,
+                 "y":581.058942721259
+                }, 
+                {
+                 "gid":253,
+                 "height":78.7686,
+                 "id":75,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":225.444497379705,
+                 "y":710.377491329204
+                }, 
+                {
+                 "gid":253,
+                 "height":78.7686,
+                 "id":76,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":226.040019056694,
+                 "y":573.407505621725
+                }, 
+                {
+                 "gid":253,
+                 "height":78.7686,
+                 "id":77,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":466.391267842149,
+                 "y":334.251300335852
+                }, 
+                {
+                 "gid":253,
+                 "height":78.7686,
+                 "id":78,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":465.791531726041,
+                 "y":469.791662576466
+                }, 
+                {
+                 "gid":141,
+                 "height":24,
+                 "id":80,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":0
                         }, 
                         {
-                         "name":"glassBarrierHardness",
-                         "type":"string",
-                         "value":"10"
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":4
                         }],
                  "rotation":90,
                  "type":"",
                  "visible":true,
-                 "width":78.2758,
-                 "x":230.59236973027,
-                 "y":646.352647352647
+                 "width":32,
+                 "x":186.111071128703,
+                 "y":863.614729519012
                 }, 
                 {
-                 "gid":5,
-                 "height":36.0347,
-                 "id":68,
-                 "name":"boost pad",
+                 "gid":141,
+                 "height":24,
+                 "id":81,
+                 "name":"",
                  "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "tint":"#ffffaa21",
-                             "type":"Boost Pad"
-                            }
-                        }, 
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":45
+                         "value":0
                         }, 
                         {
                          "name":"boostPadFactor",
                          "type":"float",
-                         "value":6
+                         "value":4
                         }],
-                 "rotation":135,
+                 "rotation":90,
                  "type":"",
                  "visible":true,
-                 "width":36.0347,
-                 "x":585.379253396604,
-                 "y":429.535097552448
+                 "width":32,
+                 "x":292.264363679981,
+                 "y":860.016312822358
                 }, 
                 {
-                 "gid":5,
-                 "height":36.0347,
-                 "id":69,
-                 "name":"boost pad",
+                 "gid":141,
+                 "height":24,
+                 "id":82,
+                 "name":"",
                  "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "tint":"#ffffaa21",
-                             "type":"Boost Pad"
-                            }
-                        }, 
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":45
+                         "value":0
                         }, 
                         {
                          "name":"boostPadFactor",
                          "type":"float",
-                         "value":6
+                         "value":4
                         }],
-                 "rotation":135,
+                 "rotation":90,
                  "type":"",
                  "visible":true,
-                 "width":36.0347,
-                 "x":713.251381268731,
-                 "y":353.611021628372
+                 "width":32,
+                 "x":417.609211946743,
+                 "y":864.214465635121
+                }, 
+                {
+                 "gid":141,
+                 "height":24,
+                 "id":83,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":0
+                        }, 
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":4
+                        }],
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":519.564351685258,
+                 "y":863.614729519012
+                }, 
+                {
+                 "gid":141,
+                 "height":24,
+                 "id":84,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":0
+                        }, 
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":4
+                        }],
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":644.309463835912,
+                 "y":863.614729519012
+                }, 
+                {
+                 "gid":141,
+                 "height":24,
+                 "id":85,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":0
+                        }, 
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":4
+                        }],
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":60.3775231860338,
+                 "y":110.749590834697
+                }, 
+                {
+                 "gid":141,
+                 "height":24,
+                 "id":86,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":180
+                        }, 
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":4
+                        }],
+                 "rotation":270,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":719.588288779778,
+                 "y":382.617203127841
+                }, 
+                {
+                 "gid":141,
+                 "height":24,
+                 "id":87,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":180
+                        }, 
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":4
+                        }],
+                 "rotation":270,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":593.20167303146,
+                 "y":455.357701400255
+                }, 
+                {
+                 "gid":141,
+                 "height":24,
+                 "id":88,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":180
+                        }, 
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":4
+                        }],
+                 "rotation":270,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":591.38316057465,
+                 "y":293.510092744135
+                }, 
+                {
+                 "gid":141,
+                 "height":24,
+                 "id":89,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":180
+                        }, 
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":4
+                        }],
+                 "rotation":270,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":831.426804873613,
+                 "y":541.737043098745
+                }, 
+                {
+                 "gid":141,
+                 "height":24,
+                 "id":90,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":180
+                        }, 
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":4
+                        }],
+                 "rotation":270,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":830.517548645208,
+                 "y":691.764320785597
+                }, 
+                {
+                 "gid":141,
+                 "height":24,
+                 "id":91,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":180
+                        }, 
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":4
+                        }],
+                 "rotation":270,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":941.860363862541,
+                 "y":620.872026123464
+                }, 
+                {
+                 "gid":138,
+                 "height":24,
+                 "id":92,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":387.626807650443,
+                 "y":893.66692582802
+                }, 
+                {
+                 "gid":138,
+                 "height":24,
+                 "id":94,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":611.542217384544,
+                 "y":892.991447675323
+                }, 
+                {
+                 "gid":137,
+                 "height":44,
+                 "id":95,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":59,
+                 "x":876.95340811044,
+                 "y":902.06902502157
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1220,7 +1046,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":70,
+ "nextobjectid":96,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
@@ -1233,6 +1059,10 @@
         {
          "firstgid":129,
          "source":"objects.tsj"
+        }, 
+        {
+         "firstgid":143,
+         "source":"space-tiles.tsj"
         }],
  "tilewidth":16,
  "type":"map",
