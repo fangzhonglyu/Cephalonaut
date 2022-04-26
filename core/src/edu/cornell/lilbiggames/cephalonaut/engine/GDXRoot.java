@@ -54,6 +54,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private StartScreenMode startScreenMode;
 	private SettingsMode settings;
 	private LevelLoader levelLoader;
+	private DialogueMode dialogueMode;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -83,6 +84,10 @@ public class GDXRoot extends Game implements ScreenListener {
 		keyBindings.put("rotate-clockwise", Input.Keys.valueOf(bindings.getString("rotate-clockwise","D")));
 	}
 
+	private void initializeDialogue() {
+		dialogueMode = new DialogueMode(canvas, directory);
+	}
+
 	/** 
 	 * Called when the Application is first created.
 	 * 
@@ -100,6 +105,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		initializeCheckpointsMap();
 		initializeKeybindings();
+		initializeDialogue();
 
 		// Initialize the game world
 		mainMenu = new MainMenuMode(directory, canvas, this);
@@ -137,7 +143,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		String levelName = mainMenu.getCurLevel();
 		int curLevel = mainMenu.getCurLevelNumber();
 		String checkpointName = "checkpoint_" + numCheckpointsCompleted.get(curLevel);
-		playMode = new PlayMode(this, levelLoader, levelName, checkpointName, keyBindings);
+		playMode = new PlayMode(this, levelLoader, levelName, checkpointName, keyBindings, dialogueMode);
 		playMode.gatherAssets(directory);
 		playMode.setCanvas(canvas);
 		playMode.reset();
@@ -178,8 +184,28 @@ public class GDXRoot extends Game implements ScreenListener {
 	 * @param height The new height in pixels
 	 */
 	public void resize(int width, int height) {
+
+//		int new_width = Math.max(1280, width);
+//		int new_height = Math.max(720, height);
+//		if(width > 1280 || height > 720) {
+//		if(new_width/1280 > new_height / 720) {
+//
+//		}
+//		if(width > 1280) {
+//			super.resize(new_width, new_height);
+//			canvas.resize();
+//		}
+		super.resize(width, height);
 		canvas.resize();
-		super.resize(width,height);
+//		canvas.resize();
+//		if(new_height == height && new_width == width) {
+//			canvas.resize();
+//		}
+//		System.out.println(new_width);
+//		System.out.println(new_height);
+//		}
+//		super.resize(width, height);
+//		canvas.resize();
 	}
 
 	@Override

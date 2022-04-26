@@ -57,6 +57,12 @@ public class LevelController implements ContactListener {
         if (cephalonaut.getShouldTeleport()) {
             teleport(cephalonautController);
         }
+        if (!cephalonaut.isAlive()) {
+            GrappleModel grapple = cephalonaut.getGrapple();
+            if (grapple.isOut()) {
+                cephalonautController.removeGrapple(grapple);
+            }
+        }
 
 //        if (object.getClass() == LevelElement.class) {
 //            switch (((LevelElement) object).getElement()) {
@@ -133,6 +139,10 @@ public class LevelController implements ContactListener {
         }
     }
 
+    private void openDialogue(int part) {
+        playMode.nextDialogue(part);
+    }
+
     private GameObject getOtherBody(Contact contact, GameObject object) {
         Body body1 = contact.getFixtureA().getBody();
         Body body2 = contact.getFixtureB().getBody();
@@ -169,6 +179,14 @@ public class LevelController implements ContactListener {
                 }
             }
 
+            if (contactObject instanceof  LEDialogueTrigger) {
+                LEDialogueTrigger dialogueTrigger = (LEDialogueTrigger) contactObject;
+                if(dialogueTrigger.isActive()) {
+                    openDialogue(dialogueTrigger.getTarget());
+                    dialogueTrigger.deactivate();
+                }
+            }
+
             if (contactObject instanceof LEBlackHole) {
                 cephalonaut.setAlive(false);
             }
@@ -181,8 +199,8 @@ public class LevelController implements ContactListener {
 
             if (contactObject instanceof LEWormHole) {
                 LEWormHole hole1 = (LEWormHole) contactObject;
-                LEWormHole hole2 = (LEWormHole) playMode.getObject(hole1.getTarget());
-                if (hole1.getCooldown() == 0 && hole2.getCooldown() == 0) {
+                if (hole1.getCooldown() == 0 && hole1.getTarget() != -1) {
+                    LEWormHole hole2 = (LEWormHole) playMode.getObject(hole1.getTarget());
                     setTeleport(hole2);
                     hole1.setCooldown(hole1.getWormHoleCooldown());
                     hole2.setCooldown(hole2.getWormHoleCooldown());
