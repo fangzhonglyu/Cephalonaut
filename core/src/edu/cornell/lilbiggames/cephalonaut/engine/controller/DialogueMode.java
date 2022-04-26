@@ -33,8 +33,6 @@ public class DialogueMode {
     /** Reference to the game canvas */
     protected GameCanvas canvas;
 
-    private InputController inputController;
-
     private Vector2 scale;
 
     private ArrayList<ArrayList<String>> dialogue;
@@ -47,9 +45,9 @@ public class DialogueMode {
 
     private final AssetDirectory directory;
 
-    final private int X_OFFSET = 280;
+    final private int X_OFFSET = 260;
     final private int Y_OFFSET = 25;
-    final private float ARROW_WIDTH = 7.5f;
+    final private float ARROW_WIDTH = 5f;
     final private float KEY_WIDTH = 5f;
 
     private float frame;
@@ -64,7 +62,7 @@ public class DialogueMode {
         this.canvas  = canvas;
         this.directory = directory;
         this.scale = new Vector2(1,1);
-        this.nextIcon = directory.getEntry("arrow", Texture.class);
+        this.nextIcon = directory.getEntry("white-arrow", Texture.class);
 
         this.W_KEY = directory.getEntry("W-key", Texture.class);
         this.AD_KEY = directory.getEntry("AD-key", Texture.class);
@@ -86,7 +84,6 @@ public class DialogueMode {
         frame = 0;
 
         this.displayFont = directory.getEntry("retro", BitmapFont.class);
-        this.inputController = InputController.getInstance();
     }
 
     public void load(String levelName, String checkpointName) {
@@ -222,7 +219,7 @@ public class DialogueMode {
         canvas.draw(nextIcon, Color.WHITE,
                 nextIcon.getWidth(), nextIcon.getHeight() / 2f,
                 cx + canvas.getWidth() / 2f - X_OFFSET*scale.x, cy - canvas.getHeight() / 2f + Y_OFFSET*scale.y,
-                (float)Math.PI / -2f, scale.x * ARROW_WIDTH, scale.y * ARROW_WIDTH);
+                (float)Math.PI, scale.x * ARROW_WIDTH, scale.y * ARROW_WIDTH);
     }
 }
 

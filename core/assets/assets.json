@@ -41,7 +41,8 @@
     "W-key": "UI-W-key.png",
     "LEFT-click": "UI-left-click.png",
     "RIGHT-click": "UI-right-click.png",
-    "SPACE-key": "UI-space-key.png"
+    "SPACE-key": "UI-space-key.png",
+    "white-arrow": "UI-arrow-white.png"
   },
   "jsons": {
     "dialogue": "dialogue.json",
