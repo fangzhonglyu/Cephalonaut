@@ -36,7 +36,8 @@ public class PauseMode extends MenuMode {
 
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
-        displayFont = assets.getEntry("gothamo",BitmapFont.class);
+        displayFont = assets.getEntry("retro", BitmapFont.class);
+
         selectedOption = 0; //default is resume
     }
 

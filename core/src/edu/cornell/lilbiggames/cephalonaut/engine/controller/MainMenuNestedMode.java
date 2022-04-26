@@ -60,7 +60,7 @@ public class MainMenuNestedMode extends MenuMode {
         this.listener = listener;
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
-        displayFont = assets.getEntry("gothamo",BitmapFont.class);
+        displayFont = assets.getEntry("retro", BitmapFont.class);
         this.completedCheckpoints = completedCheckpoints;
         this.checkpoints = checkpoints;
 

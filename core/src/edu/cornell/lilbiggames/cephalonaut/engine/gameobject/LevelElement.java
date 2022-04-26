@@ -134,7 +134,7 @@ public class LevelElement extends SimpleObstacle {
 
     public static void gatherAssets(AssetDirectory directory) {
         // Allocate the tiles
-//		displayFont = directory.getEntry( "shared:gothamo" ,BitmapFont.class);
+//		displayFont = directory.getEntry( "retro", BitmapFont.class);
     }
 
     public Element getElement() {

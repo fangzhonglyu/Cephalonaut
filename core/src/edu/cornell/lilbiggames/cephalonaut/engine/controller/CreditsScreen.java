@@ -43,7 +43,7 @@ public class CreditsScreen extends MenuMode implements Screen {
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
-        this.displayFont = assets.getEntry("gothamo", BitmapFont.class);
+        this.displayFont = assets.getEntry("retro", BitmapFont.class);
 
         // TODO: have this actually parse from a json
         credits = new Credit[8];
