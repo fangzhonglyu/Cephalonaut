@@ -275,9 +275,13 @@ public class LevelLoader {
         private final Queue<GameObject> objects;
         private final Map<Integer, LevelElement> idToObject;
 
-        public LevelDef() {
+        final public int width, height;
+
+        public LevelDef(int width, int height) {
             objects = new Queue<>();
             idToObject = new HashMap<>();
+            this.width = width;
+            this.height = height;
         }
 
         public void addObject(GameObject obj) {
@@ -298,7 +302,7 @@ public class LevelLoader {
         }
     }
 
-    class Pair {
+    static class Pair {
         public TiledFile tiledFile;
         public int firstgid;
         public Pair(TiledFile tiledFile, int firstgid) {
@@ -330,14 +334,15 @@ public class LevelLoader {
     }
 
     public LevelDef loadLevel(String levelName, String checkpointName) {
-        LevelDef levelDef = new LevelDef();
-
         JsonValue level = assetDirectory.getEntry(levelName+":"+checkpointName, JsonValue.class);
         LevelElement.Def levelElementDef = new LevelElement.Def();
 
+        int levelWidth = level.getInt("width");
         int levelHeight = level.getInt("height");
         int tileSize = level.getInt("tilewidth");
         assert tileSize == level.getInt("tileheight");
+
+        LevelDef levelDef = new LevelDef(levelWidth, levelHeight);
 
         for (JsonValue layer : level.get("layers")) {
             String type = layer.getString("type");

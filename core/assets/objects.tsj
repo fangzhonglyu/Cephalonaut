@@ -403,6 +403,7 @@
                  "type":"class",
                  "value":
                     {
+                     "canGrappleOn":false,
                      "type":"Finish"
                     }
                 }],
@@ -605,8 +606,15 @@
                  "type":"class",
                  "value":
                     {
+                     "canGrappleOn":false,
+                     "isSensor":true,
                      "type":"Boost Pad"
                     }
+                }, 
+                {
+                 "name":"boostPadAngle",
+                 "type":"float",
+                 "value":-90
                 }]
         }, 
         {
