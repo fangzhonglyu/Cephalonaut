@@ -335,14 +335,14 @@ public class CephalonautModel extends OctopusObstacle {
 		grapple.draw(canvas, getPosition(), (float) Math.toDegrees(getAngle()));
 
 		//animation
-
 		float ox = 0.5f * filmstrip.getRegionWidth();
 		float oy = 0.75f * filmstrip.getRegionHeight();
 		canvas.draw(filmstrip, Color.WHITE, ox, oy,
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 0.052f* drawScale.x * deathScale, 0.052f*drawScale.y * deathScale);
+		canvas.drawSimpleFuelBar(ink / max_ink, getX() * drawScale.x, (getY() - getHeight() * 1.0f) * drawScale.y);
 	}
-	
+
 	/**
 	 * Draws the outline of the physics body.
 	 *
