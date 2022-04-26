@@ -113,6 +113,7 @@ public class PlayMode extends WorldController implements Screen {
     public void nextDialogue(int part) {
         dialogueMode.nextDialogue(part);
         paused = true;
+        dialogueFade = 0;
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {
@@ -363,7 +364,7 @@ public class PlayMode extends WorldController implements Screen {
 
         canvas.drawSimpleFuelBar(cephalonaut.getInk());
         canvas.drawFade(fadeInCount);
-        
+
         if (!cephalonaut.isAlive()) {
             canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
         }
