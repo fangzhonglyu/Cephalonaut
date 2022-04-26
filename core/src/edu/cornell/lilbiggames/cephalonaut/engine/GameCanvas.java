@@ -770,6 +770,19 @@ public class GameCanvas {
 		drawSimpleFuelBar(ink, x, y);
 	}
 
+	public void drawBlackHoleOutline(float x, float y, float radius){
+		spriteBatch.end();
+		shapeRen.begin(ShapeRenderer.ShapeType.Line);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glLineWidth(4f);
+		shapeRen.setColor(Color.valueOf("ff7c2160"));
+		shapeRen.circle(x, y, radius, 200);
+		shapeRen.end();
+		spriteBatch.begin();
+	}
+
+
 	public void drawSlider(Slider slider){
 		float x = slider.getPosition().x;
 		float y = slider.getPosition().y;
@@ -1120,6 +1133,18 @@ public class GameCanvas {
 		GlyphLayout layout = new GlyphLayout(font,text);
 		font.draw(spriteBatch, layout, x, y);
     }
+
+	/**
+	 * Draws text in top left of the screen.
+	 *
+	 * @param text The string to draw
+	 * @param font The font to use
+	 */
+	public void drawTextTopLeft( String text, BitmapFont font) {
+		float x = getCameraX() - getWidth() * 0.49f;
+		float y = getCameraY() + getHeight() * 0.47f;
+		drawText(text, font, x, y);
+	}
 
     /**
      * Draws text centered on the screen.
