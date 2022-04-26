@@ -8,8 +8,8 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":12,
- "tiledversion":"1.8.2",
+ "tilecount":11,
+ "tiledversion":"1.8.4",
  "tileheight":66,
  "tiles":[
         {
@@ -615,6 +615,11 @@
                  "name":"boostPadAngle",
                  "type":"float",
                  "value":-90
+                }, 
+                {
+                 "name":"boostPadFactor",
+                 "type":"float",
+                 "value":8
                 }]
         }, 
         {
@@ -713,122 +718,6 @@
                      "width":0,
                      "x":7.63636363636364,
                      "y":0.454545454545455
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            },
-         "properties":[
-                {
-                 "name":"body",
-                 "propertytype":"GameObject",
-                 "type":"class",
-                 "value":
-                    {
-                     "canGrappleOn":false,
-                     "type":"Spike"
-                    }
-                }]
-        }, 
-        {
-         "id":15,
-         "image":"GO-spikeball.png",
-         "imageheight":32,
-         "imagewidth":32,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "id":2,
-             "name":"",
-             "objects":[
-                    {
-                     "height":0,
-                     "id":1,
-                     "name":"",
-                     "polygon":[
-                            {
-                             "x":0,
-                             "y":0
-                            }, 
-                            {
-                             "x":-2.72727272727273,
-                             "y":7.54545454545455
-                            }, 
-                            {
-                             "x":-10.3636363636364,
-                             "y":3.45454545454545
-                            }, 
-                            {
-                             "x":-6.54545454545454,
-                             "y":12.6363636363636
-                            }, 
-                            {
-                             "x":-14.2727272727273,
-                             "y":15
-                            }, 
-                            {
-                             "x":-6.90909090909091,
-                             "y":18.9090909090909
-                            }, 
-                            {
-                             "x":-9.90909090909091,
-                             "y":25.0909090909091
-                            }, 
-                            {
-                             "x":-2.18181818181818,
-                             "y":22.6363636363636
-                            }, 
-                            {
-                             "x":0.636363636363637,
-                             "y":29.6363636363636
-                            }, 
-                            {
-                             "x":4.36363636363637,
-                             "y":22.6363636363636
-                            }, 
-                            {
-                             "x":11.2727272727273,
-                             "y":26.3636363636364
-                            }, 
-                            {
-                             "x":8.45454545454546,
-                             "y":18.2727272727273
-                            }, 
-                            {
-                             "x":15.3636363636364,
-                             "y":14.7272727272727
-                            }, 
-                            {
-                             "x":8.27272727272727,
-                             "y":12.7272727272727
-                            }, 
-                            {
-                             "x":11.1818181818182,
-                             "y":4.27272727272727
-                            }, 
-                            {
-                             "x":3.81818181818182,
-                             "y":7.63636363636364
-                            }],
-                     "properties":[
-                            {
-                             "name":"body",
-                             "propertytype":"GameObject",
-                             "type":"class",
-                             "value":
-                                {
-                                 "canGrappleOn":false,
-                                 "type":"Spike"
-                                }
-                            }],
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":0,
-                     "x":14.8181818181818,
-                     "y":1.54545454545455
                     }],
              "opacity":1,
              "type":"objectgroup",
