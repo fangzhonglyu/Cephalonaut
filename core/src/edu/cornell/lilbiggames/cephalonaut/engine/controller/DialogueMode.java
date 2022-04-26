@@ -108,7 +108,7 @@ public class DialogueMode {
                 dialogue.add(part_dialogue);
             }
         } catch (Exception e) {
-            System.out.println("Failed to load dialogue. Check to see there is a dialogue for " + levelName + ":" + checkpointName + ":::" + e);
+            //System.out.println("Failed to load dialogue. Check to see there is a dialogue for " + levelName + ":" + checkpointName + ":::" + e);
         }
     }
 
