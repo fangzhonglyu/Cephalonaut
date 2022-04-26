@@ -162,6 +162,8 @@ public class PlayMode extends WorldController implements Screen {
     public void reset() {
         LevelLoader.LevelDef levelDef = loader.loadLevel(level, checkpoint);
 
+        this.bounds.set(0, 0, levelDef.width, levelDef.height);
+
         Vector2 gravity = new Vector2(world.getGravity());
         cleanupLevel();
 
@@ -258,7 +260,8 @@ public class PlayMode extends WorldController implements Screen {
                 dialogueFade += .05f;
                 return false;
             }
-            canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+//            canvas.setCameraPos(bounds, cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
+
             cephalonaut.setBodyType(BodyDef.BodyType.StaticBody);
             paused  = dialogueMode.update();
 
@@ -326,7 +329,7 @@ public class PlayMode extends WorldController implements Screen {
                 (canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
 
         cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
-        canvas.setCameraPos(MathUtils.roundPositive(cephalonaut.getX()* scale.x), MathUtils.roundPositive(cephalonaut.getY()* scale.y));
+        canvas.setCameraPos(bounds, scale, MathUtils.roundPositive(cephalonaut.getX()* scale.x), MathUtils.roundPositive(cephalonaut.getY()* scale.y));
 
         if (fadeInCount > 0) {
             fadeInCount -= .05f;
@@ -374,20 +377,19 @@ public class PlayMode extends WorldController implements Screen {
         selector.draw(canvas);
         cephalonaut.draw(canvas);
 
-        canvas.drawSimpleFuelBar(cephalonaut.getInk());
-
         int minutes = (timer % 3600) / 60;
         int seconds = timer % 60;
         timeString = String.format("%02d:%02d", minutes, seconds);
 
         canvas.drawTextTopLeft(timeString, displayFont);
         canvas.drawFade(fadeInCount);
+        
         if (!cephalonaut.isAlive()) {
             canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
         }
         if(paused) {
             cephalonaut.setInking(false);
-            dialogueMode.draw(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y, dialogueFade);
+            dialogueMode.draw(canvas.getCameraX(), canvas.getCameraY(),dialogueFade);
         }
 
         canvas.end();

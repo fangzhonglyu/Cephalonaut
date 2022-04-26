@@ -129,6 +129,31 @@ public class GameCanvas {
 		camera.update();
 	}
 
+	public void setCameraPos(Rectangle bounds, Vector2 scale, float x, float y) {
+		float bounds_width = (bounds.width - 0.5f) * scale.x;
+		float bounds_height = (bounds.height - 0.5f) * scale.x;
+		float bounds_x = (bounds.x - 0.5f) * scale.y;
+		float bounds_y = (bounds.y - 0.5f) * scale.y;
+
+
+		if (x + camera.viewportWidth / 2 > bounds_width) {
+			camera.position.x = bounds_width - camera.viewportWidth / 2;
+		} else if (x - camera.viewportWidth / 2 < bounds_x) {
+			camera.position.x = bounds_x + camera.viewportWidth / 2;
+		} else {
+			camera.position.x = x;
+		}
+
+		if (y + camera.viewportHeight / 2 > bounds_height) {
+			camera.position.y = bounds_height - camera.viewportHeight / 2;
+		} else if (y - camera.viewportHeight / 2 < bounds_y) {
+			camera.position.y = bounds_y + camera.viewportHeight / 2;
+		} else {
+			camera.position.y = y;
+		}
+		camera.update();
+	}
+
 	public float getCameraX() {
 		return camera.position.x;
 	}
@@ -726,17 +751,23 @@ public class GameCanvas {
 		spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
 	}
 
-	public void drawSimpleFuelBar(float ink){
-		float x = -getWidth()/3f+getCameraX();
-		float y = -getHeight()*0.47f+getCameraY();
+	public void drawSimpleFuelBar(float ink, float x, float y){
 		spriteBatch.end();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(Color.WHITE);
-		shapeRen.rect(x, y, getWidth()/1.5f, 30*Gdx.graphics.getHeight()/1080f);
+		float width = getWidth() / 18f;
+		float height = getHeight() * 15f / 1080f;
+		shapeRen.rect(x - width / 2, y, width, height);
 		shapeRen.setColor(ink > 0.6  ? Color.PURPLE : ink > 0.3 ? Color.ORANGE : Color.RED);
-		shapeRen.rect(x + 1, y + 1, getWidth()/1.5f*ink-2, 30*Gdx.graphics.getHeight()/1080f-2);
+		shapeRen.rect(x - width / 2 + 1, y + 1, width * ink - 2, height - 2);
 		shapeRen.end();
 		spriteBatch.begin();
+	}
+
+	public void drawSimpleFuelBar(float ink){
+		float x = getWidth()*0.43f+getCameraX();
+		float y = getHeight()*0.47f+getCameraY();
+		drawSimpleFuelBar(ink, x, y);
 	}
 
 	public void drawSlider(Slider slider){
