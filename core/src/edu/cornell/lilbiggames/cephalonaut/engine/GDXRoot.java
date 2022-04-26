@@ -64,6 +64,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private Screen nextScreen;
 	private Screen postLoadingScreen;
 
+	private boolean fakeLoadingAssets;
+
 	/**
 	 * Creates a new game from the configuration settings.
 	 *
@@ -107,7 +109,12 @@ public class GDXRoot extends Game implements ScreenListener {
 		levelLoader = new LevelLoader();
 		directory = levelLoader.getAssetDirectory();
 
+		fakeLoadingAssets = true;
+
 		canvas.resize();
+		loadingScreen = new LoadingScreen(directory, canvas, this,500f);
+		postLoadingScreen = startScreenMode;
+		setScreen(loadingScreen);
 
 		SoundController.gatherSoundAssets(directory);
 
@@ -121,7 +128,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		mainMenu = new MainMenuMode(directory, canvas, this);
 		mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, 5,0, 0, this);
 		startScreenMode = new StartScreenMode(directory, canvas, this);
-		loadingScreen = new LoadingScreen(directory, canvas, this,100f);
+
 		LevelElement.gatherAssets(directory);
 
 		pauseMode = new PauseMode(directory, canvas, this);
@@ -131,7 +138,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		SoundController.setMusicVolume(0.5f);
 		SoundController.startMenuMusic();
-		setScreen(startScreenMode);
+		postLoadingScreen = startScreenMode;
 	}
 
 	private void initializeCheckpointSelect(){

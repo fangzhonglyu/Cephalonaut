@@ -44,9 +44,10 @@ public class LoadingScreen extends MenuMode implements Screen {
         this.bounds = canvas.getSize().cpy();
 
         filmStrips = new FilmStrip[NUM_FRAMES/FILM_STRIP_SIZE + 1];
+        System.out.println(Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*2));
         for(int i = 0; i <= NUM_FRAMES/FILM_STRIP_SIZE; i++) {
             Texture loadingAnimation = assets.getEntry("loadingAnimation"+(i+1), Texture.class);
-            filmStrips[i] = new FilmStrip(loadingAnimation, 1, 15, 15,
+            filmStrips[i] = new FilmStrip(loadingAnimation, 1, Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1), Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1),
                     0, 0, loadingAnimation.getWidth(), loadingAnimation.getHeight());
         }
 
