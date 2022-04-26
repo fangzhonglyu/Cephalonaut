@@ -770,6 +770,19 @@ public class GameCanvas {
 		drawSimpleFuelBar(ink, x, y);
 	}
 
+	public void drawBlackHoleOutline(float x, float y, float radius){
+		spriteBatch.end();
+		shapeRen.begin(ShapeRenderer.ShapeType.Line);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glLineWidth(4f);
+		shapeRen.setColor(Color.valueOf("ff7c2160"));
+		shapeRen.circle(x, y, radius, 200);
+		shapeRen.end();
+		spriteBatch.begin();
+	}
+
+
 	public void drawSlider(Slider slider){
 		float x = slider.getPosition().x;
 		float y = slider.getPosition().y;
