@@ -104,6 +104,10 @@
     "retro": {
       "file": "RetroGame.ttf",
       "size": 64
+    },
+    "cozette": {
+      "file": "CozetteVector.ttf",
+      "size": 64
     }
   }
 }

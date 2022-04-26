@@ -55,14 +55,14 @@ public class MainMenuMode extends MenuMode {
         this.listener = listener;
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
-        displayFont = assets.getEntry("retro",BitmapFont.class);
+        displayFont = assets.getEntry("retro", BitmapFont.class);
 
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.assets = assets;
 
         curLevel = DEFAULT_LEVEL;
-        levelIcon = assets.getEntry("levelicon:level_"+curLevel, Texture.class);
+        levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
 
     }
 
@@ -89,10 +89,10 @@ public class MainMenuMode extends MenuMode {
             levelSelected = true;
         } else if (inputController.isNextPressed()){
             curLevel = (curLevel + 1)%NUM_LEVELS;
-            levelIcon = assets.getEntry("levelicon:level_"+curLevel, Texture.class);
+            levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
         } else if (inputController.isPrevPressed()){
             curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
-            levelIcon = assets.getEntry("levelicon:level_"+curLevel, Texture.class);
+            levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
         } else if (inputController.didExit()){
             listener.exitScreen(this, RETURN_TO_START_CODE);
         }
@@ -151,6 +151,7 @@ public class MainMenuMode extends MenuMode {
                     levelIconWidth / 2f, levelIconHeight / 2f,
                     width / 2f, height / 2f,
                     0, scale.x / 2f, scale.y / 2f);
+
 
         canvas.drawTextCentered("LEVEL: " + curLevel, displayFont, -levelIconHeight / 4f * scale.y - 60f);
 
