@@ -96,7 +96,7 @@ public class SettingsMode extends MenuMode {
 
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
-        displayFont = assets.getEntry("gothamo",BitmapFont.class);
+        displayFont = assets.getEntry("retro", BitmapFont.class);
 
         volumeDown = assets.getEntry("volume-down", Texture.class);
         volumeUp = assets.getEntry("volume-up", Texture.class);
