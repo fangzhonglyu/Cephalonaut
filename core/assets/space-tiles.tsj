@@ -2088,6 +2088,7 @@
         }, 
         {
          "id":64,
+         "probability":0.25,
          "type":"Background"
         }, 
         {
@@ -2970,6 +2971,7 @@
         }, 
         {
          "id":96,
+         "probability":0.100000001490116,
          "type":"Background"
         }, 
         {
