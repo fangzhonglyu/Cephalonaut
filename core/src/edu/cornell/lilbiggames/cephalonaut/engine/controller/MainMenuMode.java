@@ -63,7 +63,6 @@ public class MainMenuMode extends MenuMode {
 
         curLevel = DEFAULT_LEVEL;
         levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
-
     }
 
     @Override
@@ -85,21 +84,20 @@ public class MainMenuMode extends MenuMode {
     private void update(float delta){
         inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
-        if(inputController.isSelectPressed()){
+        if (inputController.isSelectPressed()){
             levelSelected = true;
         } else if (inputController.isNextPressed()){
-            curLevel = (curLevel + 1)%NUM_LEVELS;
-            levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
+            curLevel = (curLevel + 1) % NUM_LEVELS;
         } else if (inputController.isPrevPressed()){
             curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
-            levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
         } else if (inputController.didExit()){
             listener.exitScreen(this, RETURN_TO_START_CODE);
         }
+        levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
     }
 
     public String getCurLevel(){
-        return "level_"+curLevel;
+        return "level_" + curLevel;
     }
 
     public int getCurLevelNumber(){
