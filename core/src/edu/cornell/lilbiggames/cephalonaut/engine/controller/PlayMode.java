@@ -104,7 +104,7 @@ public class PlayMode extends WorldController implements Screen {
         setComplete(false);
         setFailure(false);
 
-        displayFont = this.loader.getAssetDirectory().getEntry("retro",BitmapFont.class);
+        displayFont = this.loader.getAssetDirectory().getEntry("gothamo",BitmapFont.class);
         directionalGrapple = true;
         deathRotationCount = 0;
         fadeInCount = 1;

@@ -60,7 +60,7 @@ public class DialogueMode {
         this.directory = directory;
         this.scale = new Vector2(1,1);
         this.nextIcon = directory.getEntry("nexticon", Texture.class);
-        this.displayFont = directory.getEntry("retro", BitmapFont.class);
+        this.displayFont = directory.getEntry("gothamo", BitmapFont.class);
         this.inputController = InputController.getInstance();
     }
 
