@@ -64,7 +64,7 @@
                         {
                          "name":"dx",
                          "type":"float",
-                         "value":-5
+                         "value":5
                         }, 
                         {
                          "name":"dy",
