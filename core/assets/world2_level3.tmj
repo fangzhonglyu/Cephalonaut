@@ -1061,6 +1061,33 @@
                  "width":16,
                  "x":432,
                  "y":656
+                }, 
+                {
+                 "gid":42,
+                 "height":16,
+                 "id":163,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "type":"Button"
+                            }
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"object",
+                         "value":40
+                        }],
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":160,
+                 "y":592
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1069,7 +1096,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":163,
+ "nextobjectid":164,
  "orientation":"orthogonal",
  "properties":[
         {
