@@ -128,7 +128,7 @@
         {
          "name":"music",
          "type":"int",
-         "value":6
+         "value":1
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
