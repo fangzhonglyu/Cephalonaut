@@ -1,7 +1,6 @@
 {
   "level_0:checkpoint_0": {
-    "part_0": ["hi my name is michael the octopus!", "[W] press W to thrust."],
-    "part_1": ["Well Done!", "[AD] press A to rotate left and D to rotate right."]
+    "part_0": ["hi my name is michael the octopus!", "[W] press W to thrust.", "[AD] press A to rotate left and D to rotate right."]
   },
   "level_0:checkpoint_1": {
     "part_0": ["[LEFT_CLICK] Left click your mouse to grapple!",
