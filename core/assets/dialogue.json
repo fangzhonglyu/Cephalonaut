@@ -7,6 +7,9 @@
       "[RIGHT_CLICK] Right click to release.",
       "[SPACE] You can also press the space bar to release the grapple."]
   },
+  "level_0:checkpoint_2": {
+    "part_0": ["Welcome to the ruins"]
+  },
   "level_0:checkpoint_4": {
     "part_0": ["Welcome to the Black Hole Lab"]
   }
