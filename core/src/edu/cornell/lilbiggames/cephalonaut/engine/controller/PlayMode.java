@@ -175,6 +175,7 @@ public class PlayMode extends WorldController implements Screen {
         prev_music = levelDef.music;
         deathRotationCount = 0;
         cephalonaut.setDeathScale(1);
+        cephalonaut.setHasMoved(false);
         fadeInCount = 1;
         timeCount = 0;
         timer = 0;
@@ -301,10 +302,12 @@ public class PlayMode extends WorldController implements Screen {
         InputController input = InputController.getInstance();
         if(isDialogueMode(dt)) return;
 
-        timeCount += dt;
-        if (timeCount >= 1) {
-            timer += 1;
-            timeCount = 0;
+        if (cephalonaut.getHasMoved()) {
+            timeCount += dt;
+            if (timeCount >= 1) {
+                timer += 1;
+                timeCount = 0;
+            }
         }
 
         if (input.didExit()) {

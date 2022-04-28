@@ -127,6 +127,7 @@
                          "value":
                             {
                              "bodyType":"Kinematic",
+                             "canGrappleOn":true,
                              "type":"Door"
                             }
                         }, 

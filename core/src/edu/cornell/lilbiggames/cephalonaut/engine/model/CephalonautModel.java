@@ -66,6 +66,8 @@ public class CephalonautModel extends OctopusObstacle {
 
 	private float deathScale;
 
+	private boolean hasMoved;
+
 	public boolean isAlive() {
 		return alive;
 	}
@@ -110,6 +112,13 @@ public class CephalonautModel extends OctopusObstacle {
 		teleportLocation = teleportLoc;
 	}
 
+	public void setHasMoved(boolean moved) {
+		hasMoved = moved;
+	}
+
+	public boolean getHasMoved() {
+		return hasMoved;
+	}
 
 	/**
 	 * Sets the amount of ink in the cephalonaut's sac.
