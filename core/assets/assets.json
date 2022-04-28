@@ -98,14 +98,25 @@
     "level_6:checkpoint_4": "levels/level_6/level_4.tmj"
   },
   "music": {
-    "level0": "music/CephalonautLevel7mix1.mp3",
-    "level1": "music/CephalonautLevel1mix1.mp3",
-    "level2": "music/CephalonautLevel9mix1.mp3",
-    "level3": "music/CephalonautLevel3mix1.mp3",
-    "level4": "music/CephalonautLevel4mix1.mp3",
-    "level5": "music/CephalonautLevel5mix1.mp3",
-    "level6": "music/CephalonautLevel6mix1.mp3",
-    "mainMenu": "music/Cephalonautintromusicmix1.mp3"
+    "level0": "music/CephalonautLevel1RoughMix1.mp3",
+    "level1": "music/CephalonautLevel2RoughMix1.mp3",
+    "level2": "music/CephalonautLevel3RoughMix1.mp3",
+    "level3": "music/CephalonautLevel4RoughMix1.mp3",
+    "level4": "music/CephalonautLevel5RoughMix1.mp3",
+    "level5": "music/CephalonautLevel6RoughMix1.mp3",
+    "level6": "music/CephalonautLevel7RoughMix1.mp3",
+    "level7": "music/CephalonautLevel8RoughMix1.mp3",
+    "level8": "music/CephalonautLevel9RoughMix1.mp3",
+    "level9": "music/CephalonautLevel10RoughMix1.mp3",
+    "level10": "music/CephalonautLevel11RoughMix1.mp3",
+    "level11": "music/CephalonautLevel12RoughMix1.mp3",
+    "level12": "music/CephalonautLevel13RoughMix1.mp3",
+    "level13": "music/CephalonautLevel14RoughMix1.mp3",
+    "level14": "music/CephalonautLevel15RoughMix1.mp3",
+    "level15": "music/CephalonautLevel16RoughMix1.mp3",
+    "level16": "music/CephalonautLevel17RoughMix1.mp3",
+    "level17": "music/CephalonautLevel18RoughMix1.mp3",
+    "mainMenu": "music/CephalonautintromusicRoughMix1.mp3"
   },
   "sounds": {
     "ink": "sample ink.mp3",
