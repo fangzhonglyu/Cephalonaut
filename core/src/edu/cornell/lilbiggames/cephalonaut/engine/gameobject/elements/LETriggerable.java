@@ -6,7 +6,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 public class LETriggerable extends LevelElement {
     // TODO: Clean this up a bit. I just copied code over and it could be a bit nicer.
 
-    static final float MOVE_SPEED = 1f;
+    static final float MOVE_SPEED = 10f;
 
     final protected Vector2 originalPos;
     final protected Vector2 activatedPos;
