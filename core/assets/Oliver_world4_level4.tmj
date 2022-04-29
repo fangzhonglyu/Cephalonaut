@@ -544,7 +544,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":270
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -567,7 +567,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":270
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -590,7 +590,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":270
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -613,7 +613,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":270
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -636,7 +636,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":270
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -659,7 +659,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":270
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -682,7 +682,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":180
+                         "value":90
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -705,7 +705,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":180
+                         "value":90
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -728,7 +728,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":180
+                         "value":90
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -751,7 +751,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":180
+                         "value":90
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -774,7 +774,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":180
+                         "value":90
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -797,7 +797,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":180
+                         "value":90
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -816,6 +816,18 @@
                  "height":24,
                  "id":92,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -828,6 +840,18 @@
                  "height":24,
                  "id":94,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
