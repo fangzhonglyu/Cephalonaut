@@ -75,7 +75,7 @@
                 }, 
                 {
                  "gid":215,
-                 "height":16,
+                 "height":49.6334304536544,
                  "id":194,
                  "name":"dialogue1",
                  "properties":[
@@ -99,9 +99,9 @@
                  "rotation":88.8114877093905,
                  "type":"Background",
                  "visible":true,
-                 "width":81.4463346187976,
-                 "x":445.169451018733,
-                 "y":345.451491231916
+                 "width":46.5542998232017,
+                 "x":142.938905796585,
+                 "y":363.898801636521
                 }, 
                 {
                  "gid":259,
@@ -128,7 +128,7 @@
         {
          "name":"music",
          "type":"int",
-         "value":6
+         "value":1
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

@@ -66,6 +66,8 @@ public class CephalonautModel extends OctopusObstacle {
 
 	private float deathScale;
 
+	private boolean hasMoved;
+
 	public boolean isAlive() {
 		return alive;
 	}
@@ -110,6 +112,13 @@ public class CephalonautModel extends OctopusObstacle {
 		teleportLocation = teleportLoc;
 	}
 
+	public void setHasMoved(boolean moved) {
+		hasMoved = moved;
+	}
+
+	public boolean getHasMoved() {
+		return hasMoved;
+	}
 
 	/**
 	 * Sets the amount of ink in the cephalonaut's sac.
@@ -342,7 +351,7 @@ public class CephalonautModel extends OctopusObstacle {
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 0.052f* drawScale.x * deathScale, 0.052f*drawScale.y * deathScale);
 
-		canvas.drawSimpleFuelBar(ink / max_ink, getX() * drawScale.x, (getY() - getHeight() * 1.0f) * drawScale.y);
+		canvas.drawSimpleFuelBar(ink / max_ink, getX() * drawScale.x, (getY() - getHeight() * 0.7f) * drawScale.y);
 	}
 
 	/**

@@ -12,13 +12,13 @@ public class SoundController {
     /** The Music Object for a bgm that is actively playing */
     private static Music bgmPlaying;
 
-    private static final int MENU_MUSIC_INDEX = 7;
+    private static final int MENU_MUSIC_INDEX = 19;
 
     /** The cache for level musics */
-    private static Music[] musicCache = new Music[10];
+    private static Music[] musicCache = new Music[20];
 
     /** SFX cache*/
-    private static Sound[] soundCache = new Sound[10];
+    private static Sound[] soundCache = new Sound[20];
 
     /** Ink sound object */
     private static Sound inkSound;
