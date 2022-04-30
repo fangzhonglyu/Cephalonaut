@@ -190,7 +190,7 @@ public class LevelCompleteMode extends MenuMode {
 
         canvas.drawTextCentered(timeString, displayFont, 0f);
 
-        super.drawOptions(options, selectedOption, 200);
+        super.drawOptions(options, selectedOption, 150);
 
         canvas.end();
     }
