@@ -10,10 +10,7 @@
   "level_0:checkpoint_4": {
     "part_0": ["Welcome to the Black Hole Lab"]
   },
-  "level_2:checkpoint_1": {
-    "part_0": ["You need to go fast to break glass!"]
-  },
-  "level_2:checkpoint_2": {
-    "part_0": ["This is the ruins..."]
+  "level_2:checkpoint_0": {
+    "part_0": ["Try going fast to break the glass!"]
   }
 }
