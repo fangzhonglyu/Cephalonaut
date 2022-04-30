@@ -413,6 +413,29 @@
                  "width":16,
                  "x":129.348024240641,
                  "y":145.677157395993
+                }, 
+                {
+                 "gid":269,
+                 "height":24,
+                 "id":234,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":90
+                        }, 
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":16
+                        }],
+                 "rotation":180.549203861296,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":860.222045929745,
+                 "y":633.684887278198
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -421,13 +444,13 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":234,
+ "nextobjectid":235,
  "orientation":"orthogonal",
  "properties":[
         {
          "name":"music",
          "type":"int",
-         "value":1
+         "value":17
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
