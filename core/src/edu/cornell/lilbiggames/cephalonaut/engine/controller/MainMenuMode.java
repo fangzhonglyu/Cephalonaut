@@ -151,7 +151,7 @@ public class MainMenuMode extends MenuMode {
                     0, scale.x / 2f, scale.y / 2f);
 
 
-        canvas.drawTextCentered("LEVEL: " + curLevel, displayFont, -levelIconHeight / 4f * scale.y - 60f);
+        canvas.drawTextCentered("WORLD: " + curLevel, displayFont, -levelIconHeight / 4f * scale.y - 60f);
 
         canvas.end();
     }

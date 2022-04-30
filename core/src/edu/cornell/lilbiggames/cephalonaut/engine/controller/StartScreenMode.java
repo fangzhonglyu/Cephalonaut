@@ -1,5 +1,7 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -43,10 +45,12 @@ public class StartScreenMode extends MenuMode {
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
         selectedOption = 0; //default is resume
+
+
     }
 
     public void setDefault(){
-        selectedOption = 0;
+        Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
     }
 
     @Override
@@ -56,18 +60,11 @@ public class StartScreenMode extends MenuMode {
 
     @Override
     public void render(float delta) {
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
-
-        if(selectedOption == 0 && inputController.isSelectPressed()){
-            listener.exitScreen(this, START_CODE);
-        } else if(selectedOption == 1 && inputController.isSelectPressed()){
-            listener.exitScreen(this, OPTIONS_CODE);
-        } else if(selectedOption == 2 && inputController.isSelectPressed()){
-            listener.exitScreen(this, CREDITS_CODE);
-        } else if(inputController.isUpPressed()){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            exitScreen();
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)){
             selectedOption = selectedOption == 0 ? options.length-1 : selectedOption-1;
-        } else if(inputController.isDownPressed()){
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.A)){
             selectedOption = (selectedOption+1)%options.length;
         }
 
@@ -89,6 +86,23 @@ public class StartScreenMode extends MenuMode {
         super.drawOptions(options, selectedOption);
 
         canvas.end();
+    }
+
+    @Override
+    public void exitScreen(){
+        if (selectedOption == 0) {
+            listener.exitScreen(this, START_CODE);
+        } else if (selectedOption == 1) {
+            listener.exitScreen(this, OPTIONS_CODE);
+        } else if (selectedOption == 2) {
+            listener.exitScreen(this, CREDITS_CODE);
+        }
+    }
+
+
+    @Override
+    public void optionSelected(int i){
+        selectedOption = i;
     }
 
     @Override

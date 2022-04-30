@@ -112,7 +112,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		fakeLoadingAssets = true;
 
 		canvas.resize();
-		loadingScreen = new LoadingScreen(directory, canvas, this,500f);
+		loadingScreen = new LoadingScreen(directory, canvas, this,200f);
 		postLoadingScreen = startScreenMode;
 		setScreen(loadingScreen);
 
@@ -228,6 +228,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	@Override
 	public void exitScreen(Screen screen, int exitCode) {
+		Gdx.input.setInputProcessor(new InputAdapter());
 		SoundController.killAllSound();
 		if(exitCode == MenuMode.START_CODE){
 			startScreenTransition(mainMenu);
@@ -280,7 +281,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			}
 			selectLevel();
 		} else if (exitCode == MenuMode.RETURN_TO_START_CODE){
-			Gdx.input.setInputProcessor(new InputAdapter());
+			startScreenMode.setDefault();
 			startScreenTransition(startScreenMode);
 		} else if(exitCode == MenuMode.EXIT_LOADING_CODE){
 			startScreenTransition(postLoadingScreen);
@@ -301,6 +302,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	private void performScreenTransition(Screen nextScreen){
 		if (alpha >= 1) {
+			if(nextScreen == startScreenMode || nextScreen == settings){
+				((MenuMode)nextScreen).setDefault();
+			}
 			setScreen(nextScreen);
 			fadeDirection = false;
 		}

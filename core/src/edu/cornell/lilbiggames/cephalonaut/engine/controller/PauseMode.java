@@ -1,5 +1,7 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
@@ -42,7 +44,24 @@ public class PauseMode extends MenuMode {
     }
 
     public void setDefault(){
-        selectedOption = 0;
+        Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
+    }
+
+    @Override
+    public void exitScreen(){
+        if(selectedOption == 0){
+        listener.exitScreen(this, RESUME_LEVEL_CODE);
+        } else if(selectedOption == 1){
+            listener.exitScreen(this, EXIT_LEVEL_CODE);
+        } else if(selectedOption == 2){
+            listener.exitScreen(this, RESTART_LEVEL_CODE);
+        }
+    }
+
+
+    @Override
+    public void optionSelected(int i){
+        selectedOption = i;
     }
 
     @Override
@@ -52,20 +71,14 @@ public class PauseMode extends MenuMode {
 
     @Override
     public void render(float delta) {
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
 
-        if(selectedOption == 0 && inputController.isSelectPressed()){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            exitScreen();
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
             listener.exitScreen(this, RESUME_LEVEL_CODE);
-        } else if(selectedOption == 1 && inputController.isSelectPressed()){
-            listener.exitScreen(this, EXIT_LEVEL_CODE);
-        } else if(selectedOption == 2 && inputController.isSelectPressed()){
-            listener.exitScreen(this, RESTART_LEVEL_CODE);
-        } else if(inputController.didExit()){
-            listener.exitScreen(this, RESUME_LEVEL_CODE);
-        } else if(inputController.isUpPressed()){
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)){
             selectedOption = selectedOption == 0 ? options.length-1 : selectedOption -1;
-        } else if(inputController.isDownPressed()){
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.A)){
             selectedOption = (selectedOption +1)%options.length;
         }
 
