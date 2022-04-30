@@ -30,6 +30,10 @@ public class CephalonautController {
     public void update(boolean grappleButton, boolean ungrappleButton, Vector2 crossHair, boolean thrusterApplied,
                        float rotation) {
 
+        if (grappleButton || ungrappleButton || thrusterApplied || rotation != 0) {
+            cephalonaut.setHasMoved(true);
+        }
+
         updateGrapple(grappleButton, ungrappleButton, crossHair);
         cephalonaut.setInking(thrusterApplied);
 
@@ -39,7 +43,7 @@ public class CephalonautController {
         }
         cephalonaut.applyForce();
 
-        if(rotation != 0) {
+        if (rotation != 0) {
             switchGrappleDirection();
         }
 
