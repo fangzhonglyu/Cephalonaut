@@ -104,20 +104,21 @@ public class LevelCompleteMode extends MenuMode {
         starScoring.setFrame(0);
     }
 
+    public void setDefault(){
+        Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
+    }
+
     private void update(float delta){
         SoundController.killAllSound();
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
-        if (selectedOption == 0 && inputController.isSelectPressed()){
-            listener.exitScreen(this, NEXT_LEVEL_CODE);
-        } else if(selectedOption == 1 && inputController.isSelectPressed()){
-            listener.exitScreen(this, RESTART_LEVEL_CODE);
-        } else if(selectedOption == 2 && inputController.isSelectPressed() || inputController.didExit()){
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            exitScreen();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
             listener.exitScreen(this, EXIT_LEVEL_CODE);
-        } else if(inputController.isUpPressed()){
-            selectedOption = selectedOption == 0 ? options.length-1 : selectedOption -1;
-        } else if(inputController.isDownPressed()){
-            selectedOption = (selectedOption + 1 ) % options.length;
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)){
+            selectedOption = selectedOption == 0 ? options.length-1 : selectedOption-1;
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.A)){
+            selectedOption = (selectedOption+1)%options.length;
         }
 
         frame += delta * 10f;
@@ -128,6 +129,21 @@ public class LevelCompleteMode extends MenuMode {
             }
             starScoring.setFrame(starScoring.getFrame() + 1);
         }
+    }
+
+    public void exitScreen() {
+        if (selectedOption == 0) {
+            listener.exitScreen(this, NEXT_LEVEL_CODE);
+        } else if (selectedOption == 1) {
+            listener.exitScreen(this, RESTART_LEVEL_CODE);
+        } else if (selectedOption == 2) {
+            listener.exitScreen(this, EXIT_LEVEL_CODE);
+        }
+    }
+
+    @Override
+    public void optionSelected(int i) {
+        selectedOption = i;
     }
 
     @Override
