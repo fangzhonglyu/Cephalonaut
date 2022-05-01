@@ -77,7 +77,7 @@ public class CephalonautController {
 
         if (grappleButton) {
             grapple.setPosition(cephalonaut.getPosition().cpy());
-            grapple.setLinearVelocity(crossHair.cpy().sub(grapple.getPosition().cpy()).nor().scl(15));
+            grapple.setLinearVelocity(crossHair.cpy().sub(grapple.getPosition().cpy()).nor().scl(20));
             grapple.setActive(true);
             grapple.setOut(true);
         }
