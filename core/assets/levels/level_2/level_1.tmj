@@ -183,12 +183,12 @@
                          "type":"float",
                          "value":16
                         }],
-                 "rotation":0,
+                 "rotation":180,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":472.629582974209,
-                 "y":248.027315520785
+                 "x":496,
+                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",
