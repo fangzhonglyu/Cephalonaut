@@ -891,6 +891,12 @@
                  "height":24,
                  "id":514,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadAngle",
+                         "type":"float",
+                         "value":180
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -991,7 +997,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":270
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1014,7 +1020,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":180
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1037,7 +1043,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":180
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1060,7 +1066,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":270
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1152,7 +1158,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":270
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1175,7 +1181,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":270
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1198,7 +1204,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":180
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1221,7 +1227,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":225
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1244,7 +1250,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":90
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1267,7 +1273,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":180
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1290,7 +1296,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":180
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1336,7 +1342,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":225
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1359,7 +1365,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":225
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1382,7 +1388,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":225
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1405,7 +1411,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":225
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1428,7 +1434,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":225
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1451,7 +1457,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":225
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1474,7 +1480,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":225
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1497,7 +1503,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":225
                         }, 
                         {
                          "name":"boostPadFactor",
@@ -1520,7 +1526,7 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":0
+                         "value":315
                         }, 
                         {
                          "name":"boostPadFactor",
