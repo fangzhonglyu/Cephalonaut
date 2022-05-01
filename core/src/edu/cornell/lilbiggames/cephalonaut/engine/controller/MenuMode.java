@@ -152,7 +152,7 @@ public class MenuMode implements Screen {
             }
             canvas.drawTextCentered(options[i], displayFont, start - 1.2f*displayFont.getLineHeight()*i - 2*displayFont.getLineHeight());
             displayFont.setColor(Color.ORANGE);
-            optionsHitBoxes[i] = new Rectangle(0,canvas.getHeight()/2 + start - 1.2f*displayFont.getLineHeight()*i - 2*displayFont.getLineHeight(), canvas.getWidth(), 1.2f*displayFont.getLineHeight());
+            optionsHitBoxes[i] = new Rectangle(0,canvas.getHeight() / 2f + start - 1.2f*displayFont.getLineHeight() * i - 2*displayFont.getLineHeight(), canvas.getWidth(), 1.2f*displayFont.getLineHeight());
 
         }
         displayFont.setColor(Color.WHITE);
