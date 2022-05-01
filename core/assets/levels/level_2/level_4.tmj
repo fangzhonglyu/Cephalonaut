@@ -23,7 +23,7 @@
          "name":"ForegroundBack",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":60,
          "x":0,
          "y":0
@@ -68,10 +68,10 @@
                         }],
                  "rotation":0,
                  "type":"",
-                 "visible":false,
+                 "visible":true,
                  "width":22.8814,
-                 "x":59.3962276155363,
-                 "y":542.795448457336
+                 "x":64,
+                 "y":416
                 }, 
                 {
                  "gid":259,
@@ -2670,8 +2670,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":656,
-                 "y":480
+                 "x":657.372997711671,
+                 "y":493.729977116705
                 }],
          "opacity":1,
          "type":"objectgroup",
