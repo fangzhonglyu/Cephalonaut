@@ -11,6 +11,8 @@
          "opacity":1,
          "parallaxx":0.5,
          "parallaxy":0.5,
+         "repeatx":true,
+         "repeaty":true,
          "type":"imagelayer",
          "visible":true,
          "x":0,
@@ -23,7 +25,7 @@
          "name":"Tile Layer 1",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":47,
          "x":0,
          "y":0
