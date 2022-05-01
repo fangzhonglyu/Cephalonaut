@@ -119,6 +119,7 @@ public class SettingsMode extends MenuMode {
     }
 
     public void setDefault(){
+        super.setDefault();
         Gdx.input.setInputProcessor(settingsInput); selectedOption = 0;
     }
 

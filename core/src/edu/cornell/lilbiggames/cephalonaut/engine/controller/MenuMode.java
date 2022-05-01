@@ -1,5 +1,6 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -183,6 +184,18 @@ public class MenuMode implements Screen {
     }
 
     public void setDefault(){
+        float x = Gdx.input.getX();
+        float y = canvas.getHeight() - Gdx.input.getY();
+
+        if(optionsHitBoxes != null){
+            for(int i = 0; i < optionsHitBoxes.length; i++){
+                Rectangle hitBox = optionsHitBoxes[i];
+                if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                    selectedOption = i;
+                    optionSelected(i);
+                }
+            }
+        }
 
     }
 }

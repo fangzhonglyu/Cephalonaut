@@ -45,6 +45,7 @@ public class PauseMode extends MenuMode {
 
     public void setDefault(){
         Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
+        super.setDefault();
     }
 
     @Override

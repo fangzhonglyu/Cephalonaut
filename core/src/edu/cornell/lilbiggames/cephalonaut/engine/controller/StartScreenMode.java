@@ -50,6 +50,7 @@ public class StartScreenMode extends MenuMode {
     }
 
     public void setDefault(){
+        super.setDefault();
         Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
     }
 

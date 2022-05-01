@@ -120,6 +120,16 @@ public class MainMenuMode extends MenuMode {
 
     public void setDefault(){
         Gdx.input.setInputProcessor(mainMenuInput);
+        float x = Gdx.input.getX();
+        float y = canvas.getHeight() - Gdx.input.getY();
+
+        if(hitBox != null){
+            if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
+                tint = Color.WHITE;
+            } else {
+                tint = Color.GRAY;
+            }
+        }
     }
 
     private void update(float delta){
