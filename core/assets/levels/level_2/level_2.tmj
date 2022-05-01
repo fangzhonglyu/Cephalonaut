@@ -393,19 +393,19 @@
                         {
                          "name":"boostPadAngle",
                          "type":"float",
-                         "value":90
+                         "value":270
                         }, 
                         {
                          "name":"boostPadFactor",
                          "type":"float",
                          "value":16
                         }],
-                 "rotation":180.549203861296,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":866.980324821387,
-                 "y":633.684887278198
+                 "x":829.622605198856,
+                 "y":650.807175438525
                 }],
          "opacity":1,
          "type":"objectgroup",
