@@ -1,5 +1,8 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -43,6 +46,38 @@ public class MainMenuMode extends MenuMode {
 
     private boolean levelSelected;
 
+    private Color tint;
+    private Rectangle hitBox;
+
+    protected InputAdapter mainMenuInput = new InputAdapter() {
+        public boolean mouseMoved (int x, int screenY) {
+            if(hitBox != null){
+                float y = canvas.getHeight() - screenY;
+                if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
+                    tint = Color.WHITE;
+                } else {
+                    tint = Color.GRAY;
+                }
+            }
+
+
+            return true;
+        }
+
+        public boolean touchDown (int x, int screenY, int pointer, int button) {
+            float y = canvas.getHeight() - screenY;
+            if(hitBox != null){
+                if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
+                    levelSelected = true;
+                }
+            }
+
+            return true;
+        }
+
+    };
+
+
     /**
      * Creates a MainMenuMode with the default size and position.
      *
@@ -56,6 +91,8 @@ public class MainMenuMode extends MenuMode {
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
+
+        tint = Color.GRAY;
 
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -81,16 +118,28 @@ public class MainMenuMode extends MenuMode {
         }
     }
 
+    public void setDefault(){
+        Gdx.input.setInputProcessor(mainMenuInput);
+        float x = Gdx.input.getX();
+        float y = canvas.getHeight() - Gdx.input.getY();
+
+        if(hitBox != null){
+            if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
+                tint = Color.WHITE;
+            } else {
+                tint = Color.GRAY;
+            }
+        }
+    }
+
     private void update(float delta){
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
-        if (inputController.isSelectPressed()){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
             levelSelected = true;
-        } else if (inputController.isNextPressed()){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D)){
             curLevel = (curLevel + 1) % NUM_LEVELS;
-        } else if (inputController.isPrevPressed()){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A)){
             curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
-        } else if (inputController.didExit()){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
             listener.exitScreen(this, RETURN_TO_START_CODE);
         }
         levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
@@ -142,16 +191,18 @@ public class MainMenuMode extends MenuMode {
                 20,
                 20);
 
+
         float levelIconWidth = levelIcon.getWidth();
         float levelIconHeight = levelIcon.getHeight();
 
-        canvas.draw(levelIcon, Color.WHITE,
+        canvas.draw(levelIcon, tint,
                     levelIconWidth / 2f, levelIconHeight / 2f,
                     width / 2f, height / 2f,
                     0, scale.x / 2f, scale.y / 2f);
 
+        hitBox = new Rectangle(width / 2f - (scale.x / 2f)*levelIconWidth/2f, height / 2f + (scale.y / 2f)*levelIconHeight/2f, (scale.x / 2f)*levelIconWidth, (scale.y / 2f)*levelIconHeight);
 
-        canvas.drawTextCentered("LEVEL: " + curLevel, displayFont, -levelIconHeight / 4f * scale.y - 60f);
+        canvas.drawTextCentered("WORLD: " + curLevel, displayFont, -levelIconHeight / 4f * scale.y - 60f);
 
         canvas.end();
     }
