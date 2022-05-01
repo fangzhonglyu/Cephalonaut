@@ -361,6 +361,11 @@ public class PlayMode extends WorldController implements Screen {
                 reset();
             }
         }
+
+        // kill michael when out of bounds
+        if(cephalonaut.getX() < -1f ||  cephalonaut.getX() >= bounds.getWidth() || cephalonaut.getY() < -1f|| cephalonaut.getY() >= bounds.getHeight()) {
+            cephalonaut.setAlive(false);
+        }
     }
 
     @Override
