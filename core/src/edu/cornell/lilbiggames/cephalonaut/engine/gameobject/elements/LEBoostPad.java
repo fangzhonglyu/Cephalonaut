@@ -12,7 +12,7 @@ public class LEBoostPad extends LevelElement {
     public LEBoostPad(Def def) {
         super(def);
         this.boostPadFactor = def.properties.getFloat("boostPadFactor", DEFAULT_BOOST_FACTOR);
-        this.boostPadAngle = -MathUtils.degreesToRadians * def.properties.getFloat("boostPadAngle", 0f);
+        this.boostPadAngle = -MathUtils.degreesToRadians * 270;
         setSensor(true);
     }
 
