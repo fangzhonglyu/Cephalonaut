@@ -332,6 +332,10 @@ public class PlayMode extends WorldController implements Screen {
 
         boolean grappleButton = input.didSecondary();
         boolean ungrappleButton = input.didTertiary();
+        if (level.equals("level_0") && checkpoint.equals("checkpoint_0")) {
+            grappleButton = false;
+            ungrappleButton = false;
+        }
         boolean inking = input.isThrusterApplied();
         float rotation = input.getRotation();
 
