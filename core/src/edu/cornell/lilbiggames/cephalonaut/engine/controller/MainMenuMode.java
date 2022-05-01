@@ -191,6 +191,7 @@ public class MainMenuMode extends MenuMode {
                 20,
                 20);
 
+
         float levelIconWidth = levelIcon.getWidth();
         float levelIconHeight = levelIcon.getHeight();
 

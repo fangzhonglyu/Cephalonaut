@@ -71,8 +71,12 @@ public class CreditsScreen extends MenuMode implements Screen {
         canvas.begin();
         float width = canvas.getWidth();
         float height = canvas.getHeight();
-        canvas.draw(background, 0.5f*canvas.getWidth()-canvas.getCameraX()/scale.x, 0.5f*canvas.getHeight()-canvas.getCameraY()/scale.y , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth()/scale.x, (float)height/(float)background.getHeight()/scale.y);
-        displayFont.getData().setScale(0.4f);
+        canvas.draw(background,
+                0.5f*canvas.getWidth()-canvas.getCameraX(),
+                0.5f*canvas.getHeight()-canvas.getCameraY(),
+                0, 0, background.getWidth() * 10, background.getHeight() * 10,
+                20,
+                20);        displayFont.getData().setScale(0.4f);
 
         float startX = canvas.getWidth()/2-scale.x*(100+20)*4;
         float yOdd = canvas.getHeight()  - canvas.getHeight()/3;

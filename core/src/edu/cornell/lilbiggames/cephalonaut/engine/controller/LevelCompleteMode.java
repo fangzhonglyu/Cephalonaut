@@ -176,9 +176,15 @@ public class LevelCompleteMode extends MenuMode {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
+        canvas.draw(background,
+                0.5f*canvas.getWidth()-canvas.getCameraX(),
+                0.5f*canvas.getHeight()-canvas.getCameraY(),
+                0, 0, background.getWidth() * 10, background.getHeight() * 10,
+                20,
+                20);
 
         canvas.setCameraPos(width / 2, height / 2);
-        canvas.drawOverlay(background, true);
+//        canvas.drawOverlay(background, true);
 
         canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
 
