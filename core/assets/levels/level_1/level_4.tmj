@@ -4,13 +4,15 @@
  "layers":[
         {
          "id":9,
-         "image":"../../BG-purplespace.png",
+         "image":"..\/..\/BG-1-teal.png",
          "name":"Background",
          "offsetx":127.32014112594,
          "offsety":294.523699953981,
          "opacity":1,
          "parallaxx":0.5,
          "parallaxy":0.5,
+         "repeatx":true,
+         "repeaty":true,
          "type":"imagelayer",
          "visible":true,
          "x":0,
@@ -262,11 +264,11 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"../../tileset.tsj"
+         "source":"..\/..\/tileset.tsj"
         }, 
         {
          "firstgid":129,
-         "source":"../../objects.tsj"
+         "source":"..\/..\/objects.tsj"
         }],
  "tilewidth":16,
  "type":"map",

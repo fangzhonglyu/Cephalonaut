@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":9,
-         "image":"..\/..\/BG-purplespace.png",
+         "image":"..\/..\/BG-1-teal.png",
          "name":"Background",
          "opacity":1,
          "parallaxx":0.5,

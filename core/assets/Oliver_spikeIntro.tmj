@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":3,
-         "image":"BG-4-violet.png",
+         "image":"BG-1-teal.png",
          "name":"Image Layer 1",
          "opacity":1,
          "parallaxx":0.5,
