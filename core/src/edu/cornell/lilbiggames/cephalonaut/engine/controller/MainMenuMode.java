@@ -197,10 +197,10 @@ public class MainMenuMode extends MenuMode {
 
         canvas.draw(levelIcon, tint,
                     levelIconWidth / 2f, levelIconHeight / 2f,
-                    width / 2f, height / 2f,
-                    0, scale.x / 2f, scale.y / 2f);
+                    width / 2f, height / 2f + 100,
+                    0, 1.5f * scale.x, 1.5f * scale.y);
 
-        hitBox = new Rectangle(width / 2f - (scale.x / 2f)*levelIconWidth/2f, height / 2f + (scale.y / 2f)*levelIconHeight/2f, (scale.x / 2f)*levelIconWidth, (scale.y / 2f)*levelIconHeight);
+        hitBox = new Rectangle(width / 2f - (1.5f*scale.x)*levelIconWidth/2f, (height / 2f + 100) + (1.5f*scale.y)*levelIconHeight/2f, (1.5f*scale.x)*levelIconWidth, (1.5f*scale.y)*levelIconHeight);
 
         canvas.drawTextCentered("WORLD: " + curLevel, displayFont, -levelIconHeight / 4f * scale.y - 60f);
 
