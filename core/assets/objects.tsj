@@ -551,6 +551,7 @@
                  "value":
                     {
                      "canGrappleOn":false,
+                     "isSensor":true,
                      "type":"Refill"
                     }
                 }],
