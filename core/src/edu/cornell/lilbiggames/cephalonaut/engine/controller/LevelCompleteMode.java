@@ -75,6 +75,9 @@ public class LevelCompleteMode extends MenuMode {
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
+        twoStars = 0;
+        threeStars = 0;
+
         selectedOption = 0;
     }
 
@@ -107,8 +110,8 @@ public class LevelCompleteMode extends MenuMode {
     public void setTimer(int timer) { this.timer = timer; }
 
     public void setStars(int twoStars, int threeStars) {
-        this.twoStars = twoStars;
-        this.threeStars = threeStars;
+        this.twoStars = twoStars == 0 ? Integer.MAX_VALUE : twoStars;
+        this.threeStars = threeStars == 0 ? Integer.MAX_VALUE : threeStars;
     }
 
     public void resetFrame() {
@@ -207,10 +210,17 @@ public class LevelCompleteMode extends MenuMode {
         }
 
         for (int i = 0; i < stars; i++) {
-            canvas.draw(starScoring, Color.WHITE,
-                    starScoring.getFwidth() / 2f, starScoring.getFheight() / 2f,
-                    width / 2f - 110 + 110 * i, height / 2f + 150,
-                    0, 0.5f * scale.x, 0.5f * scale.y);
+            if (stars == 3) {
+                canvas.draw(starScoring, Color.WHITE,
+                        starScoring.getFwidth() / 2f, starScoring.getFheight() / 2f,
+                        width / 2f - 110 + 110 * i, height / 2f + 150,
+                        0, 0.5f * scale.x, 0.5f * scale.y);
+            } else {
+                canvas.draw(starStill, Color.WHITE,
+                        starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
+                        width / 2f - 110 + 110 * i, height / 2f + 150,
+                        0, 0.5f * scale.x, 0.5f * scale.y);
+            }
         }
 
 
