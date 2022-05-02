@@ -1,6 +1,7 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.gameobject;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
@@ -11,6 +12,7 @@ import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.SimpleObstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.Properties;
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 
 
 public class LevelElement extends SimpleObstacle {
@@ -84,18 +86,27 @@ public class LevelElement extends SimpleObstacle {
         setTexture(def.texture);
     }
 
+    private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture;
+
+    public static void collectAssets(AssetDirectory assetDirectory){
+        wormholeTexture = assetDirectory.getEntry("A-wormhole-filmstrip.png",Texture.class);
+        wormholeTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        boostPadTexture = assetDirectory.getEntry("GO-boostpad-filmstrip.png",Texture.class);
+        boostPadTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+    }
+
     public static LevelElement create(Def def) {
         switch (def.element) {
             case BLACK_HOLE:
                 return new LEBlackHole(def);
             case BOOST_PAD:
-                return new LEBoostPad(def);
+                return new LEBoostPad(def,new FilmStrip(boostPadTexture,1,7));
             case DOOR:
                 return new LETriggerable(def);
             case BUTTON:
                 return new LETrigger(def);
             case WORMHOLE:
-                return new LEWormHole(def);
+                return new LEWormHole(def,new FilmStrip(wormholeTexture,1,24));
             case GLASS_BARRIER:
                 return new LEGlassBarrier(def);
             case DIALOGUE_TRIGGER:

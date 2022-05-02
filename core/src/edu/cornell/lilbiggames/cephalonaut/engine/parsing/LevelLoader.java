@@ -45,7 +45,7 @@ public class LevelLoader {
         assetDirectory = new AssetDirectory("assets.json");
         assetDirectory.loadAssets();
         assetDirectory.finishLoading();
-
+        LevelElement.collectAssets(assetDirectory);
         loadTileset("tile-tileset", TiledFile.METEOR_TILESET);
         loadTileset("space-tileset", TiledFile.SPACESHIP_TILESET);
         loadTileset("object-tileset", TiledFile.OBJECTS);
@@ -380,6 +380,7 @@ public class LevelLoader {
                         levelElementDef.texture = getTexture(level, id);
                         loadTile(levelElementDef, tile);
                         LevelElement element = LevelElement.create(levelElementDef);
+
                         element.setParallaxFactor(parallax);
                         levelDef.addObject(element);
                     }
