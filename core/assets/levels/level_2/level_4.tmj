@@ -2686,7 +2686,7 @@
         {
          "name":"music",
          "type":"int",
-         "value":17
+         "value":15
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
