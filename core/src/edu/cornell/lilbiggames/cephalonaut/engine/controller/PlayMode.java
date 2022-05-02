@@ -348,7 +348,7 @@ public class PlayMode extends WorldController implements Screen {
         canvas.setCameraPos(bounds, scale,
                 MathUtils.roundPositive(center.x * scale.x),
                 MathUtils.roundPositive(center.y * scale.y));
-        
+
         if (fadeInCount > 0) {
             fadeInCount -= .05f;
         }
