@@ -85,6 +85,7 @@ public class PlayMode extends WorldController implements Screen {
     private float dialogueFade;
     private int prev_music = -1;
 
+    private int twoStars, threeStars;
 
     /**
      * Creates and initialize a new instance of the sandbox
@@ -125,6 +126,14 @@ public class PlayMode extends WorldController implements Screen {
 
     public LevelElement getObject(int id) {
         return objectMap.get(id);
+    }
+
+    public int getTwoStars() {
+        return twoStars;
+    }
+
+    public int getThreeStars() {
+        return threeStars;
     }
 
     public void setLevel(String level) {
@@ -181,6 +190,8 @@ public class PlayMode extends WorldController implements Screen {
         timer = 0;
         dialogueMode.load(level, checkpoint);
         paused = false;
+        twoStars = levelDef.twoStars;
+        threeStars = levelDef.threeStars;
     }
 
     private void populateLevel(Iterable<GameObject> newObjects) {
@@ -188,8 +199,6 @@ public class PlayMode extends WorldController implements Screen {
         float startY = DEFAULT_STARTING_POS_Y;
         float startInk = 1f;
         for (GameObject object : newObjects) {
-
-
             if (object instanceof LEStart){
                 startX = object.getX();
                 startY = object.getY();
@@ -215,7 +224,7 @@ public class PlayMode extends WorldController implements Screen {
         float dheight = octopusTexture.getRegionHeight() * .035f;
         //FilmStrip cephInkFilm = new FilmStrip(octopusInkStrip,1,7);
         FilmStrip cephFilm = new FilmStrip(octopusStrip,5,9);
-        cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight,startInk, scale, cephFilm);
+        cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight, startInk, scale, cephFilm);
         cephalonautController = new CephalonautController(world, cephalonaut);
 
         addObject(cephalonaut);
@@ -230,6 +239,10 @@ public class PlayMode extends WorldController implements Screen {
 
     public String getTimeString() {
         return timeString;
+    }
+
+    public int getTimer() {
+        return timer;
     }
 
     /**
@@ -363,7 +376,7 @@ public class PlayMode extends WorldController implements Screen {
         }
 
         // kill michael when out of bounds
-        if(cephalonaut.getX() < -1f ||  cephalonaut.getX() >= bounds.getWidth() || cephalonaut.getY() < -1f|| cephalonaut.getY() >= bounds.getHeight()) {
+        if (cephalonaut.getX() < -1f ||  cephalonaut.getX() >= bounds.getWidth() || cephalonaut.getY() < -1f|| cephalonaut.getY() >= bounds.getHeight()) {
             cephalonaut.setAlive(false);
         }
     }

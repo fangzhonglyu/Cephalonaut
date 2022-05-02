@@ -6,8 +6,8 @@
          "id":9,
          "image":"..\/..\/BG-4-violet.png",
          "name":"Background",
-         "offsetx":-307.013352073085,
-         "offsety":-121.714846815995,
+         "offsetx":-299.56791925832,
+         "offsety":-124.849765895896,
          "opacity":1,
          "parallaxx":0.5,
          "parallaxy":0.5,
@@ -112,8 +112,8 @@
                  "type":"",
                  "visible":true,
                  "width":22.8332,
-                 "x":333.537457140504,
-                 "y":463.058729495566
+                 "x":352,
+                 "y":464
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -129,6 +129,16 @@
          "name":"music",
          "type":"int",
          "value":0
+        }, 
+        {
+         "name":"threeStars",
+         "type":"int",
+         "value":5
+        }, 
+        {
+         "name":"twoStars",
+         "type":"int",
+         "value":10
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

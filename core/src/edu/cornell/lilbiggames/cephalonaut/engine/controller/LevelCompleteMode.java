@@ -34,8 +34,7 @@ public class LevelCompleteMode extends MenuMode {
     private float frame;
 
     private FilmStrip starScoring;
-
-    private Texture starIcon;
+    private FilmStrip starStill;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -46,7 +45,11 @@ public class LevelCompleteMode extends MenuMode {
 
     private Vector2 bounds, scale;
 
+    private int timer;
+
     private String timeString;
+
+    private int twoStars, threeStars;
 
     /**
      * Creates a MainMenuMode with the default size and position.
@@ -65,8 +68,9 @@ public class LevelCompleteMode extends MenuMode {
 
         frame = 0;
         starScoring = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class),1,20);
+        starStill = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class),1,20);
         starScoring.setFrame(0);
-        starIcon = assets.getEntry("ui:star", Texture.class);
+        starStill.setFrame(19);
 
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -98,6 +102,13 @@ public class LevelCompleteMode extends MenuMode {
 
     public void setTimeString(String timeString) {
         this.timeString = timeString;
+    }
+
+    public void setTimer(int timer) { this.timer = timer; }
+
+    public void setStars(int twoStars, int threeStars) {
+        this.twoStars = twoStars;
+        this.threeStars = threeStars;
     }
 
     public void resetFrame() {
@@ -188,10 +199,25 @@ public class LevelCompleteMode extends MenuMode {
 
         canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
 
-        for (int i = 0; i < 3; i++) {
+        int stars = 1;
+        if (timer <= threeStars) {
+            stars = 3;
+        } else if (timer <= twoStars) {
+            stars = 2;
+        }
+
+        for (int i = 0; i < stars; i++) {
             canvas.draw(starScoring, Color.WHITE,
                     starScoring.getFwidth() / 2f, starScoring.getFheight() / 2f,
                     width / 2f - 110 + 110 * i, height / 2f + 150,
+                    0, 0.5f * scale.x, 0.5f * scale.y);
+        }
+
+
+        for (int i = 0; i < 3 - stars; i++) {
+            canvas.draw(starStill, Color.GRAY,
+                    starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
+                    width / 2f + 110 - 110 * i, height / 2f + 150,
                     0, 0.5f * scale.x, 0.5f * scale.y);
         }
 
