@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":9,
-         "image":"..\/..\/BG-purplespace.png",
+         "image":"..\/..\/BG-1-teal.png",
          "name":"Background",
          "offsetx":80,
          "offsety":0,
@@ -30,7 +30,7 @@
                         {
                          "name":"ink",
                          "type":"float",
-                         "value":0.1
+                         "value":0.12
                         }],
                  "rotation":0,
                  "type":"",

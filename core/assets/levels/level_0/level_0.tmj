@@ -4,11 +4,13 @@
  "layers":[
         {
          "id":9,
-         "image":"BG-purplespace.png",
+         "image":"..\/..\/BG-4-violet.png",
          "name":"Background",
          "opacity":1,
          "parallaxx":0.5,
          "parallaxy":0.5,
+         "repeatx":true,
+         "repeaty":true,
          "type":"imagelayer",
          "visible":true,
          "x":0,
