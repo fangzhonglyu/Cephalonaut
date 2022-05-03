@@ -39,7 +39,7 @@ public class CreditsScreen extends MenuMode implements Screen {
         this.canvas = canvas;
         this.listener = listener;
 
-        background = assets.getEntry( "main-menu:background", Texture.class);
+        background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();

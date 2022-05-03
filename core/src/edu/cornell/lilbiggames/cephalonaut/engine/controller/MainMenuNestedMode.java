@@ -64,7 +64,7 @@ public class MainMenuNestedMode extends MenuMode {
         this.completedCheckpoints = completedCheckpoints;
         this.checkpoints = checkpoints;
 
-        background = assets.getEntry( "main-menu:background", Texture.class);
+        background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.assets = assets;
 
