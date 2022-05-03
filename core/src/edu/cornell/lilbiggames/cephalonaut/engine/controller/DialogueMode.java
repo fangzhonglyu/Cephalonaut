@@ -119,9 +119,10 @@ public class DialogueMode {
             W_KEY_strip.setFrame((W_KEY_strip.getFrame() + 1) % W_KEY_strip.getSize());
         }
 
+        InputController input = InputController.getInstance();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) ||
                 Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) ||
-                Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+                Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) || input.isSelectPressed()) {
             index+=1;
 
             if(index >= dialogue.get(part).size()) {

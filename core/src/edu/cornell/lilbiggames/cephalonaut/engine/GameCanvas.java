@@ -798,6 +798,18 @@ public class GameCanvas {
 		spriteBatch.begin();
 	}
 
+	public void drawLevelEndGlow(float x, float y){
+		spriteBatch.end();
+		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glLineWidth(4f);
+		shapeRen.setColor(Color.valueOf("000000FF"));
+		shapeRen.circle(x, y, 50f, 200);
+		shapeRen.end();
+		spriteBatch.begin();
+	}
+
 
 	public void drawSlider(Slider slider){
 		float x = slider.getPosition().x;

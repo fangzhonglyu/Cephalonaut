@@ -111,14 +111,17 @@ public class LevelCompleteMode extends MenuMode {
 
     private void update(float delta){
         SoundController.killAllSound();
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+        inputController = InputController.getInstance();
+        inputController.readInput(new Rectangle(), new Vector2());
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed()){
             exitScreen();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.isBackPressed()){
             listener.exitScreen(this, EXIT_LEVEL_CODE);
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)){
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
+                inputController.isUpPressed()){
             selectedOption = selectedOption == 0 ? options.length-1 : selectedOption-1;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.A)){
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
+                inputController.isDownPressed()){
             selectedOption = (selectedOption+1)%options.length;
         }
 
