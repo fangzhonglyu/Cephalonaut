@@ -15,7 +15,6 @@ import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.NES
 
 public class MainMenuNestedMode extends MenuMode {
 
-
     private int checkpoints;
 
     /** The font for giving messages to the player */
@@ -64,14 +63,18 @@ public class MainMenuNestedMode extends MenuMode {
         this.completedCheckpoints = completedCheckpoints;
         this.checkpoints = checkpoints;
 
+        this.curLevel = curLevel;
         background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.assets = assets;
 
-        this.curLevel = curLevel;
         octopusTexture = new TextureRegion(assets.getEntry( "octopus.png", Texture.class ));
         levelTexture = assets.getEntry( "level.png", Texture.class );
         levelCompletedTexture = assets.getEntry( "completedLevel.png", Texture.class );
+    }
+
+    public void setBackground() {
+        background = assets.getEntry( "BG-" + (curLevel + 1), Texture.class);
     }
 
     @Override

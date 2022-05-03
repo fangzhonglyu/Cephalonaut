@@ -77,9 +77,6 @@ public class LevelCompleteMode extends MenuMode {
         background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        twoStars = 0;
-        threeStars = 0;
-
         selectedOption = 0;
     }
 
@@ -112,8 +109,8 @@ public class LevelCompleteMode extends MenuMode {
     public void setTimer(int timer) { this.timer = timer; }
 
     public void setStars(int twoStars, int threeStars) {
-        this.twoStars = twoStars == 1 ? Integer.MAX_VALUE : twoStars;
-        this.threeStars = threeStars == 1 ? Integer.MAX_VALUE : threeStars;
+        this.twoStars = twoStars <= 1 ? Integer.MAX_VALUE : twoStars;
+        this.threeStars = threeStars <= 1 ? Integer.MAX_VALUE : threeStars;
     }
 
     public void resetFrame() {
@@ -214,12 +211,12 @@ public class LevelCompleteMode extends MenuMode {
             if (stars == 3) {
                 canvas.draw(starScoring, Color.WHITE,
                         starScoring.getFwidth() / 2f, starScoring.getFheight() / 2f,
-                        width / 2f - 140 + 130 * i, height / 2f + 150,
+                        width / 2f - 130 + 130 * i, height / 2f + 150,
                         0, 0.5f * scale.x, 0.5f * scale.y);
             } else {
                 canvas.draw(starStill, Color.WHITE,
                         starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
-                        width / 2f - 140 + 130 * i, height / 2f + 150,
+                        width / 2f - 130 + 130 * i, height / 2f + 150,
                         0, 0.5f * scale.x, 0.5f * scale.y);
             }
         }
@@ -227,7 +224,7 @@ public class LevelCompleteMode extends MenuMode {
         for (int i = 0; i < 3 - stars; i++) {
             canvas.draw(starFrame, Color.WHITE,
                     starFrame.getWidth() / 2f, starFrame.getHeight() / 2f,
-                    width / 2f + 120 - 120 * i, height / 2f + 150,
+                    width / 2f + 130 - 130 * i, height / 2f + 150,
                     0, 0.5f * scale.x, 0.5f * scale.y);
         }
 
