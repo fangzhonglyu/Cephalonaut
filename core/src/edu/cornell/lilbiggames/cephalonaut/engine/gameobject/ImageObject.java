@@ -26,9 +26,6 @@ public class ImageObject extends GameObject {
         int offsetX = (int) (canvas.getCameraX() * parallaxFactor.x);
         int offsetY = (int) (canvas.getCameraY() * parallaxFactor.y);
 
-        System.out.println(parallaxFactor);
-        System.out.println(offsetX + " " + offsetY);
-
         canvas.draw(texture, -5000 + offsetX, -5000 + offsetY, 0, 0, 10000, 10000, 1.9f * drawScale.x, 1.9f * drawScale.y);
     }
 
