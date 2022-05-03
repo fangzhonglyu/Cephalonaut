@@ -72,6 +72,7 @@ public class PauseMode extends MenuMode {
 
     @Override
     public void render(float delta) {
+        SoundController.setBlackHoleSound(false,0);
         inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed()){

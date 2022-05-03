@@ -22,10 +22,20 @@ public class LevelController implements ContactListener {
     /** Listener that will update the screen when we are done */
     private ScreenListener listener;
 
+    float closestBlackHole = Float.MAX_VALUE;
+
     public LevelController(ScreenListener listener, CephalonautModel cephalonaut, PlayMode playMode) {
         this.cephalonaut = cephalonaut;
         this.playMode = playMode;
         this.listener = listener;
+    }
+
+    public void resetBlackHoleRange(){
+        closestBlackHole = Float.MAX_VALUE;
+    }
+
+    public boolean blackHoleSound(){
+        return closestBlackHole<Float.MAX_VALUE-1;
     }
 
     public void update(GameObject object, CephalonautController cephalonautController) {
@@ -90,14 +100,12 @@ public class LevelController implements ContactListener {
     public void attract(LEBlackHole blackHole) {
         Vector2 blackHolePos = blackHole.getBody().getWorldCenter();
         Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
-        if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange() * 1.5f){
-            SoundController.setBlackHoleSound(true,1f-Math.min(1f,blackHolePos.dst(cephalonautPos)/blackHole.getBlackHoleRange()));
+        float dist = blackHolePos.dst(cephalonautPos);
+        float soundRange = blackHole.getBlackHoleRange()*2.5f;
+        if ( dist < closestBlackHole && dist< soundRange){
+            closestBlackHole = blackHolePos.dst(cephalonautPos);
+            SoundController.setBlackHoleSound(true,1f-Math.min(1f,dist/soundRange));
         }
-        else{
-            SoundController.setBlackHoleSound(false,0f );
-        }
-
-
         if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange() /*||
                 blackHolePos.dst(cephalonaut.getGrapple().getPosition()) < blackHole.getBlackHoleRange()*/) {
             Vector2 delta = blackHolePos.sub(cephalonautPos).clamp(1f, 50f);

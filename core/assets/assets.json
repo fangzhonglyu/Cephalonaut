@@ -141,7 +141,9 @@
   "sounds": {
     "ink": "sample ink.mp3",
     "suction": "TentacleSuctionSFX.mp3",
-    "bounce": "BouncePadSound.mp3"
+    "bounce": "BouncePadSound.mp3",
+    "boost": "BoostPadSound.mp3",
+    "blackhole": "BlackHoleSound.mp3"
   },
   "fonts": {
     "retro": {
