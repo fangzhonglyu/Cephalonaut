@@ -24,7 +24,11 @@
     "A-wormhole-filmstrip.png": "A-wormhole-filmstrip.png",
     "GO-wormhole.png": "GO-wormhole.png",
     "GO-spikes.png": "GO-spikes.png",
+    "GO-spikes-film.png": "GO-spikes-film.png",
+    "espikes.png": "espikes.png",
+    "electric-spikes.png":"electric-spikes.png",
     "GO-spikeball.png": "GO-spikeball.png",
+    "GO-spikeball-film.png": "GO-spikeball-film.png",
     "boost.png": "boost.png",
     "bounce.png": "bounce.png",
     "reactor.png": "reactor.png",
@@ -136,7 +140,8 @@
   },
   "sounds": {
     "ink": "sample ink.mp3",
-    "suction": "TentacleSuctionSFX.mp3"
+    "suction": "TentacleSuctionSFX.mp3",
+    "bounce": "BouncePadSound.mp3"
   },
   "fonts": {
     "retro": {

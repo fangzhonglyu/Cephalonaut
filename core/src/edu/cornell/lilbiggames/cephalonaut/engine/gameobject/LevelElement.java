@@ -34,7 +34,9 @@ public class LevelElement extends SimpleObstacle {
         WORMHOLE,
         MISC,
         START,
+        ESPIKE,
         SPIKE,
+        SPIKEBALL,
         REFILL,
         DIALOGUE_TRIGGER
     }
@@ -86,13 +88,19 @@ public class LevelElement extends SimpleObstacle {
         setTexture(def.texture);
     }
 
-    private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture;
+    private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture,spikeTexture,spikeBallTexture;
 
     public static void collectAssets(AssetDirectory assetDirectory){
         wormholeTexture = assetDirectory.getEntry("A-wormhole-filmstrip.png",Texture.class);
         wormholeTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         boostPadTexture = assetDirectory.getEntry("GO-boostpad-filmstrip.png",Texture.class);
         boostPadTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        electricSpiketexture = assetDirectory.getEntry("electric-spikes.png",Texture.class);
+        electricSpiketexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        spikeTexture = assetDirectory.getEntry("GO-spikes-film.png",Texture.class);
+        spikeTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        spikeBallTexture = assetDirectory.getEntry("GO-spikeball-film.png",Texture.class);
+        spikeBallTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
 
     public static LevelElement create(Def def) {
@@ -113,6 +121,12 @@ public class LevelElement extends SimpleObstacle {
                 return new LEDialogueTrigger(def);
             case START:
                 return new LEStart(def);
+            case ESPIKE:
+                return new LEAnimated(def,new FilmStrip(electricSpiketexture,1,8),7);
+            case SPIKE:
+                return new LEAnimated(def,new FilmStrip(spikeTexture,1,9),7);
+            case SPIKEBALL:
+                return new LEAnimated(def,new FilmStrip(spikeBallTexture,1,7),7);
             default:
                 return new LevelElement(def);
         }

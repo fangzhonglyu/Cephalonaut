@@ -115,6 +115,10 @@ public class LevelLoader {
                 return LevelElement.Element.GLASS_BARRIER;
             case "Spike":
                 return LevelElement.Element.SPIKE;
+            case "ESpike":
+                return LevelElement.Element.ESPIKE;
+            case "SpikeBall":
+                return LevelElement.Element.SPIKEBALL;
             case "Refill":
                 return LevelElement.Element.REFILL;
             case "Dialogue Trigger":

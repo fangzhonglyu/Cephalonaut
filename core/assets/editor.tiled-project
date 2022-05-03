@@ -91,6 +91,8 @@
                 "Glass Barrier",
                 "Start",
                 "Spike",
+                "SpikeBall",
+                "ESpike",
                 "Refill",
                 "Dialogue Trigger"
             ],
