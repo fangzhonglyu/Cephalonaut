@@ -351,6 +351,7 @@ public class PlayMode extends WorldController implements Screen {
         }
 
         cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
+
         Vector2 center = cephalonaut.getBody().getWorldCenter();
         canvas.setCameraPos(bounds, scale,
                 MathUtils.roundPositive(center.x * scale.x),
