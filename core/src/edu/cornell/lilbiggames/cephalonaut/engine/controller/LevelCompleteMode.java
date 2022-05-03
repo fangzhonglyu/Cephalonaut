@@ -110,8 +110,10 @@ public class LevelCompleteMode extends MenuMode {
     public void setTimer(int timer) { this.timer = timer; }
 
     public void setStars(int twoStars, int threeStars) {
-        this.twoStars = twoStars == 0 ? Integer.MAX_VALUE : twoStars;
-        this.threeStars = threeStars == 0 ? Integer.MAX_VALUE : threeStars;
+        System.out.println(twoStars);
+        System.out.println(threeStars);
+        this.twoStars = twoStars == 1 ? Integer.MAX_VALUE : twoStars;
+        this.threeStars = threeStars == 1 ? Integer.MAX_VALUE : threeStars;
     }
 
     public void resetFrame() {
