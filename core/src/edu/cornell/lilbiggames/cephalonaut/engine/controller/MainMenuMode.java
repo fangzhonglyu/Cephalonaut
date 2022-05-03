@@ -92,6 +92,7 @@ public class MainMenuMode extends MenuMode {
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
 
+
         tint = Color.GRAY;
 
         background = assets.getEntry( "main-menu:background", Texture.class);
@@ -133,13 +134,17 @@ public class MainMenuMode extends MenuMode {
     }
 
     private void update(float delta){
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+        inputController = InputController.getInstance();
+        inputController.readInput(new Rectangle(), new Vector2());
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed()){
             levelSelected = true;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D)){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
+                inputController.isNextPressed()){
             curLevel = (curLevel + 1) % NUM_LEVELS;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A)){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A) ||
+                inputController.isPrevPressed()){
             curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.isBackPressed()){
             listener.exitScreen(this, RETURN_TO_START_CODE);
         }
         levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
