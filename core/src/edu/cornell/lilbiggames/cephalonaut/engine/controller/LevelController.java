@@ -131,8 +131,8 @@ public class LevelController implements ContactListener {
     public void boost(LEBoostPad obj) {
         if (!obj.getInContact()) return;
 
-        Vector2 force = new Vector2(0, obj.getBoostPadFactor()).setAngleRad(obj.getAngle() + obj.getBoostPadAngle());
-        cephalonaut.addForce(force);
+        //Vector2 force = new Vector2(0, obj.getBoostPadFactor()).setAngleRad(obj.getAngle() + obj.getBoostPadAngle());
+        //cephalonaut.addForce(force);
     }
 
     public void hit(LEGlassBarrier obj) {
@@ -174,6 +174,7 @@ public class LevelController implements ContactListener {
         }
     }
 
+    @Override
     public void beginContact(Contact contact) {
         GrappleModel grapple = cephalonaut.getGrapple();
         GameObject contactObject = getOtherBody(contact, cephalonaut);
@@ -204,6 +205,16 @@ public class LevelController implements ContactListener {
 
             if (contactObject.getRestitution()>1) {
                 SoundController.playSound(1,1);
+            }
+
+            if (contactObject instanceof  LEBoostPad) {
+                LEBoostPad boostPad = (LEBoostPad) contactObject;
+                SoundController.playSound(2,1);
+                Vector2 force = new Vector2(0, boostPad.getBoostPadFactor()).setAngleRad(boostPad.getAngle() + boostPad.getBoostPadAngle());
+                cephalonaut.addForce(force);
+                cephalonaut.applyForce();
+                contact.setEnabled(false);
+                ((LevelElement) contactObject).setInContact(false);
             }
 
             if (contactObject instanceof LEBlackHole) {
