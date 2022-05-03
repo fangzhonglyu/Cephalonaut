@@ -20,14 +20,14 @@ public class LEGlassBarrier extends LevelElement {
         this.glassBarrierHardness = def.properties.getFloat("glassBarrierHardness", DEFAULT_HARDNESS);
         this.tint = def.tint;
         this.alpha = this.tint.a;
-        this.indicator = new Color(tint.r + 10, tint.g, tint.b, tint.a);
+        this.indicator = new Color(tint.r, tint.g + 10, tint.b, tint.a);
         this.health = this.glassBarrierHardness;
     }
 
     public void hit(float damage) {
         health -= damage;
         alpha -= 1 / glassBarrierHardness * damage;
-        tint  = new Color(tint.r, tint.g, tint.b, alpha);
+        tint  = new Color(tint.r, tint.g, tint.b, Math.max(alpha, 0.33f));
         if(health <= 0) {
             this.markRemoved(true);
         }
