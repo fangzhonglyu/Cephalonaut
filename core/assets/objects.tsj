@@ -8,7 +8,7 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":12,
+ "tilecount":13,
  "tiledversion":"1.8.2",
  "tileheight":66,
  "tiles":[
@@ -698,7 +698,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":3,
              "name":"",
              "objects":[
                     {
@@ -751,7 +750,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -876,7 +874,66 @@
                  "value":
                     {
                      "canGrappleOn":false,
-                     "type":"Spike"
+                     "type":"SpikeBall"
+                    }
+                }]
+        }, 
+        {
+         "id":16,
+         "image":"espikes.png",
+         "imageheight":32,
+         "imagewidth":32,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":12.8181818181818,
+                             "y":1.36363636363637
+                            }, 
+                            {
+                             "x":13.1818181818182,
+                             "y":12.3636363636364
+                            }, 
+                            {
+                             "x":6.63636363636364,
+                             "y":14.4545454545455
+                            }, 
+                            {
+                             "x":0.454545454545455,
+                             "y":11.8181818181818
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":9.36363636363636,
+                     "y":9.36363636363636
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "type":"ESpike"
                     }
                 }]
         }],
