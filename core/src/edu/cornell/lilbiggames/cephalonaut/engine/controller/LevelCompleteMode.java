@@ -104,20 +104,25 @@ public class LevelCompleteMode extends MenuMode {
         starScoring.setFrame(0);
     }
 
+    public void setDefault(){
+        super.setDefault();
+        Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
+    }
+
     private void update(float delta){
         SoundController.killAllSound();
         inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
-        if (selectedOption == 0 && inputController.isSelectPressed()){
-            listener.exitScreen(this, NEXT_LEVEL_CODE);
-        } else if(selectedOption == 1 && inputController.isSelectPressed()){
-            listener.exitScreen(this, RESTART_LEVEL_CODE);
-        } else if(selectedOption == 2 && inputController.isSelectPressed() || inputController.didExit()){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed()){
+            exitScreen();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.isBackPressed()){
             listener.exitScreen(this, EXIT_LEVEL_CODE);
-        } else if(inputController.isUpPressed()){
-            selectedOption = selectedOption == 0 ? options.length-1 : selectedOption -1;
-        } else if(inputController.isDownPressed()){
-            selectedOption = (selectedOption + 1 ) % options.length;
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
+                inputController.isUpPressed()){
+            selectedOption = selectedOption == 0 ? options.length-1 : selectedOption-1;
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
+                inputController.isDownPressed()){
+            selectedOption = (selectedOption+1)%options.length;
         }
 
         frame += delta * 10f;
@@ -128,6 +133,21 @@ public class LevelCompleteMode extends MenuMode {
             }
             starScoring.setFrame(starScoring.getFrame() + 1);
         }
+    }
+
+    public void exitScreen() {
+        if (selectedOption == 0) {
+            listener.exitScreen(this, NEXT_LEVEL_CODE);
+        } else if (selectedOption == 1) {
+            listener.exitScreen(this, RESTART_LEVEL_CODE);
+        } else if (selectedOption == 2) {
+            listener.exitScreen(this, EXIT_LEVEL_CODE);
+        }
+    }
+
+    @Override
+    public void optionSelected(int i) {
+        selectedOption = i;
     }
 
     @Override
@@ -159,9 +179,15 @@ public class LevelCompleteMode extends MenuMode {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
+        canvas.draw(background,
+                0.5f*canvas.getWidth()-canvas.getCameraX(),
+                0.5f*canvas.getHeight()-canvas.getCameraY(),
+                0, 0, background.getWidth() * 10, background.getHeight() * 10,
+                20,
+                20);
 
         canvas.setCameraPos(width / 2, height / 2);
-        canvas.drawOverlay(background, true);
+//        canvas.drawOverlay(background, true);
 
         canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
 
@@ -174,7 +200,7 @@ public class LevelCompleteMode extends MenuMode {
 
         canvas.drawTextCentered(timeString, displayFont, 0f);
 
-        super.drawOptions(options, selectedOption, 200);
+        super.drawOptions(options, selectedOption, 150);
 
         canvas.end();
     }

@@ -42,6 +42,7 @@ public class SettingsMode extends MenuMode {
     private int currentKey;
     private Vector2 startPosition;
     private boolean dragging;
+    private boolean keybindingMode;
 
     private final float DEFAULT_VOLUME = 0.5f;
     private float musicVolume;
@@ -101,6 +102,7 @@ public class SettingsMode extends MenuMode {
         volumeDown = assets.getEntry("volume-down", Texture.class);
         volumeUp = assets.getEntry("volume-up", Texture.class);
 
+        keybindingMode = false;
         dragging = false;
         musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
     }
@@ -119,6 +121,7 @@ public class SettingsMode extends MenuMode {
     }
 
     public void setDefault(){
+        super.setDefault();
         Gdx.input.setInputProcessor(settingsInput); selectedOption = 0;
     }
 
@@ -127,15 +130,24 @@ public class SettingsMode extends MenuMode {
         inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
 
-        if(inputController.isUpPressed()){
-            selectedOption = selectedOption == 0 ? options.length-1 : selectedOption -1;
-        } else if(inputController.isDownPressed()){
-            selectedOption = (selectedOption +1)%options.length;
-        } else if(inputController.didExit()){
-            listener.exitScreen(this, RETURN_TO_START_CODE);
-        } else {
+        if(keybindingMode) {
             if(Gdx.input.isKeyJustPressed(currentKey)) {
                 keyBindings.put(options[selectedOption], currentKey);
+                keybindingMode = false;
+            }
+        } else {
+            if (inputController.isUpPressed()) {
+                selectedOption = selectedOption == 0 ? options.length - 1 : selectedOption - 1;
+            } else if (inputController.isDownPressed()) {
+                selectedOption = (selectedOption + 1) % options.length;
+            } else if (inputController.didExit() || inputController.isBackPressed()) {
+                listener.exitScreen(this, RETURN_TO_START_CODE);
+            } else {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                    keybindingMode = true;
+
+                    //keyBindings.put(options[selectedOption], currentKey);
+                }
             }
         }
 
@@ -148,9 +160,12 @@ public class SettingsMode extends MenuMode {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
-
-        canvas.draw(background, 0.5f*width-canvas.getCameraX()/scale.x, 0.5f*height-canvas.getCameraY()/scale.y , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth()/scale.x, (float)height/(float)background.getHeight()/scale.y);
-
+        canvas.draw(background,
+                0.5f*canvas.getWidth()-canvas.getCameraX(),
+                0.5f*canvas.getHeight()-canvas.getCameraY(),
+                0, 0, background.getWidth() * 10, background.getHeight() * 10,
+                20,
+                20);
         displayFont.getData().setScale(scale.x);
         displayFont.setColor(Color.ORANGE);
         canvas.drawTextCentered("SETTINGS", displayFont, height/4);
@@ -182,7 +197,8 @@ public class SettingsMode extends MenuMode {
             }
             canvas.drawText(binding, displayFont, width/4, textHeight);
             if(i == selectedOption) displayFont.setColor(Color.CYAN);
-            canvas.drawText(Input.Keys.toString(keyBindings.get(binding)), displayFont, 0.75f*width, textHeight);
+            if(i == selectedOption && keybindingMode) canvas.drawText("<Enter Key>", displayFont, 0.75f*width, textHeight);
+            else canvas.drawText(Input.Keys.toString(keyBindings.get(binding)), displayFont, 0.75f * width, textHeight);
             displayFont.setColor(Color.ORANGE);
             i++;
         }

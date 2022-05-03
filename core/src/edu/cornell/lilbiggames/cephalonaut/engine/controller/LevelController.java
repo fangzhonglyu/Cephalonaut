@@ -90,6 +90,13 @@ public class LevelController implements ContactListener {
     public void attract(LEBlackHole blackHole) {
         Vector2 blackHolePos = blackHole.getBody().getWorldCenter();
         Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
+        if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange() * 1.5f){
+            SoundController.setBlackHoleSound(true,1f-Math.min(1f,blackHolePos.dst(cephalonautPos)/blackHole.getBlackHoleRange()));
+        }
+        else{
+            SoundController.setBlackHoleSound(false,0f );
+        }
+
 
         if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange() /*||
                 blackHolePos.dst(cephalonaut.getGrapple().getPosition()) < blackHole.getBlackHoleRange()*/) {
@@ -171,7 +178,7 @@ public class LevelController implements ContactListener {
             if (contactObject instanceof LevelElement) {
 
                 ((LevelElement) contactObject).setInContact(true);
-                if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)) {
+                if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)||((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE)||((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKEBALL)) {
                     cephalonaut.setAlive(false);
                 }
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.REFILL)) {
@@ -185,6 +192,10 @@ public class LevelController implements ContactListener {
                     openDialogue(dialogueTrigger.getTarget());
                     dialogueTrigger.deactivate();
                 }
+            }
+
+            if (contactObject.getRestitution()>1) {
+                SoundController.playSound(1,1);
             }
 
             if (contactObject instanceof LEBlackHole) {

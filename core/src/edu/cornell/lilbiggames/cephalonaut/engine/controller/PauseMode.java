@@ -1,5 +1,7 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
@@ -42,7 +44,25 @@ public class PauseMode extends MenuMode {
     }
 
     public void setDefault(){
-        selectedOption = 0;
+        Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
+        super.setDefault();
+    }
+
+    @Override
+    public void exitScreen(){
+        if(selectedOption == 0){
+        listener.exitScreen(this, RESUME_LEVEL_CODE);
+        } else if(selectedOption == 1){
+            listener.exitScreen(this, EXIT_LEVEL_CODE);
+        } else if(selectedOption == 2){
+            listener.exitScreen(this, RESTART_LEVEL_CODE);
+        }
+    }
+
+
+    @Override
+    public void optionSelected(int i){
+        selectedOption = i;
     }
 
     @Override
@@ -54,18 +74,15 @@ public class PauseMode extends MenuMode {
     public void render(float delta) {
         inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
-
-        if(selectedOption == 0 && inputController.isSelectPressed()){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed()){
+            exitScreen();
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.didExit()){
             listener.exitScreen(this, RESUME_LEVEL_CODE);
-        } else if(selectedOption == 1 && inputController.isSelectPressed()){
-            listener.exitScreen(this, EXIT_LEVEL_CODE);
-        } else if(selectedOption == 2 && inputController.isSelectPressed()){
-            listener.exitScreen(this, RESTART_LEVEL_CODE);
-        } else if(inputController.didExit()){
-            listener.exitScreen(this, RESUME_LEVEL_CODE);
-        } else if(inputController.isUpPressed()){
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
+                inputController.isUpPressed()){
             selectedOption = selectedOption == 0 ? options.length-1 : selectedOption -1;
-        } else if(inputController.isDownPressed()){
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
+                inputController.isDownPressed()){
             selectedOption = (selectedOption +1)%options.length;
         }
 
@@ -78,8 +95,12 @@ public class PauseMode extends MenuMode {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
-        canvas.draw(background, 0.5f*canvas.getWidth()-canvas.getCameraX()/scale.x, 0.5f*canvas.getHeight()-canvas.getCameraY()/scale.y , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth()/scale.x, (float)height/(float)background.getHeight()/scale.y);
-
+        canvas.draw(background,
+                0.5f*canvas.getWidth()-canvas.getCameraX(),
+                0.5f*canvas.getHeight()-canvas.getCameraY(),
+                0, 0, background.getWidth() * 10, background.getHeight() * 10,
+                20,
+                20);
         super.drawOptions(options, selectedOption);
 
         canvas.end();

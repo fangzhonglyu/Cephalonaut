@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GDXRoot;
@@ -47,14 +48,14 @@ public class CreditsScreen extends MenuMode implements Screen {
 
         // TODO: have this actually parse from a json
         credits = new Credit[8];
-        credits[0] = new Credit("michael",new String[]{"programmer"},assets.getEntry("levelicon:level_0",Texture.class));
-        credits[1] = new Credit("teddy",new String[]{"programmer"},assets.getEntry("levelicon:level_1",Texture.class));
-        credits[2] = new Credit("matias",new String[]{"programmer"},assets.getEntry("levelicon:level_2",Texture.class));
-        credits[3] = new Credit("oliver",new String[]{"programmer"},assets.getEntry("levelicon:level_3",Texture.class));
-        credits[4] = new Credit("angie",new String[]{"programmer"},assets.getEntry("levelicon:level_4",Texture.class));
-        credits[5] = new Credit("barry",new String[]{"programmer","designer"},assets.getEntry("levelicon:level_5",Texture.class));
-        credits[6] = new Credit("estelle",new String[]{"designer"},assets.getEntry("levelicon:level_6",Texture.class));
-        credits[7] = new Credit("alex",new String[]{"music"},assets.getEntry("levelicon:level_6",Texture.class));
+        credits[0] = new Credit("michael",new String[]{"programmer"},assets.getEntry("michael",Texture.class));
+        credits[1] = new Credit("teddy",new String[]{"programmer"},assets.getEntry("teddy",Texture.class));
+        credits[2] = new Credit("matias",new String[]{"programmer"},assets.getEntry("matias",Texture.class));
+        credits[3] = new Credit("oliver",new String[]{"programmer"},assets.getEntry("oliver",Texture.class));
+        credits[4] = new Credit("angie",new String[]{"programmer"},assets.getEntry("angie",Texture.class));
+        credits[5] = new Credit("barry",new String[]{"programmer","designer"},assets.getEntry("barry",Texture.class));
+        credits[6] = new Credit("estelle",new String[]{"designer"},assets.getEntry("estelle",Texture.class));
+        credits[7] = new Credit("alex",new String[]{"music"},assets.getEntry("alex",Texture.class));
 
     }
 
@@ -65,14 +66,20 @@ public class CreditsScreen extends MenuMode implements Screen {
 
     @Override
     public void render(float v) {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+        InputController inputController = InputController.getInstance();
+        inputController.readInput(new Rectangle(), new Vector2());
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.isBackPressed()){
             listener.exitScreen(this, MenuMode.RETURN_TO_START_CODE);
         }
         canvas.begin();
         float width = canvas.getWidth();
         float height = canvas.getHeight();
-        canvas.draw(background, 0.5f*canvas.getWidth()-canvas.getCameraX()/scale.x, 0.5f*canvas.getHeight()-canvas.getCameraY()/scale.y , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth()/scale.x, (float)height/(float)background.getHeight()/scale.y);
-        displayFont.getData().setScale(0.4f);
+        canvas.draw(background,
+                0.5f*canvas.getWidth()-canvas.getCameraX(),
+                0.5f*canvas.getHeight()-canvas.getCameraY(),
+                0, 0, background.getWidth() * 10, background.getHeight() * 10,
+                20,
+                20);        displayFont.getData().setScale(0.4f);
 
         float startX = canvas.getWidth()/2-scale.x*(100+20)*4;
         float yOdd = canvas.getHeight()  - canvas.getHeight()/3;

@@ -1,11 +1,14 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
@@ -44,6 +47,50 @@ public class MenuMode implements Screen {
 
     protected Vector2 bounds,scale;
 
+    private Rectangle[] optionsHitBoxes;
+
+    protected int selectedOption;
+
+    protected InputAdapter menuInput = new InputAdapter() {
+        public boolean mouseMoved (int x, int screenY) {
+            float y = canvas.getHeight() - screenY;
+
+            if(optionsHitBoxes != null){
+                for(int i = 0; i < optionsHitBoxes.length; i++){
+                    Rectangle hitBox = optionsHitBoxes[i];
+                    if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                        selectedOption = i;
+                        optionSelected(i);
+                    }
+                }
+            }
+            return true;
+        }
+
+        public boolean touchDown (int x, int screenY, int pointer, int button) {
+            float y = canvas.getHeight() - screenY;
+            if(optionsHitBoxes != null){
+                for(int i = 0; i < optionsHitBoxes.length; i++){
+                    Rectangle hitBox = optionsHitBoxes[i];
+                    if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                        selectedOption = i;
+                        exitScreen();
+                    }
+                }
+            }
+            return true;
+        }
+
+    };
+
+    public void exitScreen(){
+
+    }
+
+    public void optionSelected(int i){
+
+    }
+
     /**
      * Creates a MainMenuMode with the default size and position.
      *
@@ -62,6 +109,7 @@ public class MenuMode implements Screen {
         arrow = assets.getEntry("arrow", Texture.class);
 
         this.assets = assets;
+
 
     }
 
@@ -92,6 +140,8 @@ public class MenuMode implements Screen {
     }
 
     protected void drawOptions(String[] options, int selectedOption, int offset){
+        optionsHitBoxes = new Rectangle[options.length];
+
         float start = (options.length*displayFont.getLineHeight())/2 - offset;
         displayFont.setColor(Color.ORANGE);
         displayFont.getData().setScale(0.7f*scale.x);
@@ -102,6 +152,8 @@ public class MenuMode implements Screen {
             }
             canvas.drawTextCentered(options[i], displayFont, start - 1.2f*displayFont.getLineHeight()*i - 2*displayFont.getLineHeight());
             displayFont.setColor(Color.ORANGE);
+            optionsHitBoxes[i] = new Rectangle(0,canvas.getHeight() / 2f + start - 1.2f*displayFont.getLineHeight() * i - 2 * displayFont.getLineHeight() - .6f*displayFont.getLineHeight(), canvas.getWidth(), 1.2f*displayFont.getLineHeight());
+
         }
         displayFont.setColor(Color.WHITE);
         displayFont.getData().setScale(scale.x);
@@ -128,6 +180,23 @@ public class MenuMode implements Screen {
     }
 
     public void draw(){
+
+    }
+
+    public void setDefault(){
+        float x = Gdx.input.getX();
+        float y = canvas.getHeight() - Gdx.input.getY();
+
+        if(optionsHitBoxes != null){
+            for(int i = 0; i < optionsHitBoxes.length; i++){
+                Rectangle hitBox = optionsHitBoxes[i];
+                if(hitBox.x <= x && hitBox.x + hitBox.width >= x
+                        && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                    selectedOption = i;
+                    optionSelected(i);
+                }
+            }
+        }
 
     }
 }

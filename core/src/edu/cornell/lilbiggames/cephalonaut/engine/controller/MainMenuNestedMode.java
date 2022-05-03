@@ -99,7 +99,7 @@ public class MainMenuNestedMode extends MenuMode {
             completedCheckpoints = (completedCheckpoints+1)%checkpoints;
         } else if(inputController.isPrevPressed()){
             completedCheckpoints = completedCheckpoints == 0 ? checkpoints - 1 : completedCheckpoints - 1;
-        } else if(inputController.didExit()){
+        } else if(inputController.didExit() || inputController.isBackPressed()){
             listener.exitScreen(this, NESTED_MENU_EXIT_CODE);
         }
     }
@@ -145,8 +145,12 @@ public class MainMenuNestedMode extends MenuMode {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
-        canvas.draw(background, 0.5f*canvas.getWidth()-canvas.getCameraX()/scale.x, 0.5f*canvas.getHeight()-canvas.getCameraY()/scale.y , 0, 0, background.getWidth(), background.getHeight(), (float)width/(float)background.getWidth()/scale.x, (float)height/(float)background.getHeight()/scale.y);
-
+        canvas.draw(background,
+                0.5f*canvas.getWidth()-canvas.getCameraX(),
+                0.5f*canvas.getHeight()-canvas.getCameraY(),
+                0, 0, background.getWidth() * 10, background.getHeight() * 10,
+                20,
+                20);
         float diff = 100;
         float start = width/2 - diff * (checkpoints/2);
         for(int i = 0; i < checkpoints; i++){
