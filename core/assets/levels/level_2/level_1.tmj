@@ -46,7 +46,7 @@
          "name":"objects",
          "objects":[
                 {
-                 "gid":258,
+                 "gid":386,
                  "height":27,
                  "id":193,
                  "name":"start",
@@ -74,7 +74,7 @@
                  "y":668.993973770293
                 }, 
                 {
-                 "gid":259,
+                 "gid":387,
                  "height":29.6387,
                  "id":196,
                  "name":"",
@@ -144,7 +144,7 @@
                  "y":346.256996452503
                 }, 
                 {
-                 "gid":272,
+                 "gid":400,
                  "height":32,
                  "id":214,
                  "name":"",
@@ -156,7 +156,7 @@
                  "y":151.250266240682
                 }, 
                 {
-                 "gid":272,
+                 "gid":400,
                  "height":32,
                  "id":215,
                  "name":"",
@@ -168,7 +168,7 @@
                  "y":151.843198137008
                 }, 
                 {
-                 "gid":269,
+                 "gid":397,
                  "height":24,
                  "id":216,
                  "name":"",
@@ -204,6 +204,16 @@
          "name":"music",
          "type":"int",
          "value":13
+        }, 
+        {
+         "name":"threeStars",
+         "type":"int",
+         "value":10
+        }, 
+        {
+         "name":"twoStars",
+         "type":"int",
+         "value":20
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
@@ -218,7 +228,7 @@
          "source":"..\/..\/space-tiles.tsj"
         }, 
         {
-         "firstgid":257,
+         "firstgid":385,
          "source":"..\/..\/objects.tsj"
         }],
  "tilewidth":16,
