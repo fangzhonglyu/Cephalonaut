@@ -6677,6 +6677,7 @@
          "type":"Background"
         }],
  "tilewidth":16,
+ "transparentcolor":"#ff00ff",
  "type":"tileset",
  "version":"1.8"
 }
