@@ -106,7 +106,6 @@ public class MenuMode implements Screen {
 
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        arrow = assets.getEntry("arrow", Texture.class);
 
         this.assets = assets;
 

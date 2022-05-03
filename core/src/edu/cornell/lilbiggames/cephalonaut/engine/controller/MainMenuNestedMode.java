@@ -1,6 +1,9 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.CHECKPOINT_SELECTED_CODE;
@@ -48,6 +52,11 @@ public class MainMenuNestedMode extends MenuMode {
 
     private int completedCheckpoints;
 
+    private FilmStrip filmstrip;
+    /** Animation Counter*/
+    private float frame;
+    private float maxFrame;
+
     /**
      * Creates a MainMenuMode with the default size and position.
      *
@@ -72,6 +81,10 @@ public class MainMenuNestedMode extends MenuMode {
         octopusTexture = new TextureRegion(assets.getEntry( "octopus.png", Texture.class ));
         levelTexture = assets.getEntry( "level.png", Texture.class );
         levelCompletedTexture = assets.getEntry( "completedLevel.png", Texture.class );
+
+        filmstrip = new FilmStrip(assets.getEntry("octopus",Texture.class), 5, 9);
+        frame = 0;
+        maxFrame = 4;
     }
 
     @Override
@@ -91,15 +104,17 @@ public class MainMenuNestedMode extends MenuMode {
     }
 
     private void update(float delta){
+        frame = (frame+delta*5f)%maxFrame;
+
         inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
-        if(inputController.isSelectPressed()){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
             levelSelected = true;
-        } else if (inputController.isNextPressed()){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D)){
             completedCheckpoints = (completedCheckpoints+1)%checkpoints;
-        } else if(inputController.isPrevPressed()){
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A)){
             completedCheckpoints = completedCheckpoints == 0 ? checkpoints - 1 : completedCheckpoints - 1;
-        } else if(inputController.didExit() || inputController.isBackPressed()){
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.isBackPressed()){
             listener.exitScreen(this, NESTED_MENU_EXIT_CODE);
         }
     }
@@ -153,15 +168,21 @@ public class MainMenuNestedMode extends MenuMode {
                 20);
         float diff = 100;
         float start = width/2 - diff * (checkpoints/2);
-        for(int i = 0; i < checkpoints; i++){
-            if(i <= completedCheckpoints){
-                canvas.draw(levelCompletedTexture, i*diff+start, height/2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
+        for(int i = 0; i < checkpoints; i++) {
+            if (i <= completedCheckpoints) {
+                canvas.draw(levelCompletedTexture, i * diff + start, height / 2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
             } else {
-                canvas.draw(levelTexture, i*diff+start, height/2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
+                canvas.draw(levelTexture, i * diff + start, height / 2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
             }
         }
 
-        canvas.draw(octopusTexture, start + completedCheckpoints*diff, height/2 + levelTexture.getHeight()*0.1f + 10);
+        filmstrip.setFrame((int)frame);
+
+        float ox = 0.5f * filmstrip.getRegionWidth();
+        float oy = 0.75f * filmstrip.getRegionHeight();
+        canvas.draw(filmstrip, Color.WHITE, 0, 0,
+                start + completedCheckpoints*diff, height/2 + filmstrip.getRegionHeight()*0.1f,
+                0, scale.x*2, scale.y*2);
 
         canvas.end();
     }

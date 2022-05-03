@@ -32,6 +32,8 @@ public class MainMenuMode extends MenuMode {
     private Texture background;
 
     private Texture levelIcon;
+    private Texture leftArrow;
+    private Texture rightArrow;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -97,6 +99,9 @@ public class MainMenuMode extends MenuMode {
 
         background = assets.getEntry( "main-menu:background", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        leftArrow = assets.getEntry( "arrowLeft", Texture.class);
+        rightArrow = assets.getEntry( "arrowRight", Texture.class);
         this.assets = assets;
 
         curLevel = DEFAULT_LEVEL;
@@ -204,6 +209,17 @@ public class MainMenuMode extends MenuMode {
                     levelIconWidth / 2f, levelIconHeight / 2f,
                     width / 2f, height / 2f + 100,
                     0, 1.5f * scale.x, 1.5f * scale.y);
+
+        // left arrow
+        canvas.draw(leftArrow, Color.WHITE,
+                leftArrow.getWidth() / 2f, leftArrow.getHeight() / 2f,
+                width / 5f, height / 2f,
+                0, 5f * scale.x, 5f * scale.y);
+
+        //right arrow
+        canvas.draw(rightArrow, Color.WHITE,
+                rightArrow.getWidth() / 2f, rightArrow.getHeight() / 2f,
+                width - width / 5f, height / 2f, 0, 5f * scale.x, 5f * scale.y);
 
         hitBox = new Rectangle(width / 2f - (1.5f*scale.x)*levelIconWidth/2f, (height / 2f + 100) + (1.5f*scale.y)*levelIconHeight/2f, (1.5f*scale.x)*levelIconWidth, (1.5f*scale.y)*levelIconHeight);
 
