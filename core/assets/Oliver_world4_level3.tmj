@@ -24,6 +24,12 @@
                  "height":31.0688535238714,
                  "id":1,
                  "name":"start",
+                 "properties":[
+                        {
+                         "name":"ink",
+                         "type":"float",
+                         "value":2
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -722,6 +728,18 @@
                  "height":24,
                  "id":135,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -734,6 +752,18 @@
                  "height":24,
                  "id":136,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -746,6 +776,18 @@
                  "height":24,
                  "id":137,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -758,6 +800,18 @@
                  "height":24,
                  "id":138,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,

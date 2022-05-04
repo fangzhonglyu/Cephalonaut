@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Queue;
@@ -324,6 +325,7 @@ public class PlayMode extends WorldController implements Screen {
         }
 
         if (input.didExit()) {
+
             if (listener != null) {
                 exiting = true;
                 pause();
@@ -356,8 +358,17 @@ public class PlayMode extends WorldController implements Screen {
                 (canvas.getCameraX() - canvas.getWidth() / 2f) / scale.x,
                 (canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
 
+        if(input.xbox != null && input.xbox.isConnected()) {
+            crossHair.x = 100 * input.getGrappleDirec().x + cephalonaut.getPosition().x;
+            crossHair.y = 100 * input.getGrappleDirec().y + cephalonaut.getPosition().y;
+        }
+
         cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);
-        canvas.setCameraPos(bounds, scale, MathUtils.roundPositive(cephalonaut.getX()* scale.x), MathUtils.roundPositive(cephalonaut.getY()* scale.y));
+
+        Vector2 center = cephalonaut.getBody().getWorldCenter();
+        canvas.setCameraPos(bounds, scale,
+                MathUtils.roundPositive(center.x * scale.x),
+                MathUtils.roundPositive(center.y * scale.y));
 
         if (fadeInCount > 0) {
             fadeInCount -= .05f;
@@ -376,7 +387,7 @@ public class PlayMode extends WorldController implements Screen {
         }
 
         // kill michael when out of bounds
-        if (cephalonaut.getX() < -1f ||  cephalonaut.getX() >= bounds.getWidth() || cephalonaut.getY() < -1f|| cephalonaut.getY() >= bounds.getHeight()) {
+        if(cephalonaut.getX() < -1.5f ||  cephalonaut.getX() >= bounds.getWidth() || cephalonaut.getY() < -1.5f|| cephalonaut.getY() >= bounds.getHeight()) {
             cephalonaut.setAlive(false);
         }
     }
@@ -404,6 +415,9 @@ public class PlayMode extends WorldController implements Screen {
         canvas.begin();
 
         for (GameObject obj : objects) {
+            if(obj instanceof  LevelElement && ((LevelElement) obj).getElement() == LevelElement.Element.FINISH) {
+                canvas.drawLevelEndGlow(obj.getX() * scale.x, obj.getY() * scale.y);
+            }
             obj.draw(canvas);
             if(obj instanceof LEBlackHole) {
                 canvas.drawBlackHoleOutline(obj.getX() * scale.x, obj.getY() * scale.y,

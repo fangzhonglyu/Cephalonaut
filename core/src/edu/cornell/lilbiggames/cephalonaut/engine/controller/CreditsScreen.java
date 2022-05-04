@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GDXRoot;
@@ -65,7 +66,9 @@ public class CreditsScreen extends MenuMode implements Screen {
 
     @Override
     public void render(float v) {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+        InputController inputController = InputController.getInstance();
+        inputController.readInput(new Rectangle(), new Vector2());
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.isBackPressed()){
             listener.exitScreen(this, MenuMode.RETURN_TO_START_CODE);
         }
         canvas.begin();

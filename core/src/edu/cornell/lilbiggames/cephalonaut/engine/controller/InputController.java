@@ -51,6 +51,7 @@ public class InputController {
 	private boolean secondaryPrevious;
 	/** Whether the teritiary action button was pressed. */
 	private boolean tertiaryPressed;
+	private boolean tertiaryPrevious;
 
 	private boolean selectPressed;
 	private boolean selectPrevious;
@@ -59,13 +60,19 @@ public class InputController {
 	private boolean nextPressed;
 	private boolean nextPrevious;
 	private boolean upPressed;
+	private boolean upPrevious;
 	private boolean downPressed;
+	private boolean downPrevious;
 	/** Whether the debug toggle was pressed. */
 	private boolean debugPressed;
 	private boolean debugPrevious;
 	/** Whether the exit button was pressed. */
 	private boolean exitPressed;
 	private boolean exitPrevious;
+	private boolean backPressed;
+	private boolean backPrevious;
+
+	private Vector2 grappleDirec;
 	
 	/** How much did we move horizontally? */
 	private float horizontal;
@@ -187,7 +194,11 @@ public class InputController {
 	 * @return true if the tertiary action button was pressed. This should be used for switch grappling mode.
 	 */
 	public boolean didTertiary() {
-		return tertiaryPressed && !secondaryPrevious;
+		if(xbox != null && xbox.isConnected()) {
+			return tertiaryPressed && !tertiaryPrevious;
+		} else {
+			return tertiaryPressed && !secondaryPrevious;
+		}
 	}
 
 	/**
@@ -259,17 +270,23 @@ public class InputController {
 	 * @return true if the prev button was pressed
 	 */
 	public boolean isUpPressed(){
-		return upPressed;
+		return upPressed && !upPrevious;
 	}
 
+
+	public Vector2 getGrappleDirec(){
+		return grappleDirec;
+	}
 	/**
 	 * Returns true if the player indicated to go to previous
 	 *
 	 * @return true if the prev button was pressed
 	 */
 	public boolean isDownPressed(){
-		return downPressed;
+		return downPressed && !downPrevious;
 	}
+
+	public boolean isBackPressed() { return backPressed && !backPrevious; }
 
 	/**
 	 * Gets the rotation of the octopus
@@ -296,6 +313,7 @@ public class InputController {
 			xbox = null;
 		}
 
+		grappleDirec = new Vector2();
 		keyBindings = new HashMap<>();
 		crosshair = new Vector2();
 		crosscache = new Vector2();
@@ -316,17 +334,21 @@ public class InputController {
 		// Helps us ignore buttons that are held down
 		primePrevious = primePressed;
 		secondaryPrevious = secondaryPressed;
+		tertiaryPrevious = tertiaryPressed;
 		resetPrevious  = resetPressed;
 		debugPrevious  = debugPressed;
 		exitPrevious = exitPressed;
 		selectPrevious = selectPressed;
 		nextPrevious = nextPressed;
 		prevPrevious = prevPressed;
+		backPrevious = backPressed;
+		upPrevious = upPressed;
+		downPrevious = downPressed;
 		
 		// Check to see if a GamePad is connected
 		if (xbox != null && xbox.isConnected()) {
 			readGamepad(bounds, scale);
-			readKeyboard(bounds, scale, true); // Read as a back-up
+			//readKeyboard(bounds, scale, true); // Read as a back-up
 		} else {
 			readKeyboard(bounds, scale, false);
 		}
@@ -343,29 +365,61 @@ public class InputController {
 	 * @param scale  The drawing scale
 	 */
 	private void readGamepad(Rectangle bounds, Vector2 scale) {
-		resetPressed = xbox.getStart();
+		resetPressed = xbox.getX();
 		exitPressed  = xbox.getBack();
 		debugPressed  = xbox.getY();
-
-		// Increase animation frame, but only if trying to move
-		horizontal = xbox.getLeftX();
-		vertical   = xbox.getLeftY();
 		primePressed = xbox.getRightTrigger() > 0.6f;
-		secondaryPressed = xbox.getLeftTrigger() > 0.6f;
+		selectPressed = xbox.getA();
+		downPressed = xbox.getLeftY() > 0.6f;
+		upPressed = xbox.getLeftY() < -0.6f;
+		nextPressed = xbox.getLeftX() > 0.6f;
+		prevPressed = xbox.getLeftX() < -0.6f;
+		tertiaryPressed = xbox.getLeftTrigger() > 0.6f;
+//		tertiaryPressed = xbox.getLBumper();
+		backPressed = xbox.getB();
 		
 		// Move the crosshairs with the right stick.
 //		tertiaryPressed = xbox.getA();
-		crosscache.set(xbox.getRightX(), xbox.getRightY());
-		if (crosscache.len2() > GP_THRESHOLD) {
-			momentum += GP_ACCELERATE;
-			momentum = Math.min(momentum, GP_MAX_SPEED);
-			crosscache.scl(momentum);
-			crosscache.scl(1/scale.x,1/scale.y);
-			crosshair.add(crosscache);
-		} else {
-			momentum = 0;
+//		crosscache.set(xbox.getRightX(), xbox.getRightY());
+//		if (crosscache.len2() > GP_THRESHOLD) {
+//			momentum += GP_ACCELERATE;
+//			momentum = Math.min(momentum, GP_MAX_SPEED);
+//			crosscache.scl(momentum);
+//			crosscache.scl(1/scale.x,1/scale.y);
+//			crosshair.add(crosscache);
+//		} else {
+//			momentum = 0;
+//		}
+//		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT));
+//		tertiaryPressed = (secondary && tertiaryPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) ||
+//				(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT));
+
+		// Directional controls
+//		rotation = (secondary ? rotation : 0.0f);
+		rotation = 0.0f;
+		if (xbox.getLeftX() > 0.6f) {
+			rotation += 1.0f;
 		}
-		clampPosition(bounds);
+		if (xbox.getLeftX() < -0.6f){
+			rotation -= 1.0f;
+		}
+
+		thrusterApplied = xbox.getRightTrigger() > 0.6f;
+
+		if(grappleDirec.x > .6f || grappleDirec.x < -.6f || grappleDirec.y > .6f || grappleDirec.y < -.6f) {
+			secondaryPressed = true;
+		} else {
+			secondaryPressed = false;
+		}
+
+		grappleDirec.x = xbox.getRightX();
+		grappleDirec.y = -xbox.getRightY();
+
+		// Mouse results
+//		crosshair.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+//		crosshair.scl(1/scale.x,1/scale.y);
+
+//		clampPosition(bounds);
 	}
 
 	/**

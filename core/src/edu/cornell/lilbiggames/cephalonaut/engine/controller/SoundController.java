@@ -23,6 +23,11 @@ public class SoundController {
     /** Ink sound object */
     private static Sound inkSound;
 
+    private static Sound blackHoleSound;
+
+    private static boolean blackHolePlaying = false;
+    private static long blackHoleID;
+
     /** Whether the ink sound is playing */
     private static boolean inkPlaying = false;
 
@@ -43,6 +48,7 @@ public class SoundController {
         musicCache[MENU_MUSIC_INDEX] = directory.getEntry("mainMenu", Music.class);
         inkSound = directory.getEntry("ink", Sound.class);
         soundCache[0] = directory.getEntry("suction", Sound.class);
+        soundCache[1] = directory.getEntry("bounce",Sound.class);
         //TODO load the sound effects into the cache
     }
 
@@ -60,6 +66,20 @@ public class SoundController {
                 inkPlaying = true;
                 inkSound.loop(sfxVolume);
             }
+    }
+
+    public synchronized static void setBlackHoleSound(boolean sound, float volume) {
+        if (!sound) {
+            blackHolePlaying = false;
+            //blackHoleSound.stop();
+        }
+        if (!blackHolePlaying && sound) {
+            blackHolePlaying = true;
+            //blackHoleID = blackHoleSound.loop(sfxVolume*volume);
+        }
+        if (blackHolePlaying && sound){
+            //blackHoleSound.setVolume(blackHoleID,volume*sfxVolume);
+        }
     }
 
     public synchronized static void setPlaying(boolean play) {

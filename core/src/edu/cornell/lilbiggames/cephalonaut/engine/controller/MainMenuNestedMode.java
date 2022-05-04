@@ -102,7 +102,7 @@ public class MainMenuNestedMode extends MenuMode {
             completedCheckpoints = (completedCheckpoints+1)%checkpoints;
         } else if(inputController.isPrevPressed()){
             completedCheckpoints = completedCheckpoints == 0 ? checkpoints - 1 : completedCheckpoints - 1;
-        } else if(inputController.didExit()){
+        } else if(inputController.didExit() || inputController.isBackPressed()){
             listener.exitScreen(this, NESTED_MENU_EXIT_CODE);
         }
     }

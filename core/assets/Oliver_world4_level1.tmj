@@ -436,11 +436,6 @@
                              "isSensor":true,
                              "type":"Wormhole"
                             }
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"object",
-                         "value":23
                         }],
                  "rotation":0,
                  "type":"",
@@ -465,11 +460,6 @@
                              "isSensor":true,
                              "type":"Wormhole"
                             }
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"object",
-                         "value":175
                         }],
                  "rotation":0,
                  "type":"",
@@ -480,7 +470,7 @@
                 }, 
                 {
                  "gid":186,
-                 "height":16,
+                 "height":77.5924004453605,
                  "id":64,
                  "name":"",
                  "properties":[
@@ -501,9 +491,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":16,
-                 "x":15.7900625829698,
-                 "y":755.20273089323
+                 "width":27.8976799524093,
+                 "x":13.240559736025,
+                 "y":809.996457080071
                 }, 
                 {
                  "gid":255,
@@ -547,28 +537,6 @@
                  "visible":true,
                  "width":16,
                  "x":394.048169922245,
-                 "y":269.737641968519
-                }, 
-                {
-                 "gid":255,
-                 "height":78.7686,
-                 "id":71,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "type":"Glass Barrier"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":460.42404703205,
                  "y":269.737641968519
                 }, 
                 {
@@ -1085,6 +1053,30 @@
                  "width":20.8653,
                  "x":1162.30927040722,
                  "y":378.599234389943
+                }, 
+                {
+                 "gid":138,
+                 "height":24,
+                 "id":192,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":true,
+                             "type":"Refill"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":701.420542635659,
+                 "y":241.149224806202
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1093,7 +1085,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":192,
+ "nextobjectid":193,
  "orientation":"orthogonal",
  "properties":[
         {

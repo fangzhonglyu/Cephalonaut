@@ -751,23 +751,39 @@ public class GameCanvas {
 		spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
 	}
 
-	public void drawSimpleFuelBar(float ink, float x, float y){
+	public void drawSimpleFuelBar(float ink, float maxInk, float x, float y) {
+		float percent = ink / maxInk;
 		spriteBatch.end();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRen.setColor(Color.WHITE);
+
 		float width = getWidth() / 18f;
 		float height = getHeight() * 15f / 1080f;
-		shapeRen.rect(x - width / 2, y, width, height);
-		shapeRen.setColor(ink > 0.6  ? Color.PURPLE : ink > 0.3 ? Color.ORANGE : Color.RED);
-		shapeRen.rect(x - width / 2 + 1, y + 1, width * ink - 2, height - 2);
+		float left = x - width / 2f;
+		float bottom = y;
+
+		// Draw container
+		shapeRen.setColor(Color.BLACK);
+		shapeRen.rect(left - 1, bottom - 1, width + 2, height + 2);
+		shapeRen.setColor(.85f, .85f, .85f, 1f);
+		shapeRen.rect(left + 1, bottom + 1, width - 2, height - 2);
+
+		// Draw fuel indicator
+		Color color = percent > 0.6  ? Color.PURPLE : percent > 0.3 ? Color.ORANGE : Color.RED;
+		shapeRen.setColor(color);
+		shapeRen.rect(left + 1, bottom + 1, width * percent - 2, height - 2);
+		shapeRen.setColor(color.cpy().mul(0.7f));
+		shapeRen.rect(left + 1, bottom + 1, width * percent - 2, (height - 2) * 0.4f);
+
+		// Draw lines
+		shapeRen.setColor(Color.BLACK);
+		final float INK_PER_LINE = .5f;
+		for (int i = 1; i < maxInk / INK_PER_LINE; i++) {
+			float lineX = left + INK_PER_LINE / maxInk * width * i;
+			shapeRen.rectLine(lineX, bottom, lineX, bottom + height * .7f, 3);
+		}
+
 		shapeRen.end();
 		spriteBatch.begin();
-	}
-
-	public void drawSimpleFuelBar(float ink){
-		float x = getWidth()*0.43f+getCameraX();
-		float y = getHeight()*0.47f+getCameraY();
-		drawSimpleFuelBar(ink, x, y);
 	}
 
 	public void drawBlackHoleOutline(float x, float y, float radius){
@@ -778,6 +794,18 @@ public class GameCanvas {
 		Gdx.gl.glLineWidth(4f);
 		shapeRen.setColor(Color.valueOf("ff7c2160"));
 		shapeRen.circle(x, y, radius, 200);
+		shapeRen.end();
+		spriteBatch.begin();
+	}
+
+	public void drawLevelEndGlow(float x, float y){
+		spriteBatch.end();
+		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glLineWidth(4f);
+		shapeRen.setColor(Color.valueOf("000000FF"));
+		shapeRen.circle(x, y, 50f, 200);
 		shapeRen.end();
 		spriteBatch.begin();
 	}

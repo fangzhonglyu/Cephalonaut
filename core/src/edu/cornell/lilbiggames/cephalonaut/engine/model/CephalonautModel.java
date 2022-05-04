@@ -342,6 +342,7 @@ public class CephalonautModel extends OctopusObstacle {
 	 * @param canvas Drawing context
 	 */
 	public void draw(GameCanvas canvas) {
+//		getBody().getWorldCenter(),
 		grapple.draw(canvas, getPosition(), (float) Math.toDegrees(getAngle()));
 
 		//animation
@@ -351,7 +352,7 @@ public class CephalonautModel extends OctopusObstacle {
 				getX() * drawScale.x, getY() * drawScale.y,
 				getAngle(), 0.052f* drawScale.x * deathScale, 0.052f*drawScale.y * deathScale);
 
-		canvas.drawSimpleFuelBar(ink / max_ink, getX() * drawScale.x, (getY() - getHeight() * 0.7f) * drawScale.y);
+		canvas.drawSimpleFuelBar(ink, max_ink, getX() * drawScale.x, (getY() - getHeight() * 0.7f) * drawScale.y);
 	}
 
 	/**
