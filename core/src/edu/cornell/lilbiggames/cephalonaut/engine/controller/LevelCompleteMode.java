@@ -37,8 +37,8 @@ public class LevelCompleteMode extends MenuMode {
     private float frame;
 
     private FilmStrip starScoring;
-
-    private Texture starIcon;
+    private FilmStrip starStill;
+    private Texture starFrame;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -46,6 +46,8 @@ public class LevelCompleteMode extends MenuMode {
     private AssetDirectory assets;
 
     private Vector2 bounds, scale;
+
+    private int timer;
 
     private String timeString;
 
@@ -55,6 +57,7 @@ public class LevelCompleteMode extends MenuMode {
     private boolean prevExit;
     private boolean prevSelect;
 
+    private int twoStars, threeStars;
 
     /**
      * Creates a MainMenuMode with the default size and position.
@@ -73,10 +76,12 @@ public class LevelCompleteMode extends MenuMode {
 
         frame = 0;
         starScoring = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class),1,20);
+        starStill = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class),1,20);
+        starFrame = assets.getEntry("ui:star", Texture.class);
         starScoring.setFrame(0);
-        starIcon = assets.getEntry("ui:star", Texture.class);
+        starStill.setFrame(19);
 
-        background = assets.getEntry( "main-menu:background", Texture.class);
+        background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         selectedOption = 0;
@@ -112,6 +117,13 @@ public class LevelCompleteMode extends MenuMode {
 
     public void setTimeString(String timeString) {
         this.timeString = timeString;
+    }
+
+    public void setTimer(int timer) { this.timer = timer; }
+
+    public void setStars(int twoStars, int threeStars) {
+        this.twoStars = twoStars <= 1 ? Integer.MAX_VALUE : twoStars;
+        this.threeStars = threeStars <= 1 ? Integer.MAX_VALUE : threeStars;
     }
 
     public void resetFrame() {
@@ -208,20 +220,66 @@ public class LevelCompleteMode extends MenuMode {
                 20);
 
         canvas.setCameraPos(width / 2, height / 2);
-//        canvas.drawOverlay(background, true);
 
         canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
 
-        for (int i = 0; i < 3; i++) {
-            canvas.draw(starScoring, Color.WHITE,
-                    starScoring.getFwidth() / 2f, starScoring.getFheight() / 2f,
-                    width / 2f - 110 + 110 * i, height / 2f + 150,
+        int stars = 1;
+        if (timer <= threeStars) {
+            stars = 3;
+        } else if (timer <= twoStars) {
+            stars = 2;
+        }
+
+        for (int i = 0; i < stars; i++) {
+            if (stars == 3) {
+                canvas.draw(starScoring, Color.WHITE,
+                        starScoring.getFwidth() / 2f, starScoring.getFheight() / 2f,
+                        width / 2f - 130 + 130 * i, height / 2f + 150,
+                        0, 0.5f * scale.x, 0.5f * scale.y);
+            } else {
+                canvas.draw(starStill, Color.WHITE,
+                        starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
+                        width / 2f - 130 + 130 * i, height / 2f + 150,
+                        0, 0.5f * scale.x, 0.5f * scale.y);
+            }
+        }
+
+        for (int i = 0; i < 3 - stars; i++) {
+            canvas.draw(starFrame, Color.WHITE,
+                    starFrame.getWidth() / 2f, starFrame.getHeight() / 2f,
+                    width / 2f + 130 - 130 * i, height / 2f + 150,
                     0, 0.5f * scale.x, 0.5f * scale.y);
         }
 
         canvas.drawTextCentered(timeString, displayFont, 0f);
 
+        int minutes2 = (twoStars % 3600) / 60;
+        int seconds2 = twoStars % 60;
+        String timeString2 = String.format("%02d:%02d", minutes2, seconds2);
+
+        int minutes3 = (threeStars % 3600) / 60;
+        int seconds3 = threeStars % 60;
+        String timeString3 = String.format("%02d:%02d", minutes3, seconds3);
+
         super.drawOptions(options, selectedOption, 150);
+
+        for (int i = 0; i < 3; i++) {
+                canvas.draw(starStill, Color.WHITE,
+                        starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
+                        width / 2f + 460 + 50 * i, height - 30,
+                        0, 0.2f * scale.x, 0.2f * scale.y);
+                if (i < 2) {
+                    canvas.draw(starStill, Color.WHITE,
+                            starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
+                            width / 2f + 510 + 50 * i, height - 90,
+                            0, 0.2f * scale.x, 0.2f * scale.y);
+                }
+        }
+
+        displayFont.getData().setScale(0.5f);
+        canvas.drawTextTopRight(timeString3, displayFont, -20, -5);
+        canvas.drawTextTopRight(timeString2, displayFont, -20, 55);
+        displayFont.getData().setScale(1f);
 
         canvas.end();
     }

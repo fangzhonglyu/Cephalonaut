@@ -40,7 +40,7 @@ public class PauseMode extends MenuMode {
         super(assets, canvas, listener);
         this.canvas = canvas;
         this.listener = listener;
-        background = assets.getEntry( "main-menu:background", Texture.class );
+        background = assets.getEntry( "BG-1-teal.png", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         this.scale = new Vector2(1,1);

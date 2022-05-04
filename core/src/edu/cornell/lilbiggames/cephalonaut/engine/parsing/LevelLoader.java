@@ -281,13 +281,16 @@ public class LevelLoader {
 
         final public int width, height;
         final public int music;
+        final public int twoStars, threeStars;
 
-        public LevelDef(int width, int height, int music) {
+        public LevelDef(int width, int height, int music, int twoStars, int threeStars) {
             objects = new Queue<>();
             idToObject = new HashMap<>();
             this.width = width;
             this.height = height;
             this.music = music;
+            this.twoStars = twoStars;
+            this.threeStars = threeStars;
         }
 
         public void addObject(GameObject obj) {
@@ -350,7 +353,8 @@ public class LevelLoader {
 
         Properties levelProperties = new Properties(level.get("properties"));
 
-        LevelDef levelDef = new LevelDef(levelWidth, levelHeight, levelProperties.getInt("music", 1));
+        LevelDef levelDef = new LevelDef(levelWidth, levelHeight, levelProperties.getInt("music", 1),
+                levelProperties.getInt("twoStars", 1), levelProperties.getInt("threeStars", 1));
 
         for (JsonValue layer : level.get("layers")) {
             String type = layer.getString("type");
