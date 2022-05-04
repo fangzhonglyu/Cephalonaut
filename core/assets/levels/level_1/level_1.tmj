@@ -400,6 +400,24 @@
                  "width":48,
                  "x":604.666666666667,
                  "y":410
+                }, 
+                {
+                 "gid":141,
+                 "height":24,
+                 "id":72,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"boostPadFactor",
+                         "type":"float",
+                         "value":16
+                        }],
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":512,
+                 "y":352
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -433,7 +451,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":70,
+ "nextobjectid":73,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -454,7 +472,7 @@
          "source":"..\/..\/objects.tsj"
         }, 
         {
-         "firstgid":145,
+         "firstgid":146,
          "source":"..\/..\/space-tiles.tsj"
         }],
  "tilewidth":16,
