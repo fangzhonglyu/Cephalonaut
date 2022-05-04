@@ -38,6 +38,7 @@ public class SettingsMode extends MenuMode {
 
     private int SLIDER_HEIGHT = 18;
     private Slider musicVolumeSlider;
+    private Slider fxVolumeSlider;
 
     private int currentKey;
     private Vector2 startPosition;
@@ -46,6 +47,7 @@ public class SettingsMode extends MenuMode {
 
     private final float DEFAULT_VOLUME = 0.5f;
     private float musicVolume;
+    private float fxVolume;
 
     private InputAdapter settingsInput = new InputAdapter() {
         @Override
@@ -61,6 +63,11 @@ public class SettingsMode extends MenuMode {
             if(musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
                 musicVolumeSlider.movedX(startPosition.x);
                 musicVolume = musicVolumeSlider.getValue();
+            }
+
+            if(fxVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
+                fxVolumeSlider.movedX(startPosition.x);
+                fxVolume = fxVolumeSlider.getValue();
             }
             return true;
         }
@@ -78,6 +85,13 @@ public class SettingsMode extends MenuMode {
                 startPosition.x = screenX;
                 musicVolume = musicVolumeSlider.getValue();
                 SoundController.setMusicVolume(musicVolume);
+            }
+
+            if(dragging && fxVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
+                fxVolumeSlider.movedX(screenX);
+                startPosition.x = screenX;
+                fxVolume = fxVolumeSlider.getValue();
+                SoundController.setFXVolume(fxVolume);
             }
 
             return true;
@@ -104,7 +118,9 @@ public class SettingsMode extends MenuMode {
 
         keybindingMode = false;
         dragging = false;
-        musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
+        musicVolumeSlider = new Slider(canvas, Color.PURPLE,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
+        fxVolumeSlider = new Slider(canvas, Color.PURPLE,0.0f, 1.0f, fxVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
+
     }
 
     public GameCanvas getCanvas(){
@@ -168,9 +184,9 @@ public class SettingsMode extends MenuMode {
                 20);
         displayFont.getData().setScale(scale.x);
         displayFont.setColor(Color.ORANGE);
-        canvas.drawTextCentered("SETTINGS", displayFont, height/4);
+        canvas.drawTextCentered("SETTINGS", displayFont, height/3);
 
-        float subtitleHeight = (3.0f/4.0f)*height - displayFont.getLineHeight();
+        float subtitleHeight = (5.0f/6.0f)*height - displayFont.getLineHeight();
         displayFont.getData().setScale(0.7f*scale.x);
         canvas.drawText("KEYBINDINGS", displayFont, width/4, subtitleHeight);
 
@@ -181,29 +197,19 @@ public class SettingsMode extends MenuMode {
 
         int i = 0;
         for(String binding : keyBindings.keySet()){
-            float textHeight = start - 2*displayFont.getLineHeight()*i;
+            float textHeight = start - 1.5f*displayFont.getLineHeight()*i;
             if(i == selectedOption){
                 displayFont.setColor(YELLOW);
-                canvas.draw(
-                        arrow,
-                        YELLOW,
-                        ARROW_WIDTH/2,
-                        ARROW_WIDTH/2,
-                        width*0.2f,
-                        textHeight,
-                        ARROW_WIDTH,
-                        ARROW_WIDTH
-                );
             }
             canvas.drawText(binding, displayFont, width/4, textHeight);
-            if(i == selectedOption) displayFont.setColor(Color.CYAN);
+            if(i == selectedOption) displayFont.setColor(Color.PURPLE);
             if(i == selectedOption && keybindingMode) canvas.drawText("<Enter Key>", displayFont, 0.75f*width, textHeight);
             else canvas.drawText(Input.Keys.toString(keyBindings.get(binding)), displayFont, 0.75f * width, textHeight);
             displayFont.setColor(Color.ORANGE);
             i++;
         }
 
-        start = start - 2*displayFont.getLineHeight()*i;
+        start = start - 1.5f*displayFont.getLineHeight()*i;
 
         displayFont.getData().setScale(0.7f*scale.x);
         displayFont.setColor(Color.ORANGE);
@@ -211,15 +217,36 @@ public class SettingsMode extends MenuMode {
 
         float sliderHeight = SLIDER_HEIGHT*scale.x;
 
-        musicVolumeSlider.updatePosition(width/2f, start-2*displayFont.getLineHeight());
-        musicVolumeSlider.updateSize(width/3f, sliderHeight);
+        start = start-1.5f*displayFont.getLineHeight();
+
+        // music volume slider
+        displayFont.getData().setScale(0.5f*scale.x);
+        start += 10;
+        canvas.drawText("MUSIC", displayFont, width/4, start);
+        start -= 0.5f*displayFont.getLineHeight();
+
+        musicVolumeSlider.updatePosition(width * 0.75f, start);
+        musicVolumeSlider.updateSize(width/4f, sliderHeight);
         musicVolumeSlider.draw();
 
-        float halfSliderWidth = width/3.0f * 0.5f;
+        float halfSliderWidth = width/4f * 0.5f;
 
         // draw volume icons
-        canvas.draw(volumeDown, Color.WHITE, 0, sliderHeight/2, width/2 - halfSliderWidth - 3*sliderHeight, start - 2f*displayFont.getLineHeight(), 2*sliderHeight, 2*sliderHeight);
-        canvas.draw(volumeUp, Color.WHITE, 0, sliderHeight/2, width/2 + halfSliderWidth + 2*sliderHeight, start - 2f*displayFont.getLineHeight(), 2*sliderHeight, 2*sliderHeight);
+        canvas.draw(volumeDown, Color.WHITE, 0, sliderHeight/2, width*0.75f - halfSliderWidth - 2*sliderHeight - 10, start, 2*sliderHeight, 2*sliderHeight);
+        canvas.draw(volumeUp, Color.WHITE, 0, sliderHeight/2, width*0.75f + halfSliderWidth + 10, start, 2*sliderHeight, 2*sliderHeight);
+
+        canvas.drawText("SOUND EFFECTS", displayFont, width/4, start - sliderHeight - 40);
+        start -= 0.5f*displayFont.getLineHeight();
+
+        //soundfx
+        fxVolumeSlider.updatePosition(width*0.75f, start - sliderHeight - 40);
+        fxVolumeSlider.updateSize(width/4f, sliderHeight);
+        fxVolumeSlider.draw();
+
+        // draw volume icons
+        canvas.draw(volumeDown, Color.WHITE, 0, sliderHeight/2, width*0.75f - halfSliderWidth - 2*sliderHeight -10, start  - sliderHeight - 40, 2*sliderHeight, 2*sliderHeight);
+        canvas.draw(volumeUp, Color.WHITE, 0, sliderHeight/2, width*0.75f + halfSliderWidth + 10, start  - sliderHeight - 40, 2*sliderHeight, 2*sliderHeight);
+
 
         canvas.end();
     }

@@ -202,4 +202,9 @@ public class SoundController {
             bgmPlaying.setVolume(musicVolume);
         }
     }
+
+    /* set fx volume */
+    public static void setFXVolume(float volume){
+        sfxVolume = volume;
+    }
 }

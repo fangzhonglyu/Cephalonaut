@@ -223,7 +223,7 @@ public class MainMenuMode extends MenuMode {
 
         hitBox = new Rectangle(width / 2f - (1.5f*scale.x)*levelIconWidth/2f, (height / 2f + 100) + (1.5f*scale.y)*levelIconHeight/2f, (1.5f*scale.x)*levelIconWidth, (1.5f*scale.y)*levelIconHeight);
 
-        canvas.drawTextCentered("WORLD " + curLevel, displayFont, -levelIconHeight / 4f * scale.y - 60f);
+        canvas.drawTextCentered("WORLD " + (curLevel+1), displayFont, -levelIconHeight / 4f * scale.y - 60f);
 
         canvas.end();
     }

@@ -79,8 +79,8 @@ public class MainMenuNestedMode extends MenuMode {
 
         this.curLevel = curLevel;
         octopusTexture = new TextureRegion(assets.getEntry( "octopus.png", Texture.class ));
-        levelTexture = assets.getEntry( "level.png", Texture.class );
-        levelCompletedTexture = assets.getEntry( "completedLevel.png", Texture.class );
+        levelTexture = assets.getEntry( "level-incomplete", Texture.class );
+        levelCompletedTexture = assets.getEntry( "level-complete-3-star", Texture.class );
 
         filmstrip = new FilmStrip(assets.getEntry("octopus",Texture.class), 5, 9);
         frame = 0;
@@ -169,10 +169,10 @@ public class MainMenuNestedMode extends MenuMode {
         float diff = 100;
         float start = width/2 - diff * (checkpoints/2);
         for(int i = 0; i < checkpoints; i++) {
-            if (i <= completedCheckpoints) {
-                canvas.draw(levelCompletedTexture, i * diff + start, height / 2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
+            if (i < completedCheckpoints) {
+                canvas.draw(levelCompletedTexture, i * diff + start, height / 2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 2f, 2f);
             } else {
-                canvas.draw(levelTexture, i * diff + start, height / 2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
+                canvas.draw(levelTexture, i * diff + start, height / 2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 2f, 2f);
             }
         }
 
@@ -180,8 +180,8 @@ public class MainMenuNestedMode extends MenuMode {
 
         float ox = 0.5f * filmstrip.getRegionWidth();
         float oy = 0.75f * filmstrip.getRegionHeight();
-        canvas.draw(filmstrip, Color.WHITE, 0, 0,
-                start + completedCheckpoints*diff, height/2 + filmstrip.getRegionHeight()*0.1f,
+        canvas.draw(filmstrip, Color.WHITE, ox, 0,
+                start + completedCheckpoints*diff + levelTexture.getWidth(), height/2 + levelTexture.getHeight() + 10,
                 0, scale.x*2, scale.y*2);
 
         canvas.end();

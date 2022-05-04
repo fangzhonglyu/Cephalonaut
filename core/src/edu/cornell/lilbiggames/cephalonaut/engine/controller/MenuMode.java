@@ -28,7 +28,6 @@ public class MenuMode implements Screen {
     public static final int EXIT_LOADING_CODE = 61;
 
     protected final Color YELLOW = new Color(255.0f/256.0f, 232.0f/256.0f, 132.0f/256.0f, 1.0f);
-    protected final float ARROW_WIDTH = 20.0f;
 
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
@@ -43,7 +42,6 @@ public class MenuMode implements Screen {
     protected GameCanvas canvas;
 
     private AssetDirectory assets;
-    protected Texture arrow;
 
     protected Vector2 bounds,scale;
 
