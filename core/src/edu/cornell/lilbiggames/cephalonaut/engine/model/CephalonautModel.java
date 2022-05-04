@@ -342,6 +342,7 @@ public class CephalonautModel extends OctopusObstacle {
 	 * @param canvas Drawing context
 	 */
 	public void draw(GameCanvas canvas) {
+//		getBody().getWorldCenter(),
 		grapple.draw(canvas, getPosition(), (float) Math.toDegrees(getAngle()));
 
 		//animation

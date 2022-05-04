@@ -36,7 +36,7 @@ public class StartScreenMode extends MenuMode {
         super(assets, canvas, listener);
         this.canvas = canvas;
         this.listener = listener;
-        background = assets.getEntry( "main-menu:background", Texture.class );
+        background = assets.getEntry( "BG-1-teal.png", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         banner = assets.getEntry( "banner", Texture.class );
 

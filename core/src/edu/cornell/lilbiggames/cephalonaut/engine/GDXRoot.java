@@ -279,7 +279,9 @@ public class GDXRoot extends Game implements ScreenListener {
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			levelCompleteMode.resetFrame();
 			levelCompleteMode.setSelectedOption(0);
+			levelCompleteMode.setTimer(playMode.getTimer());
 			levelCompleteMode.setTimeString(playMode.getTimeString());
+			levelCompleteMode.setStars(playMode.getTwoStars(), playMode.getThreeStars());
 			loadingScreenTransition(levelCompleteMode);
 		} else if (exitCode == MenuMode.NEXT_LEVEL_CODE) {
 			if(mainMenuNestedMode.getNumCompletedCheckpoints() == 4){

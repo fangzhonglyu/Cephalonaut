@@ -115,20 +115,25 @@ public class CephalonautController {
                 DistanceJointDef anchor3 = new DistanceJointDef();
                 anchor1.bodyA = grapple.getBody();
                 anchor1.bodyB = cephalonaut.getBody();
-                anchor1.localAnchorB.set(0, -20);
+                //System.out.println(cephalonaut.getBody().getLocalCenter().toString());
+                float yDistA = cephalonaut.getBody().getLocalCenter().y - 20;
+                anchor1.localAnchorB.set(0, yDistA);
                 anchor1.collideConnected = false;
-                anchor1.length = (float) Math.sqrt(distance * distance + 400);
+                anchor1.length = (float) Math.sqrt(distance * distance + yDistA * yDistA);
                 anchor1.dampingRatio = 0.6f;
                 anchor2.bodyA = grapple.getBody();
                 anchor2.bodyB = cephalonaut.getBody();
                 anchor2.dampingRatio = 0.6f;
-                anchor2.localAnchorB.set(0, 20);
+                float yDistB = cephalonaut.getBody().getLocalCenter().y + 20;
+                anchor2.localAnchorB.set(0, yDistB);
                 anchor2.collideConnected = false;
-                anchor2.length = (float) Math.sqrt(distance * distance + 400);
+                anchor2.length = (float) Math.sqrt(distance * distance + yDistB * yDistB);
                 anchor3.bodyA = grapple.getBody();
                 anchor3.bodyB = cephalonaut.getBody();
+                anchor3.localAnchorB.set(cephalonaut.getBody().getLocalCenter());
                 anchor3.collideConnected = false;
-                anchor3.length = distance;
+                anchor3.length = (float) Math.sqrt(distance * distance +
+                        cephalonaut.getBody().getLocalCenter().y * cephalonaut.getBody().getLocalCenter().y);
                 anchor1.frequencyHz = 3f;
                 anchor2.frequencyHz = 3f;
                 grappleJoint1Def = anchor1;
@@ -151,7 +156,11 @@ public class CephalonautController {
                 world.destroyJoint(grappleJoint2);
                 grappleJoint1 = null;
                 grappleJoint2 = null;
-                cephalonaut.getBody().setTransform(cephalonaut.getPosition(), (float) (3 * Math.PI/4) + cephalonaut.getAngle());
+                Vector2 cephWBodyCenter = cephalonaut.getBody().getWorldCenter();
+                Vector2 cephLBodyCenter = cephalonaut.getBody().getLocalCenter();
+                cephalonaut.getBody().setTransform(
+                        cephWBodyCenter.add(cephLBodyCenter.setAngleRad(cephalonaut.getAngle() + (float) (Math.PI / 4))),
+                        (float) (3 * Math.PI/4) + cephalonaut.getAngle());
                 grappleJoint1 = world.createJoint(grappleJoint1Def);
                 grappleJoint2 = world.createJoint(grappleJoint2Def);
             }
