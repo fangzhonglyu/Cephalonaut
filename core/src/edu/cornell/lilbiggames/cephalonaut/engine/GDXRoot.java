@@ -65,6 +65,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private Screen postLoadingScreen;
 
 	private boolean fakeLoadingAssets;
+	private Map<Integer,Integer> numCheckpointsPerLevel;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -77,6 +78,14 @@ public class GDXRoot extends Game implements ScreenListener {
 	}
 
 	private void initializeCheckpointsMap(){
+		numCheckpointsPerLevel = new HashMap<>();
+		JsonValue bindings = directory.getEntry("worldCheckpoints", JsonValue.class);
+
+		for(int i = 0; i < 7; i++){
+			int checkpoints = bindings.getInt(String.valueOf(i));
+			numCheckpointsPerLevel.put(i,checkpoints);
+		}
+
 		numCheckpointsCompleted = new ArrayList<>();
 		for(int i = 0; i < 7; i++){
 			numCheckpointsCompleted.add(0);
@@ -93,6 +102,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		keyBindings.put("rotate-counterclockwise", Input.Keys.valueOf(bindings.getString("rotate-counterclockwise","A")));
 		keyBindings.put("rotate-clockwise", Input.Keys.valueOf(bindings.getString("rotate-clockwise","D")));
 	}
+
 
 	private void initializeDialogue() {
 		dialogueMode = new DialogueMode(canvas, directory);
@@ -126,7 +136,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		// Initialize the game world
 		mainMenu = new MainMenuMode(directory, canvas, this);
-		mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, 5,0, 0, this);
+		mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, numCheckpointsPerLevel.get(0),0, 0, this);
 		startScreenMode = new StartScreenMode(directory, canvas, this);
 
 		LevelElement.gatherAssets(directory);
@@ -144,7 +154,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private void initializeCheckpointSelect(){
 		int curLevel = mainMenu.getCurLevelNumber();
 		mainMenuNestedMode.setLevel(curLevel);
-		mainMenuNestedMode.setNumCheckpoints(5);
+		mainMenuNestedMode.setNumCheckpoints(numCheckpointsPerLevel.get(curLevel));
 		mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
 	}
 
@@ -154,7 +164,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		int curLevel = mainMenu.getCurLevelNumber();
 		numCheckpointsCompleted.set(curLevel, numCheckpointsCompleted.get(curLevel)+1);
 		mainMenuNestedMode.setLevel(curLevel);
-		mainMenuNestedMode.setNumCheckpoints(5);
+		mainMenuNestedMode.setNumCheckpoints(numCheckpointsPerLevel.get(curLevel));
 		mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
 	}
 
@@ -274,7 +284,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			levelCompleteMode.setStars(playMode.getTwoStars(), playMode.getThreeStars());
 			loadingScreenTransition(levelCompleteMode);
 		} else if (exitCode == MenuMode.NEXT_LEVEL_CODE) {
-			if(mainMenuNestedMode.getNumCompletedCheckpoints() == 4){
+			if(mainMenuNestedMode.getNumCompletedCheckpoints() == numCheckpointsPerLevel.get(mainMenu.getCurLevelNumber())-1){
 				mainMenu.nextLevel();
 				mainMenuNestedMode.setNumCompletedCheckpoints(0);
 			} else {
