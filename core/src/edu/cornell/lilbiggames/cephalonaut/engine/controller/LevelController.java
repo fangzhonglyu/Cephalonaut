@@ -39,8 +39,8 @@ public class LevelController implements ContactListener {
     }
 
     public void update(GameObject object, CephalonautController cephalonautController) {
-        if (object instanceof LEBoostPad) {
-            boost((LEBoostPad) object);
+        if (object instanceof LEBoostPad && ((LEBoostPad) object).getCooldown() > 0) {
+            ((LEBoostPad) object).setCooldown(((LEBoostPad) object).getCooldown() - 1);
         } else if (object instanceof LEBlackHole) {
             attract((LEBlackHole) object);
         } else if (object instanceof LETriggerable) {
@@ -209,12 +209,18 @@ public class LevelController implements ContactListener {
 
             if (contactObject instanceof  LEBoostPad) {
                 LEBoostPad boostPad = (LEBoostPad) contactObject;
-                SoundController.playSound(2,1);
-                Vector2 force = new Vector2(0, boostPad.getBoostPadFactor()).setAngleRad(boostPad.getAngle() + boostPad.getBoostPadAngle());
-                cephalonaut.addForce(force);
-                cephalonaut.applyForce();
-                contact.setEnabled(false);
-                ((LevelElement) contactObject).setInContact(false);
+                //SoundController.playSound(2,1);
+                //Vector2 force = new Vector2(0, boostPad.getBoostPadFactor()).setAngleRad(boostPad.getAngle() + boostPad.getBoostPadAngle());
+
+                if (boostPad.getCooldown() == 0) {
+                    boostPad.setCooldown(boostPad.getBOOST_COOLDOWN());
+                    Vector2 force = boostPad.boost();
+                    cephalonaut.addForce(force);
+                    cephalonaut.applyForce();
+                }
+
+                //contact.setEnabled(false);
+                //((LevelElement) contactObject).setInContact(false);
             }
 
             if (contactObject instanceof LEBlackHole) {
