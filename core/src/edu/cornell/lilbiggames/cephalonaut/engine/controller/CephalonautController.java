@@ -115,7 +115,7 @@ public class CephalonautController {
                 DistanceJointDef anchor3 = new DistanceJointDef();
                 anchor1.bodyA = grapple.getBody();
                 anchor1.bodyB = cephalonaut.getBody();
-                System.out.println(cephalonaut.getBody().getLocalCenter().toString());
+                //System.out.println(cephalonaut.getBody().getLocalCenter().toString());
                 float yDistA = cephalonaut.getBody().getLocalCenter().y - 20;
                 anchor1.localAnchorB.set(0, yDistA);
                 anchor1.collideConnected = false;
