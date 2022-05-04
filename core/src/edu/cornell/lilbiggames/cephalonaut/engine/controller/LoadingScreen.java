@@ -37,7 +37,7 @@ public class LoadingScreen extends MenuMode implements Screen {
         this.loadingTime = totalLoadingTime;
         this.totalLoadingTime = totalLoadingTime;
 
-        background = assets.getEntry( "main-menu:background", Texture.class );
+        background = assets.getEntry( "BG-1-teal.png", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         this.scale = new Vector2(1,1);

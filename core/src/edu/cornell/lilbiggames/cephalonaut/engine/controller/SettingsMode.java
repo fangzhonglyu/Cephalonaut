@@ -92,7 +92,7 @@ public class SettingsMode extends MenuMode {
         this.musicVolume = DEFAULT_VOLUME;
         options = keyBindings.keySet().toArray(new String[0]);
 
-        background = assets.getEntry( "main-menu:background", Texture.class );
+        background = assets.getEntry( "BG-1-teal.png", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         this.scale = new Vector2(1,1);
