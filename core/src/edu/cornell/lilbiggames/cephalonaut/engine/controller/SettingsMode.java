@@ -8,10 +8,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.engine.ui.Slider;
+import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
 import java.util.Map;
 
@@ -24,8 +27,6 @@ public class SettingsMode extends MenuMode {
 
     /** Background texture for start-up */
     private Texture background;
-
-    private InputController inputController;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -46,6 +47,10 @@ public class SettingsMode extends MenuMode {
 
     private final float DEFAULT_VOLUME = 0.5f;
     private float musicVolume;
+    XBoxController xbox;
+    private boolean prevUp;
+    private boolean prevDown;
+    private boolean prevExit;
 
     private InputAdapter settingsInput = new InputAdapter() {
         @Override
@@ -105,6 +110,12 @@ public class SettingsMode extends MenuMode {
         keybindingMode = false;
         dragging = false;
         musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
+        Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
+        if (controllers.size > 0) {
+            xbox = controllers.get( 0 );
+        } else {
+            xbox = null;
+        }
     }
 
     public GameCanvas getCanvas(){
@@ -127,8 +138,6 @@ public class SettingsMode extends MenuMode {
 
     @Override
     public void render(float delta) {
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
 
         if(keybindingMode) {
             if(Gdx.input.isKeyJustPressed(currentKey)) {
@@ -136,11 +145,14 @@ public class SettingsMode extends MenuMode {
                 keybindingMode = false;
             }
         } else {
-            if (inputController.isUpPressed()) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
+                    (xbox != null && xbox.isConnected() && xbox.getLeftY() < -0.6f && prevUp != xbox.getLeftY() < -0.6f)) {
                 selectedOption = selectedOption == 0 ? options.length - 1 : selectedOption - 1;
-            } else if (inputController.isDownPressed()) {
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
+                    (xbox != null && xbox.isConnected() && xbox.getLeftY() > 0.6f && prevDown != xbox.getLeftY() > 0.6f)) {
                 selectedOption = (selectedOption + 1) % options.length;
-            } else if (inputController.didExit() || inputController.isBackPressed()) {
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
+                    (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())) {
                 listener.exitScreen(this, RETURN_TO_START_CODE);
             } else {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
@@ -148,6 +160,11 @@ public class SettingsMode extends MenuMode {
 
                     //keyBindings.put(options[selectedOption], currentKey);
                 }
+            }
+            if(xbox != null && xbox.isConnected()) {
+                prevUp = xbox.getLeftY() < -0.6f;
+                prevDown = xbox.getLeftY() > 0.6f;
+                prevExit = xbox.getB();
             }
         }
 

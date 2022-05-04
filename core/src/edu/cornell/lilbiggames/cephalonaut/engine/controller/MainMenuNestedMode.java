@@ -1,14 +1,19 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.CHECKPOINT_SELECTED_CODE;
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.NESTED_MENU_EXIT_CODE;
@@ -36,8 +41,6 @@ public class MainMenuNestedMode extends MenuMode {
 
     private int curLevel;
 
-    private InputController inputController;
-
     private Vector2 bounds,scale;
 
     private boolean levelSelected;
@@ -47,6 +50,11 @@ public class MainMenuNestedMode extends MenuMode {
     private Texture levelCompletedTexture;
 
     private int completedCheckpoints;
+    XBoxController xbox;
+    private boolean prevRight;
+    private boolean prevLeft;
+    private boolean prevExit;
+    private boolean prevSelect;
 
     /**
      * Creates a MainMenuMode with the default size and position.
@@ -72,6 +80,12 @@ public class MainMenuNestedMode extends MenuMode {
         octopusTexture = new TextureRegion(assets.getEntry( "octopus.png", Texture.class ));
         levelTexture = assets.getEntry( "level.png", Texture.class );
         levelCompletedTexture = assets.getEntry( "completedLevel.png", Texture.class );
+        Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
+        if (controllers.size > 0) {
+            xbox = controllers.get( 0 );
+        } else {
+            xbox = null;
+        }
     }
 
     @Override
@@ -91,16 +105,24 @@ public class MainMenuNestedMode extends MenuMode {
     }
 
     private void update(float delta){
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
-        if(inputController.isSelectPressed()){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
             levelSelected = true;
-        } else if (inputController.isNextPressed()){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
+                (xbox != null && xbox.isConnected() && xbox.getLeftX() > 0.6f && prevRight != xbox.getLeftX() > 0.6f)){
             completedCheckpoints = (completedCheckpoints+1)%checkpoints;
-        } else if(inputController.isPrevPressed()){
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A) ||
+                (xbox != null && xbox.isConnected() && xbox.getLeftX() < -0.6f && prevLeft != xbox.getLeftX() < -0.6f)){
             completedCheckpoints = completedCheckpoints == 0 ? checkpoints - 1 : completedCheckpoints - 1;
-        } else if(inputController.didExit() || inputController.isBackPressed()){
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
+                (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
             listener.exitScreen(this, NESTED_MENU_EXIT_CODE);
+        }
+        if(xbox != null && xbox.isConnected()) {
+            prevLeft = xbox.getLeftX() < -0.6f;
+            prevRight = xbox.getLeftX() > 0.6f;
+            prevExit = xbox.getB();
+            prevSelect = xbox.getA();
         }
     }
 

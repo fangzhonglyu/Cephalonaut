@@ -7,9 +7,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
 public class StartScreenMode extends MenuMode {
 
@@ -23,14 +26,19 @@ public class StartScreenMode extends MenuMode {
     private Texture background;
     private Texture banner;
 
-    private InputController inputController;
-
     private String[] options = {"START", "OPTIONS", "CREDITS" };
 
     private int selectedOption;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
+
+    XBoxController xbox;
+    private boolean prevUp;
+    private boolean prevDown;
+    private boolean prevExit;
+    private boolean prevSelect;
+
 
     public StartScreenMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
         super(assets, canvas, listener);
@@ -46,7 +54,12 @@ public class StartScreenMode extends MenuMode {
         displayFont = assets.getEntry("retro", BitmapFont.class);
         selectedOption = 0; //default is resume
 
-
+        Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
+        if (controllers.size > 0) {
+            xbox = controllers.get( 0 );
+        } else {
+            xbox = null;
+        }
     }
 
     public void setDefault(){
@@ -61,18 +74,21 @@ public class StartScreenMode extends MenuMode {
 
     @Override
     public void render(float delta) {
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed()) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())) {
             exitScreen();
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
-                    inputController.isUpPressed()){
+                (xbox != null && xbox.isConnected() && xbox.getLeftY() < -0.6f && prevUp != xbox.getLeftY() < -0.6f)){
             selectedOption = selectedOption == 0 ? options.length-1 : selectedOption-1;
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
-                    inputController.isDownPressed()){
+                (xbox != null && xbox.isConnected() && xbox.getLeftY() > 0.6f && prevDown != xbox.getLeftY() > 0.6f)){
             selectedOption = (selectedOption+1)%options.length;
         }
-
+        if(xbox != null && xbox.isConnected()) {
+            prevUp = xbox.getLeftY() < -0.6f;
+            prevDown = xbox.getLeftY() > 0.6f;
+            prevSelect = xbox.getA();
+        }
         draw();
     }
 
