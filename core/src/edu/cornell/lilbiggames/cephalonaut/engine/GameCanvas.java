@@ -79,8 +79,6 @@ public class GameCanvas {
 
 	/** ShapeRenderer for the fuel bar*/
 	private ShapeRenderer shapeRen;
-	/** ShapeRenderer for the fuel bar*/
-	private ShapeRenderer shapeRen2;
 	
 	/** Value to cache window width (if we are currently full screen) */
 	int width;
@@ -96,6 +94,12 @@ public class GameCanvas {
 	/** Cache object to handle raw textures */
 	private TextureRegion holder;
 
+	private ShaderProgram shaderProgram;
+	public FrameBuffer bgFrame;
+	public FrameBuffer fgFrame;
+
+
+
 	/**
 	 * Creates a new GameCanvas determined by the application configuration.
 	 * 
@@ -108,8 +112,7 @@ public class GameCanvas {
 		spriteBatch = new PolygonSpriteBatch();
 		debugRender = new ShapeRenderer();
 		shapeRen = new ShapeRenderer();
-//		shapeRen2 = new ShapeRenderer();
-		
+
 		// Set the projection matrix (for proper scaling)
 		camera = new OrthographicCamera(getWidth(),getHeight());
 		camera.setToOrtho(false);
@@ -121,6 +124,13 @@ public class GameCanvas {
 		local  = new Affine2();
 		global = new Matrix4();
 		vertex = new Vector2();
+
+		String vertexShader = Gdx.files.internal("shaders/vertex.glsl").readString();
+		String fragmentShader = Gdx.files.internal("shaders/fragment.glsl").readString();
+		shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
+
+		bgFrame = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		fgFrame = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 	}
 
 	public void setCameraPos(float x, float y) {
@@ -314,6 +324,7 @@ public class GameCanvas {
 	 * weird scaling issues.
 	 */
 	 public void resize() {
+		shaderProgram.setUniformf("u_res", getWidth(), getHeight());
 		// Resizing screws up the spriteBatch projection matrix
 		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
 		shapeRen.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
@@ -361,6 +372,23 @@ public class GameCanvas {
 			break;
 		}
 		blend = state;
+	}
+
+	private void switchToSprite() {
+		if (!spriteBatch.isDrawing()) {
+			shapeRen.end();
+			fgFrame.end();
+			bgFrame.begin();
+			spriteBatch.begin();
+		}
+	}
+
+	private void switchToShape() {
+		if (!shapeRen.isDrawing()) {
+			spriteBatch.end();
+			bgFrame.end();
+			fgFrame.begin();
+		}
 	}
 	
 	/**
@@ -412,33 +440,69 @@ public class GameCanvas {
 	 * Nothing is flushed to the graphics card until the method end() is called.
 	 */
     public void begin() {
+		bh.set(-1000, -1000);
+		fgFrame.begin();
+		Gdx.gl.glClearColor(0, 0, 0, 0);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		fgFrame.end();
+		bgFrame.begin();
 		spriteBatch.setProjectionMatrix(camera.combined);
     	spriteBatch.begin();
     	shapeRen.setProjectionMatrix(camera.combined);
     	active = DrawPass.STANDARD;
     }
 
+	private Vector2 bh = new Vector2();
+	public void setBH(float x, float y) {
+		bh.set(x, y);
+//		shaderProgram.setUniformf("u_bh", x, y);
+	}
+
 	/**
 	 * Ends a drawing sequence, flushing textures to the graphics card.
 	 */
     public void end() {
-    	spriteBatch.end();
-    	active = DrawPass.INACTIVE;
+		bgFrame.end();
+
+//		TextureRegion bgTex = new TextureRegion(bgFrame.getColorBufferTexture());
+
+//		global.idt();
+//		spriteBatch.setProjectionMatrix(global);
+
+//		spriteBatch.draw(bgTex, 0, 0);
+		float x = camera.position.x - camera.viewportWidth / 2f;
+		float y = camera.position.y - camera.viewportHeight / 2f;
+		spriteBatch.setShader(shaderProgram);
+		System.out.println(bh);
+		shaderProgram.setUniformf("u_bh", bh.x - x, bh.y - y);
+		shaderProgram.setUniformf("u_res", 1920, 1080);
+		shaderProgram.setUniformMatrix("u_projTrans", spriteBatch.getProjectionMatrix());
+		spriteBatch.draw(bgFrame.getColorBufferTexture(), x, y, width, height, 0, 0, width, height, false, true);
+		spriteBatch.setShader(null);
+//		TextureRegion fgTex = new TextureRegion(fgFrame.getColorBufferTexture());
+//		spriteBatch.draw(fgTex, 0, 0);
+		spriteBatch.draw(fgFrame.getColorBufferTexture(), x, y, width, height, 0, 0, width, height, false, true);
+
+
+		spriteBatch.end();
+
+		active = DrawPass.INACTIVE;
     }
 
 	public void drawFade(float fadeOut) {
-		spriteBatch.end();
+		switchToShape();
+
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(0, 0, 0,fadeOut);
 		shapeRen.rect(getCameraX() - getWidth() / 2 - 1, getCameraY() - getHeight() / 2 - 1, getWidth() + 2, getHeight() + 2);
-		shapeRen.end();
-		spriteBatch.begin();
+
+		switchToSprite();
 	}
 
 	public void drawDialogueBox(float fade) {
-		spriteBatch.end();
+		switchToShape();
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -461,7 +525,8 @@ public class GameCanvas {
 		shapeRen.rect(getCameraX() - getWidth() * .4f, getCameraY() - getHeight() / 2 , getWidth() * .8f, 300f*getHeight()/1080f);
 		shapeRen.end();
 		Gdx.gl.glLineWidth(1f);
-		spriteBatch.begin();
+
+		switchToSprite();
 	}
 
 
@@ -753,7 +818,7 @@ public class GameCanvas {
 
 	public void drawSimpleFuelBar(float ink, float maxInk, float x, float y) {
 		float percent = ink / maxInk;
-		spriteBatch.end();
+		switchToShape();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 
 		float width = getWidth() / 18f;
@@ -782,39 +847,40 @@ public class GameCanvas {
 			shapeRen.rectLine(lineX, bottom, lineX, bottom + height * .7f, 3);
 		}
 
-		shapeRen.end();
-		spriteBatch.begin();
+		switchToSprite();
 	}
 
 	public void drawBlackHoleOutline(float x, float y, float radius){
-		spriteBatch.end();
+		switchToShape();
+
 		shapeRen.begin(ShapeRenderer.ShapeType.Line);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glLineWidth(4f);
 		shapeRen.setColor(Color.valueOf("ff7c2160"));
 		shapeRen.circle(x, y, radius, 200);
-		shapeRen.end();
-		spriteBatch.begin();
+
+		switchToSprite();
 	}
 
 	public void drawLevelEndGlow(float x, float y){
-		spriteBatch.end();
+		switchToShape();
+
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glLineWidth(4f);
 		shapeRen.setColor(Color.valueOf("000000FF"));
 		shapeRen.circle(x, y, 50f, 200);
-		shapeRen.end();
-		spriteBatch.begin();
+
+		switchToSprite();
 	}
 
 
 	public void drawSlider(Slider slider){
 		float x = slider.getPosition().x;
 		float y = slider.getPosition().y;
-		spriteBatch.end();
+		switchToShape();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(Color.WHITE);
 		shapeRen.rect(x - slider.getWidth()/2.0f, y, slider.getWidth(), slider.getHeight());
@@ -822,8 +888,8 @@ public class GameCanvas {
 		shapeRen.rect((x-slider.getWidth()/2.0f), y, slider.getWidth()*slider.getValue(), slider.getHeight());
 		shapeRen.setColor(slider.getColor());
 		shapeRen.circle(slider.getKnobPosition().x, y + slider.getHeight()/2f, slider.getKnobRadius(), 1000);
-		shapeRen.end();
-		spriteBatch.begin();
+
+		switchToSprite();
 	}
 
 	/**
