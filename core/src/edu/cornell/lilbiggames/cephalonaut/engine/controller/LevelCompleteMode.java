@@ -56,6 +56,7 @@ public class LevelCompleteMode extends MenuMode {
     private boolean prevDown;
     private boolean prevExit;
     private boolean prevSelect;
+    private boolean choiceMade;
 
     private int twoStars, threeStars;
 
@@ -91,6 +92,7 @@ public class LevelCompleteMode extends MenuMode {
         } else {
             xbox = null;
         }
+        choiceMade = false;
     }
 
     @Override
@@ -129,6 +131,8 @@ public class LevelCompleteMode extends MenuMode {
     public void resetFrame() {
         starScoring.setFrame(0);
     }
+
+    public void resetChoiceMade() { choiceMade = false; }
 
     public void setDefault(){
         super.setDefault();
@@ -170,12 +174,15 @@ public class LevelCompleteMode extends MenuMode {
     }
 
     public void exitScreen() {
-        if (selectedOption == 0) {
-            listener.exitScreen(this, NEXT_LEVEL_CODE);
-        } else if (selectedOption == 1) {
-            listener.exitScreen(this, RESTART_LEVEL_CODE);
-        } else if (selectedOption == 2) {
-            listener.exitScreen(this, EXIT_LEVEL_CODE);
+        if(!choiceMade) {
+            if (selectedOption == 0) {
+                listener.exitScreen(this, NEXT_LEVEL_CODE);
+            } else if (selectedOption == 1) {
+                listener.exitScreen(this, RESTART_LEVEL_CODE);
+            } else if (selectedOption == 2) {
+                listener.exitScreen(this, EXIT_LEVEL_CODE);
+            }
+            choiceMade = true;
         }
     }
 

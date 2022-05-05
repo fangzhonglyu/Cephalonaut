@@ -210,12 +210,8 @@ public class PlayMode extends WorldController implements Screen {
         grapple.reset();
         // TODO: Switch track to a map property based off Tiled
         if(prev_music != levelDef.music) {
-            System.out.println(prev_music);
-            System.out.println(levelDef.music);
             SoundController.switchTrack(levelDef.music);
-            System.out.println("here");
         }
-        System.out.println(levelDef.music);
         prev_music = levelDef.music;
         deathRotationCount = 0;
         cephalonaut.setDeathScale(1);

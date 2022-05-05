@@ -64,7 +64,7 @@ public class PauseMode extends MenuMode {
     @Override
     public void exitScreen(){
         if(selectedOption == 0){
-        listener.exitScreen(this, RESUME_LEVEL_CODE);
+            listener.exitScreen(this, RESUME_LEVEL_CODE);
         } else if(selectedOption == 1){
             listener.exitScreen(this, EXIT_LEVEL_CODE);
         } else if(selectedOption == 2){
