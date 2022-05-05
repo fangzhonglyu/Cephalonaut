@@ -3,11 +3,8 @@ package edu.cornell.lilbiggames.cephalonaut.engine.gameobject;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.EarClippingTriangulator;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.ShortArray;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
@@ -19,23 +16,60 @@ import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 
 
 public class LevelElement extends SimpleObstacle {
-    final static EarClippingTriangulator triangulator = new EarClippingTriangulator();
-    private static Texture sparksTexture;
-    private static Texture wormholeTexture, blackHoleTexture, electricSpiketexture, boostPadTexture, spikeTexture, spikeBallTexture, engineTexture, brokenEngineTexture;
-    /**
-     * Type of element
-     **/
-    private final Element element;
+    /** Triangles for this element */
+    private PolygonShape[] triangles;
+
     protected boolean inContact = false;
-    /**
-     * Size of element, used for texture and polygon resizing purposes
-     **/
+
+    public enum Element {
+        GLASS_BARRIER,
+        BLACK_HOLE,
+        FLYING_METEOR,
+        WALL,
+        BOUNCE_PAD,
+        BOOST_PAD,
+        BUTTON,
+        DOOR,
+        FINISH,
+        WORMHOLE,
+        MISC,
+        START,
+        ESPIKE,
+        SPIKE,
+        SPIKEBALL,
+        REFILL,
+        DIALOGUE_TRIGGER,
+        SPARKLE,
+        ENGINE,
+        BROKEN_ENGINE
+    }
+
+    /** Type of element **/
+    private final Element element;
+
+    /** Size of element, used for texture and polygon resizing purposes **/
     protected float width;
     protected float height;
-    /**
-     * Triangles for this element
-     */
-    private PolygonShape[] triangles;
+
+    public static class Def {
+        public String name;
+        public float x, y, vx, vy;
+        public float width, height;
+        public float angle;
+
+        public Element element;
+        public float density;
+        public BodyDef.BodyType bodyType;
+        public float restitution;
+        public boolean isSensor;
+        public boolean canGrapple;
+        public Color tint;
+
+        public float[] vertices;
+        public TextureRegion texture;
+        public TextureRegion triggerTexture;
+        public Properties properties;
+    }
 
     protected LevelElement(Def def) {
         super(def.x, def.y);
@@ -57,22 +91,25 @@ public class LevelElement extends SimpleObstacle {
         setTexture(def.texture);
     }
 
-    public static void collectAssets(AssetDirectory assetDirectory) {
-        wormholeTexture = assetDirectory.getEntry("A-wormhole-filmstrip.png", Texture.class);
+    private static Texture sparksTexture;
+    private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture,spikeTexture,spikeBallTexture,engineTexture,brokenEngineTexture;
+
+    public static void collectAssets(AssetDirectory assetDirectory){
+        wormholeTexture = assetDirectory.getEntry("A-wormhole-filmstrip.png",Texture.class);
         wormholeTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        boostPadTexture = assetDirectory.getEntry("GO-boostpad-filmstrip.png", Texture.class);
+        boostPadTexture = assetDirectory.getEntry("GO-boostpad-filmstrip.png",Texture.class);
         boostPadTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        electricSpiketexture = assetDirectory.getEntry("electric-spikes.png", Texture.class);
+        electricSpiketexture = assetDirectory.getEntry("electric-spikes.png",Texture.class);
         electricSpiketexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        spikeTexture = assetDirectory.getEntry("GO-spikes-film.png", Texture.class);
+        spikeTexture = assetDirectory.getEntry("GO-spikes-film.png",Texture.class);
         spikeTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        spikeBallTexture = assetDirectory.getEntry("GO-spikeball-film.png", Texture.class);
+        spikeBallTexture = assetDirectory.getEntry("GO-spikeball-film.png",Texture.class);
         spikeBallTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        sparksTexture = assetDirectory.getEntry("UI-target-sparkle.png", Texture.class);
+        sparksTexture = assetDirectory.getEntry("UI-target-sparkle.png",Texture.class);
         sparksTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        engineTexture = assetDirectory.getEntry("engine_film.png", Texture.class);
+        engineTexture = assetDirectory.getEntry("engine_film.png",Texture.class);
         engineTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        brokenEngineTexture = assetDirectory.getEntry("engine_broken_film.png", Texture.class);
+        brokenEngineTexture = assetDirectory.getEntry("engine_broken_film.png",Texture.class);
         brokenEngineTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
 
@@ -81,13 +118,13 @@ public class LevelElement extends SimpleObstacle {
             case BLACK_HOLE:
                 return new LEBlackHole(def);
             case BOOST_PAD:
-                return new LEBoostPad(def, new FilmStrip(boostPadTexture, 1, 7));
+                return new LEBoostPad(def,new FilmStrip(boostPadTexture,1,7));
             case DOOR:
                 return new LETriggerable(def);
             case BUTTON:
                 return new LETrigger(def);
             case WORMHOLE:
-                return new LEWormHole(def, new FilmStrip(wormholeTexture, 1, 24));
+                return new LEWormHole(def,new FilmStrip(wormholeTexture,1,24));
             case GLASS_BARRIER:
                 return new LEGlassBarrier(def);
             case DIALOGUE_TRIGGER:
@@ -95,25 +132,20 @@ public class LevelElement extends SimpleObstacle {
             case START:
                 return new LEStart(def);
             case ESPIKE:
-                return new LEAnimated(def, new FilmStrip(electricSpiketexture, 1, 8), 7, false);
+                return new LEAnimated(def,new FilmStrip(electricSpiketexture,1,8),7, false);
             case SPIKE:
-                return new LEAnimated(def, new FilmStrip(spikeTexture, 1, 9), 7, false);
+                return new LEAnimated(def,new FilmStrip(spikeTexture,1,9),7, false);
             case SPARKLE:
-                return new LEAnimated(def, new FilmStrip(sparksTexture, 1, 6), 5, true);
+                return new LEAnimated(def,new FilmStrip(sparksTexture,1,6),5, true);
             case SPIKEBALL:
-                return new LEAnimated(def, new FilmStrip(spikeBallTexture, 1, 7), 7, false);
+                return new LEAnimated(def,new FilmStrip(spikeBallTexture,1,7),7, false);
             case ENGINE:
-                return new LEAnimated(def, new FilmStrip(engineTexture, 1, 6), 5, false);
+                return new LEAnimated(def,new FilmStrip(engineTexture,1,6),5,false);
             case BROKEN_ENGINE:
-                return new LEAnimated(def, new FilmStrip(brokenEngineTexture, 1, 6), 5, false);
+                return new LEAnimated(def,new FilmStrip(brokenEngineTexture,1,6),5,false);
             default:
                 return new LevelElement(def);
         }
-    }
-
-    public static void gatherAssets(AssetDirectory directory) {
-        // Allocate the tiles
-//		displayFont = directory.getEntry( "retro", BitmapFont.class);
     }
 
     private void updateScale() {
@@ -139,13 +171,18 @@ public class LevelElement extends SimpleObstacle {
         if (!wasInContact && this.inContact) contacted();
     }
 
-    protected void contacted() {
+    protected void contacted() {}
+
+    public static void gatherAssets(AssetDirectory directory) {
+        // Allocate the tiles
+//		displayFont = directory.getEntry( "retro", BitmapFont.class);
     }
 
     public Element getElement() {
         return element;
     }
 
+    final static EarClippingTriangulator triangulator = new EarClippingTriangulator();
     private void setVertices(float[] vertices) {
         if (vertices == null) {
             triangles = new PolygonShape[0];
@@ -157,8 +194,8 @@ public class LevelElement extends SimpleObstacle {
         ShortArray tris = triangulator.computeTriangles(vertices);
         triangles = new PolygonShape[tris.size / 3];
         for (int i = 0; i < tris.size; i += 3) {
-            float[] tri_vertices = new float[]{
-                    vertices[2 * tris.get(i)], vertices[2 * tris.get(i) + 1],
+            float[] tri_vertices = new float[] {
+                    vertices[2 * tris.get(i    )], vertices[2 * tris.get(i    ) + 1],
                     vertices[2 * tris.get(i + 1)], vertices[2 * tris.get(i + 1) + 1],
                     vertices[2 * tris.get(i + 2)], vertices[2 * tris.get(i + 2) + 1]
             };
@@ -181,7 +218,7 @@ public class LevelElement extends SimpleObstacle {
 
     /**
      * Create new fixtures for this body, defining the shape
-     * <p>
+     *
      * This is the primary method to override for custom physics objects
      */
     protected void createFixtures() {
@@ -201,7 +238,7 @@ public class LevelElement extends SimpleObstacle {
 
     /**
      * Release the fixtures for this body, reseting the shape
-     * <p>
+     *
      * This is the primary method to override for custom physics objects
      */
     protected void releaseFixtures() {
@@ -212,7 +249,7 @@ public class LevelElement extends SimpleObstacle {
 
     /**
      * Draws the outline of the physics body.
-     * <p>
+     *
      * This method can be helpful for understanding issues with collisions.
      *
      * @param canvas Drawing context
@@ -221,50 +258,7 @@ public class LevelElement extends SimpleObstacle {
         float offsetX = canvas.getCameraX() * parallaxFactor.x / drawScale.x;
         float offsetY = canvas.getCameraY() * parallaxFactor.y / drawScale.y;
         for (PolygonShape tri : triangles) {
-            canvas.drawPhysics(tri, Color.YELLOW, getX() + offsetX, getY() + offsetY, getAngle(), drawScale.x, drawScale.y);
+            canvas.drawPhysics(tri,Color.YELLOW,getX() + offsetX,getY() + offsetY,getAngle(),drawScale.x,drawScale.y);
         }
-    }
-
-    public enum Element {
-        GLASS_BARRIER,
-        BLACK_HOLE,
-        FLYING_METEOR,
-        WALL,
-        BOUNCE_PAD,
-        BOOST_PAD,
-        BUTTON,
-        DOOR,
-        FINISH,
-        WORMHOLE,
-        MISC,
-        START,
-        ESPIKE,
-        SPIKE,
-        SPIKEBALL,
-        REFILL,
-        DIALOGUE_TRIGGER,
-        SPARKLE,
-        ENGINE,
-        BROKEN_ENGINE
-    }
-
-    public static class Def {
-        public String name;
-        public float x, y, vx, vy;
-        public float width, height;
-        public float angle;
-
-        public Element element;
-        public float density;
-        public BodyDef.BodyType bodyType;
-        public float restitution;
-        public boolean isSensor;
-        public boolean canGrapple;
-        public Color tint;
-
-        public float[] vertices;
-        public TextureRegion texture;
-        public TextureRegion triggerTexture;
-        public Properties properties;
     }
 }

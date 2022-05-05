@@ -1,5 +1,4 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements;
-
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 public class LEDialogueTrigger extends LevelElement {
@@ -11,10 +10,7 @@ public class LEDialogueTrigger extends LevelElement {
         target = def.properties.getInt("target", -1);
         assert target >= 0;
     }
-
-    public int getTarget() {
-        return target;
-    }
+    public int getTarget() {return target;}
 
     public void deactivate() {
         this.active = false;

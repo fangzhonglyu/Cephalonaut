@@ -9,19 +9,13 @@ import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
 
 public class CephalonautController {
-    /**
-     * The box2d world
-     **/
-    private final World world;
+    /** The box2d world **/
+    private World world;
 
-    /**
-     * Reference to the cephalonaut's model
-     */
-    private final CephalonautModel cephalonaut;
+    /** Reference to the cephalonaut's model */
+    private CephalonautModel cephalonaut;
 
-    /**
-     * The joint of the grapple
-     */
+    /** The joint of the grapple */
     private Joint grappleJoint1, grappleJoint2, grappleJoint3;
     private DistanceJointDef grappleJoint1Def, grappleJoint2Def;
     private float lastRotation;
@@ -55,7 +49,6 @@ public class CephalonautController {
 
         lastRotation = rotation;
     }
-
     private void updateGrapple(boolean grappleButton, boolean ungrappleButton, Vector2 crossHair) {
         GrappleModel grapple = cephalonaut.getGrapple();
         // "pull in" the grapple if requested, or if it has stretched its max length
@@ -73,10 +66,10 @@ public class CephalonautController {
                 world.destroyJoint(grappleJoint3);
                 grappleJoint3 = null;
             }
-            if (ungrappleButton && grapple.isOut()) {
+            if(ungrappleButton && grapple.isOut()){
                 SoundController.playSound(0, 1);
             }
-            if (grapple.isOut())
+            if(grapple.isOut())
                 grapple.vertex = grapple.getPosition().cpy();
             grapple.reset();
             grapple.setPosition(cephalonaut.getPosition().cpy());
@@ -89,17 +82,18 @@ public class CephalonautController {
             grapple.setOut(true);
         }
 
-        if (grapple.vertex != null) {
-            if (cephalonaut.getPosition().dst(grapple.vertex) <= 1)
-                grapple.vertex = null;
+        if(grapple.vertex!=null){
+            if(cephalonaut.getPosition().dst(grapple.vertex)<=1)
+                grapple.vertex=null;
             else {
                 Vector2 dir = cephalonaut.getPosition().sub(grapple.vertex.cpy()).nor().scl(1);
-                grapple.vertex = grapple.vertex.add(dir);
+                grapple.vertex=grapple.vertex.add(dir);
             }
         }
 
         if (grapple.isLocked() > 0 && grapple.isLocked() < 8)
             grapple.setLocked(grapple.isLocked() + 0.4f);
+        ;
 
         float distance = cephalonaut.getPosition().cpy().dst(grapple.getPosition());
         if (grapple.isAnchored()) {
@@ -155,9 +149,9 @@ public class CephalonautController {
     }
 
     public void switchGrappleDirection() {
-        if (cephalonaut.getGrapple().isGrappling() && grappleJoint1 != null && grappleJoint2 != null &&
+        if(cephalonaut.getGrapple().isGrappling() && grappleJoint1 != null && grappleJoint2 != null &&
                 grappleJoint1Def != null && grappleJoint2Def != null) {
-            if (lastRotation == 0) {
+            if(lastRotation == 0) {
                 world.destroyJoint(grappleJoint1);
                 world.destroyJoint(grappleJoint2);
                 grappleJoint1 = null;
@@ -166,7 +160,7 @@ public class CephalonautController {
                 Vector2 cephLBodyCenter = cephalonaut.getBody().getLocalCenter();
                 cephalonaut.getBody().setTransform(
                         cephWBodyCenter.add(cephLBodyCenter.setAngleRad(cephalonaut.getAngle() + (float) (Math.PI / 4))),
-                        (float) (3 * Math.PI / 4) + cephalonaut.getAngle());
+                        (float) (3 * Math.PI/4) + cephalonaut.getAngle());
                 grappleJoint1 = world.createJoint(grappleJoint1Def);
                 grappleJoint2 = world.createJoint(grappleJoint2Def);
             }
@@ -174,7 +168,7 @@ public class CephalonautController {
     }
 
     public void removeGrapple(GrappleModel grapple) {
-        if (grapple.isOut()) {
+        if(grapple.isOut()) {
             if (grappleJoint1 != null) {
                 world.destroyJoint(grappleJoint1);
                 grappleJoint1 = null;

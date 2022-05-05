@@ -8,16 +8,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 public class MenuMode implements Screen {
     public static final int LEVEL_SELECTED_CODE = 21;
-    public static final int CHECKPOINT_SELECTED_CODE = 51;
-    public static final int NESTED_MENU_EXIT_CODE = 52;
-    public static final int NEXT_LEVEL_CODE = 53;
-    public static final int EXIT_LOADING_CODE = 61;
     public static int EXIT_LEVEL_CODE = 30;
     public static int RESUME_LEVEL_CODE = 31;
     public static int RESTART_LEVEL_CODE = 32;
@@ -25,39 +22,45 @@ public class MenuMode implements Screen {
     public static int START_CODE = 40;
     public static int OPTIONS_CODE = 41;
     public static int CREDITS_CODE = 42;
-    protected final Color YELLOW = new Color(255.0f / 256.0f, 232.0f / 256.0f, 132.0f / 256.0f, 1.0f);
+    public static final int CHECKPOINT_SELECTED_CODE = 51;
+    public static final int NESTED_MENU_EXIT_CODE = 52;
+    public static final int NEXT_LEVEL_CODE = 53;
+    public static final int EXIT_LOADING_CODE = 61;
+
+    protected final Color YELLOW = new Color(255.0f/256.0f, 232.0f/256.0f, 132.0f/256.0f, 1.0f);
     protected final float ARROW_WIDTH = 20.0f;
-    /**
-     * Reference to the game canvas
-     */
+
+    /** The font for giving messages to the player */
+    private BitmapFont displayFont;
+
+    /** Listener that will move to selected level when we are done */
+    private ScreenListener listener;
+
+    /** Background texture for start-up */
+    private Texture background;
+
+    /** Reference to the game canvas */
     protected GameCanvas canvas;
+
+    private AssetDirectory assets;
     protected Texture arrow;
-    protected Vector2 bounds, scale;
-    protected int selectedOption;
-    /**
-     * The font for giving messages to the player
-     */
-    private final BitmapFont displayFont;
-    /**
-     * Listener that will move to selected level when we are done
-     */
-    private final ScreenListener listener;
-    /**
-     * Background texture for start-up
-     */
-    private final Texture background;
-    private final AssetDirectory assets;
+
+    protected Vector2 bounds,scale;
+
     private Rectangle[] optionsHitBoxes;
+
+    protected int selectedOption;
+
     protected InputAdapter menuInput = new InputAdapter() {
-        public boolean mouseMoved(int x, int screenY) {
+        public boolean mouseMoved (int x, int screenY) {
             float y = canvas.getHeight() - screenY;
 
-            if (optionsHitBoxes != null) {
-                for (int i = 0; i < optionsHitBoxes.length; i++) {
+            if(optionsHitBoxes != null){
+                for(int i = 0; i < optionsHitBoxes.length; i++){
                     Rectangle hitBox = optionsHitBoxes[i];
-                    if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y) {
-                        if (i != selectedOption)
-                            SoundController.playSound(4, 1);
+                    if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                        if(i!=selectedOption)
+                            SoundController.playSound(4,1);
                         selectedOption = i;
                         optionSelected(i);
                     }
@@ -66,14 +69,14 @@ public class MenuMode implements Screen {
             return true;
         }
 
-        public boolean touchDown(int x, int screenY, int pointer, int button) {
+        public boolean touchDown (int x, int screenY, int pointer, int button) {
             float y = canvas.getHeight() - screenY;
-            if (optionsHitBoxes != null) {
-                for (int i = 0; i < optionsHitBoxes.length; i++) {
+            if(optionsHitBoxes != null){
+                for(int i = 0; i < optionsHitBoxes.length; i++){
                     Rectangle hitBox = optionsHitBoxes[i];
-                    if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y) {
+                    if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
                         selectedOption = i;
-                        SoundController.playSound(6, 1);
+                        SoundController.playSound(6,1);
                         exitScreen();
                     }
                 }
@@ -83,33 +86,33 @@ public class MenuMode implements Screen {
 
     };
 
+    public void exitScreen(){
+
+    }
+
+    public void optionSelected(int i){
+
+    }
+
     /**
      * Creates a MainMenuMode with the default size and position.
      *
-     * @param assets The asset directory to use
-     * @param canvas The game canvas to draw to
+     * @param assets    The asset directory to use
+     * @param canvas 	The game canvas to draw to
      */
-    public MenuMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener) {
-        this.canvas = canvas;
+    public MenuMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
+        this.canvas  = canvas;
         this.listener = listener;
-        this.scale = new Vector2(1, 1);
+        this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
 
-        background = assets.getEntry("BG-1-teal.png", Texture.class);
+        background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         arrow = assets.getEntry("arrow", Texture.class);
 
         this.assets = assets;
 
-
-    }
-
-    public void exitScreen() {
-
-    }
-
-    public void optionSelected(int i) {
 
     }
 
@@ -125,13 +128,13 @@ public class MenuMode implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        float scaleMin = Math.min(canvas.getWidth() / bounds.x, canvas.getHeight() / bounds.y);
+        float scaleMin = Math.min(canvas.getWidth()/bounds.x, canvas.getHeight()/bounds.y);
         scale.x = scaleMin;
         scale.y = scaleMin;
-        canvas.setCameraPos(0.5f * width, 0.5f * height);
+        canvas.setCameraPos(0.5f*width,0.5f*height);
     }
 
-    private void update(float delta) {
+    private void update(float delta){
 
     }
 
@@ -139,20 +142,20 @@ public class MenuMode implements Screen {
         drawOptions(options, selectedOption, 0);
     }
 
-    protected void drawOptions(String[] options, int selectedOption, int offset) {
+    protected void drawOptions(String[] options, int selectedOption, int offset){
         optionsHitBoxes = new Rectangle[options.length];
 
-        float start = (options.length * displayFont.getLineHeight()) / 2 - offset;
+        float start = (options.length*displayFont.getLineHeight())/2 - offset;
         displayFont.setColor(Color.ORANGE);
-        displayFont.getData().setScale(0.7f * scale.x);
+        displayFont.getData().setScale(0.7f*scale.x);
 
-        for (int i = 0; i < options.length; i++) {
-            if (selectedOption == i) {
+        for(int i = 0; i < options.length; i++){
+            if(selectedOption == i) {
                 displayFont.setColor(YELLOW);
             }
-            canvas.drawTextCentered(options[i], displayFont, start - 1.2f * displayFont.getLineHeight() * i - 2 * displayFont.getLineHeight());
+            canvas.drawTextCentered(options[i], displayFont, start - 1.2f*displayFont.getLineHeight()*i - 2*displayFont.getLineHeight());
             displayFont.setColor(Color.ORANGE);
-            optionsHitBoxes[i] = new Rectangle(0, canvas.getHeight() / 2f + start - 1.2f * displayFont.getLineHeight() * i - 2 * displayFont.getLineHeight() - .6f * displayFont.getLineHeight(), canvas.getWidth(), 1.2f * displayFont.getLineHeight());
+            optionsHitBoxes[i] = new Rectangle(0,canvas.getHeight() / 2f + start - 1.2f*displayFont.getLineHeight() * i - 2 * displayFont.getLineHeight() - .6f*displayFont.getLineHeight(), canvas.getWidth(), 1.2f*displayFont.getLineHeight());
 
         }
         displayFont.setColor(Color.WHITE);
@@ -179,19 +182,19 @@ public class MenuMode implements Screen {
 
     }
 
-    public void draw() {
+    public void draw(){
 
     }
 
-    public void setDefault() {
+    public void setDefault(){
         float x = Gdx.input.getX();
         float y = canvas.getHeight() - Gdx.input.getY();
 
-        if (optionsHitBoxes != null) {
-            for (int i = 0; i < optionsHitBoxes.length; i++) {
+        if(optionsHitBoxes != null){
+            for(int i = 0; i < optionsHitBoxes.length; i++){
                 Rectangle hitBox = optionsHitBoxes[i];
-                if (hitBox.x <= x && hitBox.x + hitBox.width >= x
-                        && hitBox.y <= y && hitBox.y + hitBox.height >= y) {
+                if(hitBox.x <= x && hitBox.x + hitBox.width >= x
+                        && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
                     selectedOption = i;
                     optionSelected(i);
                 }

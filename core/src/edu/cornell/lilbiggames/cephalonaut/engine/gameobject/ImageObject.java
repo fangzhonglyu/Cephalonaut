@@ -1,5 +1,6 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.gameobject;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -9,19 +10,16 @@ public class ImageObject extends GameObject {
 
     private final Texture texture;
 
-    public ImageObject(Texture texture) {
+    public ImageObject (Texture texture) {
         this.texture = texture;
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
     }
+    
+    @Override
+    public boolean activatePhysics(World world) { return true; }
 
     @Override
-    public boolean activatePhysics(World world) {
-        return true;
-    }
-
-    @Override
-    public void deactivatePhysics(World world) {
-    }
+    public void deactivatePhysics(World world) {}
 
     public Vector2 getParallaxFactor() {
         return parallaxFactor;
@@ -36,6 +34,5 @@ public class ImageObject extends GameObject {
     }
 
     @Override
-    public void drawDebug(GameCanvas canvas) {
-    }
+    public void drawDebug(GameCanvas canvas) {}
 }

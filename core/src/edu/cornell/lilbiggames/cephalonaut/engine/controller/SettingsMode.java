@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
@@ -18,40 +19,40 @@ import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 import java.util.Map;
 
 public class SettingsMode extends MenuMode {
-    private final float DEFAULT_VOLUME = 0.5f;
-    /**
-     * Reference to the game canvas
-     */
+    /** The font for giving messages to the player */
+    private BitmapFont displayFont;
+
+    /** Listener that will move to selected level when we are done */
+    private ScreenListener listener;
+
+    /** Background texture for start-up */
+    private Texture background;
+
+    /** Reference to the game canvas */
     protected GameCanvas canvas;
+
+    private Map<String,Integer> keyBindings;
     Texture volumeDown, volumeUp;
-    XBoxController xbox;
-    /**
-     * The font for giving messages to the player
-     */
-    private final BitmapFont displayFont;
-    /**
-     * Listener that will move to selected level when we are done
-     */
-    private final ScreenListener listener;
-    /**
-     * Background texture for start-up
-     */
-    private final Texture background;
-    private final Map<String, Integer> keyBindings;
+
     private int selectedOption;
-    private final String[] options;
-    private final int SLIDER_HEIGHT = 18;
-    private final Slider musicVolumeSlider;
+    private String[] options;
+
+    private int SLIDER_HEIGHT = 18;
+    private Slider musicVolumeSlider;
+
     private int currentKey;
     private Vector2 startPosition;
     private boolean dragging;
     private boolean keybindingMode;
+
+    private final float DEFAULT_VOLUME = 0.5f;
     private float musicVolume;
+    XBoxController xbox;
     private boolean prevUp;
     private boolean prevDown;
     private boolean prevExit;
 
-    private final InputAdapter settingsInput = new InputAdapter() {
+    private InputAdapter settingsInput = new InputAdapter() {
         @Override
         public boolean keyDown(int i) {
             currentKey = i;
@@ -59,10 +60,10 @@ public class SettingsMode extends MenuMode {
         }
 
         @Override
-        public boolean touchDown(int x, int y, int pointer, int button) {
-            startPosition = new Vector2(x, getCanvas().getHeight() - y);
+        public boolean touchDown (int x, int y, int pointer, int button) {
+            startPosition = new Vector2(x,getCanvas().getHeight()-y);
             dragging = true;
-            if (musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)) {
+            if(musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
                 musicVolumeSlider.movedX(startPosition.x);
                 musicVolume = musicVolumeSlider.getValue();
             }
@@ -70,14 +71,14 @@ public class SettingsMode extends MenuMode {
         }
 
         @Override
-        public boolean touchUp(int x, int y, int pointer, int button) {
+        public boolean touchUp (int x, int y, int pointer, int button) {
             dragging = false;
             return true;
         }
 
         @Override
-        public boolean touchDragged(int screenX, int screenY, int button) {
-            if (dragging && musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)) {
+        public boolean touchDragged(int screenX, int screenY, int button){
+            if(dragging && musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
                 musicVolumeSlider.movedX(screenX);
                 startPosition.x = screenX;
                 musicVolume = musicVolumeSlider.getValue();
@@ -88,7 +89,7 @@ public class SettingsMode extends MenuMode {
         }
     };
 
-    public SettingsMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, Map<String, Integer> keyBindings) {
+    public SettingsMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, Map<String,Integer> keyBindings){
         super(assets, canvas, listener);
         this.canvas = canvas;
         this.listener = listener;
@@ -96,10 +97,10 @@ public class SettingsMode extends MenuMode {
         this.musicVolume = DEFAULT_VOLUME;
         options = keyBindings.keySet().toArray(new String[0]);
 
-        background = assets.getEntry("BG-1-teal.png", Texture.class);
+        background = assets.getEntry( "BG-1-teal.png", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
-        this.scale = new Vector2(1, 1);
+        this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
 
@@ -108,21 +109,21 @@ public class SettingsMode extends MenuMode {
 
         keybindingMode = false;
         dragging = false;
-        musicVolumeSlider = new Slider(canvas, YELLOW, 0.0f, 1.0f, musicVolume, false, canvas.getWidth() / 3.0f, SLIDER_HEIGHT * scale.x, 20.0f);
+        musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
         Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
         if (controllers.size > 0) {
-            xbox = controllers.get(0);
+            xbox = controllers.get( 0 );
         } else {
             xbox = null;
         }
     }
 
-    public GameCanvas getCanvas() {
+    public GameCanvas getCanvas(){
         return canvas;
     }
 
-    public float getMusicVolume() {
-        return musicVolume;
+    public float getMusicVolume(){
+        return  musicVolume;
     }
 
     @Override
@@ -130,17 +131,16 @@ public class SettingsMode extends MenuMode {
 
     }
 
-    public void setDefault() {
+    public void setDefault(){
         super.setDefault();
-        Gdx.input.setInputProcessor(settingsInput);
-        selectedOption = 0;
+        Gdx.input.setInputProcessor(settingsInput); selectedOption = 0;
     }
 
     @Override
     public void render(float delta) {
 
-        if (keybindingMode) {
-            if (Gdx.input.isKeyJustPressed(currentKey)) {
+        if(keybindingMode) {
+            if(Gdx.input.isKeyJustPressed(currentKey)) {
                 keyBindings.put(options[selectedOption], currentKey);
                 keybindingMode = false;
             }
@@ -148,11 +148,11 @@ public class SettingsMode extends MenuMode {
             if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
                     (xbox != null && xbox.isConnected() && xbox.getLeftY() < -0.6f && prevUp != xbox.getLeftY() < -0.6f)) {
                 selectedOption = selectedOption == 0 ? options.length - 1 : selectedOption - 1;
-                SoundController.playSound(4, 1);
+                SoundController.playSound(4,1);
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
                     (xbox != null && xbox.isConnected() && xbox.getLeftY() > 0.6f && prevDown != xbox.getLeftY() > 0.6f)) {
                 selectedOption = (selectedOption + 1) % options.length;
-                SoundController.playSound(4, 1);
+                SoundController.playSound(4,1);
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
                     (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())) {
                 listener.exitScreen(this, RETURN_TO_START_CODE);
@@ -163,7 +163,7 @@ public class SettingsMode extends MenuMode {
                     //keyBindings.put(options[selectedOption], currentKey);
                 }
             }
-            if (xbox != null && xbox.isConnected()) {
+            if(xbox != null && xbox.isConnected()) {
                 prevUp = xbox.getLeftY() < -0.6f;
                 prevDown = xbox.getLeftY() > 0.6f;
                 prevExit = xbox.getB();
@@ -173,80 +173,79 @@ public class SettingsMode extends MenuMode {
         draw();
     }
 
-    public void draw() {
+    public void draw(){
         canvas.clear();
         canvas.begin();
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
         canvas.draw(background,
-                0.5f * canvas.getWidth() - canvas.getCameraX(),
-                0.5f * canvas.getHeight() - canvas.getCameraY(),
+                0.5f*canvas.getWidth()-canvas.getCameraX(),
+                0.5f*canvas.getHeight()-canvas.getCameraY(),
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
                 20,
                 20);
         displayFont.getData().setScale(scale.x);
         displayFont.setColor(Color.ORANGE);
-        canvas.drawTextCentered("SETTINGS", displayFont, height / 4);
+        canvas.drawTextCentered("SETTINGS", displayFont, height/4);
 
-        float subtitleHeight = (3.0f / 4.0f) * height - displayFont.getLineHeight();
-        displayFont.getData().setScale(0.7f * scale.x);
-        canvas.drawText("KEYBINDINGS", displayFont, width / 4, subtitleHeight);
+        float subtitleHeight = (3.0f/4.0f)*height - displayFont.getLineHeight();
+        displayFont.getData().setScale(0.7f*scale.x);
+        canvas.drawText("KEYBINDINGS", displayFont, width/4, subtitleHeight);
 
         float start = subtitleHeight - 1.5f * displayFont.getLineHeight();
 
-        displayFont.getData().setScale(0.5f * scale.x);
+        displayFont.getData().setScale(0.5f*scale.x);
         displayFont.setColor(Color.ORANGE);
 
         int i = 0;
-        for (String binding : keyBindings.keySet()) {
-            float textHeight = start - 2 * displayFont.getLineHeight() * i;
-            if (i == selectedOption) {
+        for(String binding : keyBindings.keySet()){
+            float textHeight = start - 2*displayFont.getLineHeight()*i;
+            if(i == selectedOption){
                 displayFont.setColor(YELLOW);
                 canvas.draw(
                         arrow,
                         YELLOW,
-                        ARROW_WIDTH / 2,
-                        ARROW_WIDTH / 2,
-                        width * 0.2f,
+                        ARROW_WIDTH/2,
+                        ARROW_WIDTH/2,
+                        width*0.2f,
                         textHeight,
                         ARROW_WIDTH,
                         ARROW_WIDTH
                 );
             }
-            canvas.drawText(binding, displayFont, width / 4, textHeight);
-            if (i == selectedOption) displayFont.setColor(Color.CYAN);
-            if (i == selectedOption && keybindingMode)
-                canvas.drawText("<Enter Key>", displayFont, 0.75f * width, textHeight);
+            canvas.drawText(binding, displayFont, width/4, textHeight);
+            if(i == selectedOption) displayFont.setColor(Color.CYAN);
+            if(i == selectedOption && keybindingMode) canvas.drawText("<Enter Key>", displayFont, 0.75f*width, textHeight);
             else canvas.drawText(Input.Keys.toString(keyBindings.get(binding)), displayFont, 0.75f * width, textHeight);
             displayFont.setColor(Color.ORANGE);
             i++;
         }
 
-        start = start - 2 * displayFont.getLineHeight() * i;
+        start = start - 2*displayFont.getLineHeight()*i;
 
-        displayFont.getData().setScale(0.7f * scale.x);
+        displayFont.getData().setScale(0.7f*scale.x);
         displayFont.setColor(Color.ORANGE);
-        canvas.drawText("VOLUME", displayFont, width / 4, start);
+        canvas.drawText("VOLUME", displayFont, width/4, start);
 
-        float sliderHeight = SLIDER_HEIGHT * scale.x;
+        float sliderHeight = SLIDER_HEIGHT*scale.x;
 
-        musicVolumeSlider.updatePosition(width / 2f, start - 2 * displayFont.getLineHeight());
-        musicVolumeSlider.updateSize(width / 3f, sliderHeight);
+        musicVolumeSlider.updatePosition(width/2f, start-2*displayFont.getLineHeight());
+        musicVolumeSlider.updateSize(width/3f, sliderHeight);
         musicVolumeSlider.draw();
 
-        float halfSliderWidth = width / 3.0f * 0.5f;
+        float halfSliderWidth = width/3.0f * 0.5f;
 
         // draw volume icons
-        canvas.draw(volumeDown, Color.WHITE, 0, sliderHeight / 2, width / 2 - halfSliderWidth - 3 * sliderHeight, start - 2f * displayFont.getLineHeight(), 2 * sliderHeight, 2 * sliderHeight);
-        canvas.draw(volumeUp, Color.WHITE, 0, sliderHeight / 2, width / 2 + halfSliderWidth + 2 * sliderHeight, start - 2f * displayFont.getLineHeight(), 2 * sliderHeight, 2 * sliderHeight);
+        canvas.draw(volumeDown, Color.WHITE, 0, sliderHeight/2, width/2 - halfSliderWidth - 3*sliderHeight, start - 2f*displayFont.getLineHeight(), 2*sliderHeight, 2*sliderHeight);
+        canvas.draw(volumeUp, Color.WHITE, 0, sliderHeight/2, width/2 + halfSliderWidth + 2*sliderHeight, start - 2f*displayFont.getLineHeight(), 2*sliderHeight, 2*sliderHeight);
 
         canvas.end();
     }
 
     @Override
-    public void resize(int w, int h) {
-        super.resize(w, h);
+    public void resize(int w, int h){
+        super.resize(w,h);
     }
 
 
