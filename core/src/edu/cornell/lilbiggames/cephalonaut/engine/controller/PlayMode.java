@@ -482,7 +482,7 @@ public class PlayMode extends WorldController implements Screen {
                     for (int j = 0; j < NUM_SPARKLES; j++) {
                         canvas.draw(sparkles[i], Color.GRAY,
                                 sparkles[i].getFwidth() / 2f, sparkles[i].getFheight() / 2f,
-                                2 * scale.x * sparkleX[i][j] + offsetX, 2 * scale.y * sparkleY[i][j] + offsetY,
+                                scale.x * sparkleX[i][j] + offsetX, scale.y * sparkleY[i][j] + offsetY,
                                 0, 0.1f * scale.x, 0.1f * scale.y);
                     }
                 }
