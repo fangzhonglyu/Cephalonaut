@@ -473,11 +473,14 @@ public class PlayMode extends WorldController implements Screen {
                         ((LEBlackHole) obj).getBlackHoleRange() * scale.x);
             }
             if (obj instanceof ImageObject) {
+                Vector2 parallaxFactor = ((ImageObject) obj).getParallaxFactor();
+                float offsetX = canvas.getCameraX() * parallaxFactor.x;
+                float offsetY = canvas.getCameraY() * parallaxFactor.y;
                 for (int i = 0; i < NUM_SPARKLES; i++) {
                     for (int j = 0; j < NUM_SPARKLES; j++) {
                         canvas.draw(sparkles[i], Color.GRAY,
                                 sparkles[i].getFwidth() / 2f, sparkles[i].getFheight() / 2f,
-                                2 * scale.x * sparkleX[i][j], 2 * scale.y * sparkleY[i][j],
+                                2 * scale.x * sparkleX[i][j] + offsetX, 2 * scale.y * sparkleY[i][j] + offsetY,
                                 0, 0.1f * scale.x, 0.1f * scale.y);
                     }
                 }
