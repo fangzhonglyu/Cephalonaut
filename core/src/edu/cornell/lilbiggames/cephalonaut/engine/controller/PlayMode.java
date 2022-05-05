@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
@@ -90,8 +91,7 @@ public class PlayMode extends WorldController implements Screen {
 
     private int twoStars, threeStars;
 
-    public static int NUM_SPARKLES = 10;
-    private float sparkleTime;
+    public static int NUM_SPARKLES = 12;
     private FilmStrip [] sparkles;
     private int [][] sparkleX;
     private int [][] sparkleY;
@@ -122,21 +122,28 @@ public class PlayMode extends WorldController implements Screen {
         paused = false;
         dialogueFade = 0;
 
-        sparkleTime = 0;
         sparkles = new FilmStrip[NUM_SPARKLES];
         for (int i = 0; i < NUM_SPARKLES; i++) {
-            sparkles[i] = new FilmStrip(this.loader.getAssetDirectory().getEntry("ui:sparkle", Texture.class), 1, 6);
+            if (i < 2 * (NUM_SPARKLES / 3)) {
+                sparkles[i] = new FilmStrip(this.loader.getAssetDirectory().getEntry("bg:Mstar", Texture.class), 1, 11);
+            } else {
+                sparkles[i] = new FilmStrip(this.loader.getAssetDirectory().getEntry("bg:Sstar", Texture.class), 1, 11);
+            }
         }
         sparkleX = new int[NUM_SPARKLES][NUM_SPARKLES];
         for (int i = 0; i < NUM_SPARKLES; i++) {
             for (int j = 0; j < NUM_SPARKLES; j++) {
-                sparkleX[i][j] = ThreadLocalRandom.current().nextInt(0, 2 * ((int) (bounds.getWidth() + 1)));
+                sparkleX[i][j] = ThreadLocalRandom.current().nextInt(0, ((int) (bounds.getWidth() + 1)));
             }
         }
         sparkleY = new int[NUM_SPARKLES][NUM_SPARKLES];
+        int minY = 0;
+        if (level.equals("level_3") && checkpoint.equals("checkpoint_0")) {
+            minY = -((int) (bounds.getHeight() + 1));
+        }
         for (int i = 0; i < NUM_SPARKLES; i++) {
             for (int j = 0; j < NUM_SPARKLES; j++) {
-                sparkleY[i][j] = ThreadLocalRandom.current().nextInt(0, 2 * ((int) (bounds.getHeight() + 1)));
+                sparkleY[i][j] = ThreadLocalRandom.current().nextInt(minY, ((int) (bounds.getHeight() + 1)));
             }
         }
     }
@@ -342,13 +349,9 @@ public class PlayMode extends WorldController implements Screen {
         InputController input = InputController.getInstance();
         if (isDialogueMode(dt)) return;
 
-        sparkleTime += 50 * dt;
-        if (sparkleTime >= 1) {
-            sparkleTime = 0;
-            int sparklesIdx = ThreadLocalRandom.current().nextInt(0, NUM_SPARKLES);
-            FilmStrip sparkle = sparkles[sparklesIdx];
-            sparkle.setFrame((sparkle.getFrame() + 1) % sparkle.getSize());
-        }
+        int sparklesIdx = ThreadLocalRandom.current().nextInt(0, NUM_SPARKLES);
+        FilmStrip sparkle = sparkles[sparklesIdx];
+        sparkle.setFrame((sparkle.getFrame() + 1) % sparkle.getSize());
 
         if (cephalonaut.getHasMoved()) {
             timeCount += dt;
@@ -443,29 +446,29 @@ public class PlayMode extends WorldController implements Screen {
      * @param dt Timing values from parent loop
      */
     public void draw(float dt) {
-
         if (exiting) return;
       
         canvas.clear();
         canvas.begin();
 
         for (GameObject obj : objects) {
-            if(obj instanceof LevelElement && ((LevelElement) obj).getElement() == LevelElement.Element.FINISH) {
+            if (obj instanceof LevelElement && ((LevelElement) obj).getElement() == LevelElement.Element.FINISH) {
                 canvas.drawLevelEndGlow(obj.getX() * scale.x, obj.getY() * scale.y);
             }
             obj.draw(canvas);
-            if(obj instanceof LEBlackHole) {
+            if (obj instanceof LEBlackHole) {
                 canvas.drawBlackHoleOutline(obj.getX() * scale.x, obj.getY() * scale.y,
                         ((LEBlackHole) obj).getBlackHoleRange() * scale.x);
             }
-        }
-
-        for (int i = 0; i < NUM_SPARKLES; i++) {
-            for (int j = 0; j < NUM_SPARKLES; j++) {
-                canvas.draw(sparkles[i], Color.WHITE,
-                        sparkles[i].getFwidth() / 2f, sparkles[i].getFheight() / 2f,
-                        scale.x * sparkleX[i][j], scale.y * sparkleY[i][j],
-                        0, 0.1f * scale.x, 0.1f * scale.y);
+            if (obj instanceof ImageObject) {
+                for (int i = 0; i < NUM_SPARKLES; i++) {
+                    for (int j = 0; j < NUM_SPARKLES; j++) {
+                        canvas.draw(sparkles[i], Color.WHITE,
+                                sparkles[i].getFwidth() / 2f, sparkles[i].getFheight() / 2f,
+                                2 * scale.x * sparkleX[i][j], 2 * scale.y * sparkleY[i][j],
+                                0, 0.1f * scale.x, 0.1f * scale.y);
+                    }
+                }
             }
         }
 
