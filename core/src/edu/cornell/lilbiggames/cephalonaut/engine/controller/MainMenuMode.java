@@ -151,6 +151,7 @@ public class MainMenuMode extends MenuMode {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftX() < -0.6f && prevLeft != xbox.getLeftX() < -0.6f)) {
             curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
+            SoundController.playSound(4, 1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
                 (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())) {
             listener.exitScreen(this, RETURN_TO_START_CODE);
