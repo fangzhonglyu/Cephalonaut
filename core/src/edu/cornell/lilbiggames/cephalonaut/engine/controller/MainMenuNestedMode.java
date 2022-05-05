@@ -83,6 +83,8 @@ public class MainMenuNestedMode extends MenuMode {
     public void render(float delta) {
         if (levelSelected && listener != null) {
             levelSelected = false;
+            SoundController.playSound(6,1);
+
             listener.exitScreen(this, CHECKPOINT_SELECTED_CODE);
         } else {
             update(delta);
@@ -97,8 +99,10 @@ public class MainMenuNestedMode extends MenuMode {
             levelSelected = true;
         } else if (inputController.isNextPressed()){
             completedCheckpoints = (completedCheckpoints+1)%checkpoints;
+            SoundController.playSound(4,1);
         } else if(inputController.isPrevPressed()){
             completedCheckpoints = completedCheckpoints == 0 ? checkpoints - 1 : completedCheckpoints - 1;
+            SoundController.playSound(4,1);
         } else if(inputController.didExit() || inputController.isBackPressed()){
             listener.exitScreen(this, NESTED_MENU_EXIT_CODE);
         }

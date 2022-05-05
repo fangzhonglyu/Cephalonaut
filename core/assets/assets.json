@@ -147,7 +147,12 @@
     "suction": "TentacleSuctionSFX.mp3",
     "bounce": "BouncePadSound.mp3",
     "boost": "BoostPadSound.mp3",
-    "blackhole": "BlackHoleSound.mp3"
+    "blackhole": "BlackHoleVortexSound.mp3",
+    "glassbreak": "glassbreak.mp3",
+    "menuSound": "MenuSelectSound.mp3",
+    "menuClick": "MenuClickSound.mp3",
+    "wormHole": "WormholeWarpSound.mp3",
+    "electricDeath": "ElectricityDeathSound.mp3"
   },
   "fonts": {
     "retro": {

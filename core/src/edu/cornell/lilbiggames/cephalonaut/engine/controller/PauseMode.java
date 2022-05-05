@@ -76,15 +76,18 @@ public class PauseMode extends MenuMode {
         inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed()){
+            SoundController.playSound(6,1);
             exitScreen();
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.didExit()){
             listener.exitScreen(this, RESUME_LEVEL_CODE);
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
                 inputController.isUpPressed()){
             selectedOption = selectedOption == 0 ? options.length-1 : selectedOption -1;
+            SoundController.playSound(4,1);
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
                 inputController.isDownPressed()){
             selectedOption = (selectedOption +1)%options.length;
+            SoundController.playSound(4,1);
         }
 
         draw();

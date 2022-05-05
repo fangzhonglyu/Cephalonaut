@@ -124,6 +124,7 @@ public class LevelController implements ContactListener {
     }
 
     public void setTeleport(LEWormHole wormHole) {
+        SoundController.playSound(5,1);
         cephalonaut.setTeleportLocation(wormHole.getPosition());
         cephalonaut.setShouldTeleport(true);
     }
@@ -189,6 +190,8 @@ public class LevelController implements ContactListener {
                 ((LevelElement) contactObject).setInContact(true);
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)||((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE)||((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKEBALL)) {
                     cephalonaut.setAlive(false);
+                    if(((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE))
+                        SoundController.playSound(7,1);
                 }
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.REFILL)) {
                     cephalonaut.refillInk();

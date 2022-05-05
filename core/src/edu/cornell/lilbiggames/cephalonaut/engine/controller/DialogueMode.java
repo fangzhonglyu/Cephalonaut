@@ -124,7 +124,7 @@ public class DialogueMode {
                 Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) ||
                 Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) || input.isSelectPressed()) {
             index+=1;
-
+            SoundController.playSound(6,1);
             if(index >= dialogue.get(part).size()) {
                 return false;
             }

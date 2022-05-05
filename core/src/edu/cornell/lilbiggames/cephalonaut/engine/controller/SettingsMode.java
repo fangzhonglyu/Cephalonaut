@@ -138,8 +138,10 @@ public class SettingsMode extends MenuMode {
         } else {
             if (inputController.isUpPressed()) {
                 selectedOption = selectedOption == 0 ? options.length - 1 : selectedOption - 1;
+                SoundController.playSound(4,1);
             } else if (inputController.isDownPressed()) {
                 selectedOption = (selectedOption + 1) % options.length;
+                SoundController.playSound(4,1);
             } else if (inputController.didExit() || inputController.isBackPressed()) {
                 listener.exitScreen(this, RETURN_TO_START_CODE);
             } else {

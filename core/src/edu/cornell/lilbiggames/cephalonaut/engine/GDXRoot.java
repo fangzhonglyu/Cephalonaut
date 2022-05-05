@@ -229,7 +229,9 @@ public class GDXRoot extends Game implements ScreenListener {
 	@Override
 	public void exitScreen(Screen screen, int exitCode) {
 		Gdx.input.setInputProcessor(new InputAdapter());
-		SoundController.killAllSound();
+		//
+		SoundController.setBlackHoleSound(false,1);
+		SoundController.setInkSound(false);
 		if(exitCode == MenuMode.START_CODE){
 			startScreenTransition(mainMenu);
 		} else if(exitCode == MenuMode.OPTIONS_CODE){
