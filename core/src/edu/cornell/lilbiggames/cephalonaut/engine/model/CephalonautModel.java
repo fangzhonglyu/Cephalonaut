@@ -25,346 +25,351 @@ import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
  * Player avatar for the gameplay prototype.
  */
 public class CephalonautModel extends OctopusObstacle {
-	/** Cache for internal force calculations */
-	private final Vector2 forceCache = new Vector2();
-	private final Vector2 miscForceCache = new Vector2();
-	private boolean shouldTeleport = false;
-	private Vector2 teleportLocation;
+    /**
+     * Cache for internal force calculations
+     */
+    private final Vector2 forceCache = new Vector2();
+    private final Vector2 miscForceCache = new Vector2();
+    /**
+     * Cache object for transforming the force according the object angle
+     */
+    private final Affine2 affineCache = new Affine2();
+    private final float MAX_SPEED = 16.0f;
+    /**
+     * Magnitude of force to apply
+     */
+    private final float force = 5.0f;
+    private boolean shouldTeleport = false;
+    private Vector2 teleportLocation;
+    /**
+     * The cephalonaut's grapple tentacle
+     */
+    private final GrappleModel grapple;
+    /**
+     * The tentacle's texture
+     */
+    private final Texture tentacleTexture;
+    /**
+     * The Filmstrip for the cephalonaut
+     */
+    private final FilmStrip filmstrip;
+    /**
+     * Animation Counter
+     */
+    private float frame;
+    /**
+     * The direction of rotation
+     */
+    private float rotation;
 
-	/** The cephalonaut's grapple tentacle */
-	private GrappleModel grapple;
+    /**
+     * Whether or not the octopus is ink-thrusting
+     */
+    private boolean inking;
 
-	/** The tentacle's texture */
-	private Texture tentacleTexture;
+    /**
+     * How much ink the cephalonaut has left
+     */
+    private float ink;
 
-	/** The Filmstrip for the cephalonaut*/
-	private FilmStrip filmstrip;
+    private final float max_ink;
 
-	/** Animation Counter*/
-	private float frame;
+    private boolean alive = true;
 
-	/** Cache object for transforming the force according the object angle */
-	private final Affine2 affineCache = new Affine2();
+    private float deathScale;
 
-	private final float MAX_SPEED = 16.0f;
+    private boolean hasMoved;
 
-	/** Magnitude of force to apply */
-	private final float force = 5.0f;
+    /**
+     * Creates a new cephalonaut with the given physics data
+     * <p>
+     * The size is expressed in physics units NOT pixels.  In order for
+     * drawing to work properly, you MUST set the drawScale. The drawScale
+     * converts the physics units to pixels.
+     */
 
-	/** The direction of rotation */
-	private float rotation;
+    public CephalonautModel(float x, float y, float width, float height, float max_ink, Vector2 drawScale, FilmStrip filmstrip) {
+        // The shrink factors fit the image to a tighter hitbox
+        super(x, y, width, height);
+        setName("michael");
+        setDrawScale(drawScale);
+        setDensity(1);
+        setFriction(0);
+        setRestitution(0.1f);
+        setFixedRotation(false);
+        this.filmstrip = filmstrip;
+        this.filmstrip.setFrame(0);
+        this.max_ink = max_ink;
+        ink = max_ink;
+        frame = 0;
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fillRectangle(0, 0, 1, 1);
+        tentacleTexture = new Texture(pixmap);
+        deathScale = 1;
 
-	/** Whether or not the octopus is ink-thrusting */
-	private boolean inking;
+        // Matias: I don't think this line of code matters bc it's being overwritten by the setTexture call
+        // in the SandboxController.
+        origin.set(width / 2f, height / 2f);
 
-	/** How much ink the cephalonaut has left */
-	private float ink;
+        grapple = new GrappleModel(x, y, drawScale);
+    }
 
-	private float max_ink;
+    public boolean isAlive() {
+        return alive;
+    }
 
-	private boolean alive = true;
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 
-	private float deathScale;
+    /**
+     * Returns true if the cephalonaut is actively inking.
+     *
+     * @return true if the cephalonaut is actively inking.
+     */
+    public boolean isInking() {
+        return inking;
+    }
 
-	private boolean hasMoved;
+    /**
+     * Sets whether the cephalonaut is actively inking.
+     *
+     * @param inking whether the cephalonaut is actively inking.
+     */
+    public void setInking(boolean inking) {
+        this.inking = inking;
+        this.forceCache.y = (inking && ink > 0) ? force : 0.0f;
+        SoundController.setInkSound(inking && ink > 0);
+    }
 
-	public boolean isAlive() {
-		return alive;
+    public boolean getShouldTeleport() {
+        return shouldTeleport;
+    }
+
+    public void setShouldTeleport(boolean shouldT) {
+        shouldTeleport = shouldT;
+    }
+
+    public Vector2 getTeleportLocation() {
+        return teleportLocation;
+    }
+
+    public void setTeleportLocation(Vector2 teleportLoc) {
+        teleportLocation = teleportLoc;
+    }
+
+    public boolean getHasMoved() {
+        return hasMoved;
+    }
+
+    public void setHasMoved(boolean moved) {
+        hasMoved = moved;
+    }
+
+    /**
+     * Returns the amount of ink in the cephalonaut's sac.
+     *
+     * @returns the amount of ink in the cephalonaut's sac.
+     */
+    public float getInk() {
+        return ink / max_ink;
+    }
+
+    /**
+     * Sets the amount of ink in the cephalonaut's sac.
+     *
+     * @param ink the amount of ink in the cephalonaut's sac.
+     */
+    public void setInk(int ink) {
+        this.ink = ink * max_ink;
+    }
+
+    /**
+     * Sets whether the cephalonaut is actively inking.
+     *
+     * @param new_force whether the cephalonaut is actively inking.
+     */
+    public void setForce(Vector2 new_force) {
+        miscForceCache.x = new_force.x;
+        miscForceCache.y = new_force.y;
+    }
+
+    /**
+     * Sets whether the cephalonaut is actively inking.
+     *
+     * @param new_force whether the cephalonaut is actively inking.
+     */
+    public void addForce(Vector2 new_force) {
+        miscForceCache.x += new_force.x;
+        miscForceCache.y += new_force.y;
+    }
+
+    /**
+     * Returns the cephalonaut's grapple tentacle.
+     *
+     * @return the cephalonaut's grapple tentacle.
+     */
+    public GrappleModel getGrapple() {
+        return grapple;
+    }
+
+    /**
+     * Creates the physics Body(s) for this object, adding them to the world.
+     * <p>
+     * This method overrides the base method to keep your ship from spinning.
+     *
+     * @param world Box2D world to store body
+     * @return true if object allocation succeeded
+     */
+    public boolean activatePhysics(World world) {
+        // create the box from our superclass
+		return super.activatePhysics(world);
+
+        // TODO: Stuff here probably
 	}
 
-	public void setAlive(boolean alive) {
-		this.alive = alive;
-	}
+    /**
+     * Applies rotation to the octopus
+     * <p>
+     * This method should be called after the rotation attribute is set.
+     */
+    public void applyRotation() {
+        body.setAngularVelocity(-5f * rotation);
+    }
 
-	/**
-	 * Returns true if the cephalonaut is actively inking.
-	 *
-	 * @return true if the cephalonaut is actively inking.
-	 */
-	public boolean isInking() {
-		return inking;
-	}
+    public float getDeathScale() {
+        return deathScale;
+    }
 
-	/**
-	 * Sets whether the cephalonaut is actively inking.
-	 *
-	 * @param inking whether the cephalonaut is actively inking.
-	 */
-	public void setInking(boolean inking) {
-		this.inking = inking;
-		this.forceCache.y = (inking && ink > 0) ? force : 0.0f;
-		SoundController.setInkSound(inking && ink > 0);
-	}
+    public void setDeathScale(float deathScaleVal) {
+        deathScale = deathScaleVal;
+    }
 
-	public boolean getShouldTeleport() {
-		return shouldTeleport;
-	}
+    /**
+     * Applies the force to the body of this dude
+     * <p>
+     * This method should be called after the force attribute is set.
+     */
+    public void applyForce() {
+        if (!isActive()) {
+            return;
+        }
 
-	public void setShouldTeleport(boolean shouldT) {
-		shouldTeleport = shouldT;
-	}
+        // Orient the force with rotation and apply ink-thrust.
+        Vector2 temp = forceCache.cpy();
+        affineCache.setToRotationRad(getAngle());
+        affineCache.applyTo(forceCache);
+        forceCache.add(miscForceCache);
+        body.applyForce(forceCache, getPosition(), true);
+        forceCache.set(temp);
+        setLinearVelocity(getLinearVelocity().clamp(0, MAX_SPEED));
+    }
 
-	public Vector2 getTeleportLocation() {
-		return teleportLocation;
-	}
-
-	public void setTeleportLocation(Vector2 teleportLoc) {
-		teleportLocation = teleportLoc;
-	}
-
-	public void setHasMoved(boolean moved) {
-		hasMoved = moved;
-	}
-
-	public boolean getHasMoved() {
-		return hasMoved;
-	}
-
-	/**
-	 * Sets the amount of ink in the cephalonaut's sac.
-	 *
-	 * @param ink the amount of ink in the cephalonaut's sac.
-	 */
-	public void setInk(int ink) { this.ink = ink*max_ink; }
-
-	/**
-	 * Returns the amount of ink in the cephalonaut's sac.
-	 *
-	 * @returns the amount of ink in the cephalonaut's sac.
-	 */
-	public float getInk() { return ink/max_ink; }
-
-	/**
-	 * Sets whether the cephalonaut is actively inking.
-	 *
-	 * @param new_force whether the cephalonaut is actively inking.
-	 */
-	public void setForce(Vector2 new_force) {
-		miscForceCache.x = new_force.x;
-		miscForceCache.y = new_force.y;
-	}
-	/**
-	 * Sets whether the cephalonaut is actively inking.
-	 *
-	 * @param new_force whether the cephalonaut is actively inking.
-	 */
-	public void addForce(Vector2 new_force) {
-		miscForceCache.x += new_force.x;
-		miscForceCache.y += new_force.y;
-	}
-
-	/**
-	 * Creates a new cephalonaut with the given physics data
-	 *
-	 * The size is expressed in physics units NOT pixels.  In order for
-	 * drawing to work properly, you MUST set the drawScale. The drawScale
-	 * converts the physics units to pixels.
-	 *
-	 */
-
-	public CephalonautModel(float x, float y, float width, float height, float max_ink, Vector2 drawScale, FilmStrip filmstrip) {
-		// The shrink factors fit the image to a tighter hitbox
-		super(x, y, width, height);
-		setName("michael");
-		setDrawScale(drawScale);
-		setDensity(1);
-		setFriction(0);
-		setRestitution(0.1f);
-		setFixedRotation(false);
-		this.filmstrip = filmstrip;
-		this.filmstrip.setFrame(0);
-		this.max_ink = max_ink;
-		ink = max_ink;
-		frame = 0;
-		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.WHITE);
-		pixmap.fillRectangle(0, 0, 1, 1);
-		tentacleTexture = new Texture(pixmap);
-		deathScale = 1;
-
-		// Matias: I don't think this line of code matters bc it's being overwritten by the setTexture call
-		// in the SandboxController.
-		origin.set(width / 2f, height / 2f);
-
-		grapple = new GrappleModel(x, y, drawScale);
-	}
-
-	/**
-	 * Returns the cephalonaut's grapple tentacle.
-	 *
-	 * @return the cephalonaut's grapple tentacle.
-	 */
-	public GrappleModel getGrapple() {
-		return grapple;
-	}
-
-	/**
-	 * Creates the physics Body(s) for this object, adding them to the world.
-	 *
-	 * This method overrides the base method to keep your ship from spinning.
-	 *
-	 * @param world Box2D world to store body
-	 *
-	 * @return true if object allocation succeeded
-	 */
-	public boolean activatePhysics(World world) {
-		// create the box from our superclass
-		if (!super.activatePhysics(world)) {
-			return false;
-		}
-
-		// TODO: Stuff here probably
-
-		return true;
-	}
-
-	/**
-	 * Applies rotation to the octopus
-	 *
-	 * This method should be called after the rotation attribute is set.
-	 */
-	public void applyRotation(){
-		body.setAngularVelocity(-5f * rotation);
-	}
-
-	public void setDeathScale(float deathScaleVal) {
-		deathScale = deathScaleVal;
-	}
-
-	public float getDeathScale() {
-		return deathScale;
-	}
-	
-
-	/**
-	 * Applies the force to the body of this dude
-	 *
-	 * This method should be called after the force attribute is set.
-	 */
-	public void applyForce() {
-		if (!isActive()) {
-			return;
-		}
-
-		// Orient the force with rotation and apply ink-thrust.
-		Vector2 temp = forceCache.cpy();
-		affineCache.setToRotationRad(getAngle());
-		affineCache.applyTo(forceCache);
-		forceCache.add(miscForceCache);
-		body.applyForce(forceCache,getPosition(),true);
-		forceCache.set(temp);
-		setLinearVelocity(getLinearVelocity().clamp(0, MAX_SPEED));
-	}
-
-	/**
-	 * Sets rotational force
-	 *
-	 * @param rotation The direction (clockwise or counterclockwise to rotate)
-	 */
-	public void setRotationalDirection(float rotation){
-		this.rotation = rotation;
-	}
+    /**
+     * Sets rotational force
+     *
+     * @param rotation The direction (clockwise or counterclockwise to rotate)
+     */
+    public void setRotationalDirection(float rotation) {
+        this.rotation = rotation;
+    }
 
 
-	public void refillInk() {
-		ink = max_ink;
-	}
+    public void refillInk() {
+        ink = max_ink;
+    }
 
 
-	/**
-	 * Updates the object's physics state (NOT GAME LOGIC).
-	 *
-	 * We use this method to reset cooldowns.
-	 *
-	 * @param dt	Number of seconds since last animation frame
-	 */
-	public void update(float dt) {
-		super.update(dt);
-		if(frame>8&&frame<18){
-			frame += dt*10f;
-			if(frame>=18)
-				frame = 0;
-		}
-		else if(frame>=18&&frame<25){
-			if(frame<23||(inking && ink > 0.0f))
-				frame += dt*20f;
-			else if (rotation>-0.8f){
-				frame += dt*15f;
-			}
-			else if (frame>24 && rotation<-0.8f){
-				frame -= dt*15f;
-			}
-			if(frame>=25)
-				frame = 0;
-		}
-		else if(frame>=27&&frame<34){
-			if(frame<32||(inking && ink > 0.0f))
-				frame += dt*20f;
-			else if (rotation<0.8f){
-				frame += dt*15f;
-			}
-			else if (frame>33 && rotation>0.8f){
-				frame -= dt*15f;
-			}
-			if(frame>=34)
-				frame = 0;
-		}
-		else if(frame>=36){
-			frame += dt*10f;
-			if(frame>=filmstrip.getSize())
-				frame = 0;
-		}
-		if(frame<5){
-			frame += dt*5f;
-			if(frame>=5)
-				frame = 0;
-			if(inking && ink > 0.0f)
-				frame = 36;
-			else if(rotation>0.8f)
-				frame = 27;
-			else if (rotation<-0.8f)
-				frame = 18;
-		}
-		filmstrip.setFrame((int)frame);
+    /**
+     * Updates the object's physics state (NOT GAME LOGIC).
+     * <p>
+     * We use this method to reset cooldowns.
+     *
+     * @param dt Number of seconds since last animation frame
+     */
+    public void update(float dt) {
+        super.update(dt);
+        if (frame > 8 && frame < 18) {
+            frame += dt * 10f;
+            if (frame >= 18)
+                frame = 0;
+        } else if (frame >= 18 && frame < 25) {
+            if (frame < 23 || (inking && ink > 0.0f))
+                frame += dt * 20f;
+            else if (rotation > -0.8f) {
+                frame += dt * 15f;
+            } else if (frame > 24 && rotation < -0.8f) {
+                frame -= dt * 15f;
+            }
+            if (frame >= 25)
+                frame = 0;
+        } else if (frame >= 27 && frame < 34) {
+            if (frame < 32 || (inking && ink > 0.0f))
+                frame += dt * 20f;
+            else if (rotation < 0.8f) {
+                frame += dt * 15f;
+            } else if (frame > 33 && rotation > 0.8f) {
+                frame -= dt * 15f;
+            }
+            if (frame >= 34)
+                frame = 0;
+        } else if (frame >= 36) {
+            frame += dt * 10f;
+            if (frame >= filmstrip.getSize())
+                frame = 0;
+        }
+        if (frame < 5) {
+            frame += dt * 5f;
+            if (frame >= 5)
+                frame = 0;
+            if (inking && ink > 0.0f)
+                frame = 36;
+            else if (rotation > 0.8f)
+                frame = 27;
+            else if (rotation < -0.8f)
+                frame = 18;
+        }
+        filmstrip.setFrame((int) frame);
 
-		if (inking && ink > 0.0f) {
-			ink -= 0.006f;
-		}
+        if (inking && ink > 0.0f) {
+            ink -= 0.006f;
+        }
 //		else if (!inking && ink < 1.0f) {
 //			ink += 0.004f;
 //		}
-		ink = Math.min(ink, max_ink);
-	}
+        ink = Math.min(ink, max_ink);
+    }
 
-	/**
-	 * Draws the physics object.
-	 *
-	 * @param canvas Drawing context
-	 */
-	public void draw(GameCanvas canvas) {
+    /**
+     * Draws the physics object.
+     *
+     * @param canvas Drawing context
+     */
+    public void draw(GameCanvas canvas) {
 //		getBody().getWorldCenter(),
-		grapple.draw(canvas, getPosition(), (float) Math.toDegrees(getAngle()));
+        grapple.draw(canvas, getPosition(), (float) Math.toDegrees(getAngle()));
 
-		//animation
-		float ox = 0.5f * filmstrip.getRegionWidth();
-		float oy = 0.75f * filmstrip.getRegionHeight();
-		canvas.draw(filmstrip, Color.WHITE, ox, oy,
-				getX() * drawScale.x, getY() * drawScale.y,
-				getAngle(), 0.052f* drawScale.x * deathScale, 0.052f*drawScale.y * deathScale);
+        //animation
+        float ox = 0.5f * filmstrip.getRegionWidth();
+        float oy = 0.75f * filmstrip.getRegionHeight();
+        canvas.draw(filmstrip, Color.WHITE, ox, oy,
+                getX() * drawScale.x, getY() * drawScale.y,
+                getAngle(), 0.052f * drawScale.x * deathScale, 0.052f * drawScale.y * deathScale);
 
-		canvas.drawSimpleFuelBar(ink, max_ink, getX() * drawScale.x, (getY() - getHeight() * 0.7f) * drawScale.y);
-	}
+        canvas.drawSimpleFuelBar(ink, max_ink, getX() * drawScale.x, (getY() - getHeight() * 0.7f) * drawScale.y);
+    }
 
-	/**
-	 * Draws the outline of the physics body.
-	 *
-	 * This method can be helpful for understanding issues with collisions.
-	 *
-	 * @param canvas Drawing context
-	 */
-	public void drawDebug(GameCanvas canvas) {
-		super.drawDebug(canvas);
+    /**
+     * Draws the outline of the physics body.
+     * <p>
+     * This method can be helpful for understanding issues with collisions.
+     *
+     * @param canvas Drawing context
+     */
+    public void drawDebug(GameCanvas canvas) {
+        super.drawDebug(canvas);
 //		canvas.drawPhysics(circleShape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
 //		canvas.drawPhysics(triangleShape, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
-	}
+    }
 }

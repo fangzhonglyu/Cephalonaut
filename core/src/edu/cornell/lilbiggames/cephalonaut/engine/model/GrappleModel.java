@@ -1,22 +1,20 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.model;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.Obstacle;
 import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.WheelObstacle;
-import edu.cornell.lilbiggames.cephalonaut.util.PooledList;
-
-import java.util.ArrayList;
 
 public class GrappleModel extends WheelObstacle {
+    /**
+     * Retraction vertex
+     */
+    public Vector2 vertex;
     /**
      * Whether the grapple is out
      */
@@ -46,13 +44,9 @@ public class GrappleModel extends WheelObstacle {
      */
     private float maxLength;
     /**
-     * Retraction vertex
-     */
-    public Vector2 vertex;
-    /**
      * The grapple's texture
      */
-    private Texture texture;
+    private final Texture texture;
 
     public GrappleModel(float x, float y, Vector2 drawScale) {
         // The shrink factors fit the image to a tighter hitbox
@@ -67,10 +61,10 @@ public class GrappleModel extends WheelObstacle {
         int pixDiameter = 5;
         Pixmap pixmap = new Pixmap(pixDiameter, pixDiameter, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.valueOf("ff9947"));
-        pixmap.fillRectangle(0,0,pixDiameter , pixDiameter);
+        pixmap.fillRectangle(0, 0, pixDiameter, pixDiameter);
         texture = (new Texture(pixmap));
         origin.set(pixDiameter / 2f, pixDiameter / 2f);
-        texture.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
+        texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         isOut = false;
         isGrappling = false;
@@ -173,15 +167,6 @@ public class GrappleModel extends WheelObstacle {
     }
 
     /**
-     * Sets the grapple's anchor location.
-     *
-     * @param location the distance joint definition for the grapple.
-     */
-    public void setAnchorLocation(String location) {
-        this.anchorLocation = location;
-    }
-
-    /**
      * Returns the grapple's anchor location.
      *
      * @return the grapple's anchor location.
@@ -191,12 +176,12 @@ public class GrappleModel extends WheelObstacle {
     }
 
     /**
-     * Sets the grapple's extension length.
+     * Sets the grapple's anchor location.
      *
-     * @param length the distance the grapple has extended from the cephalonaut.
+     * @param location the distance joint definition for the grapple.
      */
-    public void setExtensionLength(float length) {
-        extensionLength = length;
+    public void setAnchorLocation(String location) {
+        this.anchorLocation = location;
     }
 
     /**
@@ -206,6 +191,15 @@ public class GrappleModel extends WheelObstacle {
      */
     public float getExtensionLength() {
         return extensionLength;
+    }
+
+    /**
+     * Sets the grapple's extension length.
+     *
+     * @param length the distance the grapple has extended from the cephalonaut.
+     */
+    public void setExtensionLength(float length) {
+        extensionLength = length;
     }
 
 //    /**
@@ -225,21 +219,21 @@ public class GrappleModel extends WheelObstacle {
 //    }
 
     /**
-     * Set the grapple's max length.
-     *
-     * @param length the grapple's max length.
-     */
-    public void setMaxLength(float length) {
-        maxLength = length;
-    }
-
-    /**
      * Get the grapple's max length.
      *
      * @return the grapple's max length.
      */
     public float getMaxLength() {
         return maxLength;
+    }
+
+    /**
+     * Set the grapple's max length.
+     *
+     * @param length the grapple's max length.
+     */
+    public void setMaxLength(float length) {
+        maxLength = length;
     }
 
     /**
@@ -262,31 +256,31 @@ public class GrappleModel extends WheelObstacle {
             tr.preTranslate(cephP.x, cephP.y);
             float angle = getPosition().sub(cephP).angleDeg();
             tr.rotate(angle);
-            angle-=cephA;
+            angle -= cephA;
             float dist = getPosition().dst(cephP);
-            for (float i = 0; i < getPosition().dst(cephP) / 2; i += (canvas.getWidth()/1920f)*2.4f / drawScale.x) {
+            for (float i = 0; i < getPosition().dst(cephP) / 2; i += (canvas.getWidth() / 1920f) * 2.4f / drawScale.x) {
                 Vector2 t = new Vector2(i * 2, (float) (-Math.sin(i * 5) - Math.cos(i * 4)) / (dist + 0.3f) / 2f * (float) Math.sqrt(Math.sqrt(1 - i * 2 / dist)));
                 if (isLocked > 0)
                     t.set(t.x, t.y * (8 - isLocked) / 8);
-                t.y = (angle>=270||angle<90)?t.y:-t.y;
+                t.y = (angle >= 270 || angle < 90) ? t.y : -t.y;
                 tr.applyTo(t);
                 canvas.draw(texture, Color.WHITE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
-                        getAngle(), 0.018f*drawScale.x, 0.018f*drawScale.y);
+                        getAngle(), 0.018f * drawScale.x, 0.018f * drawScale.y);
             }
         }
-        if (vertex != null ) {
+        if (vertex != null) {
             Affine2 tr = new Affine2();
             tr.preTranslate(cephP.x, cephP.y);
             float angle = vertex.cpy().sub(cephP).angleDeg();
             tr.rotate(angle);
-            angle-=cephA;
+            angle -= cephA;
             float dist = vertex.dst(cephP);
-            for (float i = 0; i < vertex.dst(cephP) / 2; i += (canvas.getWidth()/1920f)*2.4f / drawScale.x) {
+            for (float i = 0; i < vertex.dst(cephP) / 2; i += (canvas.getWidth() / 1920f) * 2.4f / drawScale.x) {
                 Vector2 t = new Vector2(i * 2, (float) (-Math.sin(i * 5) - Math.cos(i * 4)) / (dist + 0.7f) / 2f * (float) Math.sqrt(Math.sqrt(1 - i * 2 / dist)));
-                t.y = (angle>=270||angle<90)?t.y:-t.y;
+                t.y = (angle >= 270 || angle < 90) ? t.y : -t.y;
                 tr.applyTo(t);
                 canvas.draw(texture, Color.WHITE, 3f, 3f, t.x * drawScale.x, t.y * drawScale.y,
-                        getAngle(), 0.018f*drawScale.x, 0.018f*drawScale.y);
+                        getAngle(), 0.018f * drawScale.x, 0.018f * drawScale.y);
             }
         }
 

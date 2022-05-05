@@ -12,7 +12,6 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEAnimated;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +19,27 @@ import java.util.Map;
 
 public class LevelLoader {
 
-    enum TiledFile {
-        METEOR_TILESET,
-        SPACESHIP_TILESET,
-        OBJECTS
+    final private AssetDirectory assetDirectory;
+    final private Map<TiledFile, Map<Integer, JsonValue>> map = new HashMap<>();
+    final private Map<TiledFile, Map<Integer, TextureRegion>> textures = new HashMap<>();
+    public LevelLoader() {
+        assetDirectory = new AssetDirectory("assets.json");
+        assetDirectory.loadAssets();
+        assetDirectory.finishLoading();
+        LevelElement.collectAssets(assetDirectory);
+        loadTileset("tile-tileset", TiledFile.METEOR_TILESET);
+        loadTileset("space-tileset", TiledFile.SPACESHIP_TILESET);
+        loadTileset("object-tileset", TiledFile.OBJECTS);
+    }
+
+    private static Color argbToColor(String hex, Color color) {
+        if (hex == null) return Color.WHITE;
+        hex = hex.charAt(0) == '#' ? hex.substring(1) : hex;
+        color.a = Integer.parseInt(hex.substring(0, 2), 16) / 255f;
+        color.r = Integer.parseInt(hex.substring(2, 4), 16) / 255f;
+        color.g = Integer.parseInt(hex.substring(4, 6), 16) / 255f;
+        color.b = Integer.parseInt(hex.substring(6, 8), 16) / 255f;
+        return color;
     }
 
     private TiledFile stringToTiledFile(String str) {
@@ -36,20 +52,6 @@ public class LevelLoader {
         } else {
             throw new IllegalArgumentException("Unknown tiled file '" + str + "' required\n");
         }
-    }
-
-    final private AssetDirectory assetDirectory;
-    final private Map<TiledFile, Map<Integer, JsonValue>> map = new HashMap<>();
-    final private Map<TiledFile, Map<Integer, TextureRegion>> textures = new HashMap<>();
-
-    public LevelLoader() {
-        assetDirectory = new AssetDirectory("assets.json");
-        assetDirectory.loadAssets();
-        assetDirectory.finishLoading();
-        LevelElement.collectAssets(assetDirectory);
-        loadTileset("tile-tileset", TiledFile.METEOR_TILESET);
-        loadTileset("space-tileset", TiledFile.SPACESHIP_TILESET);
-        loadTileset("object-tileset", TiledFile.OBJECTS);
     }
 
     private void loadTileset(String asset, TiledFile tiledFile) {
@@ -70,8 +72,8 @@ public class LevelLoader {
             int columns = tileset.getInt("columns");
             for (JsonValue tile : tileset.get("tiles")) {
                 int id = tile.getInt("id");
-                int x = (id % columns)*tileSize;
-                int y = (id / columns)*tileSize;
+                int x = (id % columns) * tileSize;
+                int y = (id / columns) * tileSize;
                 textureMap.put(id, new TextureRegion(atlas, x, y, tileSize, tileSize));
             }
         } else {
@@ -150,16 +152,6 @@ public class LevelLoader {
         }
     }
 
-    private static Color argbToColor(String hex, Color color) {
-        if (hex == null) return Color.WHITE;
-        hex = hex.charAt(0) == '#' ? hex.substring(1) : hex;
-        color.a = Integer.parseInt(hex.substring(0, 2), 16) / 255f;
-        color.r = Integer.parseInt(hex.substring(2, 4), 16) / 255f;
-        color.g = Integer.parseInt(hex.substring(4, 6), 16) / 255f;
-        color.b = Integer.parseInt(hex.substring(6, 8), 16) / 255f;
-        return color;
-    }
-
     private JsonValue mergeProperties(JsonValue a, JsonValue b) {
         for (JsonValue bChild : b) {
             String bName = bChild.getString("name");
@@ -181,7 +173,9 @@ public class LevelLoader {
         return a;
     }
 
-    /** Merges json [b] into json [a]. **/
+    /**
+     * Merges json [b] into json [a].
+     **/
     private JsonValue mergeJsons(JsonValue a, JsonValue b) {
         if (a == null) return b;
         if (b == null) return a;
@@ -216,14 +210,14 @@ public class LevelLoader {
 
             def.vertices = new float[2 * polygon.size];
             for (int i = 0; i < polygon.size; i++) {
-                def.vertices[2 * i]     = polygon.get(i).getFloat("x");
+                def.vertices[2 * i] = polygon.get(i).getFloat("x");
                 def.vertices[2 * i + 1] = polygon.get(i).getFloat("y");
             }
         } else {
             // Create PolygonShape from Tiled rectangle
-            float width  = json.getFloat("width");
+            float width = json.getFloat("width");
             float height = json.getFloat("height");
-            def.vertices = new float[] {0, 0, width, 0, height, width, 0, height};
+            def.vertices = new float[]{0, 0, width, 0, height, width, 0, height};
         }
 
         for (int i = 0; i < def.vertices.length; i += 2) {
@@ -237,7 +231,7 @@ public class LevelLoader {
         JsonValue body = properties.get("body");
         if (body == null) body = new JsonValue(JsonValue.ValueType.object);
 
-        def.x += def.width  / 2 - 0.5f;
+        def.x += def.width / 2 - 0.5f;
         def.y += def.height / 2 - 0.5f;
         def.vx = body.getFloat("vx", 0);
         def.vy = body.getFloat("vy", 0);
@@ -275,55 +269,9 @@ public class LevelLoader {
         // Need to account that rotation is around the bottom-left origin in Tiled instead of the center origin here
         def.angle = -MathUtils.degreesToRadians * json.getFloat("rotation", 0);
         //Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x-def.width/2f, y-def.height/2f), def.angle);
-        Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x-0.5f, y-0.5f), def.angle);
+        Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x - 0.5f, y - 0.5f), def.angle);
         def.x = pos.x;
         def.y = pos.y;
-    }
-
-    public static class LevelDef {
-        // TODO: GameObject/LevelElement separation is kinda gross
-        private final Queue<GameObject> objects;
-        private final Map<Integer, LevelElement> idToObject;
-
-        final public int width, height;
-        final public int music;
-        final public int twoStars, threeStars;
-
-        public LevelDef(int width, int height, int music, int twoStars, int threeStars) {
-            objects = new Queue<>();
-            idToObject = new HashMap<>();
-            this.width = width;
-            this.height = height;
-            this.music = music;
-            this.twoStars = twoStars;
-            this.threeStars = threeStars;
-        }
-
-        public void addObject(GameObject obj) {
-            objects.addLast(obj);
-        }
-
-        public void addObject(int id, LevelElement obj) {
-            addObject(obj);
-            idToObject.put(id, obj);
-        }
-
-        public Iterable<GameObject> getObjects() {
-            return objects;
-        }
-
-        public Map<Integer, LevelElement> getIdToObject() {
-            return idToObject;
-        }
-    }
-
-    static class Pair {
-        public TiledFile tiledFile;
-        public int firstgid;
-        public Pair(TiledFile tiledFile, int firstgid) {
-            this.tiledFile = tiledFile;
-            this.firstgid = firstgid;
-        }
     }
 
     private Pair getTileset(JsonValue level, int gid) {
@@ -349,7 +297,7 @@ public class LevelLoader {
     }
 
     public LevelDef loadLevel(String levelName, String checkpointName) {
-        JsonValue level = assetDirectory.getEntry(levelName+":"+checkpointName, JsonValue.class);
+        JsonValue level = assetDirectory.getEntry(levelName + ":" + checkpointName, JsonValue.class);
         LevelElement.Def levelElementDef = new LevelElement.Def();
 
         int levelWidth = level.getInt("width");
@@ -410,11 +358,11 @@ public class LevelLoader {
 
                         loadObject(levelElementDef, jsonObject, tileSize, levelHeight);
                         LevelElement newObject = LevelElement.create(levelElementDef);
-                        if(newObject.getElement() == LevelElement.Element.FINISH){
+                        if (newObject.getElement() == LevelElement.Element.FINISH) {
                             LevelElement.Def levelElementDef2 = new LevelElement.Def();
                             levelElementDef2.name = "sparkle";
-                            float x = (levelElementDef.x + levelElementDef.width/4);
-                            float y = (levelElementDef.y + levelElementDef.height/2 + .2f);
+                            float x = (levelElementDef.x + levelElementDef.width / 4);
+                            float y = (levelElementDef.y + levelElementDef.height / 2 + .2f);
                             levelElementDef2.x = x;
                             levelElementDef2.y = y;
                             levelElementDef2.width = .3f;
@@ -438,22 +386,22 @@ public class LevelLoader {
                             LevelElement newObject2 = LevelElement.create(levelElementDef2);
                             newObject2.setParallaxFactor(parallax);
                             levelDef.addObject(newObject2);
-                            levelElementDef2.x = (levelElementDef.x - levelElementDef.width/2 - .2f);
-                            levelElementDef2.y = (levelElementDef.y - levelElementDef.height/2 - .1f);
+                            levelElementDef2.x = (levelElementDef.x - levelElementDef.width / 2 - .2f);
+                            levelElementDef2.y = (levelElementDef.y - levelElementDef.height / 2 - .1f);
                             LevelElement newObject3 = LevelElement.create(levelElementDef2);
                             newObject3.setParallaxFactor(parallax);
                             levelDef.addObject(newObject3);
-                            levelElementDef2.x = (levelElementDef.x - levelElementDef.width/2 - .3f);
-                            levelElementDef2.y = (levelElementDef.y + levelElementDef.height/4);
+                            levelElementDef2.x = (levelElementDef.x - levelElementDef.width / 2 - .3f);
+                            levelElementDef2.y = (levelElementDef.y + levelElementDef.height / 4);
                             LevelElement newObject4 = LevelElement.create(levelElementDef2);
                             newObject4.setParallaxFactor(parallax);
                             levelDef.addObject(newObject4);
-                            levelElementDef2.x = (levelElementDef.x + levelElementDef.width/2 + .15f);
-                            levelElementDef2.y = (levelElementDef.y - levelElementDef.height/2 - .2f);
+                            levelElementDef2.x = (levelElementDef.x + levelElementDef.width / 2 + .15f);
+                            levelElementDef2.y = (levelElementDef.y - levelElementDef.height / 2 - .2f);
                             LevelElement newObject5 = LevelElement.create(levelElementDef2);
                             newObject5.setParallaxFactor(parallax);
                             levelDef.addObject(newObject5);
-                            levelElementDef2.x = (levelElementDef.x + levelElementDef.width/2 + .5f);
+                            levelElementDef2.x = (levelElementDef.x + levelElementDef.width / 2 + .5f);
                             levelElementDef2.y = (levelElementDef.y);
                             LevelElement newObject6 = LevelElement.create(levelElementDef2);
                             newObject6.setParallaxFactor(parallax);
@@ -479,5 +427,57 @@ public class LevelLoader {
         }
 
         return levelDef;
+    }
+
+    enum TiledFile {
+        METEOR_TILESET,
+        SPACESHIP_TILESET,
+        OBJECTS
+    }
+
+    public static class LevelDef {
+        final public int width, height;
+        final public int music;
+        final public int twoStars, threeStars;
+        // TODO: GameObject/LevelElement separation is kinda gross
+        private final Queue<GameObject> objects;
+        private final Map<Integer, LevelElement> idToObject;
+
+        public LevelDef(int width, int height, int music, int twoStars, int threeStars) {
+            objects = new Queue<>();
+            idToObject = new HashMap<>();
+            this.width = width;
+            this.height = height;
+            this.music = music;
+            this.twoStars = twoStars;
+            this.threeStars = threeStars;
+        }
+
+        public void addObject(GameObject obj) {
+            objects.addLast(obj);
+        }
+
+        public void addObject(int id, LevelElement obj) {
+            addObject(obj);
+            idToObject.put(id, obj);
+        }
+
+        public Iterable<GameObject> getObjects() {
+            return objects;
+        }
+
+        public Map<Integer, LevelElement> getIdToObject() {
+            return idToObject;
+        }
+    }
+
+    static class Pair {
+        public TiledFile tiledFile;
+        public int firstgid;
+
+        public Pair(TiledFile tiledFile, int firstgid) {
+            this.tiledFile = tiledFile;
+            this.firstgid = firstgid;
+        }
     }
 }

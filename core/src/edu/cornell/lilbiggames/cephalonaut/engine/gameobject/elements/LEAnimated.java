@@ -1,6 +1,5 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements;
 
-import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 
@@ -8,14 +7,14 @@ public class LEAnimated extends LevelElement {
 
     private float boostPadFactor;
     private float boostPadAngle;
-    private FilmStrip filmStrip;
+    private final FilmStrip filmStrip;
     private float frame;
-    private float updateFactor;
+    private final float updateFactor;
 
-    public LEAnimated(Def def, FilmStrip filmStrip,float updateFactor, boolean randStart) {
+    public LEAnimated(Def def, FilmStrip filmStrip, float updateFactor, boolean randStart) {
         super(def);
         this.filmStrip = filmStrip;
-        if(randStart) {
+        if (randStart) {
             frame = (float) (Math.random() * filmStrip.getCols());
         }
         filmStrip.setFrame(0);

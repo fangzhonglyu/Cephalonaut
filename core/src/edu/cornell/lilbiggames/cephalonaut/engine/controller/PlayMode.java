@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
@@ -16,87 +16,96 @@ import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
-import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.*;
-import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.engine.obstacle.ObstacleSelector;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
+import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-/** Game mode for playing a level */
+/**
+ * Game mode for playing a level
+ */
 public class PlayMode extends WorldController implements Screen {
-    /** For knowing we have exited a level */
+    /**
+     * Default starting position for the cephalonaut
+     */
+    static private final float DEFAULT_STARTING_POS_X = 10.0f;
+    static private final float DEFAULT_STARTING_POS_Y = 10.0f;
+    /**
+     * For knowing we have exited a level
+     */
     public static int EXIT_LEVEL = 20;
     public static int WON_LEVEL = 100;
-    /** Player model */
+    public static int NUM_SPARKLES = 12;
+    private static int prev_music;
+    boolean exiting = false;
+    /**
+     * Player model
+     */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
     private Texture octopusInkStrip, octopusStrip, nextIcon;
-
-    /** Controller that handles cephalonaut movement (grappling and inking) */
+    /**
+     * Controller that handles cephalonaut movement (grappling and inking)
+     */
     private CephalonautController cephalonautController;
-
-    /** Sound controller */
+    /**
+     * Sound controller
+     */
     private SoundController soundController;
-
-    /** Controller which handles levels and level elements **/
+    /**
+     * Controller which handles levels and level elements
+     **/
     private LevelController levelController;
-
-    /** The grapple mechanic mode TODO: Shouldn't this be in CephalonautController? */
+    /**
+     * The grapple mechanic mode TODO: Shouldn't this be in CephalonautController?
+     */
     private boolean directionalGrapple;
-
-    /** Mouse selector to move the cephalonaut TODO: Can this be in CephalonautController too? */
+    /**
+     * Mouse selector to move the cephalonaut TODO: Can this be in CephalonautController too?
+     */
     private ObstacleSelector selector;
-
-    /** Maps from Tiled object IDs to their corresponding Java objects */
+    /**
+     * Maps from Tiled object IDs to their corresponding Java objects
+     */
     private Map<Integer, LevelElement> objectMap;
-
-    /** Listener that will update the screen when we are done */
-    private ScreenListener listener;
-
-    /** Object which loads the level data */
-    private LevelLoader loader;
-
-    /** Current level name */
+    /**
+     * Listener that will update the screen when we are done
+     */
+    private final ScreenListener listener;
+    /**
+     * Object which loads the level data
+     */
+    private final LevelLoader loader;
+    /**
+     * Current level name
+     */
     private String level;
-    private String checkpoint;
-
+    private final String checkpoint;
     private float deathRotationCount;
     private float fadeInCount;
-
-    boolean exiting = false;
-
-    /** Default starting position for the cephalonaut */
-    static private final float DEFAULT_STARTING_POS_X = 10.0f;
-    static private final float DEFAULT_STARTING_POS_Y = 10.0f;
-
     private String timeString;
     private float timeCount;
     private int timer;
-
     // Matias: We shouldn't do this bc objects have state which change from loading to restarting.
     // Honestly I wouldn't be opposed to just reloading a level from scratch every time...
     // TODO: Change
     private Queue<GameObject> defaultObjects;
-    private boolean won;
-
-    private DialogueMode dialogueMode;
+    private final boolean won;
+    private final DialogueMode dialogueMode;
     private boolean paused;
     private float dialogueFade;
-    private static int prev_music;
-
     private int twoStars, threeStars;
-
-    public static int NUM_SPARKLES = 12;
-    private FilmStrip [] sparkles;
-    private int [][] sparkleX;
-    private int [][] sparkleY;
+    private final FilmStrip[] sparkles;
+    private final int[][] sparkleX;
+    private final int[][] sparkleY;
 
     /**
      * Creates and initialize a new instance of the sandbox
      */
-    public PlayMode(ScreenListener listener, LevelLoader loader, String level, String checkpoint, Map<String, Integer> keyBindings ,DialogueMode dialogueMode) {
+    public PlayMode(ScreenListener listener, LevelLoader loader, String level, String checkpoint, Map<String, Integer> keyBindings, DialogueMode dialogueMode) {
         super(DEFAULT_WIDTH, DEFAULT_HEIGHT, 0);
         this.listener = listener;
         this.level = level;
@@ -145,6 +154,10 @@ public class PlayMode extends WorldController implements Screen {
         }
     }
 
+    public static void resetMusic() {
+        prev_music = -1;
+    }
+
     public void nextDialogue(int part) {
         dialogueMode.nextDialogue(part);
         paused = true;
@@ -171,12 +184,12 @@ public class PlayMode extends WorldController implements Screen {
         this.level = level;
     }
 
-    public void resume(){
+    public void resume() {
         exiting = false;
     }
 
-    public void cleanupLevel(){
-        for(GameObject obj : objects) {
+    public void cleanupLevel() {
+        for (GameObject obj : objects) {
             obj.deactivatePhysics(world);
         }
         objects.clear();
@@ -186,7 +199,7 @@ public class PlayMode extends WorldController implements Screen {
 
     /**
      * Resets the status of the game so that we can play again.
-     *
+     * <p>
      * This method disposes of the world and creates a new one.
      */
     public void reset() {
@@ -197,7 +210,7 @@ public class PlayMode extends WorldController implements Screen {
         Vector2 gravity = new Vector2(world.getGravity());
         cleanupLevel();
 
-        world = new World(gravity,false);
+        world = new World(gravity, false);
         setComplete(false);
         setFailure(false);
 
@@ -209,7 +222,7 @@ public class PlayMode extends WorldController implements Screen {
         GrappleModel grapple = cephalonaut.getGrapple();
         grapple.reset();
         // TODO: Switch track to a map property based off Tiled
-        if(prev_music != levelDef.music) {
+        if (prev_music != levelDef.music) {
             SoundController.switchTrack(levelDef.music);
         }
         prev_music = levelDef.music;
@@ -230,18 +243,17 @@ public class PlayMode extends WorldController implements Screen {
         float startY = DEFAULT_STARTING_POS_Y;
         float startInk = 1f;
         for (GameObject object : newObjects) {
-            if (object instanceof LEStart){
+            if (object instanceof LEStart) {
                 startX = object.getX();
                 startY = object.getY();
                 startInk = ((LEStart) object).getInk();
                 continue;
-            }
-            else if (object instanceof LETrigger) {
+            } else if (object instanceof LETrigger) {
                 ((LETrigger) object).setActivated(false);
             } else if (object instanceof LETriggerable) {
                 ((LETriggerable) object).setActivated(false);
-            } else   if(object instanceof LEGlassBarrier) {
-                ((LEGlassBarrier)object).reset();
+            } else if (object instanceof LEGlassBarrier) {
+                ((LEGlassBarrier) object).reset();
             }
             object.setDrawScale(scale);
             addObject(object);
@@ -254,7 +266,7 @@ public class PlayMode extends WorldController implements Screen {
         float dwidth = octopusTexture.getRegionWidth() * .02625f;
         float dheight = octopusTexture.getRegionHeight() * .035f;
         //FilmStrip cephInkFilm = new FilmStrip(octopusInkStrip,1,7);
-        FilmStrip cephFilm = new FilmStrip(octopusStrip,5,9);
+        FilmStrip cephFilm = new FilmStrip(octopusStrip, 5, 9);
         cephalonaut = new CephalonautModel(startX, startY, dwidth, dheight, startInk, scale, cephFilm);
         cephalonautController = new CephalonautController(world, cephalonaut);
 
@@ -278,19 +290,19 @@ public class PlayMode extends WorldController implements Screen {
 
     /**
      * Gather the assets for this controller.
-     *
+     * <p>
      * This method extracts the asset variables from the given asset directory. It
      * should only be called after the asset directory is completed.
      *
-     * @param directory	Reference to global asset manager.
+     * @param directory Reference to global asset manager.
      */
     public void gatherAssets(AssetDirectory directory) {
         // Allocate the tiles
-        earthTile = new TextureRegion(directory.getEntry( "earth", Texture.class ));
-        octopusTexture = new TextureRegion(directory.getEntry( "octopus.png", Texture.class ));
-        octopusInkStrip = directory.getEntry("octopusInk",Texture.class);
-        octopusStrip = directory.getEntry("octopus",Texture.class);
-        octopusStrip.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
+        earthTile = new TextureRegion(directory.getEntry("earth", Texture.class));
+        octopusTexture = new TextureRegion(directory.getEntry("octopus.png", Texture.class));
+        octopusInkStrip = directory.getEntry("octopusInk", Texture.class);
+        octopusStrip = directory.getEntry("octopus", Texture.class);
+        octopusStrip.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 //		displayFont = directory.getEntry( "retro", BitmapFont.class);
     }
 
@@ -308,26 +320,23 @@ public class PlayMode extends WorldController implements Screen {
         cephalonaut.setInking(false);
     }
 
-    public static void resetMusic() {
-        prev_music = -1;
-    }
-
-
     private boolean isDialogueMode(float dt) {
-        if(paused) {
+        if (paused) {
             // don't freeze world until fade is done
             if (dialogueFade < .5f) {
                 dialogueFade += .05f;
                 return false;
             }
-            if(fadeInCount >= .1) { return false; }
+            if (fadeInCount >= .1) {
+                return false;
+            }
 
             // freeze world here
             enterPauseMode();
-            paused  = dialogueMode.update(dt);
+            paused = dialogueMode.update(dt);
 
             // unfreeze world if paused is false
-            if(!paused) {
+            if (!paused) {
                 exitPauseMode();
             }
             return true;
@@ -337,13 +346,13 @@ public class PlayMode extends WorldController implements Screen {
 
     /**
      * The core gameplay loop of this world.
-     *
+     * <p>
      * This method contains the specific update code for this mini-game. It does
      * not handle collisions, as those are managed by the parent class WorldController.
      * This method is called after input is read, but before collisions are resolved.
      * The very last thing that it should do is apply forces to the appropriate objects.
      *
-     * @param dt 	Number of seconds since last animation frame
+     * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
         // Move an object if touched
@@ -381,8 +390,8 @@ public class PlayMode extends WorldController implements Screen {
         for (GameObject object : objects) {
             levelController.update(object, cephalonautController);
         }
-        if(!levelController.blackHoleSound())
-            SoundController.setBlackHoleSound(false,0);
+        if (!levelController.blackHoleSound())
+            SoundController.setBlackHoleSound(false, 0);
 
         boolean grappleButton = input.didSecondary();
         boolean ungrappleButton = input.didTertiary();
@@ -397,7 +406,7 @@ public class PlayMode extends WorldController implements Screen {
                 (canvas.getCameraX() - canvas.getWidth() / 2f) / scale.x,
                 (canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
 
-        if(input.xbox != null && input.xbox.isConnected() &&
+        if (input.xbox != null && input.xbox.isConnected() &&
                 (Math.abs(input.getStickDirec().x) > .6f || Math.abs(input.getStickDirec().y) > .6f)) {
             crossHair.x = 100 * input.getStickDirec().x + cephalonaut.getPosition().x;
             crossHair.y = 100 * input.getStickDirec().y + cephalonaut.getPosition().y;
@@ -415,7 +424,7 @@ public class PlayMode extends WorldController implements Screen {
         }
         if (!cephalonaut.isAlive()) {
             cephalonaut.setLinearVelocity(Vector2.Zero);
-            cephalonaut.setDeathScale((float)((4 * Math.PI - deathRotationCount) / (4 * Math.PI)));
+            cephalonaut.setDeathScale((float) ((4 * Math.PI - deathRotationCount) / (4 * Math.PI)));
             //(float)((4 * Math.PI - deathRotationCount) / 4 * Math.PI)
 
             final float BLACK_HOLE_DEATH_SPINNY_CONSTANT = 5f;
@@ -427,8 +436,8 @@ public class PlayMode extends WorldController implements Screen {
         }
 
         // kill michael when out of bounds
-        if(cephalonaut.getX() < -cephalonaut.getHeight() ||  cephalonaut.getX() >= bounds.getWidth() + cephalonaut.getHeight()
-                || cephalonaut.getY() < -cephalonaut.getHeight()|| cephalonaut.getY() >= bounds.getHeight() + cephalonaut.getHeight()) {
+        if (cephalonaut.getX() < -cephalonaut.getHeight() || cephalonaut.getX() >= bounds.getWidth() + cephalonaut.getHeight()
+                || cephalonaut.getY() < -cephalonaut.getHeight() || cephalonaut.getY() >= bounds.getHeight() + cephalonaut.getHeight()) {
             cephalonaut.setAlive(false);
         }
     }
@@ -443,14 +452,14 @@ public class PlayMode extends WorldController implements Screen {
 
     /**
      * Draw the physics objects together with foreground and background
-     *
+     * <p>
      * This is completely overridden to support custom background and foreground art.
      *
      * @param dt Timing values from parent loop
      */
     public void draw(float dt) {
         if (exiting) return;
-      
+
         canvas.clear();
         canvas.begin();
 
@@ -486,13 +495,13 @@ public class PlayMode extends WorldController implements Screen {
         canvas.drawTextTopRight(timeString, displayFont);
         displayFont.setColor(Color.WHITE);
         canvas.drawFade(fadeInCount);
-      
+
         if (!cephalonaut.isAlive()) {
             canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
         }
 
         if (paused) {
-          dialogueMode.draw(canvas.getCameraX(), canvas.getCameraY(), dialogueFade);
+            dialogueMode.draw(canvas.getCameraX(), canvas.getCameraY(), dialogueFade);
         }
 
         canvas.end();

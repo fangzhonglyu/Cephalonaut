@@ -1,9 +1,9 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.*;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.GrappleModel;
@@ -13,16 +13,20 @@ public class LevelController implements ContactListener {
     /*Exit code for completed level */
     public static int COMPLETE_LEVEL = 50;
 
-    /** Reference to player **/
+    /**
+     * Reference to player
+     **/
     private final CephalonautModel cephalonaut;
 
-    /** Reference to the play mode **/
+    /**
+     * Reference to the play mode
+     **/
     private final PlayMode playMode;
-
-    /** Listener that will update the screen when we are done */
-    private ScreenListener listener;
-
     float closestBlackHole = Float.MAX_VALUE;
+    /**
+     * Listener that will update the screen when we are done
+     */
+    private final ScreenListener listener;
 
     public LevelController(ScreenListener listener, CephalonautModel cephalonaut, PlayMode playMode) {
         this.cephalonaut = cephalonaut;
@@ -30,12 +34,12 @@ public class LevelController implements ContactListener {
         this.listener = listener;
     }
 
-    public void resetBlackHoleRange(){
+    public void resetBlackHoleRange() {
         closestBlackHole = Float.MAX_VALUE;
     }
 
-    public boolean blackHoleSound(){
-        return closestBlackHole<Float.MAX_VALUE-1;
+    public boolean blackHoleSound() {
+        return closestBlackHole < Float.MAX_VALUE - 1;
     }
 
     public void update(GameObject object, CephalonautController cephalonautController) {
@@ -96,15 +100,17 @@ public class LevelController implements ContactListener {
 //        }
     }
 
-    /** Force from cephalonaut attracted to obj */
+    /**
+     * Force from cephalonaut attracted to obj
+     */
     public void attract(LEBlackHole blackHole) {
         Vector2 blackHolePos = blackHole.getBody().getWorldCenter();
         Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
         float dist = blackHolePos.dst(cephalonautPos);
-        float soundRange = blackHole.getBlackHoleRange()*2.5f;
-        if ( dist < closestBlackHole && dist< soundRange){
+        float soundRange = blackHole.getBlackHoleRange() * 2.5f;
+        if (dist < closestBlackHole && dist < soundRange) {
             closestBlackHole = blackHolePos.dst(cephalonautPos);
-            SoundController.setBlackHoleSound(true,1f-Math.min(1f,dist/soundRange));
+            SoundController.setBlackHoleSound(true, 1f - Math.min(1f, dist / soundRange));
         }
         if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange() /*||
                 blackHolePos.dst(cephalonaut.getGrapple().getPosition()) < blackHole.getBlackHoleRange()*/) {
@@ -124,7 +130,7 @@ public class LevelController implements ContactListener {
     }
 
     public void setTeleport(LEWormHole wormHole) {
-        SoundController.playSound(5,1);
+        SoundController.playSound(5, 1);
         cephalonaut.setTeleportLocation(wormHole.getPosition());
         cephalonaut.setShouldTeleport(true);
     }
@@ -188,29 +194,29 @@ public class LevelController implements ContactListener {
             if (contactObject instanceof LevelElement) {
 
                 ((LevelElement) contactObject).setInContact(true);
-                if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)||((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE)||((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKEBALL)) {
+                if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE) || ((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE) || ((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKEBALL)) {
                     cephalonaut.setAlive(false);
-                    if(((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE))
-                        SoundController.playSound(7,1);
+                    if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE))
+                        SoundController.playSound(7, 1);
                 }
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.REFILL)) {
                     cephalonaut.refillInk();
                 }
             }
 
-            if (contactObject instanceof  LEDialogueTrigger) {
+            if (contactObject instanceof LEDialogueTrigger) {
                 LEDialogueTrigger dialogueTrigger = (LEDialogueTrigger) contactObject;
-                if(dialogueTrigger.isActive()) {
+                if (dialogueTrigger.isActive()) {
                     openDialogue(dialogueTrigger.getTarget());
                     dialogueTrigger.deactivate();
                 }
             }
 
-            if (contactObject.getRestitution()>1) {
-                SoundController.playSound(1,1);
+            if (contactObject.getRestitution() > 1) {
+                SoundController.playSound(1, 1);
             }
 
-            if (contactObject instanceof  LEBoostPad) {
+            if (contactObject instanceof LEBoostPad) {
                 LEBoostPad boostPad = (LEBoostPad) contactObject;
                 //SoundController.playSound(2,1);
                 //Vector2 force = new Vector2(0, boostPad.getBoostPadFactor()).setAngleRad(boostPad.getAngle() + boostPad.getBoostPadAngle());
@@ -257,7 +263,7 @@ public class LevelController implements ContactListener {
             contactObject = getOtherBody(contact, grapple);
             if (contactObject != null && contactObject.canGrapple()) {
                 grapple.setAnchored(true);
-                SoundController.playSound(0,1);
+                SoundController.playSound(0, 1);
                 grapple.setExtensionLength(1 + cephalonaut.getPosition().dst(contactObject.getPosition()));
                 grapple.setAnchorLocation(contactObject.getName());
             }
@@ -286,7 +292,7 @@ public class LevelController implements ContactListener {
         if (contactObject != null) {
             if (contactObject instanceof LEGlassBarrier) {
                 LEGlassBarrier glassBarrier = (LEGlassBarrier) contactObject;
-                if(glassBarrier.isBroken()) {
+                if (glassBarrier.isBroken()) {
                     contact.setEnabled(false);
                     cephalonaut.setVX(cephalonaut.getVX() * .7f);
                 }

@@ -2,12 +2,10 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
@@ -17,41 +15,36 @@ import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
-import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.*;
-
 public class LevelCompleteMode extends MenuMode {
 
-    /** The font for giving messages to the player */
-    private BitmapFont displayFont;
-
-    /** Listener that will move to selected level when we are done */
-    private ScreenListener listener;
-
-    /** Background texture for start-up */
-    private Texture background;
-
-    private String[] options = {"NEXT LEVEL", "REPLAY LEVEL", "LEVEL SELECT" };
-
-    private int selectedOption;
-
-    private float frame;
-
-    private FilmStrip starScoring;
-    private FilmStrip starStill;
-    private Texture starFrame;
-
-    /** Reference to the game canvas */
+    /**
+     * Reference to the game canvas
+     */
     protected GameCanvas canvas;
-
-    private AssetDirectory assets;
-
-    private Vector2 bounds, scale;
-
-    private int timer;
-
-    private String timeString;
-
     XBoxController xbox;
+    /**
+     * The font for giving messages to the player
+     */
+    private final BitmapFont displayFont;
+    /**
+     * Listener that will move to selected level when we are done
+     */
+    private final ScreenListener listener;
+    /**
+     * Background texture for start-up
+     */
+    private final Texture background;
+    private final String[] options = {"NEXT LEVEL", "REPLAY LEVEL", "LEVEL SELECT"};
+    private int selectedOption;
+    private float frame;
+    private final FilmStrip starScoring;
+    private final FilmStrip starStill;
+    private final Texture starFrame;
+    private final AssetDirectory assets;
+    private final Vector2 bounds;
+    private final Vector2 scale;
+    private int timer;
+    private String timeString;
     private boolean prevUp;
     private boolean prevDown;
     private boolean prevExit;
@@ -63,32 +56,32 @@ public class LevelCompleteMode extends MenuMode {
     /**
      * Creates a MainMenuMode with the default size and position.
      *
-     * @param assets    The asset directory to use
-     * @param canvas 	The game canvas to draw to
+     * @param assets The asset directory to use
+     * @param canvas The game canvas to draw to
      */
-    public LevelCompleteMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
+    public LevelCompleteMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener) {
         super(assets, canvas, listener);
         this.assets = assets;
-        this.canvas  = canvas;
+        this.canvas = canvas;
         this.listener = listener;
-        this.scale = new Vector2(1,1);
+        this.scale = new Vector2(1, 1);
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
 
         frame = 0;
-        starScoring = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class),1,20);
-        starStill = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class),1,20);
+        starScoring = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class), 1, 20);
+        starStill = new FilmStrip(assets.getEntry("ui:star_scoring", Texture.class), 1, 20);
         starFrame = assets.getEntry("ui:star", Texture.class);
         starScoring.setFrame(0);
         starStill.setFrame(19);
 
-        background = assets.getEntry( "BG-1-teal.png", Texture.class);
+        background = assets.getEntry("BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         selectedOption = 0;
         Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
         if (controllers.size > 0) {
-            xbox = controllers.get( 0 );
+            xbox = controllers.get(0);
         } else {
             xbox = null;
         }
@@ -110,7 +103,7 @@ public class LevelCompleteMode extends MenuMode {
     public void resize(int width, int height) {
         scale.x = canvas.getWidth() / bounds.x;
         scale.y = scale.x;
-        canvas.setCameraPos(0.5f * width,0.5f * height);
+        canvas.setCameraPos(0.5f * width, 0.5f * height);
     }
 
     public void setSelectedOption(int option) {
@@ -121,7 +114,9 @@ public class LevelCompleteMode extends MenuMode {
         this.timeString = timeString;
     }
 
-    public void setTimer(int timer) { this.timer = timer; }
+    public void setTimer(int timer) {
+        this.timer = timer;
+    }
 
     public void setStars(int twoStars, int threeStars) {
         this.twoStars = twoStars <= 1 ? Integer.MAX_VALUE : twoStars;
@@ -132,31 +127,34 @@ public class LevelCompleteMode extends MenuMode {
         starScoring.setFrame(0);
     }
 
-    public void resetChoiceMade() { choiceMade = false; }
-
-    public void setDefault(){
-        super.setDefault();
-        Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
+    public void resetChoiceMade() {
+        choiceMade = false;
     }
 
-    private void update(float delta){
-        SoundController.setBlackHoleSound(false,1);
+    public void setDefault() {
+        super.setDefault();
+        Gdx.input.setInputProcessor(menuInput);
+        selectedOption = 0;
+    }
+
+    private void update(float delta) {
+        SoundController.setBlackHoleSound(false, 1);
         SoundController.setInkSound(false);
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
-                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
-            SoundController.playSound(6,1);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())) {
+            SoundController.playSound(6, 1);
             exitScreen();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
-                (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
+                (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())) {
             listener.exitScreen(this, EXIT_LEVEL_CODE);
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
-                (xbox != null && xbox.isConnected() && xbox.getLeftY() < -0.6f && prevUp != xbox.getLeftY() < -0.6f)){
-            selectedOption = selectedOption == 0 ? options.length-1 : selectedOption-1;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
-                (xbox != null && xbox.isConnected() && xbox.getLeftY() > 0.6f && prevDown != xbox.getLeftY() > 0.6f)){
-            selectedOption = (selectedOption+1)%options.length;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
+                (xbox != null && xbox.isConnected() && xbox.getLeftY() < -0.6f && prevUp != xbox.getLeftY() < -0.6f)) {
+            selectedOption = selectedOption == 0 ? options.length - 1 : selectedOption - 1;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
+                (xbox != null && xbox.isConnected() && xbox.getLeftY() > 0.6f && prevDown != xbox.getLeftY() > 0.6f)) {
+            selectedOption = (selectedOption + 1) % options.length;
         }
-        if(xbox != null && xbox.isConnected()) {
+        if (xbox != null && xbox.isConnected()) {
             prevUp = xbox.getLeftY() < -0.6f;
             prevDown = xbox.getLeftY() > 0.6f;
             prevExit = xbox.getB();
@@ -174,7 +172,7 @@ public class LevelCompleteMode extends MenuMode {
     }
 
     public void exitScreen() {
-        if(!choiceMade) {
+        if (!choiceMade) {
             if (selectedOption == 0) {
                 listener.exitScreen(this, NEXT_LEVEL_CODE);
             } else if (selectedOption == 1) {
@@ -221,8 +219,8 @@ public class LevelCompleteMode extends MenuMode {
         float height = canvas.getHeight();
         float width = canvas.getWidth();
         canvas.draw(background,
-                0.5f*canvas.getWidth()-canvas.getCameraX(),
-                0.5f*canvas.getHeight()-canvas.getCameraY(),
+                0.5f * canvas.getWidth() - canvas.getCameraX(),
+                0.5f * canvas.getHeight() - canvas.getCameraY(),
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
                 20,
                 20);
@@ -272,16 +270,16 @@ public class LevelCompleteMode extends MenuMode {
         super.drawOptions(options, selectedOption, 150);
 
         for (int i = 0; i < 3; i++) {
+            canvas.draw(starStill, Color.WHITE,
+                    starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
+                    width / 2f + 460 + 50 * i, height - 30,
+                    0, 0.2f * scale.x, 0.2f * scale.y);
+            if (i < 2) {
                 canvas.draw(starStill, Color.WHITE,
                         starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
-                        width / 2f + 460 + 50 * i, height - 30,
+                        width / 2f + 510 + 50 * i, height - 90,
                         0, 0.2f * scale.x, 0.2f * scale.y);
-                if (i < 2) {
-                    canvas.draw(starStill, Color.WHITE,
-                            starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
-                            width / 2f + 510 + 50 * i, height - 90,
-                            0, 0.2f * scale.x, 0.2f * scale.y);
-                }
+            }
         }
 
         displayFont.getData().setScale(0.5f);

@@ -3,7 +3,6 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -12,54 +11,45 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
-import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.LEVEL_SELECTED_CODE;
-
 public class MainMenuMode extends MenuMode {
-    private static final int DEFAULT_LEVEL = 0;
     public static final int NUM_LEVELS = 7;
-
-    /** The font for giving messages to the player */
-    private BitmapFont displayFont;
-
-    /** Listener that will move to selected level when we are done */
-    private ScreenListener listener;
+    private static final int DEFAULT_LEVEL = 0;
+    /**
+     * Reference to the game canvas
+     */
+    protected GameCanvas canvas;
+    XBoxController xbox;
 
 //    ImageObject background;
-
-    /** Background texture for start-up */
-    private Texture background;
-
+    /**
+     * The font for giving messages to the player
+     */
+    private final BitmapFont displayFont;
+    /**
+     * Listener that will move to selected level when we are done
+     */
+    private final ScreenListener listener;
+    /**
+     * Background texture for start-up
+     */
+    private final Texture background;
     private Texture levelIcon;
-
-    /** Reference to the game canvas */
-    protected GameCanvas canvas;
-
-    private AssetDirectory assets;
-
+    private final AssetDirectory assets;
     private int curLevel;
-
-    private Vector2 bounds,scale;
-
+    private final Vector2 bounds;
+    private final Vector2 scale;
     private boolean levelSelected;
-
     private Color tint;
     private Rectangle hitBox;
-    XBoxController xbox;
-    private boolean prevRight;
-    private boolean prevLeft;
-    private boolean prevExit;
-    private boolean prevSelect;
-
     protected InputAdapter mainMenuInput = new InputAdapter() {
-        public boolean mouseMoved (int x, int screenY) {
-            if(hitBox != null){
+        public boolean mouseMoved(int x, int screenY) {
+            if (hitBox != null) {
                 float y = canvas.getHeight() - screenY;
-                if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
+                if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y) {
                     tint = Color.WHITE;
                 } else {
                     tint = Color.GRAY;
@@ -70,10 +60,10 @@ public class MainMenuMode extends MenuMode {
             return true;
         }
 
-        public boolean touchDown (int x, int screenY, int pointer, int button) {
+        public boolean touchDown(int x, int screenY, int pointer, int button) {
             float y = canvas.getHeight() - screenY;
-            if(hitBox != null){
-                if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
+            if (hitBox != null) {
+                if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y) {
                     levelSelected = true;
                 }
             }
@@ -82,26 +72,30 @@ public class MainMenuMode extends MenuMode {
         }
 
     };
+    private boolean prevRight;
+    private boolean prevLeft;
+    private boolean prevExit;
+    private boolean prevSelect;
 
 
     /**
      * Creates a MainMenuMode with the default size and position.
      *
-     * @param assets    The asset directory to use
-     * @param canvas 	The game canvas to draw to
+     * @param assets The asset directory to use
+     * @param canvas The game canvas to draw to
      */
-    public MainMenuMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
+    public MainMenuMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener) {
         super(assets, canvas, listener);
-        this.canvas  = canvas;
+        this.canvas = canvas;
         this.listener = listener;
-        this.scale = new Vector2(1,1);
+        this.scale = new Vector2(1, 1);
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
 
 
         tint = Color.GRAY;
 
-        background = assets.getEntry( "BG-1-teal.png", Texture.class);
+        background = assets.getEntry("BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.assets = assets;
 
@@ -109,7 +103,7 @@ public class MainMenuMode extends MenuMode {
         levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
         Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
         if (controllers.size > 0) {
-            xbox = controllers.get( 0 );
+            xbox = controllers.get(0);
         } else {
             xbox = null;
         }
@@ -123,7 +117,7 @@ public class MainMenuMode extends MenuMode {
     @Override
     public void render(float delta) {
         if (levelSelected && listener != null) {
-            SoundController.playSound(6,1);
+            SoundController.playSound(6, 1);
             levelSelected = false;
             listener.exitScreen(this, LEVEL_SELECTED_CODE);
         } else {
@@ -132,13 +126,13 @@ public class MainMenuMode extends MenuMode {
         }
     }
 
-    public void setDefault(){
+    public void setDefault() {
         Gdx.input.setInputProcessor(mainMenuInput);
         float x = Gdx.input.getX();
         float y = canvas.getHeight() - Gdx.input.getY();
 
-        if(hitBox != null){
-            if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
+        if (hitBox != null) {
+            if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y) {
                 tint = Color.WHITE;
             } else {
                 tint = Color.GRAY;
@@ -146,22 +140,22 @@ public class MainMenuMode extends MenuMode {
         }
     }
 
-    private void update(float delta){
+    private void update(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
-                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
+                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())) {
             levelSelected = true;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
-                (xbox != null && xbox.isConnected() && xbox.getLeftX() > 0.6f && prevRight != xbox.getLeftX() > 0.6f)){
+                (xbox != null && xbox.isConnected() && xbox.getLeftX() > 0.6f && prevRight != xbox.getLeftX() > 0.6f)) {
             curLevel = (curLevel + 1) % NUM_LEVELS;
-            SoundController.playSound(4,1);
+            SoundController.playSound(4, 1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A) ||
-                (xbox != null && xbox.isConnected() && xbox.getLeftX() < -0.6f && prevLeft != xbox.getLeftX() < -0.6f)){
+                (xbox != null && xbox.isConnected() && xbox.getLeftX() < -0.6f && prevLeft != xbox.getLeftX() < -0.6f)) {
             curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
-                (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
+                (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())) {
             listener.exitScreen(this, RETURN_TO_START_CODE);
         }
-        if(xbox != null && xbox.isConnected()) {
+        if (xbox != null && xbox.isConnected()) {
             prevLeft = xbox.getLeftX() < -0.6f;
             prevRight = xbox.getLeftX() > 0.6f;
             prevExit = xbox.getB();
@@ -170,11 +164,11 @@ public class MainMenuMode extends MenuMode {
         levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
     }
 
-    public String getCurLevel(){
+    public String getCurLevel() {
         return "level_" + curLevel;
     }
 
-    public int getCurLevelNumber(){
+    public int getCurLevelNumber() {
         return curLevel;
     }
 
@@ -202,7 +196,7 @@ public class MainMenuMode extends MenuMode {
 
     }
 
-    public void draw(){
+    public void draw() {
         canvas.clear();
         canvas.begin();
 
@@ -210,8 +204,8 @@ public class MainMenuMode extends MenuMode {
         float width = canvas.getWidth();
 
         canvas.draw(background,
-                0.5f*canvas.getWidth()-canvas.getCameraX(),
-                0.5f*canvas.getHeight()-canvas.getCameraY(),
+                0.5f * canvas.getWidth() - canvas.getCameraX(),
+                0.5f * canvas.getHeight() - canvas.getCameraY(),
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
                 20,
                 20);
@@ -221,11 +215,11 @@ public class MainMenuMode extends MenuMode {
         float levelIconHeight = levelIcon.getHeight();
 
         canvas.draw(levelIcon, tint,
-                    levelIconWidth / 2f, levelIconHeight / 2f,
-                    width / 2f, height / 2f + 100,
-                    0, 1.5f * scale.x, 1.5f * scale.y);
+                levelIconWidth / 2f, levelIconHeight / 2f,
+                width / 2f, height / 2f + 100,
+                0, 1.5f * scale.x, 1.5f * scale.y);
 
-        hitBox = new Rectangle(width / 2f - (1.5f*scale.x)*levelIconWidth/2f, (height / 2f + 100) + (1.5f*scale.y)*levelIconHeight/2f, (1.5f*scale.x)*levelIconWidth, (1.5f*scale.y)*levelIconHeight);
+        hitBox = new Rectangle(width / 2f - (1.5f * scale.x) * levelIconWidth / 2f, (height / 2f + 100) + (1.5f * scale.y) * levelIconHeight / 2f, (1.5f * scale.x) * levelIconWidth, (1.5f * scale.y) * levelIconHeight);
 
         canvas.drawTextCentered("WORLD " + curLevel, displayFont, -levelIconHeight / 4f * scale.y - 60f);
 
