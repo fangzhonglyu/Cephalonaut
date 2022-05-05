@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.model.CephalonautModel;
@@ -20,6 +21,8 @@ import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /** Game mode for playing a level */
 public class PlayMode extends WorldController implements Screen {
@@ -85,6 +88,11 @@ public class PlayMode extends WorldController implements Screen {
 
     private int twoStars, threeStars;
 
+    public static int NUM_SPARKLES = 12;
+    private FilmStrip [] sparkles;
+    private int [][] sparkleX;
+    private int [][] sparkleY;
+
     /**
      * Creates and initialize a new instance of the sandbox
      */
@@ -110,6 +118,31 @@ public class PlayMode extends WorldController implements Screen {
         timer = 0;
         paused = false;
         dialogueFade = 0;
+
+        sparkles = new FilmStrip[NUM_SPARKLES];
+        for (int i = 0; i < NUM_SPARKLES; i++) {
+            if (i < 2 * (NUM_SPARKLES / 3)) {
+                sparkles[i] = new FilmStrip(this.loader.getAssetDirectory().getEntry("bg:Mstar", Texture.class), 1, 11);
+            } else {
+                sparkles[i] = new FilmStrip(this.loader.getAssetDirectory().getEntry("bg:Sstar", Texture.class), 1, 11);
+            }
+        }
+        sparkleX = new int[NUM_SPARKLES][NUM_SPARKLES];
+        for (int i = 0; i < NUM_SPARKLES; i++) {
+            for (int j = 0; j < NUM_SPARKLES; j++) {
+                sparkleX[i][j] = ThreadLocalRandom.current().nextInt(0, ((int) (bounds.getWidth() + 1)));
+            }
+        }
+        sparkleY = new int[NUM_SPARKLES][NUM_SPARKLES];
+        int minY = 0;
+        if (level.equals("level_3") && checkpoint.equals("checkpoint_0")) {
+            minY = -((int) (bounds.getHeight() + 1));
+        }
+        for (int i = 0; i < NUM_SPARKLES; i++) {
+            for (int j = 0; j < NUM_SPARKLES; j++) {
+                sparkleY[i][j] = ThreadLocalRandom.current().nextInt(minY, ((int) (bounds.getHeight() + 1)));
+            }
+        }
     }
 
     public void nextDialogue(int part) {
@@ -159,7 +192,7 @@ public class PlayMode extends WorldController implements Screen {
     public void reset() {
         LevelLoader.LevelDef levelDef = loader.loadLevel(level, checkpoint);
 
-        this.bounds.set(0, 0, levelDef.width, levelDef.height);
+        bounds.set(0, 0, levelDef.width, levelDef.height);
 
         Vector2 gravity = new Vector2(world.getGravity());
         cleanupLevel();
@@ -319,7 +352,11 @@ public class PlayMode extends WorldController implements Screen {
     public void update(float dt) {
         // Move an object if touched
         InputController input = InputController.getInstance();
-        if(isDialogueMode(dt)) return;
+        if (isDialogueMode(dt)) return;
+
+        int sparklesIdx = ThreadLocalRandom.current().nextInt(0, NUM_SPARKLES);
+        FilmStrip sparkle = sparkles[sparklesIdx];
+        sparkle.setFrame((sparkle.getFrame() + 1) % sparkle.getSize());
 
         if (cephalonaut.getHasMoved()) {
             timeCount += dt;
@@ -330,7 +367,6 @@ public class PlayMode extends WorldController implements Screen {
         }
 
         if (input.didExit()) {
-
             if (listener != null) {
                 exiting = true;
                 pause();
@@ -417,20 +453,26 @@ public class PlayMode extends WorldController implements Screen {
      * @param dt Timing values from parent loop
      */
     public void draw(float dt) {
-
         if (exiting) return;
       
         canvas.clear();
         canvas.begin();
 
         for (GameObject obj : objects) {
-//            if(obj instanceof  LevelElement && ((LevelElement) obj).getElement() == LevelElement.Element.FINISH) {
-//                canvas.drawLevelEndGlow(obj.getX() * scale.x, obj.getY() * scale.y);
-//            }
             obj.draw(canvas);
-            if(obj instanceof LEBlackHole) {
+            if (obj instanceof LEBlackHole) {
                 canvas.drawBlackHoleOutline(obj.getX() * scale.x, obj.getY() * scale.y,
                         ((LEBlackHole) obj).getBlackHoleRange() * scale.x);
+            }
+            if (obj instanceof ImageObject) {
+                for (int i = 0; i < NUM_SPARKLES; i++) {
+                    for (int j = 0; j < NUM_SPARKLES; j++) {
+                        canvas.draw(sparkles[i], Color.WHITE,
+                                sparkles[i].getFwidth() / 2f, sparkles[i].getFheight() / 2f,
+                                2 * scale.x * sparkleX[i][j], 2 * scale.y * sparkleY[i][j],
+                                0, 0.1f * scale.x, 0.1f * scale.y);
+                    }
+                }
             }
         }
 
@@ -450,7 +492,7 @@ public class PlayMode extends WorldController implements Screen {
             canvas.drawFade(deathRotationCount / (float) (4 * Math.PI));
         }
 
-        if(paused) {
+        if (paused) {
           dialogueMode.draw(canvas.getCameraX(), canvas.getCameraY(), dialogueFade);
         }
 
