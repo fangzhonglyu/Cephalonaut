@@ -74,10 +74,9 @@ public class StartScreenMode extends MenuMode {
 
     @Override
     public void render(float delta) {
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
-                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())|| inputController.isSelectPressed()) {
+                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())) {
             SoundController.playSound(6,1);
             exitScreen();
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||

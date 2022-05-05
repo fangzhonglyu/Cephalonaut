@@ -153,7 +153,7 @@ public class SettingsMode extends MenuMode {
                     (xbox != null && xbox.isConnected() && xbox.getLeftY() > 0.6f && prevDown != xbox.getLeftY() > 0.6f)) {
                 selectedOption = (selectedOption + 1) % options.length;
                 SoundController.playSound(4,1);
-            } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.didExit() || inputController.isBackPressed() ||
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
                     (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())) {
                 listener.exitScreen(this, RETURN_TO_START_CODE);
             } else {

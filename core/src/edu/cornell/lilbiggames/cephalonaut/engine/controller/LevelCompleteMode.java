@@ -138,9 +138,7 @@ public class LevelCompleteMode extends MenuMode {
     private void update(float delta){
         SoundController.setBlackHoleSound(false,1);
         SoundController.setInkSound(false);
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed() ||
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
                 (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
             SoundController.playSound(6,1);
             exitScreen();
