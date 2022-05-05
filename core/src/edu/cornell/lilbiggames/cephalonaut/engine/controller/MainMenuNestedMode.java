@@ -100,6 +100,8 @@ public class MainMenuNestedMode extends MenuMode {
     public void render(float delta) {
         if (levelSelected && listener != null) {
             levelSelected = false;
+            SoundController.playSound(6,1);
+
             listener.exitScreen(this, CHECKPOINT_SELECTED_CODE);
         } else {
             update(delta);
@@ -114,9 +116,11 @@ public class MainMenuNestedMode extends MenuMode {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftX() > 0.6f && prevRight != xbox.getLeftX() > 0.6f)){
             completedCheckpoints = (completedCheckpoints+1)%checkpoints;
+            SoundController.playSound(4,1);
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftX() < -0.6f && prevLeft != xbox.getLeftX() < -0.6f)){
             completedCheckpoints = completedCheckpoints == 0 ? checkpoints - 1 : completedCheckpoints - 1;
+            SoundController.playSound(4,1);
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
                 (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
             listener.exitScreen(this, NESTED_MENU_EXIT_CODE);

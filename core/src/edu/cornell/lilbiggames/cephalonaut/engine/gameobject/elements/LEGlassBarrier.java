@@ -1,5 +1,6 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements;
 import com.badlogic.gdx.graphics.Color;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 import java.util.logging.Level;
@@ -29,6 +30,7 @@ public class LEGlassBarrier extends LevelElement {
         alpha -= 1 / glassBarrierHardness * damage;
         tint  = new Color(tint.r, tint.g, tint.b, Math.max(alpha, 0.33f));
         if(health <= 0) {
+            SoundController.playSound(3,1);
             this.markRemoved(true);
         }
     }

@@ -123,6 +123,7 @@ public class MainMenuMode extends MenuMode {
     @Override
     public void render(float delta) {
         if (levelSelected && listener != null) {
+            SoundController.playSound(6,1);
             levelSelected = false;
             listener.exitScreen(this, LEVEL_SELECTED_CODE);
         } else {
@@ -152,6 +153,7 @@ public class MainMenuMode extends MenuMode {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftX() > 0.6f && prevRight != xbox.getLeftX() > 0.6f)){
             curLevel = (curLevel + 1) % NUM_LEVELS;
+            SoundController.playSound(4,1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftX() < -0.6f && prevLeft != xbox.getLeftX() < -0.6f)){
             curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;

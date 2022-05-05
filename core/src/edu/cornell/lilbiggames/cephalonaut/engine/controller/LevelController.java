@@ -22,15 +22,25 @@ public class LevelController implements ContactListener {
     /** Listener that will update the screen when we are done */
     private ScreenListener listener;
 
+    float closestBlackHole = Float.MAX_VALUE;
+
     public LevelController(ScreenListener listener, CephalonautModel cephalonaut, PlayMode playMode) {
         this.cephalonaut = cephalonaut;
         this.playMode = playMode;
         this.listener = listener;
     }
 
+    public void resetBlackHoleRange(){
+        closestBlackHole = Float.MAX_VALUE;
+    }
+
+    public boolean blackHoleSound(){
+        return closestBlackHole<Float.MAX_VALUE-1;
+    }
+
     public void update(GameObject object, CephalonautController cephalonautController) {
-        if (object instanceof LEBoostPad) {
-            boost((LEBoostPad) object);
+        if (object instanceof LEBoostPad && ((LEBoostPad) object).getCooldown() > 0) {
+            ((LEBoostPad) object).setCooldown(((LEBoostPad) object).getCooldown() - 1);
         } else if (object instanceof LEBlackHole) {
             attract((LEBlackHole) object);
         } else if (object instanceof LETriggerable) {
@@ -90,14 +100,12 @@ public class LevelController implements ContactListener {
     public void attract(LEBlackHole blackHole) {
         Vector2 blackHolePos = blackHole.getBody().getWorldCenter();
         Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
-        if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange() * 1.5f){
-            SoundController.setBlackHoleSound(true,1f-Math.min(1f,blackHolePos.dst(cephalonautPos)/blackHole.getBlackHoleRange()));
+        float dist = blackHolePos.dst(cephalonautPos);
+        float soundRange = blackHole.getBlackHoleRange()*2.5f;
+        if ( dist < closestBlackHole && dist< soundRange){
+            closestBlackHole = blackHolePos.dst(cephalonautPos);
+            SoundController.setBlackHoleSound(true,1f-Math.min(1f,dist/soundRange));
         }
-        else{
-            SoundController.setBlackHoleSound(false,0f );
-        }
-
-
         if (blackHolePos.dst(cephalonautPos) < blackHole.getBlackHoleRange() /*||
                 blackHolePos.dst(cephalonaut.getGrapple().getPosition()) < blackHole.getBlackHoleRange()*/) {
             Vector2 delta = blackHolePos.sub(cephalonautPos).clamp(1f, 50f);
@@ -116,6 +124,7 @@ public class LevelController implements ContactListener {
     }
 
     public void setTeleport(LEWormHole wormHole) {
+        SoundController.playSound(5,1);
         cephalonaut.setTeleportLocation(wormHole.getPosition());
         cephalonaut.setShouldTeleport(true);
     }
@@ -123,8 +132,8 @@ public class LevelController implements ContactListener {
     public void boost(LEBoostPad obj) {
         if (!obj.getInContact()) return;
 
-        Vector2 force = new Vector2(0, obj.getBoostPadFactor()).setAngleRad(obj.getAngle() + obj.getBoostPadAngle());
-        cephalonaut.addForce(force);
+        //Vector2 force = new Vector2(0, obj.getBoostPadFactor()).setAngleRad(obj.getAngle() + obj.getBoostPadAngle());
+        //cephalonaut.addForce(force);
     }
 
     public void hit(LEGlassBarrier obj) {
@@ -166,6 +175,7 @@ public class LevelController implements ContactListener {
         }
     }
 
+    @Override
     public void beginContact(Contact contact) {
         GrappleModel grapple = cephalonaut.getGrapple();
         GameObject contactObject = getOtherBody(contact, cephalonaut);
@@ -180,6 +190,8 @@ public class LevelController implements ContactListener {
                 ((LevelElement) contactObject).setInContact(true);
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)||((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE)||((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKEBALL)) {
                     cephalonaut.setAlive(false);
+                    if(((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE))
+                        SoundController.playSound(7,1);
                 }
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.REFILL)) {
                     cephalonaut.refillInk();
@@ -196,6 +208,22 @@ public class LevelController implements ContactListener {
 
             if (contactObject.getRestitution()>1) {
                 SoundController.playSound(1,1);
+            }
+
+            if (contactObject instanceof  LEBoostPad) {
+                LEBoostPad boostPad = (LEBoostPad) contactObject;
+                //SoundController.playSound(2,1);
+                //Vector2 force = new Vector2(0, boostPad.getBoostPadFactor()).setAngleRad(boostPad.getAngle() + boostPad.getBoostPadAngle());
+
+                if (boostPad.getCooldown() == 0) {
+                    boostPad.setCooldown(boostPad.getBOOST_COOLDOWN());
+                    Vector2 force = boostPad.boost();
+                    cephalonaut.addForce(force);
+                    cephalonaut.applyForce();
+                }
+
+                //contact.setEnabled(false);
+                //((LevelElement) contactObject).setInContact(false);
             }
 
             if (contactObject instanceof LEBlackHole) {

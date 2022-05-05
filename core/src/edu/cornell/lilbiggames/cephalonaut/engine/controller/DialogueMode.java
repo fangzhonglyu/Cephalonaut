@@ -138,6 +138,7 @@ public class DialogueMode {
             if(xbox != null && xbox.isConnected()) {
                 prevSelect = xbox.getA();
             }
+            SoundController.playSound(6,1);
             if(index >= dialogue.get(part).size()) {
                 return false;
             }

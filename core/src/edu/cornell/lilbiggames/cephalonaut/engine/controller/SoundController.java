@@ -49,6 +49,13 @@ public class SoundController {
         inkSound = directory.getEntry("ink", Sound.class);
         soundCache[0] = directory.getEntry("suction", Sound.class);
         soundCache[1] = directory.getEntry("bounce",Sound.class);
+        soundCache[2] = directory.getEntry("boost",Sound.class);
+        soundCache[3] = directory.getEntry("glassbreak",Sound.class);
+        soundCache[4] = directory.getEntry("menuSound",Sound.class);
+        soundCache[5] = directory.getEntry("wormHole",Sound.class);
+        soundCache[6] = directory.getEntry("menuClick",Sound.class);
+        soundCache[7] = directory.getEntry("electricDeath",Sound.class);
+        blackHoleSound = directory.getEntry("blackhole",Sound.class);
         //TODO load the sound effects into the cache
     }
 
@@ -71,14 +78,14 @@ public class SoundController {
     public synchronized static void setBlackHoleSound(boolean sound, float volume) {
         if (!sound) {
             blackHolePlaying = false;
-            //blackHoleSound.stop();
+            blackHoleSound.stop();
         }
         if (!blackHolePlaying && sound) {
             blackHolePlaying = true;
-            //blackHoleID = blackHoleSound.loop(sfxVolume*volume);
+            blackHoleID = blackHoleSound.loop(sfxVolume*volume*2.25f);
         }
         if (blackHolePlaying && sound){
-            //blackHoleSound.setVolume(blackHoleID,volume*sfxVolume);
+            blackHoleSound.setVolume(blackHoleID,volume*sfxVolume*2.25f);
         }
     }
 
@@ -192,6 +199,7 @@ public class SoundController {
             killSound(i);
         }
         setInkSound(false);
+        setBlackHoleSound(false,0);
     }
 
     /* set volume */

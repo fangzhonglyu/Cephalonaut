@@ -345,10 +345,12 @@ public class PlayMode extends WorldController implements Screen {
             directionalGrapple = !directionalGrapple;
         }
         cephalonaut.setForce(Vector2.Zero);
-
+        levelController.resetBlackHoleRange();
         for (GameObject object : objects) {
             levelController.update(object, cephalonautController);
         }
+        if(!levelController.blackHoleSound())
+            SoundController.setBlackHoleSound(false,0);
 
         boolean grappleButton = input.didSecondary();
         boolean ungrappleButton = input.didTertiary();

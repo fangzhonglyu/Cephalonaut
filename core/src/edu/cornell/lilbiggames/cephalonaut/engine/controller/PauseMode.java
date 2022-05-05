@@ -85,8 +85,12 @@ public class PauseMode extends MenuMode {
 
     @Override
     public void render(float delta) {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+        SoundController.setBlackHoleSound(false,0);
+        inputController = InputController.getInstance();
+        inputController.readInput(new Rectangle(), new Vector2());
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed() ||
                 (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
+            SoundController.playSound(6,1);
             exitScreen();
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
                 (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
@@ -94,9 +98,11 @@ public class PauseMode extends MenuMode {
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftY() < -0.6f && prevUp != xbox.getLeftY() < -0.6f)){
             selectedOption = selectedOption == 0 ? options.length-1 : selectedOption -1;
+            SoundController.playSound(4,1);
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftY() > 0.6f && prevDown != xbox.getLeftY() > 0.6f)){
             selectedOption = (selectedOption +1)%options.length;
+            SoundController.playSound(4,1);
         }
         if(xbox != null && xbox.isConnected()) {
             prevUp = xbox.getLeftY() < -0.6f;

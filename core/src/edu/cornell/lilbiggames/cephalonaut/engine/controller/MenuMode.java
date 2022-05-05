@@ -59,6 +59,8 @@ public class MenuMode implements Screen {
                 for(int i = 0; i < optionsHitBoxes.length; i++){
                     Rectangle hitBox = optionsHitBoxes[i];
                     if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                        if(i!=selectedOption)
+                            SoundController.playSound(4,1);
                         selectedOption = i;
                         optionSelected(i);
                     }
@@ -74,6 +76,7 @@ public class MenuMode implements Screen {
                     Rectangle hitBox = optionsHitBoxes[i];
                     if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
                         selectedOption = i;
+                        SoundController.playSound(6,1);
                         exitScreen();
                     }
                 }

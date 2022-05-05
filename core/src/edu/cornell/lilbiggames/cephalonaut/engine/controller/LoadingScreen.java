@@ -61,6 +61,8 @@ public class LoadingScreen extends MenuMode implements Screen {
     }
 
     public void render(float delta){
+        SoundController.setBlackHoleSound(false,1);
+        SoundController.setInkSound(false);
         if(loadingTime == 0){
             loadingTime = totalLoadingTime;
             listener.exitScreen(this,MenuMode.EXIT_LOADING_CODE);

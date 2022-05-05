@@ -36,6 +36,10 @@
     "electric-spikes.png":"electric-spikes.png",
     "GO-spikeball.png": "GO-spikeball.png",
     "GO-spikeball-film.png": "GO-spikeball-film.png",
+    "engine.png": "engine.png",
+    "engine_broken.png": "engine_broken.png",
+    "engine_film.png": "engine_film.png",
+    "engine_broken_film.png": "engine_broken_film.png",
     "boost.png": "boost.png",
     "bounce.png": "bounce.png",
     "reactor.png": "reactor.png",
@@ -152,7 +156,14 @@
   "sounds": {
     "ink": "sample ink.mp3",
     "suction": "TentacleSuctionSFX.mp3",
-    "bounce": "BouncePadSound.mp3"
+    "bounce": "BouncePadSound.mp3",
+    "boost": "BoostPadSound.mp3",
+    "blackhole": "BlackHoleVortexSound.mp3",
+    "glassbreak": "glassbreak.mp3",
+    "menuSound": "MenuSelectSound.mp3",
+    "menuClick": "MenuClickSound.mp3",
+    "wormHole": "WormholeWarpSound.mp3",
+    "electricDeath": "ElectricityDeathSound.mp3"
   },
   "fonts": {
     "retro": {

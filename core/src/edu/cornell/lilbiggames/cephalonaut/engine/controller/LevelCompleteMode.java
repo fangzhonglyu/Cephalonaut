@@ -136,10 +136,13 @@ public class LevelCompleteMode extends MenuMode {
     }
 
     private void update(float delta){
-        SoundController.killAllSound();
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+        SoundController.setBlackHoleSound(false,1);
+        SoundController.setInkSound(false);
+        inputController = InputController.getInstance();
+        inputController.readInput(new Rectangle(), new Vector2());
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed() ||
                 (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
+            SoundController.playSound(6,1);
             exitScreen();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
                 (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
