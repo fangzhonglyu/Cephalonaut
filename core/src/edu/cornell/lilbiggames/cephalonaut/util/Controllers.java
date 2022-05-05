@@ -11,22 +11,26 @@
  */
 package edu.cornell.lilbiggames.cephalonaut.util;
 
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * This class is a safe wrapper for the LibGDX Controllers class
- *
+ * <p>
  * The existing Controllers class has been known to segfault on some systems due to the
  * native libraries that it uses.  We need a way to "turn it off" in that case. This
  * wrapper does just that, as it controls access via the GDXAppSettings value.
  */
 public class Controllers {
-    /** The singleton for this class */
+    /**
+     * The singleton for this class
+     */
     static private Controllers singleton;
 
-    /** Whether controller support is active */
+    /**
+     * Whether controller support is active
+     */
     private boolean active;
 
     /**
@@ -39,33 +43,15 @@ public class Controllers {
     /**
      * Creates a new Controllers wrapper with the given status.
      *
-     * @param active    Whether to activate the controllers
+     * @param active Whether to activate the controllers
      */
     private Controllers(boolean active) {
         this.active = active;
     }
 
     /**
-     * Toggles the active status of this wrapper
-     *
-     * @param active    The active status of the wrapper
-     */
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    /**
-     * Returns the active status of this wrapper
-     *
-     * @return the active status of this wrapper
-     */
-    public boolean isActive() {
-        return active;
-    }
-
-    /**
      * Returns the wrapper singleton
-     *
+     * <p>
      * This method constructs a new wrapper if one did not previously exist.
      *
      * @return the wrapper singleton
@@ -78,14 +64,32 @@ public class Controllers {
     }
 
     /**
-     * Returns an array of connected {@link Controller} instances.
+     * Returns the active status of this wrapper
      *
+     * @return the active status of this wrapper
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * Toggles the active status of this wrapper
+     *
+     * @param active The active status of the wrapper
+     */
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    /**
+     * Returns an array of connected {@link Controller} instances.
+     * <p>
      * If the wrapper is not active, the array will be empty. This method should only
      * be called on the rendering thread.
      *
      * @return an array of connected {@link Controller} instances.
      */
-    public Array<Controller> getControllers () {
+    public Array<Controller> getControllers() {
         if (active) {
             try {
                 return com.badlogic.gdx.controllers.Controllers.getControllers();
@@ -98,19 +102,19 @@ public class Controllers {
 
     /**
      * Returns an array of connected {@link XBoxController} instances.
-     *
+     * <p>
      * If the wrapper is not active, the array will be empty. This method should only
      * be called on the rendering thread.
      *
      * @return an array of connected {@link XBoxController} instances.
      */
-    public Array<XBoxController> getXBoxControllers () {
+    public Array<XBoxController> getXBoxControllers() {
         Array<XBoxController> xBoxControllers = new Array<XBoxController>();
         if (active) {
             try {
-                for(Controller controller: com.badlogic.gdx.controllers.Controllers.getControllers()) {
+                for (Controller controller : com.badlogic.gdx.controllers.Controllers.getControllers()) {
                     String name = controller.getName().toLowerCase();
-                    if (name.contains( "xbox" ) || name.contains( "pc" )) {
+                    if (name.contains("xbox") || name.contains("pc")) {
                         xBoxControllers.add(new XBoxController(controller));
                     }
                 }
@@ -123,14 +127,14 @@ public class Controllers {
 
     /**
      * Adds a global {@link ControllerListener}.
-     *
+     * <p>
      * This listener can react to events from all {@link Controller} instances. However, no
      * listener will be added The listener will be added if the wrapper is not active.
      * This method should only be invoked on the rendering thread.
      *
-     * @param listener  The global listener to add
+     * @param listener The global listener to add
      */
-    public void addListener (ControllerListener listener) {
+    public void addListener(ControllerListener listener) {
         if (active) {
             try {
                 com.badlogic.gdx.controllers.Controllers.addListener(listener);
@@ -142,13 +146,13 @@ public class Controllers {
 
     /**
      * Removes a global {@link ControllerListener}.
-     *
+     * <p>
      * No listener will be added The listener will be removed if the wrapper is not active.
      * This method should only be invoked on the rendering thread.
      *
-     * @param listener  The global listener to remove
+     * @param listener The global listener to remove
      */
-    public void removeListener (ControllerListener listener) {
+    public void removeListener(ControllerListener listener) {
         if (active) {
             try {
                 com.badlogic.gdx.controllers.Controllers.removeListener(listener);
@@ -160,11 +164,11 @@ public class Controllers {
 
     /**
      * Removes every global {@link ControllerListener} previously added.
-     *
+     * <p>
      * No listener will be added The listener will be removed if the wrapper is not active.
      * This method should only be invoked on the rendering thread.
      */
-    public void clearListeners () {
+    public void clearListeners() {
         if (active) {
             try {
                 com.badlogic.gdx.controllers.Controllers.clearListeners();
@@ -176,7 +180,7 @@ public class Controllers {
 
     /**
      * Returns all listeners currently registered.
-     *
+     * <p>
      * If the wrapper is not active, the array will be empty. This method should only
      * be called on the rendering thread. Modifying this array will result in undefined
      * behaviour.
