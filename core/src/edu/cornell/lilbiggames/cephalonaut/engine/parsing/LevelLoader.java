@@ -123,6 +123,10 @@ public class LevelLoader {
                 return LevelElement.Element.REFILL;
             case "Dialogue Trigger":
                 return LevelElement.Element.DIALOGUE_TRIGGER;
+            case "Engine":
+                return LevelElement.Element.ENGINE;
+            case "BrokenEngine":
+                return LevelElement.Element.BROKEN_ENGINE;
             default:
                 System.out.printf("WARNING: Unknown LevelElement type '%s'\n", element);
                 return LevelElement.Element.WALL;
@@ -269,7 +273,8 @@ public class LevelLoader {
 
         // Need to account that rotation is around the bottom-left origin in Tiled instead of the center origin here
         def.angle = -MathUtils.degreesToRadians * json.getFloat("rotation", 0);
-        Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x-def.width/2f, y-def.height/2f), def.angle);
+        //Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x-def.width/2f, y-def.height/2f), def.angle);
+        Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x-0.5f, y-0.5f), def.angle);
         def.x = pos.x;
         def.y = pos.y;
     }

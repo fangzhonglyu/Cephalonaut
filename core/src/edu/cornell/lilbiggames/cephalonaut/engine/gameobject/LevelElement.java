@@ -38,7 +38,9 @@ public class LevelElement extends SimpleObstacle {
         SPIKE,
         SPIKEBALL,
         REFILL,
-        DIALOGUE_TRIGGER
+        DIALOGUE_TRIGGER,
+        ENGINE,
+        BROKEN_ENGINE
     }
 
     /** Type of element **/
@@ -88,7 +90,7 @@ public class LevelElement extends SimpleObstacle {
         setTexture(def.texture);
     }
 
-    private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture,spikeTexture,spikeBallTexture;
+    private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture,spikeTexture,spikeBallTexture,engineTexture,brokenEngineTexture;
 
     public static void collectAssets(AssetDirectory assetDirectory){
         wormholeTexture = assetDirectory.getEntry("A-wormhole-filmstrip.png",Texture.class);
@@ -101,6 +103,10 @@ public class LevelElement extends SimpleObstacle {
         spikeTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         spikeBallTexture = assetDirectory.getEntry("GO-spikeball-film.png",Texture.class);
         spikeBallTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        engineTexture = assetDirectory.getEntry("engine_film.png",Texture.class);
+        engineTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        brokenEngineTexture = assetDirectory.getEntry("engine_broken_film.png",Texture.class);
+        brokenEngineTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
 
     public static LevelElement create(Def def) {
@@ -127,6 +133,11 @@ public class LevelElement extends SimpleObstacle {
                 return new LEAnimated(def,new FilmStrip(spikeTexture,1,9),7);
             case SPIKEBALL:
                 return new LEAnimated(def,new FilmStrip(spikeBallTexture,1,7),7);
+            case ENGINE:
+                System.out.println("dsafdfdsf");
+                return new LEAnimated(def,new FilmStrip(engineTexture,1,6),5);
+            case BROKEN_ENGINE:
+                return new LEAnimated(def,new FilmStrip(brokenEngineTexture,1,6),5);
             default:
                 return new LevelElement(def);
         }

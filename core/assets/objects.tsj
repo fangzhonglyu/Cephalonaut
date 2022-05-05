@@ -8,9 +8,9 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":13,
+ "tilecount":15,
  "tiledversion":"1.8.2",
- "tileheight":66,
+ "tileheight":96,
  "tiles":[
         {
          "id":1,
@@ -935,6 +935,132 @@
                  "value":
                     {
                      "type":"ESpike"
+                    }
+                }]
+        }, 
+        {
+         "id":17,
+         "image":"engine.png",
+         "imageheight":96,
+         "imagewidth":48,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0.25,
+                             "y":24.875
+                            }, 
+                            {
+                             "x":6.25,
+                             "y":48.125
+                            }, 
+                            {
+                             "x":34,
+                             "y":47.875
+                            }, 
+                            {
+                             "x":40.25,
+                             "y":24.625
+                            }, 
+                            {
+                             "x":40,
+                             "y":0
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":3.875,
+                     "y":0
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "type":"Engine"
+                    }
+                }]
+        }, 
+        {
+         "id":18,
+         "image":"engine_broken.png",
+         "imageheight":96,
+         "imagewidth":48,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0.25,
+                             "y":24.875
+                            }, 
+                            {
+                             "x":6.25,
+                             "y":48.125
+                            }, 
+                            {
+                             "x":34,
+                             "y":47.875
+                            }, 
+                            {
+                             "x":40.25,
+                             "y":24.625
+                            }, 
+                            {
+                             "x":40,
+                             "y":0
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":3.75,
+                     "y":0.125
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "type":"BrokenEngine"
                     }
                 }]
         }],
