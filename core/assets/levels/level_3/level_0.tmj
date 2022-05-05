@@ -341,7 +341,8 @@
                          "type":"class",
                          "value":
                             {
-
+                             "bodyType":"Kinematic",
+                             "type":"Door"
                             }
                         }, 
                         {
