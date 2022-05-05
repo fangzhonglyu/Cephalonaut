@@ -459,6 +459,9 @@ public class PlayMode extends WorldController implements Screen {
         canvas.begin();
 
         for (GameObject obj : objects) {
+//            if(obj instanceof  LevelElement && ((LevelElement) obj).getElement() == LevelElement.Element.FINISH) {
+//                canvas.drawLevelEndGlow(obj.getX() * scale.x, obj.getY() * scale.y);
+//            }
             obj.draw(canvas);
             if (obj instanceof LEBlackHole) {
                 canvas.drawBlackHoleOutline(obj.getX() * scale.x, obj.getY() * scale.y,
