@@ -94,9 +94,12 @@ public class GameCanvas {
 	/** Cache object to handle raw textures */
 	private TextureRegion holder;
 
-	private ShaderProgram shaderProgram;
-	public FrameBuffer bgFrame;
-	public FrameBuffer fgFrame;
+	private final ShaderProgram shaderProgram;
+	private final ShaderProgram accretionShader;
+
+	private final FrameBuffer bgFrame;
+	private final FrameBuffer fgFrame;
+	private final FrameBuffer temp;
 
 
 
@@ -119,6 +122,8 @@ public class GameCanvas {
 		spriteBatch.setProjectionMatrix(camera.combined);
 		debugRender.setProjectionMatrix(camera.combined);
 
+		spriteBatch.enableBlending();
+
 		// Initialize the cache objects
 		holder = new TextureRegion();
 		local  = new Affine2();
@@ -127,10 +132,15 @@ public class GameCanvas {
 
 		String vertexShader = Gdx.files.internal("shaders/vertex.glsl").readString();
 		String fragmentShader = Gdx.files.internal("shaders/fragment.glsl").readString();
-		shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
+		String fragmentAccretionShader = Gdx.files.internal("shaders/fragment_accretion.glsl").readString();
 
-		bgFrame = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
+		accretionShader = new ShaderProgram(vertexShader, fragmentAccretionShader);
+
+		bgFrame = new FrameBuffer(Pixmap.Format.RGB888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 		fgFrame = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		temp = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+
 	}
 
 	public void setCameraPos(float x, float y) {
@@ -324,7 +334,7 @@ public class GameCanvas {
 	 * weird scaling issues.
 	 */
 	 public void resize() {
-		shaderProgram.setUniformf("u_res", getWidth(), getHeight());
+//		shaderProgram.setUniformf("u_res", getWidth(), getHeight());
 		// Resizing screws up the spriteBatch projection matrix
 		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
 		shapeRen.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
@@ -396,8 +406,20 @@ public class GameCanvas {
 	 */
 	public void clear() {
     	// Clear the screen
+		bgFrame.end();
 		Gdx.gl.glClearColor(0.047f, 0.086f, 0.31f, 1.0f);  // Homage to the XNA years
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);		
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		Gdx.gl.glClearColor(0, 0, 0, 0);
+		bgFrame.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		bgFrame.end();
+		fgFrame.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		fgFrame.end();
+		temp.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		temp.end();
 	}
 
 	/**
@@ -440,11 +462,19 @@ public class GameCanvas {
 	 * Nothing is flushed to the graphics card until the method end() is called.
 	 */
     public void begin() {
-		bh.set(-1000, -1000);
-		fgFrame.begin();
+		bh.set(-10000, -10000);
+
 		Gdx.gl.glClearColor(0, 0, 0, 0);
+		fgFrame.begin();
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		fgFrame.end();
+		temp.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		temp.end();
+		bgFrame.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		bgFrame.end();
+
 		bgFrame.begin();
 		spriteBatch.setProjectionMatrix(camera.combined);
     	spriteBatch.begin();
@@ -452,45 +482,55 @@ public class GameCanvas {
     	active = DrawPass.STANDARD;
     }
 
-	private Vector2 bh = new Vector2();
+	private final Vector2 bh = new Vector2();
 	public void setBH(float x, float y) {
 		bh.set(x, y);
-//		shaderProgram.setUniformf("u_bh", x, y);
+	}
+
+	/**
+	 * Literally the jankest quick fix of my life but it's okay it'll work :)
+	 */
+	public void end2() {
+		spriteBatch.end();
 	}
 
 	/**
 	 * Ends a drawing sequence, flushing textures to the graphics card.
 	 */
     public void end() {
+		spriteBatch.flush();
 		bgFrame.end();
 
-//		TextureRegion bgTex = new TextureRegion(bgFrame.getColorBufferTexture());
-
-//		global.idt();
-//		spriteBatch.setProjectionMatrix(global);
-
-//		spriteBatch.draw(bgTex, 0, 0);
 		float x = camera.position.x - camera.viewportWidth / 2f;
 		float y = camera.position.y - camera.viewportHeight / 2f;
+
+		// Draw accretion disk from bgFrame onto temp
+		temp.begin();
+		spriteBatch.setShader(accretionShader);
+		accretionShader.setUniformf("u_bh", bh.x - x, bh.y - y);
+		accretionShader.setUniformf("u_res", 1920, 1080);
+		shaderProgram.setUniformMatrix("u_projTrans", spriteBatch.getProjectionMatrix());
+		spriteBatch.draw(bgFrame.getColorBufferTexture(), x, y, getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), false, true);
+		spriteBatch.flush();
+		temp.end();
+
+		// Draw black hole warping from temp onto screen
 		spriteBatch.setShader(shaderProgram);
-		System.out.println(bh);
 		shaderProgram.setUniformf("u_bh", bh.x - x, bh.y - y);
 		shaderProgram.setUniformf("u_res", 1920, 1080);
-		shaderProgram.setUniformMatrix("u_projTrans", spriteBatch.getProjectionMatrix());
-		spriteBatch.draw(bgFrame.getColorBufferTexture(), x, y, width, height, 0, 0, width, height, false, true);
-		spriteBatch.setShader(null);
-//		TextureRegion fgTex = new TextureRegion(fgFrame.getColorBufferTexture());
-//		spriteBatch.draw(fgTex, 0, 0);
-		spriteBatch.draw(fgFrame.getColorBufferTexture(), x, y, width, height, 0, 0, width, height, false, true);
+		spriteBatch.draw(temp.getColorBufferTexture(), x, y, getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), false, true);
 
+		// Draw fgFrame onto screen
+		spriteBatch.setShader(null);
+		spriteBatch.draw(fgFrame.getColorBufferTexture(), x, y, getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), false, true);
 
 		spriteBatch.end();
-
 		active = DrawPass.INACTIVE;
     }
 
 	public void drawFade(float fadeOut) {
 		switchToShape();
+		fgFrame.end();
 
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -564,6 +604,17 @@ public class GameCanvas {
 		spriteBatch.setColor(Color.WHITE);
 		spriteBatch.draw(image, x, y, 0, 0, image.getWidth(), image.getHeight(), sx, sy, 0,
 						srcX, srcY, srcWidth, srcHeight, false, false);
+	}
+
+	public void draw(Texture image, float x, float y, float width, float height, int srcX, int srcY, int srcWidth, int srcHeight, float sx, float sy) {
+		if (active != DrawPass.STANDARD) {
+			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+			return;
+		}
+
+		spriteBatch.setColor(Color.WHITE);
+		spriteBatch.draw(image, x, y, 0, 0, width, height, sx, sy, 0,
+				srcX, srcY, srcWidth, srcHeight, false, false);
 	}
 	
 	/**
