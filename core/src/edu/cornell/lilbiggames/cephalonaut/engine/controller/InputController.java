@@ -60,7 +60,7 @@ public class InputController {
 	private boolean exitPressed;
 	private boolean exitPrevious;
 
-	private Vector2 grappleDirec;
+	private Vector2 stickDirec;
 
 	/** The crosshair position (for raddoll) */
 	private Vector2 crosshair;
@@ -193,8 +193,8 @@ public class InputController {
 
 
 
-	public Vector2 getGrappleDirec(){
-		return grappleDirec;
+	public Vector2 getStickDirec(){
+		return stickDirec;
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class InputController {
 			xbox = null;
 		}
 
-		grappleDirec = new Vector2();
+		stickDirec = new Vector2();
 		keyBindings = new HashMap<>();
 		crosshair = new Vector2();
 		crosscache = new Vector2();
@@ -285,14 +285,14 @@ public class InputController {
 
 		thrusterApplied = xbox.getRightTrigger() > 0.6f;
 
-		if(grappleDirec.x > .6f || grappleDirec.x < -.6f || grappleDirec.y > .6f || grappleDirec.y < -.6f) {
+		if(stickDirec.x > .6f || stickDirec.x < -.6f || stickDirec.y > .6f || stickDirec.y < -.6f) {
 			secondaryPressed = true;
 		} else {
 			secondaryPressed = false;
 		}
 
-		grappleDirec.x = xbox.getRightX();
-		grappleDirec.y = -xbox.getRightY();
+		stickDirec.x = xbox.getRightX();
+		stickDirec.y = -xbox.getRightY();
 
 	}
 

@@ -130,7 +130,7 @@ public class LevelElement extends SimpleObstacle {
             case SPIKE:
                 return new LEAnimated(def,new FilmStrip(spikeTexture,1,9),7, false);
             case SPARKLE:
-                return new LEAnimated(def,new FilmStrip(sparksTexture,1,6),6, true);
+                return new LEAnimated(def,new FilmStrip(sparksTexture,1,6),7, true);
             case SPIKEBALL:
                 return new LEAnimated(def,new FilmStrip(spikeBallTexture,1,7),7, false);
             default:

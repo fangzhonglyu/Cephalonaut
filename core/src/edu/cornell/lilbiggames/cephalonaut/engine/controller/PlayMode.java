@@ -1,14 +1,11 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Queue;
@@ -84,7 +81,7 @@ public class PlayMode extends WorldController implements Screen {
     private DialogueMode dialogueMode;
     private boolean paused;
     private float dialogueFade;
-    private int prev_music = -1;
+    private static int prev_music;
 
     private int twoStars, threeStars;
 
@@ -180,8 +177,12 @@ public class PlayMode extends WorldController implements Screen {
         grapple.reset();
         // TODO: Switch track to a map property based off Tiled
         if(prev_music != levelDef.music) {
+            System.out.println(prev_music);
+            System.out.println(levelDef.music);
             SoundController.switchTrack(levelDef.music);
+            System.out.println("here");
         }
+        System.out.println(levelDef.music);
         prev_music = levelDef.music;
         deathRotationCount = 0;
         cephalonaut.setDeathScale(1);
@@ -278,6 +279,10 @@ public class PlayMode extends WorldController implements Screen {
         cephalonaut.setInking(false);
     }
 
+    public static void resetMusic() {
+        prev_music = -1;
+    }
+
 
     private boolean isDialogueMode(float dt) {
         if(paused) {
@@ -359,9 +364,9 @@ public class PlayMode extends WorldController implements Screen {
                 (canvas.getCameraY() - canvas.getHeight() / 2f) / scale.y);
 
         if(input.xbox != null && input.xbox.isConnected() &&
-                (Math.abs(input.getGrappleDirec().x) > .6f || Math.abs(input.getGrappleDirec().y) > .6f)) {
-            crossHair.x = 100 * input.getGrappleDirec().x + cephalonaut.getPosition().x;
-            crossHair.y = 100 * input.getGrappleDirec().y + cephalonaut.getPosition().y;
+                (Math.abs(input.getStickDirec().x) > .6f || Math.abs(input.getStickDirec().y) > .6f)) {
+            crossHair.x = 100 * input.getStickDirec().x + cephalonaut.getPosition().x;
+            crossHair.y = 100 * input.getStickDirec().y + cephalonaut.getPosition().y;
         }
 
         cephalonautController.update(grappleButton, ungrappleButton, crossHair, inking, rotation);

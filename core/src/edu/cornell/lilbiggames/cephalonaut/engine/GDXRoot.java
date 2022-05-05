@@ -148,6 +148,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		SoundController.setMusicVolume(0.5f);
 		SoundController.startMenuMusic();
+		PlayMode.resetMusic();
 		postLoadingScreen = startScreenMode;
 	}
 
@@ -254,6 +255,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			selectLevel();
 		} else if (exitCode == MenuMode.EXIT_LEVEL_CODE) {
 			SoundController.startMenuMusic();
+			PlayMode.resetMusic();
 			playMode.pause();
 			SoundController.setPlaying(false);
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
