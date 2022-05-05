@@ -45,6 +45,7 @@
     "homeicon": "home.png",
     "ui:star": "UI-starframeempty.png",
     "ui:star_scoring": "UI-star-scoring.png",
+    "ui:sparkle": "UI-target-sparkle.png",
     "replayicon": "replay.png",
     "nexticon": "arrowRight.png",
     "loadingAnimation1": "UI-transition-star1-15.png",
