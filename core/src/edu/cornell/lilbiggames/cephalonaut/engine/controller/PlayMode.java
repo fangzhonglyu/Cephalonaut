@@ -137,21 +137,7 @@ public class PlayMode extends WorldController implements Screen {
             }
         }
         sparkleX = new int[NUM_SPARKLES][NUM_SPARKLES];
-        for (int i = 0; i < NUM_SPARKLES; i++) {
-            for (int j = 0; j < NUM_SPARKLES; j++) {
-                sparkleX[i][j] = ThreadLocalRandom.current().nextInt(0, ((int) (bounds.getWidth() + 1)));
-            }
-        }
         sparkleY = new int[NUM_SPARKLES][NUM_SPARKLES];
-        int minY = 0;
-        if (level.equals("level_3") && checkpoint.equals("checkpoint_0")) {
-            minY = -((int) (bounds.getHeight() + 1));
-        }
-        for (int i = 0; i < NUM_SPARKLES; i++) {
-            for (int j = 0; j < NUM_SPARKLES; j++) {
-                sparkleY[i][j] = ThreadLocalRandom.current().nextInt(minY, ((int) (bounds.getHeight() + 1)));
-            }
-        }
     }
 
     public static void resetMusic() {
@@ -236,6 +222,22 @@ public class PlayMode extends WorldController implements Screen {
         paused = false;
         twoStars = levelDef.twoStars;
         threeStars = levelDef.threeStars;
+
+        for (int i = 0; i < NUM_SPARKLES; i++) {
+            for (int j = 0; j < NUM_SPARKLES; j++) {
+                sparkleX[i][j] = ThreadLocalRandom.current().nextInt(0, ((int) (bounds.getWidth() + 1)));
+            }
+        }
+
+        int minY = 0;
+        if (level.equals("level_3") && checkpoint.equals("checkpoint_0")) {
+            minY = -((int) (bounds.getHeight() + 1));
+        }
+        for (int i = 0; i < NUM_SPARKLES; i++) {
+            for (int j = 0; j < NUM_SPARKLES; j++) {
+                sparkleY[i][j] = ThreadLocalRandom.current().nextInt(minY, ((int) (bounds.getHeight() + 1)));
+            }
+        }
     }
 
     private void populateLevel(Iterable<GameObject> newObjects) {
