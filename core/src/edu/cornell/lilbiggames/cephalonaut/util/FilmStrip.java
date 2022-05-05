@@ -160,6 +160,17 @@ public class FilmStrip extends TextureRegion {
 		setRegion(x,y,fwidth,fheight);
 	}
 
+	public void setRandFrame() {
+		if (frame < 0 || frame >= size) {
+			Gdx.app.error("FilmStrip", "Invalid animation frame", new IllegalArgumentException());
+			return;
+		}
+		this.frame = (int) (Math.random() * cols);
+		int x = this.x+(frame % cols)*fwidth;
+		int y = this.y+(frame / cols)*fheight;
+		setRegion(x,y,fwidth,fheight);
+	}
+
 	public float getFheight() {
 		return (float) fheight;
 	}
@@ -167,6 +178,8 @@ public class FilmStrip extends TextureRegion {
 	public float getFwidth() {
 		return (float) fwidth;
 	}
+
+	public int getCols() { return cols; }
 
 	/**
 	 * Returns a copy of this filmstrip.
