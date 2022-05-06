@@ -111,8 +111,6 @@ public class MenuMode implements Screen {
         arrow = assets.getEntry("arrow", Texture.class);
 
         this.assets = assets;
-
-
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -62,7 +63,7 @@ public class MainMenuNestedMode extends MenuMode {
         public boolean mouseMoved (int x, int screenY) {
             float y = canvas.getHeight() - screenY;
 
-            if (checkpointHitBoxes != null){
+            if (checkpointHitBoxes != null) {
                 for (int i = 0; i < checkpointHitBoxes.length; i++){
                     Rectangle hitBox = checkpointHitBoxes[i];
                     if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
@@ -188,6 +189,16 @@ public class MainMenuNestedMode extends MenuMode {
     @Override
     public void dispose() {
 
+    }
+
+    public void setDefault() {
+        checkpointHitBoxes = new Rectangle[checkpoints];
+        float diff = 100;
+        float start = canvas.getWidth() / 2 - diff * (checkpoints / 2);
+        for (int i = 0; i < checkpoints; i++) {
+            checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 0.1f * levelTexture.getWidth(), 0.1f * levelTexture.getHeight());
+        }
+        Gdx.input.setInputProcessor(menuNestedInput);
     }
 
     public void setNumCheckpoints(int checkpoints){
