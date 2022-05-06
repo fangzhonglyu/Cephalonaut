@@ -14,6 +14,8 @@ import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
+import javax.print.attribute.HashPrintServiceAttributeSet;
+
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.CHECKPOINT_SELECTED_CODE;
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.NESTED_MENU_EXIT_CODE;
 
@@ -56,6 +58,9 @@ public class MainMenuNestedMode extends MenuMode {
     private float frame;
     private float maxFrame;
 
+    private Texture[] silhouettes;
+    private Texture[] collectedItems;
+
     /**
      * Creates a MainMenuMode with the default size and position.
      *
@@ -84,6 +89,20 @@ public class MainMenuNestedMode extends MenuMode {
         filmstrip = new FilmStrip(assets.getEntry("octopus",Texture.class), 5, 9);
         frame = 0;
         maxFrame = 4;
+
+        populateIcons();
+    }
+
+    private void populateIcons(){
+        Texture sil = assets.getEntry( "alex-sil", Texture.class );
+        Texture collectedItem = assets.getEntry( "alex", Texture.class );
+        silhouettes = new Texture[checkpoints];
+        collectedItems = new Texture[checkpoints];
+
+        for(int i = 0; i < checkpoints; i++){
+            silhouettes[i] = sil;
+            collectedItems[i] = collectedItem;
+        }
     }
 
     public void setBackground() {
@@ -169,13 +188,15 @@ public class MainMenuNestedMode extends MenuMode {
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
                 20,
                 20);
-        float diff = 100;
-        float start = width/2 - diff * (checkpoints/2);
+        float diff = levelCompletedTexture.getWidth()*2 + 20;
+        float start = width/2 - diff * (checkpoints/2) + levelCompletedTexture.getWidth() + 20;
         for(int i = 0; i < checkpoints; i++) {
             if (i < completedCheckpoints) {
-                canvas.draw(levelCompletedTexture, i * diff + start, height / 2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 2f, 2f);
+                canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, 3f, 3f);
+                canvas.draw(collectedItems[i], Color.WHITE, collectedItems[i].getWidth()/2, collectedItems[i].getHeight()/4, i * diff + start, height/2, 0, 0.4f, 0.4f);
             } else {
-                canvas.draw(levelTexture, i * diff + start, height / 2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 2f, 2f);
+                canvas.draw(levelTexture, Color.WHITE, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, 3f, 3f);
+                canvas.draw(silhouettes[i], Color.WHITE, silhouettes[i].getWidth()/2, silhouettes[i].getHeight()/4, i * diff + start, height/2, 0, 2f, 2f);
             }
         }
 
@@ -184,7 +205,7 @@ public class MainMenuNestedMode extends MenuMode {
         float ox = 0.5f * filmstrip.getRegionWidth();
         float oy = 0.75f * filmstrip.getRegionHeight();
         canvas.draw(filmstrip, Color.WHITE, ox, 0,
-                start + completedCheckpoints*diff + levelTexture.getWidth(), height/2 + levelTexture.getHeight() + 10,
+                start + completedCheckpoints*diff, height/2 + 10,
                 0, scale.x*2, scale.y*2);
 
         canvas.end();

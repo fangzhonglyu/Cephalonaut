@@ -3,76 +3,78 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
-public class LoadingScreen extends MenuMode implements Screen {
+public class AssetLoadingScreen implements Screen {
     private GameCanvas canvas;
     private ScreenListener listener;
+    private AssetDirectory assets;
 
 
     private Texture background;
 
-    private final int NUM_FRAMES = 42;
-    private final int FILM_STRIP_SIZE = 15;
-    private FilmStrip[] filmStrips;
+    private FilmStrip filmStrip;
     private float frame;
     private float loadingTime;
     private float totalLoadingTime;
+
+    protected Vector2 bounds,scale;
+    private AssetDirectory loading;
+
+    private int budget = 15;
     /**
      * Creates a MainMenuMode with the default size and position.
      *
-     * @param assets   The asset directory to use
      * @param canvas   The game canvas to draw to
      * @param listener
      */
-    public LoadingScreen(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, float totalLoadingTime) {
-        super(assets, canvas, listener);
+    public AssetLoadingScreen(GameCanvas canvas, ScreenListener listener) {
         this.canvas = canvas;
         this.listener = listener;
         this.loadingTime = totalLoadingTime;
         this.totalLoadingTime = totalLoadingTime;
+        this.assets = new AssetDirectory("assets.json");
+        loading = new AssetDirectory("loading.json");
 
-        background = assets.getEntry( "BG-1-teal.png", Texture.class );
+        loading.loadAssets();
+        loading.finishLoading();
+
+        background = loading.getEntry( "background", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
 
-        filmStrips = new FilmStrip[NUM_FRAMES/FILM_STRIP_SIZE + 1];
-        //System.out.println(Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*2));
-        for(int i = 0; i <= NUM_FRAMES/FILM_STRIP_SIZE; i++) {
-            Texture loadingAnimation = assets.getEntry("loadingAnimation"+(i+1), Texture.class);
-            filmStrips[i] = new FilmStrip(loadingAnimation, 1, Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1), Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1),
-                    0, 0, loadingAnimation.getWidth(), loadingAnimation.getHeight());
-        }
-
+        Texture film = loading.getEntry("animation", Texture.class);
+        this.filmStrip = new FilmStrip(film,1,7);
         frame = 0;
-        filmStrips[0].setFrame(0);
+        filmStrip.setFrame(0);
+
+        assets.loadAssets();
     }
 
-    public void setLoadingTime(float time){
-        totalLoadingTime = time;
-        loadingTime = time;
+    public AssetDirectory getAssetDirectory(){
+        return assets;
+    }
+
+    @Override
+    public void show() {
+
     }
 
     public void render(float delta){
-        if(loadingTime == 0){
-            loadingTime = totalLoadingTime;
-            listener.exitScreen(this,MenuMode.EXIT_LOADING_CODE);
+        this.assets.update(this.budget);
+
+        if (assets.getProgress() >= 1.0F) {
+            listener.exitScreen(this,MenuMode.DONE_LOADING_ASSETS);
         }
         loadingTime -= 1;
-        frame = (frame+delta*10f)%NUM_FRAMES;
-
-        int currentFilmStripId = (int)(frame/FILM_STRIP_SIZE);
-
-        FilmStrip filmStrip = filmStrips[currentFilmStripId];
-
-        filmStrip.setFrame((int)frame - (int)(frame/FILM_STRIP_SIZE)*FILM_STRIP_SIZE);
+        frame = (frame+delta*10f)%7;
+        filmStrip.setFrame((int)(frame));
 
         canvas.clear();
         canvas.begin();
@@ -90,6 +92,31 @@ public class LoadingScreen extends MenuMode implements Screen {
         canvas.draw(filmStrip, Color.WHITE, ox, oy,
         canvas.getWidth()/2f, canvas.getHeight()/2f, 0, 0.5f, 0.5f);
         canvas.end();
+
+    }
+
+    @Override
+    public void resize(int i, int i1) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
 
     }
 }

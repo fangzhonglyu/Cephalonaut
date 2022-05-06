@@ -14,6 +14,7 @@
  package edu.cornell.lilbiggames.cephalonaut.engine;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.*;
@@ -52,7 +53,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private PauseMode pauseMode;
 	private LevelCompleteMode levelCompleteMode;
 	private StartScreenMode startScreenMode;
-	private LoadingScreen loadingScreen;
+	private AssetLoadingScreen assetLoadingScreen;
+	private LevelLoadingScreen loadingScreen;
 	private SettingsMode settings;
 	private CreditsScreen credits;
 	private LevelLoader levelLoader;
@@ -64,7 +66,6 @@ public class GDXRoot extends Game implements ScreenListener {
 	private Screen nextScreen;
 	private Screen postLoadingScreen;
 
-	private boolean fakeLoadingAssets;
 	private Map<Integer,Integer> numCheckpointsPerLevel;
 
 	/**
@@ -116,39 +117,12 @@ public class GDXRoot extends Game implements ScreenListener {
 	 */
 	public void create() {
 		canvas  = new GameCanvas();
-		levelLoader = new LevelLoader();
-		directory = levelLoader.getAssetDirectory();
-
-		fakeLoadingAssets = true;
-
+		assetLoadingScreen = new AssetLoadingScreen(canvas, this);
+		postLoadingScreen = startScreenMode;
 		canvas.resize();
-		loadingScreen = new LoadingScreen(directory, canvas, this,200f);
-		postLoadingScreen = startScreenMode;
-		setScreen(loadingScreen);
+		setScreen(assetLoadingScreen);
 
-		SoundController.gatherSoundAssets(directory);
 
-		initializeCheckpointsMap();
-		initializeKeybindings();
-		initializeDialogue();
-
-		transitioning = false;
-
-		// Initialize the game world
-		mainMenu = new MainMenuMode(directory, canvas, this);
-		mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, numCheckpointsPerLevel.get(0),0, 0, this);
-		startScreenMode = new StartScreenMode(directory, canvas, this);
-
-		LevelElement.gatherAssets(directory);
-
-		pauseMode = new PauseMode(directory, canvas, this);
-		settings = new SettingsMode(directory, canvas, this, keyBindings);
-		credits = new CreditsScreen(directory, canvas, this);
-		levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
-
-		SoundController.setMusicVolume(0.5f);
-		SoundController.startMenuMusic();
-		postLoadingScreen = startScreenMode;
 	}
 
 	private void initializeCheckpointSelect(){
@@ -238,6 +212,35 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	@Override
 	public void exitScreen(Screen screen, int exitCode) {
+		if(exitCode == MenuMode.DONE_LOADING_ASSETS){
+			directory = assetLoadingScreen.getAssetDirectory();
+			levelLoader = new LevelLoader(directory);
+			SoundController.gatherSoundAssets(directory);
+
+			initializeCheckpointsMap();
+			initializeKeybindings();
+			initializeDialogue();
+
+			transitioning = false;
+
+			// Initialize the game world
+			mainMenu = new MainMenuMode(directory, canvas, this);
+			mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, numCheckpointsPerLevel.get(0),0, 0, this);
+			startScreenMode = new StartScreenMode(directory, canvas, this);
+
+			LevelElement.gatherAssets(directory);
+
+			pauseMode = new PauseMode(directory, canvas, this);
+			settings = new SettingsMode(directory, canvas, this, keyBindings);
+			credits = new CreditsScreen(directory, canvas, this);
+			levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
+			loadingScreen = new LevelLoadingScreen(directory, canvas, this,200f);
+
+			SoundController.setMusicVolume(0.5f);
+			SoundController.startMenuMusic();
+			startScreenTransition(startScreenMode);
+		}
+
 		Gdx.input.setInputProcessor(new InputAdapter());
 		SoundController.killAllSound();
 		if(exitCode == MenuMode.START_CODE){

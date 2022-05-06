@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.LEVEL_SELECTED_CODE;
@@ -51,17 +52,21 @@ public class MainMenuMode extends MenuMode {
     private Color tint;
     private Rectangle hitBox;
 
+    private boolean shouldAnimate;
+    private FilmStrip filmStrip;
+    private float frame;
+
     protected InputAdapter mainMenuInput = new InputAdapter() {
         public boolean mouseMoved (int x, int screenY) {
             if(hitBox != null){
                 float y = canvas.getHeight() - screenY;
                 if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
-                    tint = Color.WHITE;
+                   shouldAnimate = false;
                 } else {
-                    tint = Color.GRAY;
+                   shouldAnimate = true;
+                   frame = 0;
                 }
             }
-
 
             return true;
         }
@@ -94,8 +99,8 @@ public class MainMenuMode extends MenuMode {
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
 
-
-        tint = Color.GRAY;
+        tint = Color.WHITE;
+        shouldAnimate = true;
 
         background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -106,6 +111,9 @@ public class MainMenuMode extends MenuMode {
 
         curLevel = DEFAULT_LEVEL;
         levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
+
+        filmStrip = new FilmStrip(assets.getEntry("levelidle:level_"+curLevel, Texture.class), 1, 5);
+        filmStrip.setFrame(0);
     }
 
     @Override
@@ -115,6 +123,7 @@ public class MainMenuMode extends MenuMode {
 
     @Override
     public void render(float delta) {
+        frame = (frame+delta*5f)%5;
         if (levelSelected && listener != null) {
             levelSelected = false;
             listener.exitScreen(this, LEVEL_SELECTED_CODE);
@@ -201,14 +210,24 @@ public class MainMenuMode extends MenuMode {
                 20,
                 20);
 
+        float levelIconWidth = filmStrip.getRegionWidth();
+        float levelIconHeight = filmStrip.getRegionHeight();
 
-        float levelIconWidth = levelIcon.getWidth();
-        float levelIconHeight = levelIcon.getHeight();
+        if(!shouldAnimate) {
+            levelIconWidth = levelIcon.getWidth();
+            levelIconHeight = levelIcon.getHeight();
 
-        canvas.draw(levelIcon, tint,
+            canvas.draw(levelIcon, tint,
                     levelIconWidth / 2f, levelIconHeight / 2f,
                     width / 2f, height / 2f + 100,
+                    0, 2f * scale.x, 2f * scale.y);
+        } else {
+            filmStrip.setFrame((int)frame);
+            canvas.draw(filmStrip, tint,
+                     levelIconWidth/ 2f,  levelIconHeight/ 2f,
+                    width / 2f, height / 2f + 100,
                     0, 1.5f * scale.x, 1.5f * scale.y);
+        }
 
         // left arrow
         canvas.draw(leftArrow, Color.WHITE,
@@ -223,7 +242,7 @@ public class MainMenuMode extends MenuMode {
 
         hitBox = new Rectangle(width / 2f - (1.5f*scale.x)*levelIconWidth/2f, (height / 2f + 100) + (1.5f*scale.y)*levelIconHeight/2f, (1.5f*scale.x)*levelIconWidth, (1.5f*scale.y)*levelIconHeight);
 
-        canvas.drawTextCentered("WORLD " + (curLevel+1), displayFont, -levelIconHeight / 4f * scale.y - 60f);
+        canvas.drawTextCentered("WORLD " + (curLevel+1), displayFont, -levelIconHeight / 4f * scale.y - 100f);
 
         canvas.end();
     }

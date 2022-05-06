@@ -41,10 +41,8 @@ public class LevelLoader {
     final private Map<TiledFile, Map<Integer, JsonValue>> map = new HashMap<>();
     final private Map<TiledFile, Map<Integer, TextureRegion>> textures = new HashMap<>();
 
-    public LevelLoader() {
-        assetDirectory = new AssetDirectory("assets.json");
-        assetDirectory.loadAssets();
-        assetDirectory.finishLoading();
+    public LevelLoader(AssetDirectory assetDirectory) {
+        this.assetDirectory = assetDirectory;
         LevelElement.collectAssets(assetDirectory);
         loadTileset("tile-tileset", TiledFile.METEOR_TILESET);
         loadTileset("space-tileset", TiledFile.SPACESHIP_TILESET);
