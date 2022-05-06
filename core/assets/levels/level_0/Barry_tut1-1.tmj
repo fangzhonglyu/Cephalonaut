@@ -136,7 +136,7 @@
                         {
                          "name":"ink",
                          "type":"float",
-                         "value":100
+                         "value":10
                         }],
                  "rotation":0,
                  "type":"",
@@ -270,30 +270,6 @@
                  "width":48,
                  "x":30,
                  "y":105.333333333333
-                }, 
-                {
-                 "gid":402,
-                 "height":96,
-                 "id":193,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":352.333333333333,
-                 "y":493.333333333333
-                }, 
-                {
-                 "gid":403,
-                 "height":96,
-                 "id":194,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":399,
-                 "y":490.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",

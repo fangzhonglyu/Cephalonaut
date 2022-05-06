@@ -128,21 +128,7 @@ public class PlayMode extends WorldController implements Screen {
             }
         }
         sparkleX = new int[NUM_SPARKLES][NUM_SPARKLES];
-        for (int i = 0; i < NUM_SPARKLES; i++) {
-            for (int j = 0; j < NUM_SPARKLES; j++) {
-                sparkleX[i][j] = ThreadLocalRandom.current().nextInt(0, ((int) (bounds.getWidth() + 1)));
-            }
-        }
         sparkleY = new int[NUM_SPARKLES][NUM_SPARKLES];
-        int minY = 0;
-        if (level.equals("level_3") && checkpoint.equals("checkpoint_0")) {
-            minY = -((int) (bounds.getHeight() + 1));
-        }
-        for (int i = 0; i < NUM_SPARKLES; i++) {
-            for (int j = 0; j < NUM_SPARKLES; j++) {
-                sparkleY[i][j] = ThreadLocalRandom.current().nextInt(minY, ((int) (bounds.getHeight() + 1)));
-            }
-        }
     }
 
     public void nextDialogue(int part) {
@@ -223,6 +209,22 @@ public class PlayMode extends WorldController implements Screen {
         paused = false;
         twoStars = levelDef.twoStars;
         threeStars = levelDef.threeStars;
+
+        for (int i = 0; i < NUM_SPARKLES; i++) {
+            for (int j = 0; j < NUM_SPARKLES; j++) {
+                sparkleX[i][j] = ThreadLocalRandom.current().nextInt(0, ((int) (bounds.getWidth() + 1)));
+            }
+        }
+
+        int minY = 0;
+        if (level.equals("level_3") && checkpoint.equals("checkpoint_0")) {
+            minY = -((int) (bounds.getHeight() + 1));
+        }
+        for (int i = 0; i < NUM_SPARKLES; i++) {
+            for (int j = 0; j < NUM_SPARKLES; j++) {
+                sparkleY[i][j] = ThreadLocalRandom.current().nextInt(minY, ((int) (bounds.getHeight() + 1)));
+            }
+        }
     }
 
     private void populateLevel(Iterable<GameObject> newObjects) {
@@ -464,11 +466,14 @@ public class PlayMode extends WorldController implements Screen {
                         ((LEBlackHole) obj).getBlackHoleRange() * scale.x);
             }
             if (obj instanceof ImageObject) {
+                Vector2 parallaxFactor = ((ImageObject) obj).getParallaxFactor();
+                float offsetX = canvas.getCameraX() * parallaxFactor.x;
+                float offsetY = canvas.getCameraY() * parallaxFactor.y;
                 for (int i = 0; i < NUM_SPARKLES; i++) {
                     for (int j = 0; j < NUM_SPARKLES; j++) {
                         canvas.draw(sparkles[i], Color.GRAY,
                                 sparkles[i].getFwidth() / 2f, sparkles[i].getFheight() / 2f,
-                                2 * scale.x * sparkleX[i][j], 2 * scale.y * sparkleY[i][j],
+                                scale.x * sparkleX[i][j] + offsetX, scale.y * sparkleY[i][j] + offsetY,
                                 0, 0.1f * scale.x, 0.1f * scale.y);
                     }
                 }

@@ -178,7 +178,7 @@
                 }, 
                 {
                  "gid":42,
-                 "height":16,
+                 "height":32,
                  "id":5,
                  "name":"",
                  "properties":[
@@ -199,8 +199,8 @@
                  "rotation":270,
                  "type":"",
                  "visible":true,
-                 "width":16,
-                 "x":608,
+                 "width":32,
+                 "x":624,
                  "y":144
                 }, 
                 {
@@ -235,20 +235,8 @@
                 }, 
                 {
                  "gid":41,
-                 "height":16,
+                 "height":32,
                  "id":8,
-                 "name":"",
-                 "rotation":270,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":608,
-                 "y":160
-                }, 
-                {
-                 "gid":25,
-                 "height":16,
-                 "id":16,
                  "name":"",
                  "rotation":270,
                  "type":"",
