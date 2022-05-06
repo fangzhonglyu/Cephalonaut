@@ -47,6 +47,7 @@
     "main-menu:background": "BG-purplespace.png",
     "ink pack.png": "ink pack.png",
     "homeicon": "home.png",
+    "ui:clock": "UI-clock.png",
     "ui:star": "UI-starframeempty.png",
     "ui:star_scoring": "UI-star-scoring.png",
     "ui:sparkle": "UI-target-sparkle.png",
