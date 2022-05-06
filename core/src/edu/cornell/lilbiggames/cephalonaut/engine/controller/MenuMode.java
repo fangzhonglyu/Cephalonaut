@@ -83,7 +83,6 @@ public class MenuMode implements Screen {
             }
             return true;
         }
-
     };
 
     public void exitScreen(){

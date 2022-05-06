@@ -2,6 +2,7 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -48,12 +49,47 @@ public class MainMenuNestedMode extends MenuMode {
     private Texture levelTexture;
     private Texture levelCompletedTexture;
 
+    private Rectangle[] checkpointHitBoxes;
     private int completedCheckpoints;
+
     XBoxController xbox;
     private boolean prevRight;
     private boolean prevLeft;
     private boolean prevExit;
     private boolean prevSelect;
+
+    protected InputAdapter menuNestedInput = new InputAdapter() {
+        public boolean mouseMoved (int x, int screenY) {
+            float y = canvas.getHeight() - screenY;
+
+            if (checkpointHitBoxes != null){
+                for (int i = 0; i < checkpointHitBoxes.length; i++){
+                    Rectangle hitBox = checkpointHitBoxes[i];
+                    if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                        if (i != completedCheckpoints)
+                            SoundController.playSound(4,1);
+                        completedCheckpoints = i;
+                    }
+                }
+            }
+            return true;
+        }
+
+        public boolean touchDown (int x, int screenY, int pointer, int button) {
+            float y = canvas.getHeight() - screenY;
+            if (checkpointHitBoxes != null){
+                for (int i = 0; i < checkpointHitBoxes.length; i++){
+                    Rectangle hitBox = checkpointHitBoxes[i];
+                    if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                        completedCheckpoints = i;
+                        SoundController.playSound(6,1);
+                        levelSelected = true;
+                    }
+                }
+            }
+            return true;
+        }
+    };
 
     /**
      * Creates a MainMenuMode with the default size and position.
