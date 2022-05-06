@@ -9,10 +9,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.*;
 
@@ -42,13 +45,18 @@ public class LevelCompleteMode extends MenuMode {
 
     private AssetDirectory assets;
 
-    private InputController inputController;
-
     private Vector2 bounds, scale;
 
     private int timer;
 
     private String timeString;
+
+    XBoxController xbox;
+    private boolean prevUp;
+    private boolean prevDown;
+    private boolean prevExit;
+    private boolean prevSelect;
+    private boolean choiceMade;
 
     private int twoStars, threeStars;
 
@@ -78,6 +86,13 @@ public class LevelCompleteMode extends MenuMode {
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         selectedOption = 0;
+        Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
+        if (controllers.size > 0) {
+            xbox = controllers.get( 0 );
+        } else {
+            xbox = null;
+        }
+        choiceMade = false;
     }
 
     @Override
@@ -117,25 +132,35 @@ public class LevelCompleteMode extends MenuMode {
         starScoring.setFrame(0);
     }
 
+    public void resetChoiceMade() { choiceMade = false; }
+
     public void setDefault(){
         super.setDefault();
         Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
     }
 
     private void update(float delta){
-        SoundController.killAllSound();
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed()){
+        SoundController.setBlackHoleSound(false,1);
+        SoundController.setInkSound(false);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
+            SoundController.playSound(6,1);
             exitScreen();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.isBackPressed()){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
+                (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
             listener.exitScreen(this, EXIT_LEVEL_CODE);
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
-                inputController.isUpPressed()){
+                (xbox != null && xbox.isConnected() && xbox.getLeftY() < -0.6f && prevUp != xbox.getLeftY() < -0.6f)){
             selectedOption = selectedOption == 0 ? options.length-1 : selectedOption-1;
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
-                inputController.isDownPressed()){
+                (xbox != null && xbox.isConnected() && xbox.getLeftY() > 0.6f && prevDown != xbox.getLeftY() > 0.6f)){
             selectedOption = (selectedOption+1)%options.length;
+        }
+        if(xbox != null && xbox.isConnected()) {
+            prevUp = xbox.getLeftY() < -0.6f;
+            prevDown = xbox.getLeftY() > 0.6f;
+            prevExit = xbox.getB();
+            prevSelect = xbox.getA();
         }
 
         frame += delta * 10f;
@@ -149,12 +174,15 @@ public class LevelCompleteMode extends MenuMode {
     }
 
     public void exitScreen() {
-        if (selectedOption == 0) {
-            listener.exitScreen(this, NEXT_LEVEL_CODE);
-        } else if (selectedOption == 1) {
-            listener.exitScreen(this, RESTART_LEVEL_CODE);
-        } else if (selectedOption == 2) {
-            listener.exitScreen(this, EXIT_LEVEL_CODE);
+        if(!choiceMade) {
+            if (selectedOption == 0) {
+                listener.exitScreen(this, NEXT_LEVEL_CODE);
+            } else if (selectedOption == 1) {
+                listener.exitScreen(this, RESTART_LEVEL_CODE);
+            } else if (selectedOption == 2) {
+                listener.exitScreen(this, EXIT_LEVEL_CODE);
+            }
+            choiceMade = true;
         }
     }
 

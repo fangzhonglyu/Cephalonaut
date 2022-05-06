@@ -9,10 +9,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
+import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
 import javax.print.attribute.HashPrintServiceAttributeSet;
 
@@ -41,8 +44,6 @@ public class MainMenuNestedMode extends MenuMode {
 
     private int curLevel;
 
-    private InputController inputController;
-
     private Vector2 bounds,scale;
 
     private boolean levelSelected;
@@ -52,6 +53,11 @@ public class MainMenuNestedMode extends MenuMode {
     private Texture levelCompletedTexture;
 
     private int completedCheckpoints;
+    XBoxController xbox;
+    private boolean prevRight;
+    private boolean prevLeft;
+    private boolean prevExit;
+    private boolean prevSelect;
 
     private FilmStrip filmstrip;
     /** Animation Counter*/
@@ -99,9 +105,15 @@ public class MainMenuNestedMode extends MenuMode {
         silhouettes = new Texture[checkpoints];
         collectedItems = new Texture[checkpoints];
 
-        for(int i = 0; i < checkpoints; i++){
+        for(int i = 0; i < checkpoints; i++) {
             silhouettes[i] = sil;
             collectedItems[i] = collectedItem;
+        }
+        Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
+        if (controllers.size > 0) {
+            xbox = controllers.get( 0 );
+        } else {
+            xbox = null;
         }
     }
 
@@ -118,6 +130,8 @@ public class MainMenuNestedMode extends MenuMode {
     public void render(float delta) {
         if (levelSelected && listener != null) {
             levelSelected = false;
+            SoundController.playSound(6,1);
+
             listener.exitScreen(this, CHECKPOINT_SELECTED_CODE);
         } else {
             update(delta);
@@ -126,18 +140,28 @@ public class MainMenuNestedMode extends MenuMode {
     }
 
     private void update(float delta){
-        frame = (frame+delta*5f)%maxFrame;
 
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+        frame = (frame+delta*5f)%maxFrame;
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
             levelSelected = true;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D)){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
+                (xbox != null && xbox.isConnected() && xbox.getLeftX() > 0.6f && prevRight != xbox.getLeftX() > 0.6f)){
             completedCheckpoints = (completedCheckpoints+1)%checkpoints;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A)){
+            SoundController.playSound(4,1);
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A) ||
+                (xbox != null && xbox.isConnected() && xbox.getLeftX() < -0.6f && prevLeft != xbox.getLeftX() < -0.6f)){
             completedCheckpoints = completedCheckpoints == 0 ? checkpoints - 1 : completedCheckpoints - 1;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.isBackPressed()){
+            SoundController.playSound(4,1);
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
+                (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
             listener.exitScreen(this, NESTED_MENU_EXIT_CODE);
+        }
+        if(xbox != null && xbox.isConnected()) {
+            prevLeft = xbox.getLeftX() < -0.6f;
+            prevRight = xbox.getLeftX() > 0.6f;
+            prevExit = xbox.getB();
+            prevSelect = xbox.getA();
         }
     }
 

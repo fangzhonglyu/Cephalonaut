@@ -9,11 +9,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
+import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.LEVEL_SELECTED_CODE;
 
@@ -43,14 +45,17 @@ public class MainMenuMode extends MenuMode {
 
     private int curLevel;
 
-    private InputController inputController;
-
     private Vector2 bounds,scale;
 
     private boolean levelSelected;
 
     private Color tint;
     private Rectangle hitBox;
+    XBoxController xbox;
+    private boolean prevRight;
+    private boolean prevLeft;
+    private boolean prevExit;
+    private boolean prevSelect;
 
     private boolean shouldAnimate;
     private FilmStrip filmStrip;
@@ -114,6 +119,12 @@ public class MainMenuMode extends MenuMode {
 
         filmStrip = new FilmStrip(assets.getEntry("levelidle:level_"+curLevel, Texture.class), 1, 5);
         filmStrip.setFrame(0);
+        Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
+        if (controllers.size > 0) {
+            xbox = controllers.get( 0 );
+        } else {
+            xbox = null;
+        }
     }
 
     @Override
@@ -125,6 +136,7 @@ public class MainMenuMode extends MenuMode {
     public void render(float delta) {
         frame = (frame+delta*5f)%5;
         if (levelSelected && listener != null) {
+            SoundController.playSound(6,1);
             levelSelected = false;
             listener.exitScreen(this, LEVEL_SELECTED_CODE);
         } else {
@@ -148,18 +160,26 @@ public class MainMenuMode extends MenuMode {
     }
 
     private void update(float delta){
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || inputController.isSelectPressed()){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
             levelSelected = true;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
-                inputController.isNextPressed()){
+                (xbox != null && xbox.isConnected() && xbox.getLeftX() > 0.6f && prevRight != xbox.getLeftX() > 0.6f)){
             curLevel = (curLevel + 1) % NUM_LEVELS;
+            SoundController.playSound(4,1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A) ||
-                inputController.isPrevPressed()){
+                (xbox != null && xbox.isConnected() && xbox.getLeftX() < -0.6f && prevLeft != xbox.getLeftX() < -0.6f)){
             curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.isBackPressed()){
+            SoundController.playSound(4, 1);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
+                (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
             listener.exitScreen(this, RETURN_TO_START_CODE);
+        }
+        if(xbox != null && xbox.isConnected()) {
+            prevLeft = xbox.getLeftX() < -0.6f;
+            prevRight = xbox.getLeftX() > 0.6f;
+            prevExit = xbox.getB();
+            prevSelect = xbox.getA();
         }
         levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
     }

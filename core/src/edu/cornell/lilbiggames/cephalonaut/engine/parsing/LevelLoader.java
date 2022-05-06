@@ -12,6 +12,7 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements.LEAnimated;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -121,6 +122,10 @@ public class LevelLoader {
                 return LevelElement.Element.REFILL;
             case "Dialogue Trigger":
                 return LevelElement.Element.DIALOGUE_TRIGGER;
+            case "Engine":
+                return LevelElement.Element.ENGINE;
+            case "BrokenEngine":
+                return LevelElement.Element.BROKEN_ENGINE;
             default:
                 System.out.printf("WARNING: Unknown LevelElement type '%s'\n", element);
                 return LevelElement.Element.WALL;
@@ -267,7 +272,8 @@ public class LevelLoader {
 
         // Need to account that rotation is around the bottom-left origin in Tiled instead of the center origin here
         def.angle = -MathUtils.degreesToRadians * json.getFloat("rotation", 0);
-        Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x-def.width/2f, y-def.height/2f), def.angle);
+        //Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x-def.width/2f, y-def.height/2f), def.angle);
+        Vector2 pos = new Vector2(def.x, def.y).rotateAroundRad(new Vector2(x-0.5f, y-0.5f), def.angle);
         def.x = pos.x;
         def.y = pos.y;
     }
@@ -402,6 +408,55 @@ public class LevelLoader {
 
                         loadObject(levelElementDef, jsonObject, tileSize, levelHeight);
                         LevelElement newObject = LevelElement.create(levelElementDef);
+                        if(newObject.getElement() == LevelElement.Element.FINISH){
+                            LevelElement.Def levelElementDef2 = new LevelElement.Def();
+                            levelElementDef2.name = "sparkle";
+                            float x = (levelElementDef.x + levelElementDef.width/4);
+                            float y = (levelElementDef.y + levelElementDef.height/2 + .2f);
+                            levelElementDef2.x = x;
+                            levelElementDef2.y = y;
+                            levelElementDef2.width = .3f;
+                            levelElementDef2.height = .3f;
+
+                            levelElementDef2.vx = 0;
+                            levelElementDef2.vy = 0;
+
+                            levelElementDef2.angle = 0;
+                            levelElementDef2.element = LevelElement.Element.SPARKLE;
+                            levelElementDef2.canGrapple = false;
+                            levelElementDef2.density = 0;
+                            levelElementDef2.restitution = 0;
+                            levelElementDef2.isSensor = true;
+                            levelElementDef2.bodyType = BodyDef.BodyType.StaticBody;
+                            levelElementDef2.tint = Color.WHITE;
+                            levelElementDef2.texture = getTexture(level, gid);
+
+                            levelElementDef2.properties = null;
+                            levelElementDef2.vertices = null;
+                            LevelElement newObject2 = LevelElement.create(levelElementDef2);
+                            newObject2.setParallaxFactor(parallax);
+                            levelDef.addObject(newObject2);
+                            levelElementDef2.x = (levelElementDef.x - levelElementDef.width/2 - .2f);
+                            levelElementDef2.y = (levelElementDef.y - levelElementDef.height/2 - .1f);
+                            LevelElement newObject3 = LevelElement.create(levelElementDef2);
+                            newObject3.setParallaxFactor(parallax);
+                            levelDef.addObject(newObject3);
+                            levelElementDef2.x = (levelElementDef.x - levelElementDef.width/2 - .3f);
+                            levelElementDef2.y = (levelElementDef.y + levelElementDef.height/4);
+                            LevelElement newObject4 = LevelElement.create(levelElementDef2);
+                            newObject4.setParallaxFactor(parallax);
+                            levelDef.addObject(newObject4);
+                            levelElementDef2.x = (levelElementDef.x + levelElementDef.width/2 + .15f);
+                            levelElementDef2.y = (levelElementDef.y - levelElementDef.height/2 - .2f);
+                            LevelElement newObject5 = LevelElement.create(levelElementDef2);
+                            newObject5.setParallaxFactor(parallax);
+                            levelDef.addObject(newObject5);
+                            levelElementDef2.x = (levelElementDef.x + levelElementDef.width/2 + .5f);
+                            levelElementDef2.y = (levelElementDef.y);
+                            LevelElement newObject6 = LevelElement.create(levelElementDef2);
+                            newObject6.setParallaxFactor(parallax);
+                            levelDef.addObject(newObject6);
+                        }
                         newObject.setParallaxFactor(parallax);
                         levelDef.addObject(jsonObject.getInt("id"), newObject);
                     }

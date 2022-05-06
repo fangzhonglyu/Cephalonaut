@@ -121,8 +121,6 @@ public class GDXRoot extends Game implements ScreenListener {
 		postLoadingScreen = startScreenMode;
 		canvas.resize();
 		setScreen(assetLoadingScreen);
-
-
 	}
 
 	private void initializeCheckpointSelect(){
@@ -242,7 +240,9 @@ public class GDXRoot extends Game implements ScreenListener {
 		}
 
 		Gdx.input.setInputProcessor(new InputAdapter());
-		SoundController.killAllSound();
+		//
+		SoundController.setBlackHoleSound(false,1);
+		SoundController.setInkSound(false);
 		if(exitCode == MenuMode.START_CODE){
 			startScreenTransition(mainMenu);
 		} else if(exitCode == MenuMode.OPTIONS_CODE){
@@ -257,6 +257,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			selectLevel();
 		} else if (exitCode == MenuMode.EXIT_LEVEL_CODE) {
 			SoundController.startMenuMusic();
+			PlayMode.resetMusic();
 			playMode.pause();
 			SoundController.setPlaying(false);
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
@@ -281,6 +282,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			SoundController.killAllSound();
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			levelCompleteMode.resetFrame();
+			levelCompleteMode.resetChoiceMade();
 			levelCompleteMode.setSelectedOption(0);
 			levelCompleteMode.setTimer(playMode.getTimer());
 			levelCompleteMode.setTimeString(playMode.getTimeString());

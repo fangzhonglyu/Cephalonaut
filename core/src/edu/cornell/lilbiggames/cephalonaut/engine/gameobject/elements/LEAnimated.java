@@ -12,9 +12,12 @@ public class LEAnimated extends LevelElement {
     private float frame;
     private float updateFactor;
 
-    public LEAnimated(Def def, FilmStrip filmStrip,float updateFactor) {
+    public LEAnimated(Def def, FilmStrip filmStrip,float updateFactor, boolean randStart) {
         super(def);
         this.filmStrip = filmStrip;
+        if(randStart) {
+            frame = (float) (Math.random() * filmStrip.getCols());
+        }
         filmStrip.setFrame(0);
         setTexture(filmStrip);
         this.updateFactor = updateFactor;
@@ -23,8 +26,9 @@ public class LEAnimated extends LevelElement {
     @Override
     public void update(float delta) {
         frame += delta * updateFactor;
-        if (frame >= filmStrip.getSize())
+        if (frame >= filmStrip.getSize()) {
             frame = 0;
+        }
         filmStrip.setFrame((int) frame);
     }
 }

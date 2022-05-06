@@ -386,8 +386,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":464,
-                 "y":192
+                 "x":461.701149425287,
+                 "y":201.195402298851
                 }, 
                 {
                  "gid":136,
@@ -472,7 +472,7 @@
          "source":"..\/..\/objects.tsj"
         }, 
         {
-         "firstgid":146,
+         "firstgid":148,
          "source":"..\/..\/space-tiles.tsj"
         }],
  "tilewidth":16,

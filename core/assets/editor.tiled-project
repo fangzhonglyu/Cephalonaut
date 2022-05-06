@@ -94,7 +94,9 @@
                 "SpikeBall",
                 "ESpike",
                 "Refill",
-                "Dialogue Trigger"
+                "Dialogue Trigger",
+                "Engine",
+                "BrokenEngine"
             ],
             "valuesAsFlags": false
         }

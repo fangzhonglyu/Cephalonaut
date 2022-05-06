@@ -106,7 +106,7 @@
                  "y":417
                 }, 
                 {
-                 "gid":262,
+                 "gid":390,
                  "height":32,
                  "id":140,
                  "name":"",
@@ -118,7 +118,7 @@
                  "y":456.666666666667
                 }, 
                 {
-                 "gid":258,
+                 "gid":386,
                  "height":27,
                  "id":160,
                  "name":"start",
@@ -136,7 +136,7 @@
                         {
                          "name":"ink",
                          "type":"float",
-                         "value":100
+                         "value":10
                         }],
                  "rotation":0,
                  "type":"",
@@ -176,7 +176,7 @@
                  "y":482.999983333333
                 }, 
                 {
-                 "gid":262,
+                 "gid":390,
                  "height":32,
                  "id":187,
                  "name":"",
@@ -248,7 +248,7 @@
                  "y":240
                 }, 
                 {
-                 "gid":262,
+                 "gid":390,
                  "height":32,
                  "id":190,
                  "name":"",
@@ -260,7 +260,7 @@
                  "y":94
                 }, 
                 {
-                 "gid":264,
+                 "gid":392,
                  "height":48,
                  "id":191,
                  "name":"finish",
@@ -278,7 +278,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":193,
+ "nextobjectid":195,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -299,7 +299,7 @@
          "source":"..\/..\/space-tiles.tsj"
         }, 
         {
-         "firstgid":257,
+         "firstgid":385,
          "source":"..\/..\/objects.tsj"
         }],
  "tilewidth":16,

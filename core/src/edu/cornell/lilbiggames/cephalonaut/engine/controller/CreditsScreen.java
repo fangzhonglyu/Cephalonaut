@@ -8,10 +8,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GDXRoot;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
 public class CreditsScreen extends MenuMode implements Screen {
     private Credit[] credits;
@@ -22,6 +25,8 @@ public class CreditsScreen extends MenuMode implements Screen {
 
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
+    XBoxController xbox;
+    private boolean prevExit;
 
     private class Credit{
         public String name;
@@ -56,7 +61,12 @@ public class CreditsScreen extends MenuMode implements Screen {
         credits[5] = new Credit("barry",new String[]{"programmer","designer"},assets.getEntry("barry",Texture.class));
         credits[6] = new Credit("estelle",new String[]{"designer"},assets.getEntry("estelle",Texture.class));
         credits[7] = new Credit("alex",new String[]{"music"},assets.getEntry("alex",Texture.class));
-
+        Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
+        if (controllers.size > 0) {
+            xbox = controllers.get( 0 );
+        } else {
+            xbox = null;
+        }
     }
 
     @Override
@@ -68,8 +78,12 @@ public class CreditsScreen extends MenuMode implements Screen {
     public void render(float v) {
         InputController inputController = InputController.getInstance();
         inputController.readInput(new Rectangle(), new Vector2());
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || inputController.isBackPressed()){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
+                (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
             listener.exitScreen(this, MenuMode.RETURN_TO_START_CODE);
+        }
+        if(xbox != null && xbox.isConnected()) {
+            prevExit = xbox.getB();
         }
         canvas.begin();
         float width = canvas.getWidth();
