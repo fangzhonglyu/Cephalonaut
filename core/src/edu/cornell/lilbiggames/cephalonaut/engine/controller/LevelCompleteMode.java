@@ -271,15 +271,17 @@ public class LevelCompleteMode extends MenuMode {
 
         super.drawOptions(options, selectedOption, 150);
 
+        float x = canvas.getWidth() * 0.40f + canvas.getCameraX() - 120;
+        float y = canvas.getHeight() * 0.47f + canvas.getCameraY() - 5;
         for (int i = 0; i < 3; i++) {
                 canvas.draw(starStill, Color.WHITE,
                         starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
-                        width / 2f + 460 + 50 * i, height - 30,
+                        x + 50 * i, y,
                         0, 0.2f * scale.x, 0.2f * scale.y);
-                if (i < 2) {
+                if (i > 0) {
                     canvas.draw(starStill, Color.WHITE,
                             starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
-                            width / 2f + 510 + 50 * i, height - 90,
+                            x + 50 * i, height - 90,
                             0, 0.2f * scale.x, 0.2f * scale.y);
                 }
         }
