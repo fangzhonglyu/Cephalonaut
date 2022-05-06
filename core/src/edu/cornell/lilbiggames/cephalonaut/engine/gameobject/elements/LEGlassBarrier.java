@@ -12,7 +12,7 @@ public class LEGlassBarrier extends LevelElement {
     private Color indicator;
     private float alpha;
     private final float INDICATOR_DISTANCE = 5.0f;
-    private final float GLASS_BARRIER_HARDNESS = 10.0f;
+    private final float GLASS_BARRIER_HARDNESS = 9.0f;
 
     private boolean didBreak;
 
