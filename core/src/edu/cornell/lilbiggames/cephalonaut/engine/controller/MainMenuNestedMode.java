@@ -182,7 +182,8 @@ public class MainMenuNestedMode extends MenuMode {
                 20);
         float diff = 100;
         float start = width/2 - diff * (checkpoints/2);
-        for(int i = 0; i < checkpoints; i++){
+        canvas.drawTextCentered("World " + curLevel, displayFont, 300f);
+        for (int i = 0; i < checkpoints; i++){
             if(i <= completedCheckpoints){
                 canvas.draw(levelCompletedTexture, i*diff+start, height/2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
             } else {
