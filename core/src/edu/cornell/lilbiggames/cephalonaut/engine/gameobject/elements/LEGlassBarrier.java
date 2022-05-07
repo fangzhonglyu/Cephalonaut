@@ -42,7 +42,7 @@ public class LEGlassBarrier extends LevelElement {
     @Override
     public void update(float delta){
         if(isAnimating) {
-            frame += delta * 21f;
+            frame += delta * 28f;
             if (frame >= filmStrip.getSize()) {
                 isAnimating = false;
                 this.markRemoved(true);
