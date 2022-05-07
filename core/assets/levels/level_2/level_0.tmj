@@ -86,64 +86,6 @@
                  "y":872.372528173374
                 }, 
                 {
-                 "gid":250,
-                 "height":16,
-                 "id":224,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0.1,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"float",
-                         "value":12
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":82.178,
-                 "x":198.868347951671,
-                 "y":487.079654399226
-                }, 
-                {
-                 "gid":250,
-                 "height":16,
-                 "id":225,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0.1,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"float",
-                         "value":12
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":81.0548,
-                 "x":200.753841075111,
-                 "y":327.229549173137
-                }, 
-                {
                  "gid":397,
                  "height":24,
                  "id":226,
@@ -357,6 +299,52 @@
                  "width":46.5543,
                  "x":213.92748461363,
                  "y":748.835339047532
+                }, 
+                {
+                 "gid":405,
+                 "height":66.6061179438663,
+                 "id":247,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "restitution":0.2,
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":207.079420283048,
+                 "y":586.372084736595
+                }, 
+                {
+                 "gid":405,
+                 "height":70.2646688913649,
+                 "id":248,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "restitution":0.2,
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":207.48964747521,
+                 "y":316.657480767207
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -365,7 +353,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":244,
+ "nextobjectid":249,
  "orientation":"orthogonal",
  "properties":[
         {

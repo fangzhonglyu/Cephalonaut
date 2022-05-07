@@ -91,7 +91,7 @@ public class LevelElement extends SimpleObstacle {
         setTexture(def.texture);
     }
 
-    private static Texture sparksTexture;
+    private static Texture sparksTexture, glassBarrierTexture;
     private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture,spikeTexture,spikeBallTexture,engineTexture,brokenEngineTexture;
 
     public static void collectAssets(AssetDirectory assetDirectory){
@@ -113,6 +113,8 @@ public class LevelElement extends SimpleObstacle {
         engineTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         brokenEngineTexture = assetDirectory.getEntry("engine_broken_film.png",Texture.class);
         brokenEngineTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        glassBarrierTexture = assetDirectory.getEntry("GO-glass-filmstrip.png",Texture.class);
+        glassBarrierTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
 
     public static LevelElement create(Def def) {
@@ -128,7 +130,7 @@ public class LevelElement extends SimpleObstacle {
             case WORMHOLE:
                 return new LEWormHole(def, new FilmStrip(wormholeTexture,1,24));
             case GLASS_BARRIER:
-                return new LEGlassBarrier(def);
+                return new LEGlassBarrier(def, new FilmStrip(glassBarrierTexture, 1, 13));
             case DIALOGUE_TRIGGER:
                 return new LEDialogueTrigger(def);
             case START:
