@@ -136,6 +136,10 @@
         {
          "firstgid":129,
          "source":"..\/..\/objects.tsj"
+        }, 
+        {
+         "firstgid":148,
+         "source":"..\/..\/space-tiles.tsj"
         }],
  "tilewidth":16,
  "type":"map",
