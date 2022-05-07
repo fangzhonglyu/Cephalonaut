@@ -97,6 +97,8 @@ public class LevelElement extends SimpleObstacle {
     public static void collectAssets(AssetDirectory assetDirectory){
         wormholeTexture = assetDirectory.getEntry("A-wormhole-filmstrip.png",Texture.class);
         wormholeTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        blackHoleTexture = assetDirectory.getEntry("a:blackhole",Texture.class);
+        blackHoleTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         boostPadTexture = assetDirectory.getEntry("GO-boostpad-filmstrip.png",Texture.class);
         boostPadTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         electricSpiketexture = assetDirectory.getEntry("electric-spikes.png",Texture.class);
@@ -116,15 +118,15 @@ public class LevelElement extends SimpleObstacle {
     public static LevelElement create(Def def) {
         switch (def.element) {
             case BLACK_HOLE:
-                return new LEBlackHole(def);
+                return new LEBlackHole(def, new FilmStrip(blackHoleTexture, 1, 8));
             case BOOST_PAD:
-                return new LEBoostPad(def,new FilmStrip(boostPadTexture,1,7));
+                return new LEBoostPad(def, new FilmStrip(boostPadTexture,1,7));
             case DOOR:
                 return new LETriggerable(def);
             case BUTTON:
                 return new LETrigger(def);
             case WORMHOLE:
-                return new LEWormHole(def,new FilmStrip(wormholeTexture,1,24));
+                return new LEWormHole(def, new FilmStrip(wormholeTexture,1,24));
             case GLASS_BARRIER:
                 return new LEGlassBarrier(def);
             case DIALOGUE_TRIGGER:

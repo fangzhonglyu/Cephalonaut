@@ -321,7 +321,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	private void performScreenTransition(Screen nextScreen){
 		if (alpha >= 1) {
-			if(nextScreen == startScreenMode || nextScreen == settings || nextScreen == levelCompleteMode || nextScreen == mainMenu){
+			if(nextScreen == startScreenMode || nextScreen == settings || nextScreen == levelCompleteMode || nextScreen == mainMenu || nextScreen == mainMenuNestedMode){
 				((MenuMode)nextScreen).setDefault();
 			}
 			setScreen(nextScreen);
