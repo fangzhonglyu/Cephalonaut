@@ -17,6 +17,7 @@ public class LEGlassBarrier extends LevelElement {
     private float frame;
 
     private boolean didBreak;
+    private boolean disabled;
     private boolean isAnimating;
 
     public LEGlassBarrier(LevelElement.Def def, FilmStrip filmStrip) {
@@ -28,6 +29,7 @@ public class LEGlassBarrier extends LevelElement {
         this.tint = def.tint;
         this.indicator = new Color(tint.r, tint.g + 10, tint.b, tint.a);
         this.didBreak = false;
+        this.disabled = false;
         this.isAnimating = false;
     }
 
@@ -65,9 +67,19 @@ public class LEGlassBarrier extends LevelElement {
         return didBreak;
     }
 
+    public void disable() {
+        disabled = true;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
     public void reset() {
         this.glassBarrierHardness = GLASS_BARRIER_HARDNESS;
         didBreak = false;
+        isAnimating = false;
+        disabled = false;
         this.markRemoved(false);
     }
 }
