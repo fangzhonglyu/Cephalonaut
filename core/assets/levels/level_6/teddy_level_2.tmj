@@ -12,7 +12,7 @@
          "parallaxx":0.5,
          "parallaxy":0.5,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -108,78 +108,6 @@
                  "width":22.8332,
                  "x":203.290584419767,
                  "y":97.924836137481
-                }, 
-                {
-                 "gid":270,
-                 "height":10.2361756184038,
-                 "id":441,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"dx",
-                         "type":"float",
-                         "value":5
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":77.6287600880411,
-                 "x":177.453772254262,
-                 "y":124.704145253021
-                }, 
-                {
-                 "gid":270,
-                 "height":10.2362,
-                 "id":442,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":77.6288,
-                 "x":432.81965148466,
-                 "y":124.51953195259
-                }, 
-                {
-                 "gid":270,
-                 "height":10.2362,
-                 "id":443,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":77.6288,
-                 "x":690.242949219088,
-                 "y":125.136854009507
-                }, 
-                {
-                 "gid":270,
-                 "height":10.2362,
-                 "id":444,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":77.6288,
-                 "x":690.494118686639,
-                 "y":286.151381010743
-                }, 
-                {
-                 "gid":270,
-                 "height":10.2362,
-                 "id":445,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"dx",
-                         "type":"float",
-                         "value":5
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":77.6288,
-                 "x":434.025666575881,
-                 "y":285.394836904222
                 }, 
                 {
                  "gid":153,
@@ -307,7 +235,7 @@
                         {
                          "name":"target",
                          "type":"object",
-                         "value":441
+                         "value":510
                         }],
                  "rotation":0,
                  "type":"",
@@ -501,7 +429,7 @@
                  "visible":true,
                  "width":32,
                  "x":1221.38317757009,
-                 "y":404.560747663551
+                 "y":403.560747663551
                 }, 
                 {
                  "gid":400,
@@ -581,7 +509,7 @@
                         {
                          "name":"target",
                          "type":"object",
-                         "value":500
+                         "value":512
                         }],
                  "rotation":45,
                  "type":"",
@@ -589,24 +517,6 @@
                  "width":16,
                  "x":664.331297628036,
                  "y":551.58162827451
-                }, 
-                {
-                 "gid":270,
-                 "height":10.2362,
-                 "id":500,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"dx",
-                         "type":"float",
-                         "value":5
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":77.6288,
-                 "x":689.653687822486,
-                 "y":525.411882618218
                 }, 
                 {
                  "gid":170,
@@ -626,7 +536,7 @@
                         {
                          "name":"target",
                          "type":"object",
-                         "value":445
+                         "value":511
                         }],
                  "rotation":315,
                  "type":"",
@@ -706,6 +616,102 @@
                  "width":32,
                  "x":381.985989492119,
                  "y":658.693520140105
+                }, 
+                {
+                 "gid":246,
+                 "height":15.0792411159806,
+                 "id":510,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "type":"Door"
+                            }
+                        }, 
+                        {
+                         "name":"dx",
+                         "type":"float",
+                         "value":5
+                        }, 
+                        {
+                         "name":"dy",
+                         "type":"float",
+                         "value":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":80.6481942688037,
+                 "x":175.993366762743,
+                 "y":127.504084168849
+                }, 
+                {
+                 "gid":246,
+                 "height":15.0792,
+                 "id":511,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "type":"Door"
+                            }
+                        }, 
+                        {
+                         "name":"dx",
+                         "type":"float",
+                         "value":5
+                        }, 
+                        {
+                         "name":"dy",
+                         "type":"float",
+                         "value":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":80.6482,
+                 "x":432.203372527473,
+                 "y":288.284575824176
+                }, 
+                {
+                 "gid":246,
+                 "height":15.0792,
+                 "id":512,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "type":"Door"
+                            }
+                        }, 
+                        {
+                         "name":"dx",
+                         "type":"float",
+                         "value":5
+                        }, 
+                        {
+                         "name":"dy",
+                         "type":"float",
+                         "value":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":80.6482,
+                 "x":688.033849433496,
+                 "y":527.369447410312
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -714,7 +720,7 @@
          "y":0
         }],
  "nextlayerid":19,
- "nextobjectid":510,
+ "nextobjectid":513,
  "orientation":"orthogonal",
  "properties":[
         {
