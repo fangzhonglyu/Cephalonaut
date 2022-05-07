@@ -152,9 +152,11 @@ public class LevelCompleteMode extends MenuMode {
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftY() < -0.6f && prevUp != xbox.getLeftY() < -0.6f)){
             selectedOption = selectedOption == 0 ? options.length-1 : selectedOption-1;
+            SoundController.playSound(4,1);
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftY() > 0.6f && prevDown != xbox.getLeftY() > 0.6f)){
             selectedOption = (selectedOption+1)%options.length;
+            SoundController.playSound(4,1);
         }
         if(xbox != null && xbox.isConnected()) {
             prevUp = xbox.getLeftY() < -0.6f;
