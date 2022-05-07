@@ -224,10 +224,10 @@ public class MainMenuNestedMode extends MenuMode {
 
     public void setDefault() {
         checkpointHitBoxes = new Rectangle[checkpoints];
-        float diff = 100;
-        float start = canvas.getWidth() / 2 - diff * (checkpoints / 2);
+        float diff = levelCompletedTexture.getWidth()*2 + 20;
+        float start = canvas.getWidth()/2 - diff * (checkpoints/2) + levelCompletedTexture.getWidth() + 20;
         for (int i = 0; i < checkpoints; i++) {
-            checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 0.1f * levelTexture.getWidth(), 0.1f * levelTexture.getHeight());
+            checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 3f * levelTexture.getWidth(), 3f * levelTexture.getHeight());
         }
         Gdx.input.setInputProcessor(menuNestedInput);
     }
@@ -268,6 +268,8 @@ public class MainMenuNestedMode extends MenuMode {
                 canvas.draw(levelTexture, Color.WHITE, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, 3f, 3f);
                 canvas.draw(silhouettes[i], Color.WHITE, silhouettes[i].getWidth()/2, silhouettes[i].getHeight()/4, i * diff + start, height/2, 0, 2f, 2f);
             }
+
+            checkpointHitBoxes[i] = new Rectangle(i*diff+start - 3f * levelTexture.getWidth()/2f,canvas.getHeight() / 2, 3f * levelTexture.getWidth(), 3f * levelTexture.getHeight());
         }
 
         filmstrip.setFrame((int)frame);
