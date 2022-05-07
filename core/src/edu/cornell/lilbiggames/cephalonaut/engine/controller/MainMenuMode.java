@@ -49,7 +49,6 @@ public class MainMenuMode extends MenuMode {
 
     private boolean levelSelected;
 
-    private Color tint;
     private Rectangle hitBox;
     XBoxController xbox;
     private boolean prevRight;
@@ -123,7 +122,6 @@ public class MainMenuMode extends MenuMode {
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
 
-        tint = Color.WHITE;
         shouldAnimate = true;
 
         background = assets.getEntry( "BG-1-teal.png", Texture.class);
@@ -137,7 +135,7 @@ public class MainMenuMode extends MenuMode {
         levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
         filmStrips = new FilmStrip[7];
 
-        for(int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
             int cols = i == 6 ? 7 : 5;
             filmStrips[i] = new FilmStrip(assets.getEntry("levelidle:level_" + i, Texture.class), 1, cols);
             filmStrips[i].setFrame(0);
@@ -172,14 +170,6 @@ public class MainMenuMode extends MenuMode {
         Gdx.input.setInputProcessor(mainMenuInput);
         float x = Gdx.input.getX();
         float y = canvas.getHeight() - Gdx.input.getY();
-
-        if(hitBox != null){
-            if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
-                tint = Color.WHITE;
-            } else {
-                tint = Color.GRAY;
-            }
-        }
     }
 
     private void update(float delta){
@@ -264,13 +254,13 @@ public class MainMenuMode extends MenuMode {
             levelIconWidth = levelIcon.getWidth();
             levelIconHeight = levelIcon.getHeight();
 
-            canvas.draw(levelIcon, tint,
+            canvas.draw(levelIcon, Color.WHITE,
                     levelIconWidth / 2f, levelIconHeight / 2f,
                     width / 2f, height / 2f + 100,
                     0, imageScale * scale.x, imageScale * scale.y);
         } else {
             filmStrips[curLevel].setFrame((int)frame);
-            canvas.draw(filmStrips[curLevel], tint,
+            canvas.draw(filmStrips[curLevel], Color.WHITE,
                      levelIconWidth/ 2f,  levelIconHeight/ 2f,
                     width / 2f, height / 2f + 100,
                     0, imageScale * scale.x, imageScale * scale.y);

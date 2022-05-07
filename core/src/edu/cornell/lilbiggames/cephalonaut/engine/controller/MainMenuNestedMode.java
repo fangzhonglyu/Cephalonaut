@@ -225,8 +225,8 @@ public class MainMenuNestedMode extends MenuMode {
     public void setDefault() {
         populateIcons();
         checkpointHitBoxes = new Rectangle[checkpoints];
-        float diff = levelCompletedTexture.getWidth()*2 + 20;
-        float start = canvas.getWidth()/2 - diff * (checkpoints/2) + levelCompletedTexture.getWidth() + 20;
+        float diff = levelTexture.getWidth()*2 + 20;
+        float start = canvas.getWidth()/2 - diff * (checkpoints/2) + levelTexture.getWidth() + 20;
         for (int i = 0; i < checkpoints; i++) {
             checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 3f * levelTexture.getWidth(), 3f * levelTexture.getHeight());
         }
