@@ -110,7 +110,8 @@ public class SettingsMode extends MenuMode {
         this.canvas = canvas;
         this.listener = listener;
         this.keyBindings = keyBindings;
-        this.musicVolume = DEFAULT_VOLUME;
+        musicVolume = DEFAULT_VOLUME;
+        fxVolume = DEFAULT_VOLUME;
         options = keyBindings.keySet().toArray(new String[0]);
 
         background = assets.getEntry( "BG-1-teal.png", Texture.class );
@@ -125,10 +126,9 @@ public class SettingsMode extends MenuMode {
 
         keybindingMode = false;
         dragging = false;
-        musicVolumeSlider = new Slider(canvas, Color.PURPLE,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
+        musicVolumeSlider = new Slider(canvas, Color.YELLOW,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
         fxVolumeSlider = new Slider(canvas, Color.PURPLE,0.0f, 1.0f, fxVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
 
-        musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
         Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
         if (controllers.size > 0) {
             xbox = controllers.get( 0 );
