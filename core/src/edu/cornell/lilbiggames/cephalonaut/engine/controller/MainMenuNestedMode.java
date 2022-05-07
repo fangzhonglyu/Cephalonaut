@@ -141,7 +141,7 @@ public class MainMenuNestedMode extends MenuMode {
         silhouettes = new Texture[checkpoints];
         collectedItems = new Texture[checkpoints];
 
-        for(int i = 0; i < checkpoints; i++) {
+        for (int i = 0; i < checkpoints; i++) {
             silhouettes[i] = sil;
             collectedItems[i] = collectedItem;
         }
@@ -223,6 +223,7 @@ public class MainMenuNestedMode extends MenuMode {
     }
 
     public void setDefault() {
+        populateIcons();
         checkpointHitBoxes = new Rectangle[checkpoints];
         float diff = levelCompletedTexture.getWidth()*2 + 20;
         float start = canvas.getWidth()/2 - diff * (checkpoints/2) + levelCompletedTexture.getWidth() + 20;
