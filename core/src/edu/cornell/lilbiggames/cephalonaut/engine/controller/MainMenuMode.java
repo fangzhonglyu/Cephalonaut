@@ -58,8 +58,11 @@ public class MainMenuMode extends MenuMode {
     private boolean prevSelect;
 
     private boolean shouldAnimate;
-    private FilmStrip filmStrip;
+    private FilmStrip[] filmStrips;
     private float frame;
+
+    private Rectangle left;
+    private Rectangle right;
 
     protected InputAdapter mainMenuInput = new InputAdapter() {
         public boolean mouseMoved (int x, int screenY) {
@@ -81,6 +84,22 @@ public class MainMenuMode extends MenuMode {
             if(hitBox != null){
                 if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
                     levelSelected = true;
+                }
+            }
+
+            if(left != null){
+                if(left.x <= x && left.x + left.width >= x && left.y >= y && left.y - left.height <= y ){
+                    curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
+                    frame = 0;
+                    SoundController.playSound(4, 1);
+                }
+            }
+
+            if(right != null){
+                if(right.x <= x && right.x + right.width >= x && right.y >= y && right.y - right.height <= y ){
+                    curLevel = (curLevel + 1) % NUM_LEVELS;
+                    frame = 0;
+                    SoundController.playSound(4,1);
                 }
             }
 
@@ -116,9 +135,13 @@ public class MainMenuMode extends MenuMode {
 
         curLevel = DEFAULT_LEVEL;
         levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
+        filmStrips = new FilmStrip[7];
 
-        filmStrip = new FilmStrip(assets.getEntry("levelidle:level_"+curLevel, Texture.class), 1, 5);
-        filmStrip.setFrame(0);
+        for(int i = 0; i < 7; i++) {
+            int cols = i == 6 ? 7 : 5;
+            filmStrips[i] = new FilmStrip(assets.getEntry("levelidle:level_" + i, Texture.class), 1, cols);
+            filmStrips[i].setFrame(0);
+        }
         Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
         if (controllers.size > 0) {
             xbox = controllers.get( 0 );
@@ -166,10 +189,12 @@ public class MainMenuMode extends MenuMode {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftX() > 0.6f && prevRight != xbox.getLeftX() > 0.6f)){
             curLevel = (curLevel + 1) % NUM_LEVELS;
+            frame = 0;
             SoundController.playSound(4,1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftX() < -0.6f && prevLeft != xbox.getLeftX() < -0.6f)){
             curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
+            frame = 0;
             SoundController.playSound(4, 1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
                 (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
@@ -230,8 +255,10 @@ public class MainMenuMode extends MenuMode {
                 20,
                 20);
 
-        float levelIconWidth = filmStrip.getRegionWidth();
-        float levelIconHeight = filmStrip.getRegionHeight();
+        float levelIconWidth = filmStrips[curLevel].getRegionWidth();
+        float levelIconHeight = filmStrips[curLevel].getRegionHeight();
+
+        float imageScale = shouldAnimate ? (curLevel == 6 ? 0.3f : 1.5f) : 2f;
 
         if(!shouldAnimate) {
             levelIconWidth = levelIcon.getWidth();
@@ -240,29 +267,32 @@ public class MainMenuMode extends MenuMode {
             canvas.draw(levelIcon, tint,
                     levelIconWidth / 2f, levelIconHeight / 2f,
                     width / 2f, height / 2f + 100,
-                    0, 2f * scale.x, 2f * scale.y);
+                    0, imageScale * scale.x, imageScale * scale.y);
         } else {
-            filmStrip.setFrame((int)frame);
-            canvas.draw(filmStrip, tint,
+            filmStrips[curLevel].setFrame((int)frame);
+            canvas.draw(filmStrips[curLevel], tint,
                      levelIconWidth/ 2f,  levelIconHeight/ 2f,
                     width / 2f, height / 2f + 100,
-                    0, 1.5f * scale.x, 1.5f * scale.y);
+                    0, imageScale * scale.x, imageScale * scale.y);
         }
 
         // left arrow
         canvas.draw(leftArrow, Color.WHITE,
                 leftArrow.getWidth() / 2f, leftArrow.getHeight() / 2f,
                 width / 5f, height / 2f,
-                0, 5f * scale.x, 5f * scale.y);
+                0, 0.05f * scale.x, 0.05f * scale.y);
 
         //right arrow
         canvas.draw(rightArrow, Color.WHITE,
                 rightArrow.getWidth() / 2f, rightArrow.getHeight() / 2f,
-                width - width / 5f, height / 2f, 0, 5f * scale.x, 5f * scale.y);
+                width - width / 5f, height / 2f, 0, 0.05f * scale.x, 0.05f * scale.y);
 
-        hitBox = new Rectangle(width / 2f - (1.5f*scale.x)*levelIconWidth/2f, (height / 2f + 100) + (1.5f*scale.y)*levelIconHeight/2f, (1.5f*scale.x)*levelIconWidth, (1.5f*scale.y)*levelIconHeight);
+        hitBox = new Rectangle(width / 2f - scale.x*imageScale*levelIconWidth/2f, (height / 2f + 100) + scale.y*imageScale*levelIconHeight/2f, scale.x*imageScale*levelIconWidth, scale.y*imageScale*levelIconHeight);
+        left = new Rectangle(width/5f - 0.1f*leftArrow.getWidth()/2f, height/2f + 0.1f*scale.x* leftArrow.getHeight()/2f, 0.1f*leftArrow.getWidth(), 0.1f*leftArrow.getHeight());
+        right = new Rectangle(width - width/5f - 0.1f*rightArrow.getWidth()/2f, height/2f + 0.1f*scale.x* rightArrow.getHeight()/2f, 0.1f*rightArrow.getWidth(), 0.1f*rightArrow.getHeight());
 
-        canvas.drawTextCentered("WORLD " + (curLevel+1), displayFont, -levelIconHeight / 4f * scale.y - 100f);
+        float textHeight = Math.min((curLevel == 6 ? 0.3f : 1.5f)*filmStrips[curLevel].getRegionHeight(), 2f*levelIcon.getWidth())*scale.y;
+        canvas.drawTextCentered("WORLD " + (curLevel+1), displayFont, -textHeight+100f);
 
         canvas.end();
     }

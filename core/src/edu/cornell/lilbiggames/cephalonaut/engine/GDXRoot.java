@@ -67,6 +67,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private Screen postLoadingScreen;
 
 	private Map<Integer,Integer> numCheckpointsPerLevel;
+	private Map<Integer, ArrayList<Texture>> levelWinTextures;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -80,10 +81,10 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	private void initializeCheckpointsMap(){
 		numCheckpointsPerLevel = new HashMap<>();
-		JsonValue bindings = directory.getEntry("worldCheckpoints", JsonValue.class);
+		JsonValue checkpointMapping = directory.getEntry("worldCheckpoints", JsonValue.class);
 
 		for(int i = 0; i < 7; i++){
-			int checkpoints = bindings.getInt(String.valueOf(i));
+			int checkpoints = checkpointMapping.getInt(String.valueOf(i));
 			numCheckpointsPerLevel.put(i,checkpoints);
 		}
 
