@@ -661,6 +661,7 @@
                          "type":"class",
                          "value":
                             {
+                             "bodyType":"Kinematic",
                              "type":"Door"
                             }
                         }, 
@@ -693,6 +694,7 @@
                          "type":"class",
                          "value":
                             {
+                             "bodyType":"Kinematic",
                              "type":"Door"
                             }
                         }, 
