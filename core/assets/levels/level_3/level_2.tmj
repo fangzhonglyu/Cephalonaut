@@ -11,8 +11,6 @@
          "opacity":1,
          "parallaxx":0.5,
          "parallaxy":0.5,
-         "repeatx":true,
-         "repeaty":true,
          "type":"imagelayer",
          "visible":true,
          "x":0,
@@ -324,18 +322,6 @@
                  "y":304
                 }, 
                 {
-                 "gid":264,
-                 "height":48,
-                 "id":18,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":359.128771953618,
-                 "y":149.449243914016
-                }, 
-                {
                  "gid":42,
                  "height":32,
                  "id":19,
@@ -472,6 +458,18 @@
                  "width":31.6667,
                  "x":361.717670408163,
                  "y":589.469371088435
+                }, 
+                {
+                 "gid":279,
+                 "height":26,
+                 "id":24,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":34,
+                 "x":368,
+                 "y":160
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -480,7 +478,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":24,
+ "nextobjectid":25,
  "orientation":"orthogonal",
  "properties":[
         {
