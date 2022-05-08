@@ -3,9 +3,13 @@
     "part_0": ["Hi my name is michael the octopus!", "[W] press W to thrust.", "[AD] press A to rotate left and D to rotate right."]
   },
   "level_0:checkpoint_1": {
-    "part_0": ["[LEFT_CLICK] Left click your mouse to grapple!",
+    "part_0": ["[LEFT_CLICK] Left click your mouse to grapple.",
       "[RIGHT_CLICK] Right click to release.",
       "[SPACE] You can also press the space bar to release the grapple."]
+  },
+  "level_0:checkpoint_3": {
+    "part_0": ["Welcome to the Spike Lab!",
+      "Watch out for spikes, they will kill you!"]
   },
   "level_2:checkpoint_0": {
     "part_0": ["Try going fast to break the glass."]
