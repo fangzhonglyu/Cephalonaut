@@ -34,7 +34,7 @@
          "name":"Object Layer 1",
          "objects":[
                 {
-                 "gid":258,
+                 "gid":386,
                  "height":59,
                  "id":244,
                  "name":"",
@@ -46,10 +46,22 @@
                  "y":480
                 }, 
                 {
-                 "gid":264,
+                 "gid":392,
                  "height":48,
                  "id":245,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":false,
+                             "type":"Finish"
+                            }
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -85,7 +97,7 @@
          "source":"..\/..\/space-tiles.tsj"
         }, 
         {
-         "firstgid":257,
+         "firstgid":385,
          "source":"..\/..\/objects.tsj"
         }],
  "tilewidth":16,

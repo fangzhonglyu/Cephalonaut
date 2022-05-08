@@ -64,6 +64,18 @@
                  "height":48,
                  "id":9,
                  "name":"finish",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "canGrappleOn":false,
+                             "isSensor":false,
+                             "type":"Finish"
+                            }
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
