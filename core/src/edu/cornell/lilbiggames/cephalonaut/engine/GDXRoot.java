@@ -15,9 +15,11 @@
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.*;
+import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private Screen postLoadingScreen;
 
 	private Map<Integer,Integer> numCheckpointsPerLevel;
-	private Map<Integer, ArrayList<Texture>> levelWinTextures;
+	private Map<Integer, List<TextureRegion>> levelWinTextures;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -91,6 +93,18 @@ public class GDXRoot extends Game implements ScreenListener {
 		numCheckpointsCompleted = new ArrayList<>();
 		for(int i = 0; i < 7; i++){
 			numCheckpointsCompleted.add(0);
+		}
+	}
+
+	private void populateWinTextures(){
+		levelWinTextures = new HashMap<>();
+		for(int i = 0; i < 7; i++){
+			List<TextureRegion> textures = new ArrayList<>();
+			for(int j = 0; j < numCheckpointsPerLevel.get(i); j++){
+				TextureRegion winTexture = levelLoader.getWinTexture("level_"+i, "checkpoint_"+j);
+				if(winTexture != null) textures.add(winTexture);
+			}
+			levelWinTextures.put(i, (ArrayList<TextureRegion>) textures);
 		}
 	}
 
@@ -143,7 +157,6 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	public void selectLevel(){
 		String levelName = mainMenu.getCurLevel();
-		int curLevel = mainMenu.getCurLevelNumber();
 		String checkpointName = "checkpoint_" + mainMenuNestedMode.getNumCompletedCheckpoints();
 		playMode = new PlayMode(this, levelLoader, levelName, checkpointName, keyBindings, dialogueMode);
 		playMode.gatherAssets(directory);
@@ -219,12 +232,13 @@ public class GDXRoot extends Game implements ScreenListener {
 			initializeCheckpointsMap();
 			initializeKeybindings();
 			initializeDialogue();
+			populateWinTextures();
 
 			transitioning = false;
 
 			// Initialize the game world
 			mainMenu = new MainMenuMode(directory, canvas, this);
-			mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, numCheckpointsPerLevel.get(0),0, 0, this);
+			mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, numCheckpointsPerLevel.get(0),0, 0, this, levelWinTextures);
 			startScreenMode = new StartScreenMode(directory, canvas, this);
 
 			LevelElement.gatherAssets(directory);

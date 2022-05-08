@@ -20,6 +20,9 @@ import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
 import javax.print.attribute.HashPrintServiceAttributeSet;
 
+import java.util.List;
+import java.util.Map;
+
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.CHECKPOINT_SELECTED_CODE;
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.NESTED_MENU_EXIT_CODE;
 
@@ -68,7 +71,8 @@ public class MainMenuNestedMode extends MenuMode {
     private float maxFrame;
 
     private Texture[] silhouettes;
-    private Texture[] collectedItems;
+
+    private Map<Integer, List<TextureRegion>> winTextures;
 
     protected InputAdapter menuNestedInput = new InputAdapter() {
         public boolean mouseMoved (int x, int screenY) {
@@ -109,7 +113,7 @@ public class MainMenuNestedMode extends MenuMode {
      * @param assets    The asset directory to use
      * @param canvas 	The game canvas to draw to
      */
-    public MainMenuNestedMode(AssetDirectory assets, GameCanvas canvas, int checkpoints, int completedCheckpoints, int curLevel, ScreenListener listener){
+    public MainMenuNestedMode(AssetDirectory assets, GameCanvas canvas, int checkpoints, int completedCheckpoints, int curLevel, ScreenListener listener, Map<Integer, List<TextureRegion>> winTextures){
         super(assets, canvas, listener);
         this.canvas  = canvas;
         this.listener = listener;
@@ -118,6 +122,7 @@ public class MainMenuNestedMode extends MenuMode {
         displayFont = assets.getEntry("retro", BitmapFont.class);
         this.completedCheckpoints = completedCheckpoints;
         this.checkpoints = checkpoints;
+        this.winTextures = winTextures;
 
         this.curLevel = curLevel;
         background = assets.getEntry( "BG-1-teal.png", Texture.class);
@@ -137,13 +142,10 @@ public class MainMenuNestedMode extends MenuMode {
 
     private void populateIcons(){
         Texture sil = assets.getEntry( "alex-sil", Texture.class );
-        Texture collectedItem = assets.getEntry( "alex", Texture.class );
         silhouettes = new Texture[checkpoints];
-        collectedItems = new Texture[checkpoints];
 
         for(int i = 0; i < checkpoints; i++) {
             silhouettes[i] = sil;
-            collectedItems[i] = collectedItem;
         }
         Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
         if (controllers.size > 0) {
@@ -252,6 +254,8 @@ public class MainMenuNestedMode extends MenuMode {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
+
+        List<TextureRegion> winTexturesCurLevel = winTextures.get(curLevel);
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
@@ -259,14 +263,14 @@ public class MainMenuNestedMode extends MenuMode {
                 20,
                 20);
         float diff = levelCompletedTexture.getWidth()*2 + 20;
-        float start = width/2 - diff * (checkpoints/2) + levelCompletedTexture.getWidth() + 20;
+        float start = width/2 - diff * (checkpoints/2);
         for(int i = 0; i < checkpoints; i++) {
             if (i < completedCheckpoints) {
                 canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, 3f, 3f);
-                canvas.draw(collectedItems[i], Color.WHITE, collectedItems[i].getWidth()/2, collectedItems[i].getHeight()/4, i * diff + start, height/2, 0, 0.4f, 0.4f);
+                canvas.draw(winTexturesCurLevel.get(i), Color.WHITE, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, 1f, 1f);
             } else {
                 canvas.draw(levelTexture, Color.WHITE, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, 3f, 3f);
-                canvas.draw(silhouettes[i], Color.WHITE, silhouettes[i].getWidth()/2, silhouettes[i].getHeight()/4, i * diff + start, height/2, 0, 2f, 2f);
+                canvas.draw(winTexturesCurLevel.get(i), Color.BLACK, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, 1f, 1f);
             }
 
             checkpointHitBoxes[i] = new Rectangle(i*diff+start - 3f * levelTexture.getWidth()/2f,canvas.getHeight() / 2, 3f * levelTexture.getWidth(), 3f * levelTexture.getHeight());

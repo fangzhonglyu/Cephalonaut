@@ -346,6 +346,37 @@ public class LevelLoader {
         return textures.get(tileset.tiledFile).get(gid - tileset.firstgid);
     }
 
+    public TextureRegion getWinTexture(String levelName, String checkpointName){
+        JsonValue level = assetDirectory.getEntry(levelName+":"+checkpointName, JsonValue.class);
+        LevelElement.Def levelElementDef = new LevelElement.Def();
+
+        int levelWidth = level.getInt("width");
+        int levelHeight = level.getInt("height");
+        int tileSize = level.getInt("tilewidth");
+        assert tileSize == level.getInt("tileheight");
+
+        Properties levelProperties = new Properties(level.get("properties"));
+
+        LevelDef levelDef = new LevelDef(levelWidth, levelHeight, levelProperties.getInt("music", 1),
+                levelProperties.getInt("twoStars", 1), levelProperties.getInt("threeStars", 1));
+
+        for (JsonValue layer : level.get("layers")) {
+            if(layer.getString("type").equals("objectgroup")){
+                for (JsonValue jsonObject : layer.get("objects")) {
+                    int gid = jsonObject.getInt("gid");
+                    mergeJsons(jsonObject, getTiledObj(level, gid));
+                    levelElementDef.texture = getTexture(level, gid);
+                    loadObject(levelElementDef, jsonObject, tileSize, levelHeight);
+
+                    if(levelElementDef.element == LevelElement.Element.FINISH){
+                        return levelElementDef.texture;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public LevelDef loadLevel(String levelName, String checkpointName) {
         JsonValue level = assetDirectory.getEntry(levelName+":"+checkpointName, JsonValue.class);
         LevelElement.Def levelElementDef = new LevelElement.Def();

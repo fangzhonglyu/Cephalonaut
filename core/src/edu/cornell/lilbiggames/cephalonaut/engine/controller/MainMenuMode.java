@@ -45,8 +45,6 @@ public class MainMenuMode extends MenuMode {
 
     private int curLevel;
 
-    private Vector2 bounds,scale;
-
     private boolean levelSelected;
 
     private Color tint;
@@ -247,6 +245,8 @@ public class MainMenuMode extends MenuMode {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
+
+        displayFont.getData().setScale(scale.x);
 
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
