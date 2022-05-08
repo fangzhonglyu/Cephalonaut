@@ -231,27 +231,27 @@ public class SettingsMode extends MenuMode {
             i++;
         }
 
-        start = start - 1.5f*displayFont.getLineHeight()*i;
+        start = start - 2f*displayFont.getLineHeight()*i;
 
         displayFont.getData().setScale(0.7f*scale.x);
         displayFont.setColor(Color.ORANGE);
         canvas.drawText("VOLUME", displayFont, width*0.3f - musicVolumeSlider.getWidth()/2, start);
-        start = start-1.5f*displayFont.getLineHeight();
+        start = start-1.2f*displayFont.getLineHeight();
 
         displayFont.getData().setScale(0.5f*scale.x);
-        canvas.drawText("MUSIC", displayFont, width*0.3f - musicVolumeSlider.getWidth()/2, start-10);
-        canvas.drawText("SOUND EFFECTS", displayFont, width*0.7f  - fxVolumeSlider.getWidth()/2, start-10);
+        canvas.drawText("MUSIC", displayFont, width*0.3f - musicVolumeSlider.getWidth()/2, start);
+        canvas.drawText("SOUND EFFECTS", displayFont, width*0.7f  - fxVolumeSlider.getWidth()/2, start);
 
-        start = start-displayFont.getLineHeight();
+        start = start-1.5f*displayFont.getLineHeight();
         float sliderHeight = SLIDER_HEIGHT*scale.y;
 
-        musicVolumeSlider.updatePosition(width * 0.3f, start - 60);
+        musicVolumeSlider.updatePosition(width * 0.3f, start - sliderHeight/2);
         musicVolumeSlider.updateSize(width/4f, sliderHeight);
         musicVolumeSlider.draw();
 
 
         //soundfx
-        fxVolumeSlider.updatePosition(width*0.7f, start - 60);
+        fxVolumeSlider.updatePosition(width*0.7f, start - sliderHeight/2);
         fxVolumeSlider.updateSize(width/4f, sliderHeight);
         fxVolumeSlider.draw();
         canvas.end();
