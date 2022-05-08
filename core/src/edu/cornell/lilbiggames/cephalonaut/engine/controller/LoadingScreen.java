@@ -37,14 +37,14 @@ public class LoadingScreen extends MenuMode implements Screen {
         this.loadingTime = totalLoadingTime;
         this.totalLoadingTime = totalLoadingTime;
 
-        background = assets.getEntry( "main-menu:background", Texture.class );
+        background = assets.getEntry( "BG-1-teal.png", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
 
         filmStrips = new FilmStrip[NUM_FRAMES/FILM_STRIP_SIZE + 1];
-        System.out.println(Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*2));
+        //System.out.println(Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*2));
         for(int i = 0; i <= NUM_FRAMES/FILM_STRIP_SIZE; i++) {
             Texture loadingAnimation = assets.getEntry("loadingAnimation"+(i+1), Texture.class);
             filmStrips[i] = new FilmStrip(loadingAnimation, 1, Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1), Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1),
@@ -61,6 +61,8 @@ public class LoadingScreen extends MenuMode implements Screen {
     }
 
     public void render(float delta){
+        SoundController.setBlackHoleSound(false,1);
+        SoundController.setInkSound(false);
         if(loadingTime == 0){
             loadingTime = totalLoadingTime;
             listener.exitScreen(this,MenuMode.EXIT_LOADING_CODE);

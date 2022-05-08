@@ -8,9 +8,9 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":13,
+ "tilecount":19,
  "tiledversion":"1.8.2",
- "tileheight":66,
+ "tileheight":96,
  "tiles":[
         {
          "id":1,
@@ -138,8 +138,8 @@
                              "y":-34.5454545454545
                             }, 
                             {
-                             "x":19.6363636363636,
-                             "y":-44.1818181818182
+                             "x":18.9900347842436,
+                             "y":-44.9897292469682
                             }, 
                             {
                              "x":8.72727272727273,
@@ -196,8 +196,8 @@
         {
          "id":5,
          "image":"GO-blackhole.png",
-         "imageheight":32,
-         "imagewidth":32,
+         "imageheight":40,
+         "imagewidth":40,
          "objectgroup":
             {
              "draworder":"index",
@@ -205,39 +205,39 @@
              "objects":[
                     {
                      "height":0,
-                     "id":3,
+                     "id":2,
                      "name":"",
                      "polygon":[
                             {
-                             "x":0,
-                             "y":0
+                             "x":1.875,
+                             "y":0.875
                             }, 
                             {
-                             "x":7.45454545454546,
-                             "y":7.09090909090909
+                             "x":-4.375,
+                             "y":8.875
                             }, 
                             {
-                             "x":16.3636363636364,
-                             "y":4.90909090909091
+                             "x":-3.625,
+                             "y":18
                             }, 
                             {
-                             "x":18.5454545454545,
-                             "y":-3.27272727272727
+                             "x":6.125,
+                             "y":22
                             }, 
                             {
-                             "x":12.7272727272727,
-                             "y":-9.81818181818182
+                             "x":14.625,
+                             "y":14.125
                             }, 
                             {
-                             "x":3.81818181818182,
-                             "y":-10
+                             "x":10.375,
+                             "y":3
                             }],
                      "rotation":0,
                      "type":"",
                      "visible":true,
                      "width":0,
-                     "x":7.63636363636364,
-                     "y":16.7272727272727
+                     "x":15.75,
+                     "y":8.25
                     }],
              "opacity":1,
              "type":"objectgroup",
@@ -377,16 +377,16 @@
                              "y":0
                             }, 
                             {
-                             "x":0.271381578947368,
-                             "y":48.3059210526316
+                             "x":-1.34444055135253,
+                             "y":48.7906676917216
                             }, 
                             {
-                             "x":36.09375,
-                             "y":48.3059210526316
+                             "x":38.1943187693899,
+                             "y":48.6290854786916
                             }, 
                             {
-                             "x":34.7368421052632,
-                             "y":0
+                             "x":35.7063353834431,
+                             "y":0.16158221302999
                             }],
                      "rotation":0,
                      "type":"",
@@ -409,6 +409,7 @@
                  "value":
                     {
                      "canGrappleOn":false,
+                     "isSensor":true,
                      "type":"Finish"
                     }
                 }],
@@ -430,32 +431,32 @@
                      "name":"",
                      "polygon":[
                             {
-                             "x":0,
-                             "y":0
+                             "x":-4.52430196483971,
+                             "y":0.323164426059979
                             }, 
                             {
                              "x":-5.69901315789474,
                              "y":13.2976973684211
                             }, 
                             {
-                             "x":3.25657894736842,
-                             "y":40.1644736842105
+                             "x":-4.49936727807108,
+                             "y":41.7802958145104
                             }, 
                             {
-                             "x":42.8782894736842,
-                             "y":41.25
+                             "x":44.6556938170141,
+                             "y":41.08841778697
                             }, 
                             {
-                             "x":49.1200657894737,
-                             "y":27.9523026315789
+                             "x":50.5743057067436,
+                             "y":35.8698310700484
                             }, 
                             {
-                             "x":51.2911184210526,
-                             "y":11.6694078947368
+                             "x":51.7758650601426,
+                             "y":6.66035929080712
                             }, 
                             {
-                             "x":44.2351973684211,
-                             "y":0
+                             "x":47.3052594159909,
+                             "y":-0.16158221302999
                             }],
                      "rotation":0,
                      "type":"",
@@ -478,6 +479,7 @@
                  "value":
                     {
                      "canGrappleOn":false,
+                     "isSensor":true,
                      "type":"Finish"
                     }
                 }],
@@ -934,9 +936,395 @@
                  "type":"class",
                  "value":
                     {
+                     "canGrappleOn":false,
                      "type":"ESpike"
                     }
                 }]
+        }, 
+        {
+         "id":17,
+         "image":"engine.png",
+         "imageheight":96,
+         "imagewidth":48,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0.25,
+                             "y":24.875
+                            }, 
+                            {
+                             "x":6.25,
+                             "y":48.125
+                            }, 
+                            {
+                             "x":34,
+                             "y":47.875
+                            }, 
+                            {
+                             "x":40.25,
+                             "y":24.625
+                            }, 
+                            {
+                             "x":40,
+                             "y":0
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":3.875,
+                     "y":0
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "type":"Engine"
+                    }
+                }]
+        }, 
+        {
+         "id":18,
+         "image":"engine_broken.png",
+         "imageheight":96,
+         "imagewidth":48,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0.25,
+                             "y":24.875
+                            }, 
+                            {
+                             "x":6.25,
+                             "y":48.125
+                            }, 
+                            {
+                             "x":34,
+                             "y":47.875
+                            }, 
+                            {
+                             "x":40.25,
+                             "y":24.625
+                            }, 
+                            {
+                             "x":40,
+                             "y":0
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":3.75,
+                     "y":0.125
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "type":"BrokenEngine"
+                    }
+                }]
+        }, 
+        {
+         "id":20,
+         "image":"GO-glass-frame1.png",
+         "imageheight":48,
+         "imagewidth":16,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":2,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0,
+                             "y":47.4485228290063
+                            }, 
+                            {
+                             "x":3.70891418339941,
+                             "y":47.5764164215373
+                            }, 
+                            {
+                             "x":3.45312699833738,
+                             "y":-0.511574370124057
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":0.127893592531014,
+                     "y":0.383680777593043
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "restitution":0.2,
+                     "type":"Glass Barrier"
+                    }
+                }],
+         "type":"GameObject"
+        }, 
+        {
+         "id":21,
+         "image":"core.png",
+         "imageheight":40,
+         "imagewidth":40,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":-8.25,
+                             "y":8.5
+                            }, 
+                            {
+                             "x":-8.5,
+                             "y":32.5
+                            }, 
+                            {
+                             "x":-0.25,
+                             "y":40.5
+                            }, 
+                            {
+                             "x":22.75,
+                             "y":40.5
+                            }, 
+                            {
+                             "x":31,
+                             "y":31.75
+                            }, 
+                            {
+                             "x":31.5,
+                             "y":8.75
+                            }, 
+                            {
+                             "x":23,
+                             "y":0.25
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":8.75,
+                     "y":-0.5
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":22,
+         "image":"chip.png",
+         "imageheight":26,
+         "imagewidth":34,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":-4.25,
+                             "y":15.25
+                            }, 
+                            {
+                             "x":7,
+                             "y":26.25
+                            }, 
+                            {
+                             "x":24.75,
+                             "y":26.25
+                            }, 
+                            {
+                             "x":30,
+                             "y":0.25
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":4,
+                     "y":-0.25
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":23,
+         "image":"shield.png",
+         "imageheight":40,
+         "imagewidth":40,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":40,
+                             "y":0
+                            }, 
+                            {
+                             "x":37.75,
+                             "y":-26.25
+                            }, 
+                            {
+                             "x":26.5,
+                             "y":-36.75
+                            }, 
+                            {
+                             "x":11.25,
+                             "y":-36.5
+                            }, 
+                            {
+                             "x":0.75,
+                             "y":-25.5
+                            }],
+                     "properties":[
+                            {
+                             "name":"body",
+                             "propertytype":"GameObject",
+                             "type":"class",
+                             "value":
+                                {
+                                 "canGrappleOn":false,
+                                 "isSensor":true,
+                                 "type":"Finish"
+                                }
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":0,
+                     "y":40
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
         }],
  "tilewidth":59,
  "type":"tileset",

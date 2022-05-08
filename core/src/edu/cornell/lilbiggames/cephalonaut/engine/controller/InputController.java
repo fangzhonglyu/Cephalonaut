@@ -53,37 +53,19 @@ public class InputController {
 	private boolean tertiaryPressed;
 	private boolean tertiaryPrevious;
 
-	private boolean selectPressed;
-	private boolean selectPrevious;
-	private boolean prevPressed;
-	private boolean prevPrevious;
-	private boolean nextPressed;
-	private boolean nextPrevious;
-	private boolean upPressed;
-	private boolean upPrevious;
-	private boolean downPressed;
-	private boolean downPrevious;
 	/** Whether the debug toggle was pressed. */
 	private boolean debugPressed;
 	private boolean debugPrevious;
 	/** Whether the exit button was pressed. */
 	private boolean exitPressed;
 	private boolean exitPrevious;
-	private boolean backPressed;
-	private boolean backPrevious;
 
-	private Vector2 grappleDirec;
-	
-	/** How much did we move horizontally? */
-	private float horizontal;
-	/** How much did we move vertically? */
-	private float vertical;
+	private Vector2 stickDirec;
+
 	/** The crosshair position (for raddoll) */
 	private Vector2 crosshair;
 	/** The crosshair cache (for using as a return value) */
 	private Vector2 crosscache;
-	/** For the gamepad crosshair control */
-	private float momentum;
 
 	/** Forward thrust applied */
 	private boolean thrusterApplied;
@@ -93,12 +75,6 @@ public class InputController {
 	
 	/** An X-Box controller (if it is connected) */
 	XBoxController xbox;
-
-	// slider mouse control
-	private Vector2 startPosition;
-	private Vector2 endPosition;
-	private boolean isDragging;
-	private boolean didDrag;
 
 	private void setDefaultBindings(){
 		keyBindings.put("thrust",Input.Keys.valueOf("W"));
@@ -121,29 +97,6 @@ public class InputController {
 
 	public void setBindings(Map<String,Integer> keyBindings){
 		this.keyBindings = keyBindings;
-	}
-
-	
-	/**
-	 * Returns the amount of sideways movement. 
-	 *
-	 * -1 = left, 1 = right, 0 = still
-	 *
-	 * @return the amount of sideways movement. This should probably be used for rotation
-	 */
-	public float getHorizontal() {
-		return horizontal;
-	}
-	
-	/**
-	 * Returns the amount of vertical movement. 
-	 *
-	 * -1 = down, 1 = up, 0 = still
-	 *
-	 * @return the amount of vertical movement. This should probably not be used
-	 */
-	public float getVertical() {
-		return vertical;
 	}
 	
 	/**
@@ -237,56 +190,12 @@ public class InputController {
 		return thrusterApplied;
 	}
 
-	/**
-	 * Returns true if the player just selected something
-	 *
-	 * @return true if the select button was pressed
-	 */
-	public boolean isSelectPressed(){
-		return selectPressed && !selectPrevious;
-	}
-
-	/**
-	 * Returns true if the player indicated to go to next
-	 *
-	 * @return true if the next button was pressed
-	 */
-	public boolean isNextPressed(){
-		return nextPressed && !nextPrevious;
-	}
-
-	/**
-	 * Returns true if the player indicated to go to previous
-	 *
-	 * @return true if the prev button was pressed
-	 */
-	public boolean isPrevPressed(){
-		return prevPressed && !prevPrevious;
-	}
-
-	/**
-	 * Returns true if the player indicated to go to previous
-	 *
-	 * @return true if the prev button was pressed
-	 */
-	public boolean isUpPressed(){
-		return upPressed && !upPrevious;
-	}
 
 
-	public Vector2 getGrappleDirec(){
-		return grappleDirec;
-	}
-	/**
-	 * Returns true if the player indicated to go to previous
-	 *
-	 * @return true if the prev button was pressed
-	 */
-	public boolean isDownPressed(){
-		return downPressed && !downPrevious;
-	}
 
-	public boolean isBackPressed() { return backPressed && !backPrevious; }
+	public Vector2 getStickDirec(){
+		return stickDirec;
+	}
 
 	/**
 	 * Gets the rotation of the octopus
@@ -313,7 +222,7 @@ public class InputController {
 			xbox = null;
 		}
 
-		grappleDirec = new Vector2();
+		stickDirec = new Vector2();
 		keyBindings = new HashMap<>();
 		crosshair = new Vector2();
 		crosscache = new Vector2();
@@ -338,17 +247,11 @@ public class InputController {
 		resetPrevious  = resetPressed;
 		debugPrevious  = debugPressed;
 		exitPrevious = exitPressed;
-		selectPrevious = selectPressed;
-		nextPrevious = nextPressed;
-		prevPrevious = prevPressed;
-		backPrevious = backPressed;
-		upPrevious = upPressed;
-		downPrevious = downPressed;
-		
+
 		// Check to see if a GamePad is connected
 		if (xbox != null && xbox.isConnected()) {
 			readGamepad(bounds, scale);
-			//readKeyboard(bounds, scale, true); // Read as a back-up
+			readKeyboard(bounds, scale, true); // Read as a back-up
 		} else {
 			readKeyboard(bounds, scale, false);
 		}
@@ -369,33 +272,9 @@ public class InputController {
 		exitPressed  = xbox.getBack();
 		debugPressed  = xbox.getY();
 		primePressed = xbox.getRightTrigger() > 0.6f;
-		selectPressed = xbox.getA();
-		downPressed = xbox.getLeftY() > 0.6f;
-		upPressed = xbox.getLeftY() < -0.6f;
-		nextPressed = xbox.getLeftX() > 0.6f;
-		prevPressed = xbox.getLeftX() < -0.6f;
 		tertiaryPressed = xbox.getLeftTrigger() > 0.6f;
 //		tertiaryPressed = xbox.getLBumper();
-		backPressed = xbox.getB();
-		
-		// Move the crosshairs with the right stick.
-//		tertiaryPressed = xbox.getA();
-//		crosscache.set(xbox.getRightX(), xbox.getRightY());
-//		if (crosscache.len2() > GP_THRESHOLD) {
-//			momentum += GP_ACCELERATE;
-//			momentum = Math.min(momentum, GP_MAX_SPEED);
-//			crosscache.scl(momentum);
-//			crosscache.scl(1/scale.x,1/scale.y);
-//			crosshair.add(crosscache);
-//		} else {
-//			momentum = 0;
-//		}
-//		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT));
-//		tertiaryPressed = (secondary && tertiaryPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) ||
-//				(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT));
 
-		// Directional controls
-//		rotation = (secondary ? rotation : 0.0f);
 		rotation = 0.0f;
 		if (xbox.getLeftX() > 0.6f) {
 			rotation += 1.0f;
@@ -406,20 +285,15 @@ public class InputController {
 
 		thrusterApplied = xbox.getRightTrigger() > 0.6f;
 
-		if(grappleDirec.x > .6f || grappleDirec.x < -.6f || grappleDirec.y > .6f || grappleDirec.y < -.6f) {
+		if(stickDirec.x > .6f || stickDirec.x < -.6f || stickDirec.y > .6f || stickDirec.y < -.6f) {
 			secondaryPressed = true;
 		} else {
 			secondaryPressed = false;
 		}
 
-		grappleDirec.x = xbox.getRightX();
-		grappleDirec.y = -xbox.getRightY();
+		stickDirec.x = xbox.getRightX();
+		stickDirec.y = -xbox.getRightY();
 
-		// Mouse results
-//		crosshair.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
-//		crosshair.scl(1/scale.x,1/scale.y);
-
-//		clampPosition(bounds);
 	}
 
 	/**
@@ -437,14 +311,9 @@ public class InputController {
 		debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
 		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
 		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT));
-		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) && !selectPressed;;
-		selectPressed = ((secondary && selectPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))) && !exitPressed;
-		nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || (Gdx.input.isKeyJustPressed(Input.Keys.D)));
-		prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || (Gdx.input.isKeyJustPressed(Input.Keys.A)));
+		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE));
 		tertiaryPressed = (secondary && tertiaryPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) ||
 				(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT));
-		upPressed = (secondary && upPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.UP) || (Gdx.input.isKeyJustPressed(Input.Keys.W)));
-		downPressed = (secondary && downPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || (Gdx.input.isKeyJustPressed(Input.Keys.S)));
 
 		// Directional controls
 		rotation = (secondary ? rotation : 0.0f);
@@ -455,8 +324,9 @@ public class InputController {
 			rotation -= 1.0f;
 		}
 
-		thrusterApplied = Gdx.input.isKeyPressed((keyBindings.get("thrust")));
-		
+		thrusterApplied = (secondary ? thrusterApplied : false);
+		thrusterApplied = thrusterApplied || Gdx.input.isKeyPressed((keyBindings.get("thrust")));
+
 		// Mouse results
 		crosshair.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 		crosshair.scl(1/scale.x,1/scale.y);

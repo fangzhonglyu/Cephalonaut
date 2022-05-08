@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -59,6 +60,8 @@ public class MenuMode implements Screen {
                 for(int i = 0; i < optionsHitBoxes.length; i++){
                     Rectangle hitBox = optionsHitBoxes[i];
                     if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                        if(i!=selectedOption)
+                            SoundController.playSound(4,1);
                         selectedOption = i;
                         optionSelected(i);
                     }
@@ -69,18 +72,18 @@ public class MenuMode implements Screen {
 
         public boolean touchDown (int x, int screenY, int pointer, int button) {
             float y = canvas.getHeight() - screenY;
-            if(optionsHitBoxes != null){
-                for(int i = 0; i < optionsHitBoxes.length; i++){
+            if (optionsHitBoxes != null){
+                for (int i = 0; i < optionsHitBoxes.length; i++){
                     Rectangle hitBox = optionsHitBoxes[i];
-                    if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                    if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
                         selectedOption = i;
+                        SoundController.playSound(6,1);
                         exitScreen();
                     }
                 }
             }
             return true;
         }
-
     };
 
     public void exitScreen(){
@@ -104,13 +107,11 @@ public class MenuMode implements Screen {
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
 
-        background = assets.getEntry( "main-menu:background", Texture.class);
+        background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         arrow = assets.getEntry("arrow", Texture.class);
 
         this.assets = assets;
-
-
     }
 
     @Override
@@ -152,7 +153,9 @@ public class MenuMode implements Screen {
             }
             canvas.drawTextCentered(options[i], displayFont, start - 1.2f*displayFont.getLineHeight()*i - 2*displayFont.getLineHeight());
             displayFont.setColor(Color.ORANGE);
-            optionsHitBoxes[i] = new Rectangle(0,canvas.getHeight() / 2f + start - 1.2f*displayFont.getLineHeight() * i - 2 * displayFont.getLineHeight() - .6f*displayFont.getLineHeight(), canvas.getWidth(), 1.2f*displayFont.getLineHeight());
+            GlyphLayout layout = new GlyphLayout(displayFont, options[i]);
+            float x = (canvas.getWidth()  - layout.width) / 2.0f;
+            optionsHitBoxes[i] = new Rectangle(x,canvas.getHeight() / 2f + start - 1.2f*displayFont.getLineHeight() * i - 2 * displayFont.getLineHeight() - .6f*displayFont.getLineHeight(), 1.2f*layout.width, 1.2f*displayFont.getLineHeight());
 
         }
         displayFont.setColor(Color.WHITE);

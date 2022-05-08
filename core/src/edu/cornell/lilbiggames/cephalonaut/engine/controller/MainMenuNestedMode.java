@@ -1,20 +1,26 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.CHECKPOINT_SELECTED_CODE;
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.NESTED_MENU_EXIT_CODE;
 
 public class MainMenuNestedMode extends MenuMode {
-
 
     private int checkpoints;
 
@@ -36,8 +42,6 @@ public class MainMenuNestedMode extends MenuMode {
 
     private int curLevel;
 
-    private InputController inputController;
-
     private Vector2 bounds,scale;
 
     private boolean levelSelected;
@@ -46,7 +50,47 @@ public class MainMenuNestedMode extends MenuMode {
     private Texture levelTexture;
     private Texture levelCompletedTexture;
 
+    private Rectangle[] checkpointHitBoxes;
     private int completedCheckpoints;
+
+    XBoxController xbox;
+    private boolean prevRight;
+    private boolean prevLeft;
+    private boolean prevExit;
+    private boolean prevSelect;
+
+    protected InputAdapter menuNestedInput = new InputAdapter() {
+        public boolean mouseMoved (int x, int screenY) {
+            float y = canvas.getHeight() - screenY;
+
+            if (checkpointHitBoxes != null) {
+                for (int i = 0; i < checkpointHitBoxes.length; i++){
+                    Rectangle hitBox = checkpointHitBoxes[i];
+                    if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                        if (i != completedCheckpoints)
+                            SoundController.playSound(4,1);
+                        completedCheckpoints = i;
+                    }
+                }
+            }
+            return true;
+        }
+
+        public boolean touchDown (int x, int screenY, int pointer, int button) {
+            float y = canvas.getHeight() - screenY;
+            if (checkpointHitBoxes != null){
+                for (int i = 0; i < checkpointHitBoxes.length; i++){
+                    Rectangle hitBox = checkpointHitBoxes[i];
+                    if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
+                        completedCheckpoints = i;
+                        SoundController.playSound(6,1);
+                        levelSelected = true;
+                    }
+                }
+            }
+            return true;
+        }
+    };
 
     /**
      * Creates a MainMenuMode with the default size and position.
@@ -64,14 +108,24 @@ public class MainMenuNestedMode extends MenuMode {
         this.completedCheckpoints = completedCheckpoints;
         this.checkpoints = checkpoints;
 
-        background = assets.getEntry( "main-menu:background", Texture.class);
+        this.curLevel = curLevel;
+        background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.assets = assets;
 
-        this.curLevel = curLevel;
         octopusTexture = new TextureRegion(assets.getEntry( "octopus.png", Texture.class ));
         levelTexture = assets.getEntry( "level.png", Texture.class );
         levelCompletedTexture = assets.getEntry( "completedLevel.png", Texture.class );
+        Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
+        if (controllers.size > 0) {
+            xbox = controllers.get( 0 );
+        } else {
+            xbox = null;
+        }
+    }
+
+    public void setBackground() {
+        background = assets.getEntry( "BG-" + (curLevel + 1), Texture.class);
     }
 
     @Override
@@ -83,6 +137,8 @@ public class MainMenuNestedMode extends MenuMode {
     public void render(float delta) {
         if (levelSelected && listener != null) {
             levelSelected = false;
+            SoundController.playSound(6,1);
+
             listener.exitScreen(this, CHECKPOINT_SELECTED_CODE);
         } else {
             update(delta);
@@ -91,16 +147,26 @@ public class MainMenuNestedMode extends MenuMode {
     }
 
     private void update(float delta){
-        inputController = InputController.getInstance();
-        inputController.readInput(new Rectangle(), new Vector2());
-        if(inputController.isSelectPressed()){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
             levelSelected = true;
-        } else if (inputController.isNextPressed()){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
+                (xbox != null && xbox.isConnected() && xbox.getLeftX() > 0.6f && prevRight != xbox.getLeftX() > 0.6f)){
             completedCheckpoints = (completedCheckpoints+1)%checkpoints;
-        } else if(inputController.isPrevPressed()){
+            SoundController.playSound(4,1);
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A) ||
+                (xbox != null && xbox.isConnected() && xbox.getLeftX() < -0.6f && prevLeft != xbox.getLeftX() < -0.6f)){
             completedCheckpoints = completedCheckpoints == 0 ? checkpoints - 1 : completedCheckpoints - 1;
-        } else if(inputController.didExit() || inputController.isBackPressed()){
+            SoundController.playSound(4,1);
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
+                (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
             listener.exitScreen(this, NESTED_MENU_EXIT_CODE);
+        }
+        if(xbox != null && xbox.isConnected()) {
+            prevLeft = xbox.getLeftX() < -0.6f;
+            prevRight = xbox.getLeftX() > 0.6f;
+            prevExit = xbox.getB();
+            prevSelect = xbox.getA();
         }
     }
 
@@ -123,6 +189,16 @@ public class MainMenuNestedMode extends MenuMode {
     @Override
     public void dispose() {
 
+    }
+
+    public void setDefault() {
+        checkpointHitBoxes = new Rectangle[checkpoints];
+        float diff = 100;
+        float start = canvas.getWidth() / 2 - diff * (checkpoints / 2);
+        for (int i = 0; i < checkpoints; i++) {
+            checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 0.1f * levelTexture.getWidth(), 0.1f * levelTexture.getHeight());
+        }
+        Gdx.input.setInputProcessor(menuNestedInput);
     }
 
     public void setNumCheckpoints(int checkpoints){
@@ -153,7 +229,8 @@ public class MainMenuNestedMode extends MenuMode {
                 20);
         float diff = 100;
         float start = width/2 - diff * (checkpoints/2);
-        for(int i = 0; i < checkpoints; i++){
+        canvas.drawTextCentered("World " + curLevel, displayFont, 300f);
+        for (int i = 0; i < checkpoints; i++){
             if(i <= completedCheckpoints){
                 canvas.draw(levelCompletedTexture, i*diff+start, height/2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
             } else {

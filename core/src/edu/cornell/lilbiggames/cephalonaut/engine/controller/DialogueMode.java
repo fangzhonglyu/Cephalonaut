@@ -13,8 +13,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -51,6 +53,8 @@ public class DialogueMode {
     final private float KEY_WIDTH = 5f;
 
     private float frame;
+    XBoxController xbox;
+    private boolean prevSelect;
 
     /**
      * Creates a DialogueMode with the default size and position.
@@ -84,6 +88,12 @@ public class DialogueMode {
         frame = 0;
 
         this.displayFont = directory.getEntry("retro", BitmapFont.class);
+        Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
+        if (controllers.size > 0) {
+            xbox = controllers.get( 0 );
+        } else {
+            xbox = null;
+        }
     }
 
     public void load(String levelName, String checkpointName) {
@@ -122,12 +132,19 @@ public class DialogueMode {
         InputController input = InputController.getInstance();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) ||
                 Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) ||
-                Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) || input.isSelectPressed()) {
+                Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) ||
+                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())) {
             index+=1;
-
+            if(xbox != null && xbox.isConnected()) {
+                prevSelect = xbox.getA();
+            }
+            SoundController.playSound(6,1);
             if(index >= dialogue.get(part).size()) {
                 return false;
             }
+        }
+        if(xbox != null && xbox.isConnected()) {
+            prevSelect = xbox.getA();
         }
         return true;
 

@@ -38,7 +38,10 @@ public class LevelElement extends SimpleObstacle {
         SPIKE,
         SPIKEBALL,
         REFILL,
-        DIALOGUE_TRIGGER
+        DIALOGUE_TRIGGER,
+        SPARKLE,
+        ENGINE,
+        BROKEN_ENGINE
     }
 
     /** Type of element **/
@@ -88,11 +91,14 @@ public class LevelElement extends SimpleObstacle {
         setTexture(def.texture);
     }
 
-    private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture,spikeTexture,spikeBallTexture;
+    private static Texture sparksTexture, glassBarrierTexture;
+    private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture,spikeTexture,spikeBallTexture,engineTexture,brokenEngineTexture;
 
     public static void collectAssets(AssetDirectory assetDirectory){
         wormholeTexture = assetDirectory.getEntry("A-wormhole-filmstrip.png",Texture.class);
         wormholeTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        blackHoleTexture = assetDirectory.getEntry("a:blackhole",Texture.class);
+        blackHoleTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         boostPadTexture = assetDirectory.getEntry("GO-boostpad-filmstrip.png",Texture.class);
         boostPadTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         electricSpiketexture = assetDirectory.getEntry("electric-spikes.png",Texture.class);
@@ -101,32 +107,46 @@ public class LevelElement extends SimpleObstacle {
         spikeTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         spikeBallTexture = assetDirectory.getEntry("GO-spikeball-film.png",Texture.class);
         spikeBallTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        sparksTexture = assetDirectory.getEntry("UI-target-sparkle.png",Texture.class);
+        sparksTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        engineTexture = assetDirectory.getEntry("engine_film.png",Texture.class);
+        engineTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        brokenEngineTexture = assetDirectory.getEntry("engine_broken_film.png",Texture.class);
+        brokenEngineTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        glassBarrierTexture = assetDirectory.getEntry("GO-glass-filmstrip.png",Texture.class);
+        glassBarrierTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
 
     public static LevelElement create(Def def) {
         switch (def.element) {
             case BLACK_HOLE:
-                return new LEBlackHole(def);
+                return new LEBlackHole(def, new FilmStrip(blackHoleTexture, 1, 8));
             case BOOST_PAD:
-                return new LEBoostPad(def,new FilmStrip(boostPadTexture,1,7));
+                return new LEBoostPad(def, new FilmStrip(boostPadTexture,1,7));
             case DOOR:
                 return new LETriggerable(def);
             case BUTTON:
                 return new LETrigger(def);
             case WORMHOLE:
-                return new LEWormHole(def,new FilmStrip(wormholeTexture,1,24));
+                return new LEWormHole(def, new FilmStrip(wormholeTexture,1,24));
             case GLASS_BARRIER:
-                return new LEGlassBarrier(def);
+                return new LEGlassBarrier(def, new FilmStrip(glassBarrierTexture, 1, 13));
             case DIALOGUE_TRIGGER:
                 return new LEDialogueTrigger(def);
             case START:
                 return new LEStart(def);
             case ESPIKE:
-                return new LEAnimated(def,new FilmStrip(electricSpiketexture,1,8),7);
+                return new LEAnimated(def,new FilmStrip(electricSpiketexture,1,8),7, false);
             case SPIKE:
-                return new LEAnimated(def,new FilmStrip(spikeTexture,1,9),7);
+                return new LEAnimated(def,new FilmStrip(spikeTexture,1,9),7, false);
+            case SPARKLE:
+                return new LEAnimated(def,new FilmStrip(sparksTexture,1,6),5, true);
             case SPIKEBALL:
-                return new LEAnimated(def,new FilmStrip(spikeBallTexture,1,7),7);
+                return new LEAnimated(def,new FilmStrip(spikeBallTexture,1,7),7, false);
+            case ENGINE:
+                return new LEAnimated(def,new FilmStrip(engineTexture,1,6),5,false);
+            case BROKEN_ENGINE:
+                return new LEAnimated(def,new FilmStrip(brokenEngineTexture,1,6),5,false);
             default:
                 return new LevelElement(def);
         }

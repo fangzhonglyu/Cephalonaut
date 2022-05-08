@@ -1,12 +1,13 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 public class LETriggerable extends LevelElement {
     // TODO: Clean this up a bit. I just copied code over and it could be a bit nicer.
 
-    static final float MOVE_SPEED = 10f;
+    static final float MOVE_SPEED = 20f;
 
     final protected Vector2 originalPos;
     final protected Vector2 activatedPos;
@@ -21,6 +22,7 @@ public class LETriggerable extends LevelElement {
 
         dx = def.properties.getFloat("dx", 0);
         dy = def.properties.getFloat("dy", 3);
+        setBodyType(BodyDef.BodyType.KinematicBody);
         originalPos = getPosition().cpy();
         // TODO: Make these adjustable parameters
         activatedPos = getPosition().cpy().add(dx, dy);
