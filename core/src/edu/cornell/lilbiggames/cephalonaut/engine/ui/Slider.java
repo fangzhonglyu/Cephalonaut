@@ -73,7 +73,7 @@ public class Slider {
 
     public void movedX(float newX){
         knobPosition = new Vector2(newX, y);
-        value = 0.95f * Math.min(1,Math.max(0,(knobPosition.x - (x-sliderWidth/2.0f))/ sliderWidth));
+        value = 0.942f * Math.min(1,Math.max(0,(knobPosition.x - (x-sliderWidth/2.0f))/ sliderWidth));
         knobPosition = new Vector2((x-sliderWidth/2.0f) + value*sliderWidth, y);
     }
 
