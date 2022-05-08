@@ -86,64 +86,6 @@
                  "y":872.372528173374
                 }, 
                 {
-                 "gid":250,
-                 "height":16,
-                 "id":224,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0.1,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"float",
-                         "value":12
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":82.178,
-                 "x":198.868347951671,
-                 "y":487.079654399226
-                }, 
-                {
-                 "gid":250,
-                 "height":16,
-                 "id":225,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0.1,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"float",
-                         "value":12
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":81.0548,
-                 "x":200.753841075111,
-                 "y":327.229549173137
-                }, 
-                {
                  "gid":397,
                  "height":24,
                  "id":226,
@@ -163,8 +105,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":224.748480332127,
-                 "y":651.879134456515
+                 "x":224,
+                 "y":672
                 }, 
                 {
                  "gid":397,
@@ -186,8 +128,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":222.781227397947,
-                 "y":545.376663006331
+                 "x":224,
+                 "y":544
                 }, 
                 {
                  "gid":397,
@@ -209,124 +151,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":225.434582248046,
-                 "y":414.768182728912
-                }, 
-                {
-                 "gid":250,
-                 "height":16,
-                 "id":229,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0.1,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"float",
-                         "value":12
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":116.710720368445,
-                 "x":73.6933876394991,
-                 "y":408.175344202394
-                }, 
-                {
-                 "gid":250,
-                 "height":16,
-                 "id":230,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0.1,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"float",
-                         "value":12
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":116.711,
-                 "x":292.283951173033,
-                 "y":407.008046074363
-                }, 
-                {
-                 "gid":250,
-                 "height":16,
-                 "id":231,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0.1,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"float",
-                         "value":14
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":93.48893904209,
-                 "x":79.9420516967907,
-                 "y":759.822638055527
-                }, 
-                {
-                 "gid":250,
-                 "height":16,
-                 "id":232,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":0.1,
-                             "tint":"#ff93bde5",
-                             "type":"Glass Barrier"
-                            }
-                        }, 
-                        {
-                         "name":"glassBarrierHardness",
-                         "type":"float",
-                         "value":14
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":93.4889,
-                 "x":307.972531132075,
-                 "y":760.650217706821
+                 "x":224,
+                 "y":416
                 }, 
                 {
                  "gid":215,
@@ -357,6 +183,144 @@
                  "width":46.5543,
                  "x":213.92748461363,
                  "y":748.835339047532
+                }, 
+                {
+                 "gid":405,
+                 "height":64,
+                 "id":247,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "restitution":0.2,
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":208,
+                 "y":592
+                }, 
+                {
+                 "gid":405,
+                 "height":64,
+                 "id":248,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "restitution":0.2,
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":208,
+                 "y":320
+                }, 
+                {
+                 "gid":405,
+                 "height":112,
+                 "id":249,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "restitution":0.2,
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":288,
+                 "y":400
+                }, 
+                {
+                 "gid":405,
+                 "height":112,
+                 "id":250,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "restitution":0.2,
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":80,
+                 "y":400
+                }, 
+                {
+                 "gid":405,
+                 "height":95.7007012987716,
+                 "id":251,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "restitution":0.2,
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":16.2340680356047,
+                 "x":78.4646354362142,
+                 "y":751.882965982198
+                }, 
+                {
+                 "gid":405,
+                 "height":95.5953551772607,
+                 "id":252,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+                             "restitution":0.2,
+                             "type":"Glass Barrier"
+                            }
+                        }],
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":16.2276159767896,
+                 "x":306.217014659479,
+                 "y":752.23058791536
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -365,7 +329,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":244,
+ "nextobjectid":253,
  "orientation":"orthogonal",
  "properties":[
         {
