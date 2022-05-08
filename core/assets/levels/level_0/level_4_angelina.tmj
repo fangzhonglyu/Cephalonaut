@@ -58,7 +58,7 @@
                          "value":
                             {
                              "canGrappleOn":false,
-                             "isSensor":false,
+                             "isSensor":true,
                              "type":"Finish"
                             }
                         }],
