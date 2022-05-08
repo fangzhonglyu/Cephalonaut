@@ -110,7 +110,8 @@ public class SettingsMode extends MenuMode {
         this.canvas = canvas;
         this.listener = listener;
         this.keyBindings = keyBindings;
-        this.musicVolume = DEFAULT_VOLUME;
+        musicVolume = DEFAULT_VOLUME;
+        fxVolume = DEFAULT_VOLUME;
         options = keyBindings.keySet().toArray(new String[0]);
 
         background = assets.getEntry( "BG-1-teal.png", Texture.class );
