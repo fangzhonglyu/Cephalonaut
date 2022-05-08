@@ -8,7 +8,7 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":15,
+ "tilecount":19,
  "tiledversion":"1.8.2",
  "tileheight":96,
  "tiles":[
@@ -201,7 +201,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":3,
              "name":"",
              "objects":[
                     {
@@ -410,6 +409,7 @@
                  "value":
                     {
                      "canGrappleOn":false,
+                     "isSensor":true,
                      "type":"Finish"
                     }
                 }],
@@ -479,6 +479,7 @@
                  "value":
                     {
                      "canGrappleOn":false,
+                     "isSensor":true,
                      "type":"Finish"
                     }
                 }],
@@ -1065,8 +1066,267 @@
                      "type":"BrokenEngine"
                     }
                 }]
+        }, 
+        {
+         "id":20,
+         "image":"GO-glass-frame1.png",
+         "imageheight":48,
+         "imagewidth":16,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":2,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0,
+                             "y":47.4485228290063
+                            }, 
+                            {
+                             "x":3.70891418339941,
+                             "y":47.5764164215373
+                            }, 
+                            {
+                             "x":3.45312699833738,
+                             "y":-0.511574370124057
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":0.127893592531014,
+                     "y":0.383680777593043
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "restitution":0.2,
+                     "type":"Glass Barrier"
+                    }
+                }],
+         "type":"GameObject"
+        }, 
+        {
+         "id":21,
+         "image":"core.png",
+         "imageheight":40,
+         "imagewidth":40,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":-8.25,
+                             "y":8.5
+                            }, 
+                            {
+                             "x":-8.5,
+                             "y":32.5
+                            }, 
+                            {
+                             "x":-0.25,
+                             "y":40.5
+                            }, 
+                            {
+                             "x":22.75,
+                             "y":40.5
+                            }, 
+                            {
+                             "x":31,
+                             "y":31.75
+                            }, 
+                            {
+                             "x":31.5,
+                             "y":8.75
+                            }, 
+                            {
+                             "x":23,
+                             "y":0.25
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":8.75,
+                     "y":-0.5
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":22,
+         "image":"chip.png",
+         "imageheight":26,
+         "imagewidth":34,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":-4.25,
+                             "y":15.25
+                            }, 
+                            {
+                             "x":7,
+                             "y":26.25
+                            }, 
+                            {
+                             "x":24.75,
+                             "y":26.25
+                            }, 
+                            {
+                             "x":30,
+                             "y":0.25
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":4,
+                     "y":-0.25
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":23,
+         "image":"shield.png",
+         "imageheight":40,
+         "imagewidth":40,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":40,
+                             "y":0
+                            }, 
+                            {
+                             "x":37.75,
+                             "y":-26.25
+                            }, 
+                            {
+                             "x":26.5,
+                             "y":-36.75
+                            }, 
+                            {
+                             "x":11.25,
+                             "y":-36.5
+                            }, 
+                            {
+                             "x":0.75,
+                             "y":-25.5
+                            }],
+                     "properties":[
+                            {
+                             "name":"body",
+                             "propertytype":"GameObject",
+                             "type":"class",
+                             "value":
+                                {
+                                 "canGrappleOn":false,
+                                 "isSensor":true,
+                                 "type":"Finish"
+                                }
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":0,
+                     "y":40
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
         }],
- "tilewidth":160,
+ "tilewidth":59,
  "type":"tileset",
  "version":"1.8"
 }

@@ -288,7 +288,10 @@ public class LevelController implements ContactListener {
                 LEGlassBarrier glassBarrier = (LEGlassBarrier) contactObject;
                 if(glassBarrier.isBroken()) {
                     contact.setEnabled(false);
-                    cephalonaut.setVX(cephalonaut.getVX() * .7f);
+                    if(!glassBarrier.isDisabled()) {
+                        cephalonaut.setVX(cephalonaut.getVX() * .5f);
+                    }
+                    glassBarrier.disable();
                 }
             }
         }
