@@ -815,13 +815,12 @@ public class GameCanvas {
 		float x = slider.getPosition().x;
 		float y = slider.getPosition().y;
 		spriteBatch.end();
-		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRen.setColor(Color.WHITE);
+		shapeRen.begin(ShapeRenderer.ShapeType.Line);
+		shapeRen.setColor(slider.getColor());
 		shapeRen.rect(x - slider.getWidth()/2.0f, y, slider.getWidth(), slider.getHeight());
-		shapeRen.setColor(slider.getColor());
-		shapeRen.rect((x-slider.getWidth()/2.0f), y, slider.getWidth()*slider.getValue(), slider.getHeight());
-		shapeRen.setColor(slider.getColor());
-		shapeRen.circle(slider.getKnobPosition().x, y + slider.getHeight()/2f, slider.getKnobRadius(), 1000);
+		shapeRen.end();
+		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRen.rect(slider.getKnobPosition().x, y - slider.getHeight()/2f, slider.getKnobRadius(), 2*slider.getKnobRadius());
 		shapeRen.end();
 		spriteBatch.begin();
 	}
