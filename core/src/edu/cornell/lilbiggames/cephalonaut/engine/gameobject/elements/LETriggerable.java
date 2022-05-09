@@ -2,6 +2,7 @@ package edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 public class LETriggerable extends LevelElement {
@@ -39,6 +40,7 @@ public class LETriggerable extends LevelElement {
     public void setActivated(boolean activated) {
         targetPos = activated ? activatedPos : originalPos;
         setLinearVelocity(targetPos.cpy().sub(getPosition()).setLength(MOVE_SPEED));
+        //SoundController.playSound(9,1);
     }
 
 }

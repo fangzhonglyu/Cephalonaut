@@ -101,7 +101,7 @@ public class LevelController implements ContactListener {
         Vector2 blackHolePos = blackHole.getBody().getWorldCenter();
         Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
         float dist = blackHolePos.dst(cephalonautPos);
-        float soundRange = blackHole.getBlackHoleRange()*2.5f;
+        float soundRange = blackHole.getBlackHoleRange()*1.5f;
         if ( dist < closestBlackHole && dist< soundRange){
             closestBlackHole = blackHolePos.dst(cephalonautPos);
             SoundController.setBlackHoleSound(true,1f-Math.min(1f,dist/soundRange));
