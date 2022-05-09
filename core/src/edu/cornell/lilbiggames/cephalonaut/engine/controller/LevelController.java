@@ -137,15 +137,13 @@ public class LevelController implements ContactListener {
     }
 
     public void hit(LEGlassBarrier obj) {
-        float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
-        obj.hit(hitSpeed);
+        obj.hit(cephalonaut.getLinearVelocity().len());
     }
 
     public void willHit(LEGlassBarrier obj) {
         Vector2 glassBarrierPos = obj.getBody().getWorldCenter();
         Vector2 cephalonautPos = cephalonaut.getBody().getWorldCenter();
-        float hitSpeed = (float) Math.sqrt(Math.pow(cephalonaut.getVX(), 2) + Math.pow(cephalonaut.getVY(), 2));
-        obj.willBreak(hitSpeed, glassBarrierPos.dst(cephalonautPos));
+        obj.willBreak(cephalonaut.getLinearVelocity().len(), glassBarrierPos.dst(cephalonautPos));
     }
 
 
