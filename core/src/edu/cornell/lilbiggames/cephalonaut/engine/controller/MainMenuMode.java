@@ -266,23 +266,25 @@ public class MainMenuMode extends MenuMode {
                     0, imageScale * scale.x, imageScale * scale.y);
         }
 
+        float textHeight = Math.min((curLevel == 6 ? 0.3f : 1.5f)*filmStrips[curLevel].getRegionHeight(), 2f*levelIcon.getWidth())*scale.y;
+        canvas.drawTextCentered("WORLD " + (curLevel+1), displayFont, -textHeight+100f);
+
         // left arrow
         canvas.draw(leftArrow, Color.WHITE,
                 leftArrow.getWidth() / 2f, leftArrow.getHeight() / 2f,
-                width / 5f, height / 2f,
+                width / 5f, height/2-textHeight+100f,
                 0, 0.05f * scale.x, 0.05f * scale.y);
 
         //right arrow
         canvas.draw(rightArrow, Color.WHITE,
                 rightArrow.getWidth() / 2f, rightArrow.getHeight() / 2f,
-                width - width / 5f, height / 2f, 0, 0.05f * scale.x, 0.05f * scale.y);
+                width - width / 5f, height/2 -textHeight+100f, 0, 0.05f * scale.x, 0.05f * scale.y);
 
         hitBox = new Rectangle(width / 2f - scale.x*imageScale*levelIconWidth/2f, (height / 2f + 100) + scale.y*imageScale*levelIconHeight/2f, scale.x*imageScale*levelIconWidth, scale.y*imageScale*levelIconHeight);
-        left = new Rectangle(width/5f - 0.1f*leftArrow.getWidth()/2f, height/2f + 0.1f*scale.x* leftArrow.getHeight()/2f, 0.1f*leftArrow.getWidth(), 0.1f*leftArrow.getHeight());
-        right = new Rectangle(width - width/5f - 0.1f*rightArrow.getWidth()/2f, height/2f + 0.1f*scale.x* rightArrow.getHeight()/2f, 0.1f*rightArrow.getWidth(), 0.1f*rightArrow.getHeight());
+        left = new Rectangle(width/5f - 0.1f*leftArrow.getWidth()/2f, height/2-textHeight+100f + 0.1f*scale.x* leftArrow.getHeight()/2f, 0.1f*leftArrow.getWidth(), 0.1f*leftArrow.getHeight());
+        right = new Rectangle(width - width/5f - 0.1f*rightArrow.getWidth()/2f, height/2-textHeight+100f + 0.1f*scale.x* rightArrow.getHeight()/2f, 0.1f*rightArrow.getWidth(), 0.1f*rightArrow.getHeight());
 
-        float textHeight = Math.min((curLevel == 6 ? 0.3f : 1.5f)*filmStrips[curLevel].getRegionHeight(), 2f*levelIcon.getWidth())*scale.y;
-        canvas.drawTextCentered("WORLD " + (curLevel+1), displayFont, -textHeight+100f);
+
 
         canvas.end();
     }

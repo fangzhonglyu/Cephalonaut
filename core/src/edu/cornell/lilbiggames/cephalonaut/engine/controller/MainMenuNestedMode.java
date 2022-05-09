@@ -48,8 +48,6 @@ public class MainMenuNestedMode extends MenuMode {
 
     private int curLevel;
 
-    private Vector2 bounds,scale;
-
     private boolean levelSelected;
 
     private TextureRegion octopusTexture;
@@ -227,8 +225,8 @@ public class MainMenuNestedMode extends MenuMode {
     public void setDefault() {
         populateIcons();
         checkpointHitBoxes = new Rectangle[checkpoints];
-        float diff = levelTexture.getWidth()*2 + 20;
-        float start = canvas.getWidth()/2 - diff * (checkpoints/2) + levelTexture.getWidth() + 20;
+        float diff = scale.x*levelTexture.getWidth()*2 + scale.x*20f;
+        float start = canvas.getWidth()/2 - diff * (checkpoints/2) + levelTexture.getWidth();
         for (int i = 0; i < checkpoints; i++) {
             checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 3f * levelTexture.getWidth(), 3f * levelTexture.getHeight());
         }
@@ -256,6 +254,7 @@ public class MainMenuNestedMode extends MenuMode {
         float height = canvas.getHeight();
         float width = canvas.getWidth();
 
+
         List<TextureRegion> winTexturesCurLevel = winTextures.get(curLevel);
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
@@ -263,18 +262,18 @@ public class MainMenuNestedMode extends MenuMode {
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
                 20,
                 20);
-        float diff = levelCompletedTexture.getWidth()*2 + 20;
-        float start = width/2 - diff * (checkpoints/2);
+        float diff = scale.x*levelCompletedTexture.getWidth()*2  + scale.x*20f;
+        float start = width/2 - diff * ((checkpoints-1)/2f);
         for(int i = 0; i < checkpoints; i++) {
             if (i < completedCheckpoints) {
-                canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, 3f, 3f);
-                canvas.draw(winTexturesCurLevel.get(i), Color.WHITE, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, 1f, 1f);
+                canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
+                canvas.draw(winTexturesCurLevel.get(i), Color.WHITE, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, scale.x*1f, scale.y*1f);
             } else {
-                canvas.draw(levelTexture, Color.WHITE, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, 3f, 3f);
-                canvas.draw(winTexturesCurLevel.get(i), Color.BLACK, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, 1f, 1f);
+                canvas.draw(levelTexture, Color.WHITE, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
+                canvas.draw(winTexturesCurLevel.get(i), Color.BLACK, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, scale.x*1f, scale.y*1f);
             }
 
-            checkpointHitBoxes[i] = new Rectangle(i*diff+start - 3f * levelTexture.getWidth()/2f,canvas.getHeight() / 2, 3f * levelTexture.getWidth(), 3f * levelTexture.getHeight());
+            checkpointHitBoxes[i] = new Rectangle(i*diff+start - scale.x*3f * levelTexture.getWidth()/2f,canvas.getHeight() / 2, scale.x*3f * levelTexture.getWidth(), scale.x*3f * levelTexture.getHeight());
         }
 
         filmstrip.setFrame((int)frame);
@@ -284,6 +283,11 @@ public class MainMenuNestedMode extends MenuMode {
         canvas.draw(filmstrip, Color.WHITE, ox, 0,
                 start + completedCheckpoints*diff, height/2 + 10,
                 0, scale.x*2, scale.y*2);
+
+        displayFont.setColor(YELLOW);
+        displayFont.getData().setScale(0.6f);
+        canvas.drawText("WORLD " + (curLevel+1), displayFont, width*0.2f, height*0.9f);
+        displayFont.setColor(Color.WHITE);
 
         canvas.end();
     }
