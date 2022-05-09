@@ -25,6 +25,9 @@ import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.ui.Slider;
 
+import java.sql.Time;
+import java.util.Date;
+
 /**
  * Primary view class for the game, abstracting the basic graphics calls.
  * 
@@ -101,7 +104,8 @@ public class GameCanvas {
 	private final FrameBuffer fgFrame;
 	private final FrameBuffer temp;
 
-
+	private final float[] blackHoles = new float[60];
+	private int blackHoleCount;
 
 	/**
 	 * Creates a new GameCanvas determined by the application configuration.
@@ -462,7 +466,7 @@ public class GameCanvas {
 	 * Nothing is flushed to the graphics card until the method end() is called.
 	 */
     public void begin() {
-		bh.set(-10000, -10000);
+		blackHoleCount = 0;
 
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		fgFrame.begin();
@@ -482,9 +486,11 @@ public class GameCanvas {
     	active = DrawPass.STANDARD;
     }
 
-	private final Vector2 bh = new Vector2();
-	public void setBH(float x, float y) {
-		bh.set(x, y);
+	public void setBH(float x, float y, float radius) {
+		blackHoles[3 * blackHoleCount] = x - (camera.position.x - camera.viewportWidth / 2f);
+		blackHoles[3 * blackHoleCount + 1] = y - (camera.position.y - camera.viewportHeight / 2f);
+		blackHoles[3 * blackHoleCount + 2] = radius;
+		blackHoleCount++;
 	}
 
 	/**
@@ -507,16 +513,21 @@ public class GameCanvas {
 		// Draw accretion disk from bgFrame onto temp
 		temp.begin();
 		spriteBatch.setShader(accretionShader);
-		accretionShader.setUniformf("u_bh", bh.x - x, bh.y - y);
+//		accretionShader.setUniformf("u_radius", 16 );
+		accretionShader.setUniform3fv("u_bh", blackHoles, 0, 3 * blackHoleCount);
+		accretionShader.setUniformi("u_bh_count", blackHoleCount);
 		accretionShader.setUniformf("u_res", 1920, 1080);
-		shaderProgram.setUniformMatrix("u_projTrans", spriteBatch.getProjectionMatrix());
+		accretionShader.setUniformf("u_time", (System.currentTimeMillis() % 1000000) / 1000f);
+
+		//		shaderProgram.setUniformMatrix("u_projTrans", spriteBatch.getProjectionMatrix());
 		spriteBatch.draw(bgFrame.getColorBufferTexture(), x, y, getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), false, true);
 		spriteBatch.flush();
 		temp.end();
 
 		// Draw black hole warping from temp onto screen
 		spriteBatch.setShader(shaderProgram);
-		shaderProgram.setUniformf("u_bh", bh.x - x, bh.y - y);
+		shaderProgram.setUniform3fv("u_bh", blackHoles, 0, 3 * blackHoleCount);
+		shaderProgram.setUniformi("u_bh_count", blackHoleCount);
 		shaderProgram.setUniformf("u_res", 1920, 1080);
 		spriteBatch.draw(temp.getColorBufferTexture(), x, y, getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), false, true);
 
@@ -709,6 +720,22 @@ public class GameCanvas {
 		// Call the master drawing method (more efficient that base method)
 		holder.setRegion(image);
 		draw(holder,tint,ox,oy,x,y,angle,sx,sy);
+	}
+
+	public void drawFg(Texture image, Color tint, float ox, float oy,
+					 float x, float y, float angle, float sx, float sy) {
+		if (active != DrawPass.STANDARD) {
+			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+			return;
+		}
+
+		// Call the master drawing method (more efficient that base method)
+		spriteBatch.flush();
+		fgFrame.begin();
+		holder.setRegion(image);
+		draw(holder,tint,ox,oy,x,y,angle,sx,sy);
+		spriteBatch.flush();
+		bgFrame.begin();
 	}
 	
 	/**
@@ -1275,8 +1302,12 @@ public class GameCanvas {
 			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
 			return;
 		}
+		spriteBatch.flush();
+		fgFrame.begin();
 		GlyphLayout layout = new GlyphLayout(font,text);
 		font.draw(spriteBatch, layout, x, y);
+		spriteBatch.flush();
+		bgFrame.begin();
     }
 
 	/**
@@ -1313,11 +1344,15 @@ public class GameCanvas {
 			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
 			return;
 		}
-		
+
+		spriteBatch.flush();
+		fgFrame.begin();
 		GlyphLayout layout = new GlyphLayout(font,text);
 		float x = (getWidth()  - layout.width) / 2.0f;
 		float y = (getHeight() + layout.height) / 2.0f;
 		font.draw(spriteBatch, layout, x, y+offset);
+		spriteBatch.flush();
+		bgFrame.begin();
     }
     
 	/**

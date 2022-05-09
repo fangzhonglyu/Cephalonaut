@@ -38,6 +38,6 @@ public class LEBlackHole extends LevelElement {
     @Override
     public void draw(GameCanvas canvas) {
         super.draw(canvas);
-        canvas.setBH(getX() * drawScale.x, getY() * drawScale.y);
+        canvas.setBH(getX() * drawScale.x, getY() * drawScale.y, blackHoleRange * drawScale.x);
     }
 }
