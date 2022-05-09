@@ -11,8 +11,6 @@
          "opacity":1,
          "parallaxx":0.5,
          "parallaxy":0.5,
-         "repeatx":true,
-         "repeaty":true,
          "type":"imagelayer",
          "visible":true,
          "x":0,
@@ -34,29 +32,6 @@
                  "width":32,
                  "x":496.666666666667,
                  "y":608.666666666667
-                }, 
-                {
-                 "gid":131,
-                 "height":16,
-                 "id":22,
-                 "name":"finish",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "type":"Finish"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":81.6666666666667,
-                 "y":90.3333333333333
                 }, 
                 {
                  "gid":19,
@@ -191,6 +166,18 @@
                  "width":32,
                  "x":54.5629697806412,
                  "y":598.911489492253
+                }, 
+                {
+                 "gid":131,
+                 "height":32,
+                 "id":37,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":77.67985887406,
+                 "y":94.476300046019
                 }],
          "offsetx":127.32014112594,
          "offsety":294.523699953981,
@@ -256,7 +243,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":37,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

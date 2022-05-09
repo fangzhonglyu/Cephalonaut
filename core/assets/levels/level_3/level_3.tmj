@@ -70,34 +70,6 @@
          "name":"Object Layer 1",
          "objects":[
                 {
-                 "gid":258,
-                 "height":27,
-                 "id":2,
-                 "name":"start",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "type":"Start"
-                            }
-                        }, 
-                        {
-                         "name":"ink",
-                         "type":"float",
-                         "value":1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":22.8814,
-                 "x":368,
-                 "y":592
-                }, 
-                {
                  "gid":269,
                  "height":24,
                  "id":5,
@@ -878,6 +850,18 @@
                  "width":32,
                  "x":368,
                  "y":80
+                }, 
+                {
+                 "gid":258,
+                 "height":32,
+                 "id":93,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":363.5,
+                 "y":585.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -886,7 +870,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":93,
+ "nextobjectid":94,
  "orientation":"orthogonal",
  "properties":[
         {
