@@ -418,11 +418,6 @@ public class GameCanvas {
 	 * Clear the screen so we can start a new animation frame
 	 */
 	public void clear() {
-    	// Clear the screen
-		bgFrame.end();
-		Gdx.gl.glClearColor(0.047f, 0.086f, 0.31f, 1.0f);  // Homage to the XNA years
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		bgFrame.begin();
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -433,6 +428,9 @@ public class GameCanvas {
 		temp.begin();
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		temp.end();
+
+		Gdx.gl.glClearColor(0.047f, 0.086f, 0.31f, 1.0f);  // Homage to the XNA years
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	}
 
 	/**
@@ -543,12 +541,22 @@ public class GameCanvas {
     }
 
 	public void drawFade(float fadeOut) {
+		if (active == DrawPass.STANDARD) {
+			spriteBatch.end();
+			bgFrame.end();
+		}
+
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(0, 0, 0, fadeOut);
 		shapeRen.rect(getCameraX() - getWidth() / 2f, getCameraY() - getHeight() / 2f, getWidth(), getHeight());
 		shapeRen.end();
+
+		if (active == DrawPass.STANDARD) {
+			spriteBatch.begin();
+			bgFrame.begin();
+		}
 	}
 
 	public void drawDialogueBox(float fade) {
@@ -891,6 +899,29 @@ public class GameCanvas {
 		computeTransform(ox,oy,x,y,angle,sx,sy);
 		spriteBatch.setColor(tint);
 		spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
+	}
+
+	public void drawFg(TextureRegion region, Color tint, float ox, float oy,
+					 float x, float y, float angle, float sx, float sy) {
+		if (active != DrawPass.STANDARD) {
+			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+			return;
+		}
+
+		spriteBatch.flush();
+		bgFrame.end();
+		fgFrame.begin();
+
+		// BUG: The draw command for texture regions does not work properly.
+		// There is a workaround, but it will break if the bug is fixed.
+		// For now, it is better to set the affine transform directly.
+		computeTransform(ox,oy,x,y,angle,sx,sy);
+		spriteBatch.setColor(tint);
+		spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
+
+		spriteBatch.flush();
+		fgFrame.end();
+		bgFrame.begin();
 	}
 
 	public void drawSimpleFuelBar(float ink, float maxInk, float x, float y) {
