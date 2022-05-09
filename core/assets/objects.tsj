@@ -8,29 +8,30 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":19,
+ "tilecount":25,
  "tiledversion":"1.8.2",
  "tileheight":96,
  "tiles":[
         {
          "id":1,
-         "image":"octopus.png",
-         "imageheight":59,
-         "imagewidth":50,
+         "image":"A-michael-still.png",
+         "imageheight":32,
+         "imagewidth":32,
          "objectgroup":
             {
              "draworder":"index",
+             "id":2,
              "name":"",
              "objects":[
                     {
                      "ellipse":true,
-                     "height":58.7272727272727,
+                     "height":31.0909090909091,
                      "id":1,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":38.5454545454545,
+                     "width":20,
                      "x":6,
                      "y":-1.77635683940025e-15
                     }],
@@ -60,17 +61,18 @@
         }, 
         {
          "id":2,
-         "image":"squid.png",
-         "imageheight":66,
-         "imagewidth":54,
+         "image":"A-barry-still.png",
+         "imageheight":32,
+         "imagewidth":32,
          "objectgroup":
             {
              "draworder":"index",
+             "id":2,
              "name":"",
              "objects":[
                     {
                      "height":0,
-                     "id":3,
+                     "id":4,
                      "name":"",
                      "polygon":[
                             {
@@ -78,95 +80,43 @@
                              "y":0
                             }, 
                             {
-                             "x":2.54545454545455,
-                             "y":13.6363636363636
+                             "x":-6.18181818181818,
+                             "y":3.09090909090909
                             }, 
                             {
-                             "x":7.81818181818182,
-                             "y":17.8181818181818
+                             "x":-9.09090909090909,
+                             "y":7.09090909090909
                             }, 
                             {
-                             "x":14.7272727272727,
-                             "y":21.4545454545455
+                             "x":-6,
+                             "y":18
                             }, 
                             {
-                             "x":36.9090909090909,
-                             "y":21.4545454545455
+                             "x":-11.4545454545455,
+                             "y":29.6363636363636
                             }, 
                             {
-                             "x":54,
-                             "y":7.27272727272727
+                             "x":9.45454545454545,
+                             "y":30
                             }, 
                             {
-                             "x":54.3636363636364,
-                             "y":0.363636363636367
-                            }, 
-                            {
-                             "x":50,
-                             "y":-0.54545454545454
-                            }, 
-                            {
-                             "x":53.0909090909091,
-                             "y":-8.18181818181818
-                            }, 
-                            {
-                             "x":51.4545454545455,
-                             "y":-15.6363636363636
-                            }, 
-                            {
-                             "x":47.4545454545455,
-                             "y":-18.7272727272727
-                            }, 
-                            {
-                             "x":41.4545454545455,
-                             "y":-13.0909090909091
-                            }, 
-                            {
-                             "x":42,
-                             "y":-32.7272727272727
-                            }, 
-                            {
-                             "x":37.2727272727273,
-                             "y":-38.1818181818182
-                            }, 
-                            {
-                             "x":30.9090909090909,
-                             "y":-38.3636363636364
-                            }, 
-                            {
-                             "x":27.4545454545455,
-                             "y":-34.5454545454545
-                            }, 
-                            {
-                             "x":18.9900347842436,
-                             "y":-44.9897292469682
+                             "x":6.90909090909091,
+                             "y":15.6363636363636
                             }, 
                             {
                              "x":8.72727272727273,
-                             "y":-19.0909090909091
+                             "y":9.27272727272727
                             }, 
                             {
-                             "x":12.1818181818182,
-                             "y":-15.8181818181818
-                            }, 
-                            {
-                             "x":13.8181818181818,
-                             "y":0.909090909090914
-                            }, 
-                            {
-                             "x":10.7272727272727,
-                             "y":4.18181818181819
-                            }, 
-                            {
-                             "x":2.72727272727273,
-                             "y":-1.27272727272727
+                             "x":5.81818181818182,
+                             "y":2.18181818181819
                             }],
                      "rotation":0,
                      "type":"",
                      "visible":true,
                      "width":0,
-                     "x":-0.363636363636364,
-                     "y":44.1818181818182
+                     "x":16.1818181818182,
+                     "y":36.1818181818182
                     }],
              "opacity":1,
              "type":"objectgroup",
@@ -176,12 +126,25 @@
             },
          "properties":[
                 {
+                 "name":"animation",
+                 "propertytype":"animation",
+                 "type":"class",
+                 "value":
+                    {
+                     "cols":5,
+                     "rows":1,
+                     "textureNum":6,
+                     "update":7
+                    }
+                }, 
+                {
                  "name":"body",
                  "propertytype":"GameObject",
                  "type":"class",
                  "value":
                     {
                      "canGrappleOn":false,
+                     "isSensor":true,
                      "type":"Finish"
                     }
                 }],
@@ -196,11 +159,12 @@
         {
          "id":5,
          "image":"GO-blackhole.png",
-         "imageheight":40,
-         "imagewidth":40,
+         "imageheight":48,
+         "imagewidth":48,
          "objectgroup":
             {
              "draworder":"index",
+             "id":3,
              "name":"",
              "objects":[
                     {
@@ -236,8 +200,8 @@
                      "type":"",
                      "visible":true,
                      "width":0,
-                     "x":15.75,
-                     "y":8.25
+                     "x":20.1136363636364,
+                     "y":12.6136363636364
                     }],
              "opacity":1,
              "type":"objectgroup",
@@ -1323,6 +1287,186 @@
              "y":0
             },
          "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":24,
+         "image":"A-oliver-still.png",
+         "imageheight":32,
+         "imagewidth":32,
+         "properties":[
+                {
+                 "name":"animation",
+                 "propertytype":"animation",
+                 "type":"class",
+                 "value":
+                    {
+                     "cols":5,
+                     "rows":1,
+                     "textureNum":5,
+                     "update":7
+                    }
+                }, 
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":25,
+         "image":"A-teddy-still.png",
+         "imageheight":32,
+         "imagewidth":32,
+         "properties":[
+                {
+                 "name":"animation",
+                 "propertytype":"animation",
+                 "type":"class",
+                 "value":
+                    {
+                     "cols":5,
+                     "rows":1,
+                     "textureNum":3,
+                     "update":7
+                    }
+                }, 
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":26,
+         "image":"A-angie-still.png",
+         "imageheight":32,
+         "imagewidth":32,
+         "properties":[
+                {
+                 "name":"animation",
+                 "propertytype":"animation",
+                 "type":"class",
+                 "value":
+                    {
+                     "cols":5,
+                     "rows":1,
+                     "textureNum":1,
+                     "update":7
+                    }
+                }, 
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":27,
+         "image":"A-estelle-still.png",
+         "imageheight":32,
+         "imagewidth":32,
+         "properties":[
+                {
+                 "name":"animation",
+                 "propertytype":"animation",
+                 "type":"class",
+                 "value":
+                    {
+                     "cols":5,
+                     "rows":1,
+                     "textureNum":2,
+                     "update":7
+                    }
+                }, 
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":29,
+         "image":"A-alex-still.png",
+         "imageheight":32,
+         "imagewidth":32,
+         "properties":[
+                {
+                 "name":"animation",
+                 "propertytype":"animation",
+                 "type":"class",
+                 "value":
+                    {
+                     "cols":6,
+                     "rows":1,
+                     "textureNum":0,
+                     "update":7
+                    }
+                }, 
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":30,
+         "image":"A-matias-still.png",
+         "imageheight":32,
+         "imagewidth":32,
+         "properties":[
+                {
+                 "name":"animation",
+                 "propertytype":"animation",
+                 "type":"class",
+                 "value":
+                    {
+                     "cols":5,
+                     "rows":1,
+                     "textureNum":4,
+                     "update":7
+                    }
+                }, 
                 {
                  "name":"body",
                  "propertytype":"GameObject",
