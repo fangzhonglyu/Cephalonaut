@@ -63,7 +63,7 @@
                         {
                          "name":"dy",
                          "type":"float",
-                         "value":-10
+                         "value":-9
                         }],
                  "rotation":0,
                  "type":"",
@@ -90,7 +90,7 @@
                         {
                          "name":"dy",
                          "type":"float",
-                         "value":10
+                         "value":9
                         }],
                  "rotation":0,
                  "type":"",
@@ -117,7 +117,7 @@
                         {
                          "name":"dy",
                          "type":"float",
-                         "value":10
+                         "value":9
                         }],
                  "rotation":0,
                  "type":"",
@@ -144,7 +144,7 @@
                         {
                          "name":"dy",
                          "type":"float",
-                         "value":-10
+                         "value":-9
                         }],
                  "rotation":0,
                  "type":"",
