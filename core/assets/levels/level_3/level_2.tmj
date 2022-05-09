@@ -686,12 +686,42 @@
                  "height":32,
                  "id":244,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"ink",
+                         "type":"float",
+                         "value":0.5
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":373.666666666667,
-                 "y":722
+                 "x":384,
+                 "y":768
+                }, 
+                {
+                 "gid":394,
+                 "height":24,
+                 "id":245,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":235.511250511387,
+                 "y":179.734897040775
+                }, 
+                {
+                 "gid":394,
+                 "height":24,
+                 "id":246,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":538.934133369699,
+                 "y":177.689349515887
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -700,7 +730,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":245,
+ "nextobjectid":247,
  "orientation":"orthogonal",
  "properties":[
         {
