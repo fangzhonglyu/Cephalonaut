@@ -549,7 +549,7 @@ public class GameCanvas {
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(0, 0, 0, fadeOut);
-		shapeRen.rect(getCameraX() - getWidth() / 2f, getCameraY() - getHeight() / 2f, getWidth(), getHeight());
+		shapeRen.rect(0, 0, 1000000, 1000000);
 		shapeRen.end();
 
 		if (active == DrawPass.STANDARD) {

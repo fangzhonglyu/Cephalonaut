@@ -210,7 +210,6 @@ public abstract class WorldController implements Screen {
 		// TODO: look into this
 		this.scale.x = canvas.getWidth()/bounds.getWidth();
 		this.scale.y = canvas.getHeight()/bounds.getHeight();
-//		this.Oscale = scale.cpy();
 	}
 	
 	/**

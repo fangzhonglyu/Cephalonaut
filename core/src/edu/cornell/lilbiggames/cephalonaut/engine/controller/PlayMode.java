@@ -304,7 +304,6 @@ public class PlayMode extends WorldController implements Screen {
     }
 
     private void enterPauseMode() {
-        //canvas.setCameraPos(cephalonaut.getX() * scale.x, cephalonaut.getY() * scale.y);
         for (GameObject obj : objects) {
             obj.setActive(false);
         }
@@ -352,6 +351,7 @@ public class PlayMode extends WorldController implements Screen {
         // Move an object if touched
         InputController input = InputController.getInstance();
         if (isDialogueMode(dt)) return;
+        if (exiting) return;
 
         int sparklesIdx = ThreadLocalRandom.current().nextInt(0, NUM_SPARKLES);
         FilmStrip sparkle = sparkles[sparklesIdx];
@@ -368,7 +368,6 @@ public class PlayMode extends WorldController implements Screen {
         if (input.didExit()) {
             if (listener != null) {
                 exiting = true;
-                pause();
                 listener.exitScreen(this, EXIT_LEVEL);
                 return;
             } else {
