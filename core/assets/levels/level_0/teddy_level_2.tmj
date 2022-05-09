@@ -46,58 +46,6 @@
          "name":"objects",
          "objects":[
                 {
-                 "gid":387,
-                 "height":29.6387,
-                 "id":196,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "isSensor":true,
-                             "type":"Finish"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":22.8332,
-                 "x":303.003719822756,
-                 "y":205.805121187664
-                }, 
-                {
-                 "gid":386,
-                 "height":27,
-                 "id":208,
-                 "name":"start",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "type":"Start"
-                            }
-                        }, 
-                        {
-                         "name":"ink",
-                         "type":"float",
-                         "value":0.14
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":22.8814,
-                 "x":149.038924446199,
-                 "y":395.89106406392
-                }, 
-                {
                  "gid":215,
                  "height":49.6334,
                  "id":209,
@@ -126,6 +74,30 @@
                  "width":46.5543,
                  "x":135.566924446199,
                  "y":364.63106406392
+                }, 
+                {
+                 "gid":387,
+                 "height":32,
+                 "id":210,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":314.736518716145,
+                 "y":207.239388794567
+                }, 
+                {
+                 "gid":386,
+                 "height":32,
+                 "id":211,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":143.366157328806,
+                 "y":403.032096369957
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -134,7 +106,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":210,
+ "nextobjectid":212,
  "orientation":"orthogonal",
  "properties":[
         {
