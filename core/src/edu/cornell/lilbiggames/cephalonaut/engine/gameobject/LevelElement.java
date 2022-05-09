@@ -119,11 +119,16 @@ public class LevelElement extends SimpleObstacle {
         glassBarrierTexture = assetDirectory.getEntry("GO-glass-filmstrip.png",Texture.class);
         glassBarrierTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         animationCache = new Texture[7];
-        //animationCache[0] = assetDirectory.getEntry("",Texture.class);
-        //animationCache[0].setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        //animationCache[1] = assetDirectory.getEntry("",Texture.class);
-        //animationCache[0].setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-
+        animationCache[0] = assetDirectory.getEntry("A-alex.png",Texture.class);
+        animationCache[1] = assetDirectory.getEntry("A-angie.png",Texture.class);
+        animationCache[2] = assetDirectory.getEntry("A-estelle.png",Texture.class);
+        animationCache[3] = assetDirectory.getEntry("A-teddy.png",Texture.class);
+        animationCache[4] = assetDirectory.getEntry("A-matias.png",Texture.class);
+        animationCache[5] = assetDirectory.getEntry("A-oliver.png",Texture.class);
+        animationCache[6] = assetDirectory.getEntry("A-barry.png",Texture.class);
+        for(int i = 0;i<7;i++){
+            animationCache[i].setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        }
     }
 
     public static LevelElement create(Def def) {
