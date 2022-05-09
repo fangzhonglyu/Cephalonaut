@@ -46,18 +46,6 @@
          "name":"Object Layer 1",
          "objects":[
                 {
-                 "gid":386,
-                 "height":59,
-                 "id":29,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":50,
-                 "x":64,
-                 "y":112
-                }, 
-                {
                  "gid":392,
                  "height":48,
                  "id":30,
@@ -1124,6 +1112,18 @@
                  "width":16,
                  "x":576,
                  "y":160
+                }, 
+                {
+                 "gid":386,
+                 "height":32,
+                 "id":193,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":60.6666666666667,
+                 "y":99.6666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1132,7 +1132,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":193,
+ "nextobjectid":194,
  "orientation":"orthogonal",
  "properties":[
         {

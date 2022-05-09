@@ -75,27 +75,15 @@
                 }, 
                 {
                  "gid":387,
-                 "height":29.6387,
-                 "id":196,
+                 "height":32,
+                 "id":204,
                  "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "isSensor":true,
-                             "type":"Finish"
-                            }
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":22.8332,
-                 "x":578.617410836919,
-                 "y":93.6699769810658
+                 "width":32,
+                 "x":573.910592380533,
+                 "y":94.4743448579608
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -104,7 +92,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":204,
+ "nextobjectid":205,
  "orientation":"orthogonal",
  "properties":[
         {

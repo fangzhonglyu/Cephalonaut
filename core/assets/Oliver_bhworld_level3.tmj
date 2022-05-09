@@ -7,8 +7,6 @@
          "image":"BG-3-blue.png",
          "name":"Image Layer 1",
          "opacity":1,
-         "repeatx":true,
-         "repeaty":true,
          "type":"imagelayer",
          "visible":true,
          "x":0,
@@ -860,24 +858,6 @@
                  "y":164.27528583993
                 }, 
                 {
-                 "gid":130,
-                 "height":59,
-                 "id":74,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"ink",
-                         "type":"float",
-                         "value":2
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":50,
-                 "x":48.8786279683377,
-                 "y":920.061565523307
-                }, 
-                {
                  "gid":144,
                  "height":32,
                  "id":76,
@@ -1092,6 +1072,18 @@
                  "width":16,
                  "x":688,
                  "y":736
+                }, 
+                {
+                 "gid":130,
+                 "height":32,
+                 "id":95,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":53.8520494785351,
+                 "y":909.330099442154
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1100,7 +1092,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":95,
+ "nextobjectid":96,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
