@@ -273,13 +273,17 @@ public class MainMenuNestedMode extends MenuMode {
                 20);
         float diff = scale.x * 200;
         float start = width/2 - diff * ((checkpoints-1)/2f);
+
         for(int i = 0; i < checkpoints; i++) {
+
+            float imageScale = (0.3f*3f*levelTexture.getHeight()*scale.y)/(scale.y*winTexturesCurLevel.get(i).getRegionHeight());
+
             if (i < completedCheckpoints) {
-                canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*4f, scale.y*4f);
-                canvas.draw(winTexturesCurLevel.get(i), Color.WHITE, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2 + 20, 0, scale.x*2f, scale.y*2f);
+                canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
+                canvas.draw(winTexturesCurLevel.get(i), Color.WHITE, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, imageScale, imageScale);
             } else {
-                canvas.draw(levelTexture, Color.WHITE, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*4f, scale.y*4f);
-                canvas.draw(winTexturesCurLevel.get(i), Color.BLACK, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2 + 20, 0, scale.x*2f, scale.y*2f);
+                canvas.draw(levelTexture, Color.WHITE, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
+                canvas.draw(winTexturesCurLevel.get(i), Color.BLACK, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, imageScale, imageScale);
             }
 
             checkpointHitBoxes[i] = new Rectangle(i*diff+start - scale.x*3f * levelTexture.getWidth()/2f,canvas.getHeight() / 2, scale.x*4f * levelTexture.getWidth(), scale.x*4f * levelTexture.getHeight());

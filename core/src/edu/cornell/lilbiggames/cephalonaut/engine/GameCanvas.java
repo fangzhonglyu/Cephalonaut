@@ -498,13 +498,6 @@ public class GameCanvas {
 	}
 
 	/**
-	 * Literally the jankest quick fix of my life but it's okay it'll work :)
-	 */
-	public void end2() {
-		spriteBatch.end();
-	}
-
-	/**
 	 * Ends a drawing sequence, flushing textures to the graphics card.
 	 */
     public void end() {
@@ -545,16 +538,12 @@ public class GameCanvas {
     }
 
 	public void drawFade(float fadeOut) {
-		switchToShape();
-		fgFrame.end();
-
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRen.setColor(0, 0, 0,fadeOut);
-		shapeRen.rect(getCameraX() - getWidth() / 2 - 1, getCameraY() - getHeight() / 2 - 1, getWidth() + 2, getHeight() + 2);
-
-		switchToSprite();
+		shapeRen.setColor(0, 0, 0, fadeOut);
+		shapeRen.rect(getCameraX() - getWidth() / 2f, getCameraY() - getHeight() / 2f, getWidth(), getHeight());
+		shapeRen.end();
 	}
 
 	public void drawDialogueBox(float fade) {
