@@ -22,24 +22,6 @@
          "name":"Objects",
          "objects":[
                 {
-                 "gid":130,
-                 "height":16,
-                 "id":147,
-                 "name":"start",
-                 "properties":[
-                        {
-                         "name":"ink",
-                         "type":"float",
-                         "value":0.12
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":15,
-                 "x":312,
-                 "y":699.333333333333
-                }, 
-                {
                  "gid":141,
                  "height":24,
                  "id":148,
@@ -64,16 +46,28 @@
                  "y":432
                 }, 
                 {
-                 "gid":137,
-                 "height":44,
-                 "id":150,
+                 "gid":152,
+                 "height":40,
+                 "id":151,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":59,
-                 "x":125,
-                 "y":419.5
+                 "width":40,
+                 "x":121.5,
+                 "y":379.5
+                }, 
+                {
+                 "gid":130,
+                 "height":32,
+                 "id":152,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":310.666666666667,
+                 "y":670.666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -107,7 +101,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":151,
+ "nextobjectid":153,
  "orientation":"orthogonal",
  "properties":[
         {

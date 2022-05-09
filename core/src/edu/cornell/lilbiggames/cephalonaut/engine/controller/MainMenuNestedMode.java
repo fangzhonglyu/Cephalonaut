@@ -13,9 +13,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
+
+import javax.print.attribute.HashPrintServiceAttributeSet;
+
+import java.util.List;
+import java.util.Map;
 
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.CHECKPOINT_SELECTED_CODE;
 import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.NESTED_MENU_EXIT_CODE;
@@ -42,8 +48,6 @@ public class MainMenuNestedMode extends MenuMode {
 
     private int curLevel;
 
-    private Vector2 bounds,scale;
-
     private boolean levelSelected;
 
     private TextureRegion octopusTexture;
@@ -58,6 +62,15 @@ public class MainMenuNestedMode extends MenuMode {
     private boolean prevLeft;
     private boolean prevExit;
     private boolean prevSelect;
+
+    private FilmStrip filmstrip;
+    /** Animation Counter*/
+    private float frame;
+    private float maxFrame;
+
+    private Texture[] silhouettes;
+
+    private Map<Integer, List<TextureRegion>> winTextures;
 
     protected InputAdapter menuNestedInput = new InputAdapter() {
         public boolean mouseMoved (int x, int screenY) {
@@ -88,6 +101,12 @@ public class MainMenuNestedMode extends MenuMode {
                     }
                 }
             }
+
+            if(settingsIconHitbox != null){
+                if(settingsIconHitbox.x <= x && settingsIconHitbox.x + settingsIconHitbox.width >= x && settingsIconHitbox.y >= y && settingsIconHitbox.y - settingsIconHitbox.height <= y ){
+                    goToSettings = true;
+                }
+            }
             return true;
         }
     };
@@ -98,7 +117,7 @@ public class MainMenuNestedMode extends MenuMode {
      * @param assets    The asset directory to use
      * @param canvas 	The game canvas to draw to
      */
-    public MainMenuNestedMode(AssetDirectory assets, GameCanvas canvas, int checkpoints, int completedCheckpoints, int curLevel, ScreenListener listener){
+    public MainMenuNestedMode(AssetDirectory assets, GameCanvas canvas, int checkpoints, int completedCheckpoints, int curLevel, ScreenListener listener, Map<Integer, List<TextureRegion>> winTextures){
         super(assets, canvas, listener);
         this.canvas  = canvas;
         this.listener = listener;
@@ -107,6 +126,7 @@ public class MainMenuNestedMode extends MenuMode {
         displayFont = assets.getEntry("retro", BitmapFont.class);
         this.completedCheckpoints = completedCheckpoints;
         this.checkpoints = checkpoints;
+        this.winTextures = winTextures;
 
         this.curLevel = curLevel;
         background = assets.getEntry( "BG-1-teal.png", Texture.class);
@@ -114,8 +134,24 @@ public class MainMenuNestedMode extends MenuMode {
         this.assets = assets;
 
         octopusTexture = new TextureRegion(assets.getEntry( "octopus.png", Texture.class ));
-        levelTexture = assets.getEntry( "level.png", Texture.class );
-        levelCompletedTexture = assets.getEntry( "completedLevel.png", Texture.class );
+        levelTexture = assets.getEntry( "level-incomplete", Texture.class );
+        levelTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        levelCompletedTexture = assets.getEntry( "level-complete-3-star", Texture.class );
+        levelCompletedTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        filmstrip = new FilmStrip(assets.getEntry("octopus",Texture.class), 5, 9);
+        frame = 0;
+        maxFrame = 4;
+
+        populateIcons();
+    }
+
+    private void populateIcons(){
+        Texture sil = assets.getEntry( "alex-sil", Texture.class );
+        silhouettes = new Texture[checkpoints];
+
+        for (int i = 0; i < checkpoints; i++) {
+            silhouettes[i] = sil;
+        }
         Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
         if (controllers.size > 0) {
             xbox = controllers.get( 0 );
@@ -138,8 +174,10 @@ public class MainMenuNestedMode extends MenuMode {
         if (levelSelected && listener != null) {
             levelSelected = false;
             SoundController.playSound(6,1);
-
             listener.exitScreen(this, CHECKPOINT_SELECTED_CODE);
+        } else if(goToSettings){
+            goToSettings = false;
+            listener.exitScreen(this, MenuMode.OPTIONS_CODE);
         } else {
             update(delta);
             draw();
@@ -147,6 +185,8 @@ public class MainMenuNestedMode extends MenuMode {
     }
 
     private void update(float delta){
+
+        frame = (frame+delta*5f)%maxFrame;
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
                 (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
             levelSelected = true;
@@ -192,11 +232,12 @@ public class MainMenuNestedMode extends MenuMode {
     }
 
     public void setDefault() {
+        populateIcons();
         checkpointHitBoxes = new Rectangle[checkpoints];
-        float diff = 100;
-        float start = canvas.getWidth() / 2 - diff * (checkpoints / 2);
+        float diff = scale.x*levelTexture.getWidth()*2 + scale.x*20f;
+        float start = canvas.getWidth()/2 - diff * (checkpoints/2) + levelTexture.getWidth();
         for (int i = 0; i < checkpoints; i++) {
-            checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 0.1f * levelTexture.getWidth(), 0.1f * levelTexture.getHeight());
+            checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 3f * levelTexture.getWidth(), 3f * levelTexture.getHeight());
         }
         Gdx.input.setInputProcessor(menuNestedInput);
     }
@@ -221,24 +262,42 @@ public class MainMenuNestedMode extends MenuMode {
 
         float height = canvas.getHeight();
         float width = canvas.getWidth();
+
+
+        List<TextureRegion> winTexturesCurLevel = winTextures.get(curLevel);
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
                 20,
                 20);
-        float diff = 100;
-        float start = width/2 - diff * (checkpoints/2);
-        canvas.drawTextCentered("World " + curLevel, displayFont, 300f);
-        for (int i = 0; i < checkpoints; i++){
-            if(i <= completedCheckpoints){
-                canvas.draw(levelCompletedTexture, i*diff+start, height/2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
+        float diff = scale.x*levelCompletedTexture.getWidth()*2  + scale.x*20f;
+        float start = width/2 - diff * ((checkpoints-1)/2f);
+        for(int i = 0; i < checkpoints; i++) {
+            if (i < completedCheckpoints) {
+                canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
+                canvas.draw(winTexturesCurLevel.get(i), Color.WHITE, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, scale.x*1f, scale.y*1f);
             } else {
-                canvas.draw(levelTexture, i*diff+start, height/2, 0, 0, levelTexture.getWidth(), levelTexture.getHeight(), 0.1f, 0.1f);
+                canvas.draw(levelTexture, Color.WHITE, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
+                canvas.draw(winTexturesCurLevel.get(i), Color.BLACK, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, scale.x*1f, scale.y*1f);
             }
+
+            checkpointHitBoxes[i] = new Rectangle(i*diff+start - scale.x*3f * levelTexture.getWidth()/2f,canvas.getHeight() / 2, scale.x*3f * levelTexture.getWidth(), scale.x*3f * levelTexture.getHeight());
         }
 
-        canvas.draw(octopusTexture, start + completedCheckpoints*diff, height/2 + levelTexture.getHeight()*0.1f + 10);
+        filmstrip.setFrame((int)frame);
+
+        float ox = 0.5f * filmstrip.getRegionWidth();
+        float oy = 0.75f * filmstrip.getRegionHeight();
+        canvas.draw(filmstrip, Color.WHITE, ox, 0,
+                start + completedCheckpoints*diff, height/2 + 10,
+                0, scale.x*2, scale.y*2);
+
+        displayFont.setColor(YELLOW);
+        displayFont.getData().setScale(0.6f);
+        canvas.drawText("WORLD " + (curLevel+1), displayFont, width*0.2f, height*0.9f);
+        displayFont.setColor(Color.WHITE);
+        super.drawGoToSettings();
 
         canvas.end();
     }

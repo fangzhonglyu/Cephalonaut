@@ -46,7 +46,7 @@
          "name":"objects",
          "objects":[
                 {
-                 "gid":258,
+                 "gid":386,
                  "height":27,
                  "id":193,
                  "name":"start",
@@ -64,7 +64,7 @@
                         {
                          "name":"ink",
                          "type":"float",
-                         "value":2
+                         "value":1
                         }],
                  "rotation":0,
                  "type":"",
@@ -74,10 +74,10 @@
                  "y":401.533639638107
                 }, 
                 {
-                 "gid":215,
-                 "height":49.6334304536544,
-                 "id":194,
-                 "name":"dialogue1",
+                 "gid":387,
+                 "height":29.6387,
+                 "id":196,
+                 "name":"",
                  "properties":[
                         {
                          "name":"body",
@@ -87,27 +87,9 @@
                             {
                              "canGrappleOn":false,
                              "isSensor":true,
-                             "tint":"#00ffffff",
-                             "type":"Dialogue Trigger"
+                             "type":"Finish"
                             }
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"int",
-                         "value":0
                         }],
-                 "rotation":88.8114877093905,
-                 "type":"Background",
-                 "visible":true,
-                 "width":46.5542998232017,
-                 "x":142.938905796585,
-                 "y":363.898801636521
-                }, 
-                {
-                 "gid":259,
-                 "height":29.6387,
-                 "id":196,
-                 "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -129,6 +111,16 @@
          "name":"music",
          "type":"int",
          "value":1
+        }, 
+        {
+         "name":"threeStars",
+         "type":"int",
+         "value":7
+        }, 
+        {
+         "name":"twoStars",
+         "type":"int",
+         "value":10
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
@@ -143,7 +135,7 @@
          "source":"..\/..\/space-tiles.tsj"
         }, 
         {
-         "firstgid":257,
+         "firstgid":385,
          "source":"..\/..\/objects.tsj"
         }],
  "tilewidth":16,

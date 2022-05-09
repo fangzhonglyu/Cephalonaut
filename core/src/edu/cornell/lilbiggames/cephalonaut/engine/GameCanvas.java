@@ -512,7 +512,8 @@ public class GameCanvas {
 
 		// Draw accretion disk from bgFrame onto temp
 		temp.begin();
-		spriteBatch.setShader(accretionShader);
+		// COMMENT FOLLOWING LINE TO DISABLE ACCRETION SHADERS:
+//		spriteBatch.setShader(accretionShader);
 //		accretionShader.setUniformf("u_radius", 16 );
 		accretionShader.setUniform3fv("u_bh", blackHoles, 0, 3 * blackHoleCount);
 		accretionShader.setUniformi("u_bh_count", blackHoleCount);
@@ -958,14 +959,15 @@ public class GameCanvas {
 	public void drawSlider(Slider slider){
 		float x = slider.getPosition().x;
 		float y = slider.getPosition().y;
+
 		switchToShape();
-		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRen.setColor(Color.WHITE);
+
+		shapeRen.begin(ShapeRenderer.ShapeType.Line);
+		shapeRen.setColor(slider.getColor());
 		shapeRen.rect(x - slider.getWidth()/2.0f, y, slider.getWidth(), slider.getHeight());
-		shapeRen.setColor(slider.getColor());
-		shapeRen.rect((x-slider.getWidth()/2.0f), y, slider.getWidth()*slider.getValue(), slider.getHeight());
-		shapeRen.setColor(slider.getColor());
-		shapeRen.circle(slider.getKnobPosition().x, y + slider.getHeight()/2f, slider.getKnobRadius(), 1000);
+		shapeRen.end();
+		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRen.rect(slider.getKnobPosition().x, y - slider.getHeight()/2f, slider.getKnobRadius(), 2*slider.getKnobRadius());
 
 		switchToSprite();
 	}

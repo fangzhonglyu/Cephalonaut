@@ -35,39 +35,27 @@
          "objects":[
                 {
                  "gid":386,
-                 "height":59,
-                 "id":244,
+                 "height":32,
+                 "id":246,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":50,
-                 "x":20,
-                 "y":480
+                 "width":32,
+                 "x":42.5456947808853,
+                 "y":474.753578506937
                 }, 
                 {
-                 "gid":392,
-                 "height":48,
-                 "id":245,
+                 "gid":408,
+                 "height":40,
+                 "id":247,
                  "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "isSensor":true,
-                             "type":"Finish"
-                            }
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":48,
-                 "x":471.180829427889,
-                 "y":74.4023344239102
+                 "width":40,
+                 "x":464.968068707333,
+                 "y":75.9242457608456
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -76,7 +64,7 @@
          "y":0
         }],
  "nextlayerid":30,
- "nextobjectid":246,
+ "nextobjectid":248,
  "orientation":"orthogonal",
  "properties":[
         {
