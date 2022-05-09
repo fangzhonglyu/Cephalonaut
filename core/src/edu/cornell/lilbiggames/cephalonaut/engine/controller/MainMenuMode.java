@@ -276,6 +276,7 @@ public class MainMenuMode extends MenuMode {
         }
 
         float textHeight = Math.min((curLevel == 6 ? 0.3f : 1.5f)*filmStrips[curLevel].getRegionHeight(), 2f*levelIcon.getWidth())*scale.y;
+        displayFont.setColor(YELLOW);
         canvas.drawTextCentered("WORLD " + (curLevel+1), displayFont, -textHeight+100f);
 
         // left arrow
