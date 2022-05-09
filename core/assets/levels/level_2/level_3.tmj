@@ -399,16 +399,16 @@
                  "y":560
                 }, 
                 {
-                 "gid":387,
-                 "height":32,
-                 "id":288,
+                 "gid":408,
+                 "height":40,
+                 "id":289,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":32,
-                 "x":884.666666666667,
-                 "y":558.666666666667
+                 "width":40,
+                 "x":881.225049258974,
+                 "y":560.563693994689
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -417,7 +417,7 @@
          "y":0
         }],
  "nextlayerid":18,
- "nextobjectid":289,
+ "nextobjectid":290,
  "orientation":"orthogonal",
  "properties":[
         {
