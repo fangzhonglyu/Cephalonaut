@@ -143,7 +143,7 @@
     "level_6:checkpoint_1": "levels/level_6/teddy_level_1.tmj",
     "level_6:checkpoint_2": "levels/level_6/teddy_level_2.tmj",
     "level_6:checkpoint_3": "Oliver_world4_level2.tmj",
-    "level_6:checkpoint_4": "levels/level_6/level_4.tmj"
+    "level_6:checkpoint_4": "levels/level_6/demo_level.tmj"
   },
   "music": {
     "level0": "music/CephalonautLevel1RoughMix1.mp3",
@@ -176,7 +176,10 @@
     "menuSound": "MenuSelectSound.mp3",
     "menuClick": "MenuClickSound.mp3",
     "wormHole": "WormholeWarpSound.mp3",
-    "electricDeath": "ElectricityDeathSound.mp3"
+    "electricDeath": "ElectricityDeathSound.mp3",
+    "buttonSound": "ButtonPushSound.mp3",
+    "DoorOpenSound": "DoorOpenSound.mp3",
+    "healthPack": "healthPack.mp3"
   },
   "fonts": {
     "retro": {
