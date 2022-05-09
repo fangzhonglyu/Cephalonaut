@@ -822,12 +822,12 @@
         {
          "name":"threeStars",
          "type":"int",
-         "value":25
+         "value":20
         }, 
         {
          "name":"twoStars",
          "type":"int",
-         "value":40
+         "value":35
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
