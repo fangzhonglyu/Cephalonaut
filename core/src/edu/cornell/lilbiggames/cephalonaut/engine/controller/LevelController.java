@@ -194,6 +194,8 @@ public class LevelController implements ContactListener {
                         SoundController.playSound(7,1);
                 }
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.REFILL)) {
+                    if(cephalonaut.getInk()<0.9f)
+                        ((LEInkPack) contactObject).trigger();
                     cephalonaut.refillInk();
                 }
             }

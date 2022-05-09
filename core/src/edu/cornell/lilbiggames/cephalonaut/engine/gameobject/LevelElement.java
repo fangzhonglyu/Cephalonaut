@@ -93,7 +93,7 @@ public class LevelElement extends SimpleObstacle {
         setTexture(def.texture);
     }
 
-    private static Texture sparksTexture, glassBarrierTexture;
+    private static Texture sparksTexture, glassBarrierTexture,inkPackTexture;
     private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture,spikeTexture,spikeBallTexture,engineTexture,brokenEngineTexture;
     private static Texture[] animationCache;
 
@@ -118,6 +118,8 @@ public class LevelElement extends SimpleObstacle {
         brokenEngineTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         glassBarrierTexture = assetDirectory.getEntry("GO-glass-filmstrip.png",Texture.class);
         glassBarrierTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        inkPackTexture = assetDirectory.getEntry("inkPack-film.png",Texture.class);
+        inkPackTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         animationCache = new Texture[7];
         animationCache[0] = assetDirectory.getEntry("A-alex.png",Texture.class);
         animationCache[1] = assetDirectory.getEntry("A-angie.png",Texture.class);
@@ -161,6 +163,8 @@ public class LevelElement extends SimpleObstacle {
                 return new LEAnimated(def,new FilmStrip(engineTexture,1,6),5,false);
             case BROKEN_ENGINE:
                 return new LEAnimated(def,new FilmStrip(brokenEngineTexture,1,6),5,false);
+            case REFILL:
+                return new LEInkPack(def,new FilmStrip(inkPackTexture,2,5));
             default:
                 JsonValue anim = def.properties.get("animation");
                 if(anim!=null)

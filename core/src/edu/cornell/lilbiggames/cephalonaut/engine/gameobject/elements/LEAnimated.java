@@ -6,8 +6,6 @@ import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 
 public class LEAnimated extends LevelElement {
 
-    private float boostPadFactor;
-    private float boostPadAngle;
     private FilmStrip filmStrip;
     private float frame;
     private float updateFactor;
