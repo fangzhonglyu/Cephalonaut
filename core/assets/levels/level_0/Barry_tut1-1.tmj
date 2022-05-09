@@ -312,6 +312,17 @@
                  "height":16,
                  "id":199,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"threeStars",
+                         "type":"int",
+                         "value":15
+                        }, 
+                        {
+                         "name":"twoStars",
+                         "type":"int",
+                         "value":25
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
