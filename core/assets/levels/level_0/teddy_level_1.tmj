@@ -74,16 +74,16 @@
                  "y":401.533639638107
                 }, 
                 {
-                 "gid":387,
-                 "height":32,
-                 "id":204,
+                 "gid":407,
+                 "height":26,
+                 "id":205,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":32,
-                 "x":573.910592380533,
-                 "y":94.4743448579608
+                 "width":34,
+                 "x":576.477098556407,
+                 "y":92.3085011584388
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -92,13 +92,13 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":205,
+ "nextobjectid":206,
  "orientation":"orthogonal",
  "properties":[
         {
          "name":"music",
          "type":"int",
-         "value":1
+         "value":3
         }, 
         {
          "name":"threeStars",

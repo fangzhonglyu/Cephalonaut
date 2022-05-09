@@ -329,7 +329,7 @@
                         {
                          "name":"dy",
                          "type":"float",
-                         "value":10
+                         "value":8
                         }],
                  "rotation":0,
                  "type":"",
@@ -375,7 +375,7 @@
         {
          "name":"music",
          "type":"int",
-         "value":5
+         "value":8
         }, 
         {
          "name":"threeStars",

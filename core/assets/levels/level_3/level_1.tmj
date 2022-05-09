@@ -88,7 +88,7 @@
                         {
                          "name":"dx",
                          "type":"float",
-                         "value":10
+                         "value":9
                         }, 
                         {
                          "name":"dy",
@@ -697,7 +697,7 @@
                         {
                          "name":"dx",
                          "type":"float",
-                         "value":-10
+                         "value":9
                         }, 
                         {
                          "name":"dy",
@@ -730,7 +730,7 @@
                         {
                          "name":"dx",
                          "type":"float",
-                         "value":-10
+                         "value":-9
                         }, 
                         {
                          "name":"dy",
@@ -1138,7 +1138,7 @@
         {
          "name":"music",
          "type":"int",
-         "value":5
+         "value":8
         }, 
         {
          "name":"threeStars",

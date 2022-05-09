@@ -374,6 +374,22 @@
  "nextlayerid":4,
  "nextobjectid":37,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"music",
+         "type":"int",
+         "value":12
+        }, 
+        {
+         "name":"threeStars",
+         "type":"int",
+         "value":15
+        }, 
+        {
+         "name":"twoStars",
+         "type":"int",
+         "value":30
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
  "tileheight":16,

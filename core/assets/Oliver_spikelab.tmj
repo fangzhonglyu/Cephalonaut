@@ -302,36 +302,6 @@
                 {
                  "gid":87,
                  "height":34.6667,
-                 "id":36,
-                 "name":"dialogue0",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "isSensor":true,
-                             "tint":"#00ffffff",
-                             "type":"Dialogue Trigger"
-                            }
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"int",
-                         "value":0
-                        }],
-                 "rotation":0,
-                 "type":"Background",
-                 "visible":true,
-                 "width":31.6667,
-                 "x":485.768480663616,
-                 "y":170.12660423341
-                }, 
-                {
-                 "gid":87,
-                 "height":34.6667,
                  "id":37,
                  "name":"dialogue0",
                  "properties":[
@@ -380,6 +350,22 @@
  "nextlayerid":4,
  "nextobjectid":39,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"music",
+         "type":"int",
+         "value":3
+        }, 
+        {
+         "name":"threeStars",
+         "type":"int",
+         "value":10
+        }, 
+        {
+         "name":"twoStars",
+         "type":"int",
+         "value":17
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
  "tileheight":16,
