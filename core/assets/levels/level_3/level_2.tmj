@@ -708,8 +708,8 @@
                  "type":"",
                  "visible":true,
                  "width":24,
-                 "x":235.511250511387,
-                 "y":179.734897040775
+                 "x":96,
+                 "y":400
                 }, 
                 {
                  "gid":394,
@@ -720,8 +720,8 @@
                  "type":"",
                  "visible":true,
                  "width":24,
-                 "x":538.934133369699,
-                 "y":177.689349515887
+                 "x":688,
+                 "y":400
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -741,12 +741,12 @@
         {
          "name":"threeStars",
          "type":"int",
-         "value":25
+         "value":30
         }, 
         {
          "name":"twoStars",
          "type":"int",
-         "value":30
+         "value":40
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
