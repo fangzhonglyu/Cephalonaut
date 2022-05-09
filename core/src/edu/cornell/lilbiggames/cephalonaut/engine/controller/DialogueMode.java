@@ -164,16 +164,16 @@ public class DialogueMode {
         float X_OFFSET = 410f;
         canvas.draw(texture, Color.WHITE,
                 texture.getWidth() / 2f, texture.getHeight() / 2f,
-                cx - canvas.getWidth() / 2 + X_OFFSET * scale.x, cy - Y_OFFSET * scale.y,
+                cx - canvas.getWidth() / 2f + X_OFFSET * scale.x, cy - Y_OFFSET * scale.y,
                 0, scale.x * KEY_WIDTH, scale.y * KEY_WIDTH);
     }
 
     private void drawVisual(FilmStrip filmStrip, float cx, float cy){
         float Y_OFFSET = 395f;
         float X_OFFSET = 410f;
-        canvas.draw(filmStrip, Color.WHITE,
+        canvas.drawFg(filmStrip, Color.WHITE,
                 filmStrip.getFwidth() / 2f, filmStrip.getFheight() / 2f,
-                cx - canvas.getWidth() / 2 + X_OFFSET * scale.x, cy - Y_OFFSET * scale.y,
+                cx - canvas.getWidth() / 2f + X_OFFSET * scale.x, cy - Y_OFFSET * scale.y,
                 0, scale.x * KEY_WIDTH, scale.y * KEY_WIDTH);
     }
 
