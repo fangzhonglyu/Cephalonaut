@@ -160,7 +160,9 @@ public class GameCanvas {
 		float bounds_y = (bounds.y - 0.5f) * scale.y;
 
 
-		if (x + camera.viewportWidth / 2 > bounds_width) {
+		if (bounds_width <= camera.viewportWidth) {
+			camera.position.x = bounds_x + bounds_width / 2;
+		} else if (x + camera.viewportWidth / 2 > bounds_width) {
 			camera.position.x = bounds_width - camera.viewportWidth / 2;
 		} else if (x - camera.viewportWidth / 2 < bounds_x) {
 			camera.position.x = bounds_x + camera.viewportWidth / 2;
@@ -168,7 +170,9 @@ public class GameCanvas {
 			camera.position.x = x;
 		}
 
-		if (y + camera.viewportHeight / 2 > bounds_height) {
+		if (bounds_height <= camera.viewportHeight) {
+			camera.position.y = bounds_y + bounds_height / 2;
+		} else if (y + camera.viewportHeight / 2 > bounds_height) {
 			camera.position.y = bounds_height - camera.viewportHeight / 2;
 		} else if (y - camera.viewportHeight / 2 < bounds_y) {
 			camera.position.y = bounds_y + camera.viewportHeight / 2;
