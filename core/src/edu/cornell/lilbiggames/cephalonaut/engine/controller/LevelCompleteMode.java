@@ -176,6 +176,11 @@ public class LevelCompleteMode extends MenuMode {
     }
 
     public void exitScreen() {
+        if (goToSettings){
+            goToSettings = false;
+            listener.exitScreen(this, MenuMode.OPTIONS_CODE);
+        }
+
         if(!choiceMade) {
             if (selectedOption == 0) {
                 listener.exitScreen(this, NEXT_LEVEL_CODE);
@@ -228,6 +233,8 @@ public class LevelCompleteMode extends MenuMode {
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
                 20,
                 20);
+
+        super.drawGoToSettings();
 
         canvas.setCameraPos(width / 2, height / 2);
 
