@@ -140,7 +140,7 @@ public class MainMenuMode extends MenuMode {
         filmStrips = new FilmStrip[7];
 
         for (int i = 0; i < 7; i++) {
-            int cols = i == 6 ? 7 : 5;
+            int cols = i == 0 ? 7 : 5;
             filmStrips[i] = new FilmStrip(assets.getEntry("levelidle:level_" + i, Texture.class), 1, cols);
             filmStrips[i].setFrame(0);
         }
@@ -257,7 +257,7 @@ public class MainMenuMode extends MenuMode {
         float levelIconWidth = filmStrips[curLevel].getRegionWidth();
         float levelIconHeight = filmStrips[curLevel].getRegionHeight();
 
-        float imageScale = shouldAnimate ? (curLevel == 6 ? 0.3f : 1.5f) : 2f;
+        float imageScale = shouldAnimate ? (curLevel == 0 ? 0.3f : 1.5f) : 2f;
 
         if(!shouldAnimate) {
             levelIconWidth = levelIcon.getWidth();
@@ -275,7 +275,7 @@ public class MainMenuMode extends MenuMode {
                     0, imageScale * scale.x, imageScale * scale.y);
         }
 
-        float textHeight = Math.min((curLevel == 6 ? 0.3f : 1.5f)*filmStrips[curLevel].getRegionHeight(), 2f*levelIcon.getWidth())*scale.y;
+        float textHeight = Math.min((curLevel == 0 ? 0.3f : 1.5f)*filmStrips[curLevel].getRegionHeight(), 2f*levelIcon.getWidth())*scale.y;
         displayFont.setColor(YELLOW);
         canvas.drawTextCentered("WORLD " + (curLevel+1), displayFont, -textHeight+100f);
 
