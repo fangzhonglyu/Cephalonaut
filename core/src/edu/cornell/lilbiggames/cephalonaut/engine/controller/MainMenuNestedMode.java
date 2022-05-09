@@ -234,10 +234,10 @@ public class MainMenuNestedMode extends MenuMode {
     public void setDefault() {
         populateIcons();
         checkpointHitBoxes = new Rectangle[checkpoints];
-        float diff = scale.x*levelTexture.getWidth()*2 + scale.x*20f;
+        float diff = scale.x * 200;
         float start = canvas.getWidth()/2 - diff * (checkpoints/2) + levelTexture.getWidth();
         for (int i = 0; i < checkpoints; i++) {
-            checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 3f * levelTexture.getWidth(), 3f * levelTexture.getHeight());
+            checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 4f * levelTexture.getWidth(), 4f * levelTexture.getHeight());
         }
         Gdx.input.setInputProcessor(menuNestedInput);
     }
@@ -271,18 +271,18 @@ public class MainMenuNestedMode extends MenuMode {
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
                 20,
                 20);
-        float diff = scale.x*levelCompletedTexture.getWidth()*2  + scale.x*20f;
+        float diff = scale.x * 200;
         float start = width/2 - diff * ((checkpoints-1)/2f);
         for(int i = 0; i < checkpoints; i++) {
             if (i < completedCheckpoints) {
-                canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
-                canvas.draw(winTexturesCurLevel.get(i), Color.WHITE, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, scale.x*1f, scale.y*1f);
+                canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*4f, scale.y*4f);
+                canvas.draw(winTexturesCurLevel.get(i), Color.WHITE, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2 + 20, 0, scale.x*2f, scale.y*2f);
             } else {
-                canvas.draw(levelTexture, Color.WHITE, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
-                canvas.draw(winTexturesCurLevel.get(i), Color.BLACK, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2, 0, scale.x*1f, scale.y*1f);
+                canvas.draw(levelTexture, Color.WHITE, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*4f, scale.y*4f);
+                canvas.draw(winTexturesCurLevel.get(i), Color.BLACK, winTexturesCurLevel.get(i).getRegionWidth()/2, winTexturesCurLevel.get(i).getRegionHeight()/4, i * diff + start, height/2 + 20, 0, scale.x*2f, scale.y*2f);
             }
 
-            checkpointHitBoxes[i] = new Rectangle(i*diff+start - scale.x*3f * levelTexture.getWidth()/2f,canvas.getHeight() / 2, scale.x*3f * levelTexture.getWidth(), scale.x*3f * levelTexture.getHeight());
+            checkpointHitBoxes[i] = new Rectangle(i*diff+start - scale.x*3f * levelTexture.getWidth()/2f,canvas.getHeight() / 2, scale.x*4f * levelTexture.getWidth(), scale.x*4f * levelTexture.getHeight());
         }
 
         filmstrip.setFrame((int)frame);
@@ -290,8 +290,8 @@ public class MainMenuNestedMode extends MenuMode {
         float ox = 0.5f * filmstrip.getRegionWidth();
         float oy = 0.75f * filmstrip.getRegionHeight();
         canvas.draw(filmstrip, Color.WHITE, ox, 0,
-                start + completedCheckpoints*diff, height/2 + 10,
-                0, scale.x*2, scale.y*2);
+                start + completedCheckpoints*diff, height/2 + 40,
+                0, scale.x*3, scale.y*3);
 
         displayFont.setColor(YELLOW);
         displayFont.getData().setScale(0.6f);
