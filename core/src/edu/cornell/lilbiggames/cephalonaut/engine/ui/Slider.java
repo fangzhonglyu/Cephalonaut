@@ -66,9 +66,10 @@ public class Slider {
         knobPosition = new Vector2(knobX, y);
     }
 
-    public void updateSize(float sliderWidth, float sliderHeight){
+    public void updateSize(float sliderWidth, float sliderHeight, float knobRadius){
         this.sliderWidth = sliderWidth;
         this.sliderHeight = sliderHeight;
+        this.knobRadius = knobRadius;
     }
 
     public void movedX(float newX){

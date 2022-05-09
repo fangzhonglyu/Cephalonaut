@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import org.w3c.dom.css.Rect;
 
 public class MenuMode implements Screen {
     public static final int LEVEL_SELECTED_CODE = 21;
@@ -39,6 +40,10 @@ public class MenuMode implements Screen {
 
     /** Background texture for start-up */
     private Texture background;
+
+    private Texture settingsIcon;
+    protected Rectangle settingsIconHitbox;
+    protected boolean goToSettings;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -81,6 +86,13 @@ public class MenuMode implements Screen {
                     }
                 }
             }
+
+            if(settingsIconHitbox != null){
+                if(settingsIconHitbox.x <= x && settingsIconHitbox.x + settingsIconHitbox.width >= x && settingsIconHitbox.y >= y && settingsIconHitbox.y - settingsIconHitbox.height <= y ){
+                    goToSettings = true;
+                    exitScreen();
+                }
+            }
             return true;
         }
     };
@@ -110,6 +122,8 @@ public class MenuMode implements Screen {
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         this.assets = assets;
+
+        settingsIcon = assets.getEntry("settings-icon", Texture.class);
     }
 
     @Override
@@ -119,7 +133,9 @@ public class MenuMode implements Screen {
 
     @Override
     public void render(float delta) {
-
+        canvas.begin();
+        canvas.draw(settingsIcon, 20, canvas.getHeight()*0.9f, 100, 100, 100, 100, 100, 100);
+        canvas.end();
     }
 
     @Override
@@ -184,6 +200,14 @@ public class MenuMode implements Screen {
 
     }
 
+    public void drawGoToSettings(){
+        canvas.draw(settingsIcon, Color.WHITE,
+                settingsIcon.getWidth() / 2f, settingsIcon.getHeight() / 2f,
+                canvas.getWidth()*0.1f, canvas.getHeight()*0.9f,
+                0, scale.x*0.1f, scale.y*0.1f);
+        settingsIconHitbox = new Rectangle(canvas.getWidth()*0.1f-scale.x*settingsIcon.getWidth()/2*0.1f,canvas.getHeight()*0.9f+scale.y*settingsIcon.getHeight()/2*0.1f,scale.x*settingsIcon.getWidth()*0.1f,scale.y*settingsIcon.getHeight()*0.1f);
+    }
+
     public void setDefault(){
         float x = Gdx.input.getX();
         float y = canvas.getHeight() - Gdx.input.getY();
@@ -198,6 +222,5 @@ public class MenuMode implements Screen {
                 }
             }
         }
-
     }
 }

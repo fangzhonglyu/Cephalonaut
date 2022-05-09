@@ -101,6 +101,12 @@ public class MainMenuNestedMode extends MenuMode {
                     }
                 }
             }
+
+            if(settingsIconHitbox != null){
+                if(settingsIconHitbox.x <= x && settingsIconHitbox.x + settingsIconHitbox.width >= x && settingsIconHitbox.y >= y && settingsIconHitbox.y - settingsIconHitbox.height <= y ){
+                    goToSettings = true;
+                }
+            }
             return true;
         }
     };
@@ -167,8 +173,10 @@ public class MainMenuNestedMode extends MenuMode {
         if (levelSelected && listener != null) {
             levelSelected = false;
             SoundController.playSound(6,1);
-
             listener.exitScreen(this, CHECKPOINT_SELECTED_CODE);
+        } else if(goToSettings){
+            goToSettings = false;
+            listener.exitScreen(this, MenuMode.OPTIONS_CODE);
         } else {
             update(delta);
             draw();
@@ -288,6 +296,7 @@ public class MainMenuNestedMode extends MenuMode {
         displayFont.getData().setScale(0.6f);
         canvas.drawText("WORLD " + (curLevel+1), displayFont, width*0.2f, height*0.9f);
         displayFont.setColor(Color.WHITE);
+        super.drawGoToSettings();
 
         canvas.end();
     }

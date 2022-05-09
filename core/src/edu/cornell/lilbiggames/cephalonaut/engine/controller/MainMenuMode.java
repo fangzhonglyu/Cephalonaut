@@ -100,6 +100,12 @@ public class MainMenuMode extends MenuMode {
                 }
             }
 
+            if(settingsIconHitbox != null){
+                if(settingsIconHitbox.x <= x && settingsIconHitbox.x + settingsIconHitbox.width >= x && settingsIconHitbox.y >= y && settingsIconHitbox.y - settingsIconHitbox.height <= y ){
+                    goToSettings = true;
+                }
+            }
+
             return true;
         }
 
@@ -158,6 +164,9 @@ public class MainMenuMode extends MenuMode {
             SoundController.playSound(6,1);
             levelSelected = false;
             listener.exitScreen(this, LEVEL_SELECTED_CODE);
+        } else if (goToSettings){
+            goToSettings = false;
+            listener.exitScreen(this, MenuMode.OPTIONS_CODE);
         } else {
             update(delta);
             draw();
@@ -284,8 +293,7 @@ public class MainMenuMode extends MenuMode {
         left = new Rectangle(width/5f - 0.1f*leftArrow.getWidth()/2f, height/2-textHeight+100f + 0.1f*scale.x* leftArrow.getHeight()/2f, 0.1f*leftArrow.getWidth(), 0.1f*leftArrow.getHeight());
         right = new Rectangle(width - width/5f - 0.1f*rightArrow.getWidth()/2f, height/2-textHeight+100f + 0.1f*scale.x* rightArrow.getHeight()/2f, 0.1f*rightArrow.getWidth(), 0.1f*rightArrow.getHeight());
 
-
-
+        super.drawGoToSettings();
         canvas.end();
     }
 }

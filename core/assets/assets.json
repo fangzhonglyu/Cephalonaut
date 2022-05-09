@@ -106,7 +106,8 @@
     "RIGHT-click": "UI-right-click.png",
     "SPACE-key": "UI-space-key.png",
     "white-arrow": "UI-arrow-white.png",
-    "banner": "banner.png"
+    "banner": "banner.png",
+    "settings-icon": "UI-settings.png"
   },
   "jsons": {
     "dialogue": "dialogue.json",

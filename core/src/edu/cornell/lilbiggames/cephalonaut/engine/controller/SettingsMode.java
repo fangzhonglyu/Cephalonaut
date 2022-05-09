@@ -49,6 +49,7 @@ public class SettingsMode extends MenuMode {
     private final float DEFAULT_VOLUME = 0.5f;
     private float musicVolume;
     private float fxVolume;
+    private float KNOB_RADIUS = 20.0f;
 
     XBoxController xbox;
     private boolean prevUp;
@@ -126,8 +127,8 @@ public class SettingsMode extends MenuMode {
 
         keybindingMode = false;
         dragging = false;
-        musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
-        fxVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, fxVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, 20.0f);
+        musicVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, musicVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, KNOB_RADIUS);
+        fxVolumeSlider = new Slider(canvas, YELLOW,0.0f, 1.0f, fxVolume, false, canvas.getWidth()/3.0f, SLIDER_HEIGHT*scale.x, KNOB_RADIUS);
 
         Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
         if (controllers.size > 0) {
@@ -246,13 +247,13 @@ public class SettingsMode extends MenuMode {
         float sliderHeight = SLIDER_HEIGHT*scale.y;
 
         musicVolumeSlider.updatePosition(width * 0.3f, start - sliderHeight/2);
-        musicVolumeSlider.updateSize(width/4f, sliderHeight);
+        musicVolumeSlider.updateSize(width/4f, sliderHeight, scale.x*KNOB_RADIUS);
         musicVolumeSlider.draw();
 
 
         //soundfx
         fxVolumeSlider.updatePosition(width*0.7f, start - sliderHeight/2);
-        fxVolumeSlider.updateSize(width/4f, sliderHeight);
+        fxVolumeSlider.updateSize(width/4f, sliderHeight, scale.x*KNOB_RADIUS);
         fxVolumeSlider.draw();
         canvas.end();
     }
