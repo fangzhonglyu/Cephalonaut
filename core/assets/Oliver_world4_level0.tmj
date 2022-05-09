@@ -7,8 +7,6 @@
          "image":"BG-2-lblue.png",
          "name":"Image Layer 1",
          "opacity":1,
-         "repeatx":true,
-         "repeaty":true,
          "type":"imagelayer",
          "visible":true,
          "x":0,
@@ -160,18 +158,6 @@
                  "y":189.946992059291
                 }, 
                 {
-                 "gid":130,
-                 "height":33.854420328216,
-                 "id":6,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":31.4716781365802,
-                 "x":80.8761249338274,
-                 "y":543.499205929063
-                }, 
-                {
                  "gid":144,
                  "height":32,
                  "id":7,
@@ -242,6 +228,18 @@
                  "width":16,
                  "x":64,
                  "y":240
+                }, 
+                {
+                 "gid":130,
+                 "height":32,
+                 "id":14,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":85.5,
+                 "y":543
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -250,7 +248,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":14,
+ "nextobjectid":15,
  "orientation":"orthogonal",
  "properties":[
         {

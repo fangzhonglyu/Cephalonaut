@@ -20,7 +20,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -115,8 +114,8 @@
                      "type":"",
                      "visible":true,
                      "width":0,
-                     "x":16.1818181818182,
-                     "y":36.1818181818182
+                     "x":15.8779684051478,
+                     "y":2.15064319473182
                     }],
              "opacity":1,
              "type":"objectgroup",
@@ -164,7 +163,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":3,
              "name":"",
              "objects":[
                     {
@@ -1307,7 +1305,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1385,7 +1382,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1463,7 +1459,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1537,7 +1532,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1611,7 +1605,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1690,6 +1683,74 @@
          "image":"A-matias-still.png",
          "imageheight":32,
          "imagewidth":32,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":-7.29239464008994,
+                             "y":1.51924888335207
+                            }, 
+                            {
+                             "x":-14.2809395035095,
+                             "y":10.3308924067941
+                            }, 
+                            {
+                             "x":-13.6732399501686,
+                             "y":18.5348363768953
+                            }, 
+                            {
+                             "x":-6.07699553340828,
+                             "y":26.1310807936556
+                            }, 
+                            {
+                             "x":-1.51924888335207,
+                             "y":28.2580292303485
+                            }, 
+                            {
+                             "x":2.73464799003373,
+                             "y":27.9541794536781
+                            }, 
+                            {
+                             "x":7.90009419343077,
+                             "y":25.5233812403148
+                            }, 
+                            {
+                             "x":13.9770897268391,
+                             "y":17.0155874935432
+                            }, 
+                            {
+                             "x":13.6732399501686,
+                             "y":8.5077937467716
+                            }, 
+                            {
+                             "x":6.3808453100787,
+                             "y":1.21539910668166
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":15.8001883868615,
+                     "y":1.51924888335207
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
          "properties":[
                 {
                  "name":"animation",
