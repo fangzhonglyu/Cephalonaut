@@ -100,9 +100,9 @@ public class GameCanvas {
 	private final ShaderProgram shaderProgram;
 	private final ShaderProgram accretionShader;
 
-	private final FrameBuffer bgFrame;
-	private final FrameBuffer fgFrame;
-	private final FrameBuffer temp;
+	private FrameBuffer bgFrame;
+	private FrameBuffer fgFrame;
+	private FrameBuffer temp;
 
 	private final float[] blackHoles = new float[60];
 	private int blackHoleCount;
@@ -160,7 +160,9 @@ public class GameCanvas {
 		float bounds_y = (bounds.y - 0.5f) * scale.y;
 
 
-		if (x + camera.viewportWidth / 2 > bounds_width) {
+		if (bounds_width <= camera.viewportWidth) {
+			camera.position.x = bounds_x + bounds_width / 2;
+		} else if (x + camera.viewportWidth / 2 > bounds_width) {
 			camera.position.x = bounds_width - camera.viewportWidth / 2;
 		} else if (x - camera.viewportWidth / 2 < bounds_x) {
 			camera.position.x = bounds_x + camera.viewportWidth / 2;
@@ -168,7 +170,9 @@ public class GameCanvas {
 			camera.position.x = x;
 		}
 
-		if (y + camera.viewportHeight / 2 > bounds_height) {
+		if (bounds_height <= camera.viewportHeight) {
+			camera.position.y = bounds_y + bounds_height / 2;
+		} else if (y + camera.viewportHeight / 2 > bounds_height) {
 			camera.position.y = bounds_height - camera.viewportHeight / 2;
 		} else if (y - camera.viewportHeight / 2 < bounds_y) {
 			camera.position.y = bounds_y + camera.viewportHeight / 2;
@@ -340,6 +344,11 @@ public class GameCanvas {
 	 public void resize() {
 //		shaderProgram.setUniformf("u_res", getWidth(), getHeight());
 		// Resizing screws up the spriteBatch projection matrix
+
+		bgFrame = new FrameBuffer(Pixmap.Format.RGB888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		fgFrame = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		temp = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+
 		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
 		shapeRen.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
 		camera.setToOrtho(false, getWidth(), getHeight());
@@ -517,7 +526,7 @@ public class GameCanvas {
 //		accretionShader.setUniformf("u_radius", 16 );
 		accretionShader.setUniform3fv("u_bh", blackHoles, 0, 3 * blackHoleCount);
 		accretionShader.setUniformi("u_bh_count", blackHoleCount);
-		accretionShader.setUniformf("u_res", 1920, 1080);
+		accretionShader.setUniformf("u_res", getWidth(), getHeight());
 		accretionShader.setUniformf("u_time", (System.currentTimeMillis() % 1000000) / 1000f);
 
 		//		shaderProgram.setUniformMatrix("u_projTrans", spriteBatch.getProjectionMatrix());
@@ -529,7 +538,7 @@ public class GameCanvas {
 		spriteBatch.setShader(shaderProgram);
 		shaderProgram.setUniform3fv("u_bh", blackHoles, 0, 3 * blackHoleCount);
 		shaderProgram.setUniformi("u_bh_count", blackHoleCount);
-		shaderProgram.setUniformf("u_res", 1920, 1080);
+		shaderProgram.setUniformf("u_res", getWidth(), getHeight());
 		spriteBatch.draw(temp.getColorBufferTexture(), x, y, getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), false, true);
 
 		// Draw fgFrame onto screen

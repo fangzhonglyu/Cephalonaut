@@ -295,7 +295,7 @@ public class MainMenuNestedMode extends MenuMode {
         float oy = 0.75f * filmstrip.getRegionHeight();
         canvas.draw(filmstrip, Color.WHITE, ox, 0,
                 start + completedCheckpoints*diff, height/2 + 40,
-                0, scale.x*3, scale.y*3);
+                0, scale.x*2.5f, scale.y*2.5f);
 
         displayFont.setColor(YELLOW);
         displayFont.getData().setScale(0.6f);

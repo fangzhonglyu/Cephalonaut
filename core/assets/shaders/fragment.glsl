@@ -32,10 +32,10 @@ void main() {
 		float radius = u_bh[i].z;
 		
 		if (distance < radius) {
-			float alpha = smoothstep(0, pow(radius - R0, P), pow(radius - distance, P));
+			float alpha = smoothstep(0.0, pow(radius - R0, P), pow(radius - distance, P));
 			coords += offset / u_res * alpha; // * smoothstep(R0, R1, distance);
 		}
 	}
 	
-	gl_FragColor = texture(u_texture, coords);
+	gl_FragColor = texture2D(u_texture, coords);
 }

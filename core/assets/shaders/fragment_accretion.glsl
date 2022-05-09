@@ -21,7 +21,7 @@ uniform vec2 u_res;
 uniform float u_time;
 
 void main() {
-    vec4 color = texture(u_texture, v_texCoords);
+    vec4 color = texture2D(u_texture, v_texCoords);
 	
 	for (int i = 0; i < u_bh_count; i++) {
 		
@@ -46,15 +46,15 @@ void main() {
 		vec2 uv = offset / u_res.yy;
 		
 		float r = length(offset);
-		if (r > u_bh[i].z || r < 40) continue;
+		if (r > u_bh[i].z || r < 40.0) continue;
 		float r2 = r / u_res.y;
 		float theta = atan(uv.y, uv.x);
 		bool spiral = fract(2.5 * theta / pi + 7.0 * pow(r2, 0.4) - 0.5 * u_time) < 0.5;
 		
-		vec4 c = spiral ? accretion : vec4(.6, .5, .3, 0.);
+		vec4 c = spiral ? accretion : vec4(.6, .5, .3, .0);
 		
 		float re = sin((r2 * 50.0 + u_time * 5.0) * 1.0) / 2.0 + 1.0;
-		re *= smoothstep(0, u_bh[i].z - 45, u_bh[i].z - r);
+		re *= smoothstep(0.0, u_bh[i].z - 45.0, u_bh[i].z - r);
 		color = mix(color, c, re * 0.3);
 	}
     
