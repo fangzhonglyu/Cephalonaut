@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
+import org.w3c.dom.css.Rect;
 
 public class MenuMode implements Screen {
     public static final int LEVEL_SELECTED_CODE = 21;
@@ -27,9 +28,9 @@ public class MenuMode implements Screen {
     public static final int NESTED_MENU_EXIT_CODE = 52;
     public static final int NEXT_LEVEL_CODE = 53;
     public static final int EXIT_LOADING_CODE = 61;
+    public static final int DONE_LOADING_ASSETS = 71;
 
     protected final Color YELLOW = new Color(255.0f/256.0f, 232.0f/256.0f, 132.0f/256.0f, 1.0f);
-    protected final float ARROW_WIDTH = 20.0f;
 
     /** The font for giving messages to the player */
     private BitmapFont displayFont;
@@ -40,11 +41,14 @@ public class MenuMode implements Screen {
     /** Background texture for start-up */
     private Texture background;
 
+    private Texture settingsIcon;
+    protected Rectangle settingsIconHitbox;
+    protected boolean goToSettings;
+
     /** Reference to the game canvas */
     protected GameCanvas canvas;
 
     private AssetDirectory assets;
-    protected Texture arrow;
 
     protected Vector2 bounds,scale;
 
@@ -82,6 +86,13 @@ public class MenuMode implements Screen {
                     }
                 }
             }
+
+            if(settingsIconHitbox != null){
+                if(settingsIconHitbox.x <= x && settingsIconHitbox.x + settingsIconHitbox.width >= x && settingsIconHitbox.y >= y && settingsIconHitbox.y - settingsIconHitbox.height <= y ){
+                    goToSettings = true;
+                    exitScreen();
+                }
+            }
             return true;
         }
     };
@@ -109,9 +120,10 @@ public class MenuMode implements Screen {
 
         background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        arrow = assets.getEntry("arrow", Texture.class);
 
         this.assets = assets;
+
+        settingsIcon = assets.getEntry("settings-icon", Texture.class);
     }
 
     @Override
@@ -121,7 +133,9 @@ public class MenuMode implements Screen {
 
     @Override
     public void render(float delta) {
-
+        canvas.begin();
+        canvas.draw(settingsIcon, 20, canvas.getHeight()*0.9f, 100, 100, 100, 100, 100, 100);
+        canvas.end();
     }
 
     @Override
@@ -186,6 +200,14 @@ public class MenuMode implements Screen {
 
     }
 
+    public void drawGoToSettings(){
+        canvas.draw(settingsIcon, Color.WHITE,
+                settingsIcon.getWidth() / 2f, settingsIcon.getHeight() / 2f,
+                canvas.getWidth()*0.1f, canvas.getHeight()*0.9f,
+                0, scale.x*0.1f, scale.y*0.1f);
+        settingsIconHitbox = new Rectangle(canvas.getWidth()*0.1f-scale.x*settingsIcon.getWidth()/2*0.1f,canvas.getHeight()*0.9f+scale.y*settingsIcon.getHeight()/2*0.1f,scale.x*settingsIcon.getWidth()*0.1f,scale.y*settingsIcon.getHeight()*0.1f);
+    }
+
     public void setDefault(){
         float x = Gdx.input.getX();
         float y = canvas.getHeight() - Gdx.input.getY();
@@ -200,6 +222,5 @@ public class MenuMode implements Screen {
                 }
             }
         }
-
     }
 }

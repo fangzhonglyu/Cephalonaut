@@ -3,14 +3,13 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 
-public class LoadingScreen extends MenuMode implements Screen {
+public class LevelLoadingScreen extends MenuMode implements Screen {
     private GameCanvas canvas;
     private ScreenListener listener;
 
@@ -30,7 +29,7 @@ public class LoadingScreen extends MenuMode implements Screen {
      * @param canvas   The game canvas to draw to
      * @param listener
      */
-    public LoadingScreen(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, float totalLoadingTime) {
+    public LevelLoadingScreen(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, float totalLoadingTime) {
         super(assets, canvas, listener);
         this.canvas = canvas;
         this.listener = listener;

@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.ImageObject;
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
@@ -35,6 +35,8 @@ public class MainMenuMode extends MenuMode {
     private Texture background;
 
     private Texture levelIcon;
+    private Texture leftArrow;
+    private Texture rightArrow;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -43,11 +45,8 @@ public class MainMenuMode extends MenuMode {
 
     private int curLevel;
 
-    private Vector2 bounds,scale;
-
     private boolean levelSelected;
 
-    private Color tint;
     private Rectangle hitBox;
     XBoxController xbox;
     private boolean prevRight;
@@ -55,17 +54,24 @@ public class MainMenuMode extends MenuMode {
     private boolean prevExit;
     private boolean prevSelect;
 
+    private boolean shouldAnimate;
+    private FilmStrip[] filmStrips;
+    private float frame;
+
+    private Rectangle left;
+    private Rectangle right;
+
     protected InputAdapter mainMenuInput = new InputAdapter() {
         public boolean mouseMoved (int x, int screenY) {
             if(hitBox != null){
                 float y = canvas.getHeight() - screenY;
                 if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
-                    tint = Color.WHITE;
+                   shouldAnimate = false;
                 } else {
-                    tint = Color.GRAY;
+                   shouldAnimate = true;
+                   frame = 0;
                 }
             }
-
 
             return true;
         }
@@ -75,6 +81,28 @@ public class MainMenuMode extends MenuMode {
             if(hitBox != null){
                 if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
                     levelSelected = true;
+                }
+            }
+
+            if(left != null){
+                if(left.x <= x && left.x + left.width >= x && left.y >= y && left.y - left.height <= y ){
+                    curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
+                    frame = 0;
+                    SoundController.playSound(4, 1);
+                }
+            }
+
+            if(right != null){
+                if(right.x <= x && right.x + right.width >= x && right.y >= y && right.y - right.height <= y ){
+                    curLevel = (curLevel + 1) % NUM_LEVELS;
+                    frame = 0;
+                    SoundController.playSound(4,1);
+                }
+            }
+
+            if(settingsIconHitbox != null){
+                if(settingsIconHitbox.x <= x && settingsIconHitbox.x + settingsIconHitbox.width >= x && settingsIconHitbox.y >= y && settingsIconHitbox.y - settingsIconHitbox.height <= y ){
+                    goToSettings = true;
                 }
             }
 
@@ -98,15 +126,24 @@ public class MainMenuMode extends MenuMode {
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
 
-
-        tint = Color.GRAY;
+        shouldAnimate = true;
 
         background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        leftArrow = assets.getEntry( "arrowLeft", Texture.class);
+        rightArrow = assets.getEntry( "arrowRight", Texture.class);
         this.assets = assets;
 
         curLevel = DEFAULT_LEVEL;
         levelIcon = assets.getEntry("levelicon:level_" + curLevel, Texture.class);
+        filmStrips = new FilmStrip[7];
+
+        for (int i = 0; i < 7; i++) {
+            int cols = i == 6 ? 7 : 5;
+            filmStrips[i] = new FilmStrip(assets.getEntry("levelidle:level_" + i, Texture.class), 1, cols);
+            filmStrips[i].setFrame(0);
+        }
         Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
         if (controllers.size > 0) {
             xbox = controllers.get( 0 );
@@ -122,10 +159,14 @@ public class MainMenuMode extends MenuMode {
 
     @Override
     public void render(float delta) {
+        frame = (frame+delta*5f)%5;
         if (levelSelected && listener != null) {
             SoundController.playSound(6,1);
             levelSelected = false;
             listener.exitScreen(this, LEVEL_SELECTED_CODE);
+        } else if (goToSettings){
+            goToSettings = false;
+            listener.exitScreen(this, MenuMode.OPTIONS_CODE);
         } else {
             update(delta);
             draw();
@@ -136,14 +177,6 @@ public class MainMenuMode extends MenuMode {
         Gdx.input.setInputProcessor(mainMenuInput);
         float x = Gdx.input.getX();
         float y = canvas.getHeight() - Gdx.input.getY();
-
-        if(hitBox != null){
-            if(hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y >= y && hitBox.y - hitBox.height <= y ){
-                tint = Color.WHITE;
-            } else {
-                tint = Color.GRAY;
-            }
-        }
     }
 
     private void update(float delta){
@@ -153,10 +186,12 @@ public class MainMenuMode extends MenuMode {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftX() > 0.6f && prevRight != xbox.getLeftX() > 0.6f)){
             curLevel = (curLevel + 1) % NUM_LEVELS;
+            frame = 0;
             SoundController.playSound(4,1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftX() < -0.6f && prevLeft != xbox.getLeftX() < -0.6f)){
             curLevel = curLevel == 0 ? NUM_LEVELS - 1 : curLevel - 1;
+            frame = 0;
             SoundController.playSound(4, 1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
                 (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())){
@@ -210,6 +245,8 @@ public class MainMenuMode extends MenuMode {
         float height = canvas.getHeight();
         float width = canvas.getWidth();
 
+        displayFont.getData().setScale(scale.x);
+
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
@@ -217,19 +254,47 @@ public class MainMenuMode extends MenuMode {
                 20,
                 20);
 
+        float levelIconWidth = filmStrips[curLevel].getRegionWidth();
+        float levelIconHeight = filmStrips[curLevel].getRegionHeight();
 
-        float levelIconWidth = levelIcon.getWidth();
-        float levelIconHeight = levelIcon.getHeight();
+        float imageScale = shouldAnimate ? (curLevel == 6 ? 0.3f : 1.5f) : 2f;
 
-        canvas.draw(levelIcon, tint,
+        if(!shouldAnimate) {
+            levelIconWidth = levelIcon.getWidth();
+            levelIconHeight = levelIcon.getHeight();
+
+            canvas.draw(levelIcon, Color.WHITE,
                     levelIconWidth / 2f, levelIconHeight / 2f,
                     width / 2f, height / 2f + 100,
-                    0, 1.5f * scale.x, 1.5f * scale.y);
+                    0, imageScale * scale.x, imageScale * scale.y);
+        } else {
+            filmStrips[curLevel].setFrame((int)frame);
+            canvas.draw(filmStrips[curLevel], Color.WHITE,
+                     levelIconWidth/ 2f,  levelIconHeight/ 2f,
+                    width / 2f, height / 2f + 100,
+                    0, imageScale * scale.x, imageScale * scale.y);
+        }
 
-        hitBox = new Rectangle(width / 2f - (1.5f*scale.x)*levelIconWidth/2f, (height / 2f + 100) + (1.5f*scale.y)*levelIconHeight/2f, (1.5f*scale.x)*levelIconWidth, (1.5f*scale.y)*levelIconHeight);
+        float textHeight = Math.min((curLevel == 6 ? 0.3f : 1.5f)*filmStrips[curLevel].getRegionHeight(), 2f*levelIcon.getWidth())*scale.y;
+        displayFont.setColor(YELLOW);
+        canvas.drawTextCentered("WORLD " + (curLevel+1), displayFont, -textHeight+100f);
 
-        canvas.drawTextCentered("WORLD " + curLevel, displayFont, -levelIconHeight / 4f * scale.y - 60f);
+        // left arrow
+        canvas.draw(leftArrow, Color.WHITE,
+                leftArrow.getWidth() / 2f, leftArrow.getHeight() / 2f,
+                width / 5f, height/2-textHeight+100f,
+                0, 0.05f * scale.x, 0.05f * scale.y);
 
+        //right arrow
+        canvas.draw(rightArrow, Color.WHITE,
+                rightArrow.getWidth() / 2f, rightArrow.getHeight() / 2f,
+                width - width / 5f, height/2 -textHeight+100f, 0, 0.05f * scale.x, 0.05f * scale.y);
+
+        hitBox = new Rectangle(width / 2f - scale.x*imageScale*levelIconWidth/2f, (height / 2f + 100) + scale.y*imageScale*levelIconHeight/2f, scale.x*imageScale*levelIconWidth, scale.y*imageScale*levelIconHeight);
+        left = new Rectangle(width/5f - 0.1f*leftArrow.getWidth()/2f, height/2-textHeight+100f + 0.1f*scale.x* leftArrow.getHeight()/2f, 0.1f*leftArrow.getWidth(), 0.1f*leftArrow.getHeight());
+        right = new Rectangle(width - width/5f - 0.1f*rightArrow.getWidth()/2f, height/2-textHeight+100f + 0.1f*scale.x* rightArrow.getHeight()/2f, 0.1f*rightArrow.getWidth(), 0.1f*rightArrow.getHeight());
+
+        super.drawGoToSettings();
         canvas.end();
     }
 }

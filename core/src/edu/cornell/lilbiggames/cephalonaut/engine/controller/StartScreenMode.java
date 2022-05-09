@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
@@ -24,7 +25,8 @@ public class StartScreenMode extends MenuMode {
 
     /** Background texture for start-up */
     private Texture background;
-    private Texture banner;
+    private FilmStrip banner;
+    private float frame;
 
     private String[] options = {"START", "OPTIONS", "CREDITS" };
 
@@ -46,9 +48,10 @@ public class StartScreenMode extends MenuMode {
         this.listener = listener;
         background = assets.getEntry( "BG-1-teal.png", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        banner = assets.getEntry( "banner", Texture.class );
+        banner = new FilmStrip(assets.getEntry( "banner-filmstrip", Texture.class),1,7);
+        frame = 0;
+        banner.setFrame(0);
 
-        
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
         displayFont = assets.getEntry("retro", BitmapFont.class);
@@ -74,6 +77,8 @@ public class StartScreenMode extends MenuMode {
 
     @Override
     public void render(float delta) {
+        frame = (frame+10f*delta)%7;
+        banner.setFrame((int)frame);
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
                 (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())) {
@@ -111,9 +116,9 @@ public class StartScreenMode extends MenuMode {
 
         displayFont.getData().setScale(scale.x);
         displayFont.setColor(Color.ORANGE);
-        float start = (options.length*displayFont.getLineHeight())/2;
-        canvas.draw(banner, width/2 - scale.x*0.5f*banner.getWidth()/2, height/2+start, 0,0, banner.getWidth(), banner.getHeight(), scale.x*0.5f, scale.y*0.5f);
-        super.drawOptions(options, selectedOption);
+        float start = (options.length*displayFont.getLineHeight())/2 - scale.y*80f;
+        canvas.draw(banner, Color.WHITE, width/2 - scale.x*2.5f*banner.getRegionWidth()/2, height/2+start, scale.x*2.5f*banner.getRegionWidth(), scale.y*2.5f*banner.getRegionHeight());
+        super.drawOptions(options, selectedOption, (int)(scale.y*80));
 
         canvas.end();
     }
