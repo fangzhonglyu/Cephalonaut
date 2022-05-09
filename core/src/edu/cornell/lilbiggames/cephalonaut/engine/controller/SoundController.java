@@ -55,6 +55,9 @@ public class SoundController {
         soundCache[5] = directory.getEntry("wormHole",Sound.class);
         soundCache[6] = directory.getEntry("menuClick",Sound.class);
         soundCache[7] = directory.getEntry("electricDeath",Sound.class);
+        soundCache[8] = directory.getEntry("buttonSound",Sound.class);
+        soundCache[9] = directory.getEntry("DoorOpenSound",Sound.class);
+        soundCache[10] = directory.getEntry("healthPack",Sound.class);
         blackHoleSound = directory.getEntry("blackhole",Sound.class);
         //TODO load the sound effects into the cache
     }
@@ -82,10 +85,10 @@ public class SoundController {
         }
         if (!blackHolePlaying && sound) {
             blackHolePlaying = true;
-            blackHoleID = blackHoleSound.loop(sfxVolume*volume*2.25f);
+            blackHoleID = blackHoleSound.loop(sfxVolume*volume*2f);
         }
         if (blackHolePlaying && sound){
-            blackHoleSound.setVolume(blackHoleID,volume*sfxVolume*2.25f);
+            blackHoleSound.setVolume(blackHoleID,volume*sfxVolume*2f);
         }
     }
 
