@@ -119,10 +119,10 @@ public class LevelElement extends SimpleObstacle {
         glassBarrierTexture = assetDirectory.getEntry("GO-glass-filmstrip.png",Texture.class);
         glassBarrierTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         animationCache = new Texture[7];
-        animationCache[0] = assetDirectory.getEntry("",Texture.class);
-        animationCache[0].setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        animationCache[1] = assetDirectory.getEntry("",Texture.class);
-        animationCache[0].setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        //animationCache[0] = assetDirectory.getEntry("",Texture.class);
+        //animationCache[0].setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        //animationCache[1] = assetDirectory.getEntry("",Texture.class);
+        //animationCache[0].setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
     }
 
