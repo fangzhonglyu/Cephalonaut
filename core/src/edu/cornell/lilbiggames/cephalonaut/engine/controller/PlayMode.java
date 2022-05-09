@@ -486,7 +486,7 @@ public class PlayMode extends WorldController implements Screen {
 
         float x = canvas.getWidth() * 0.40f + canvas.getCameraX() + 56;
         float y = canvas.getHeight() * 0.47f + canvas.getCameraY() - 12;
-        canvas.draw(clock, Color.WHITE, clock.getWidth() / 2f, clock.getHeight() / 2f, x, y, 0, 0.9f, 0.9f);
+        canvas.drawFg(clock, Color.WHITE, clock.getWidth() / 2f, clock.getHeight() / 2f, x, y, 0, 0.9f, 0.9f);
 
         int minutes = (timer % 3600) / 60;
         int seconds = timer % 60;
