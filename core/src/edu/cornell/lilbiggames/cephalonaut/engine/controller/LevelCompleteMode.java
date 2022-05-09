@@ -173,6 +173,9 @@ public class LevelCompleteMode extends MenuMode {
             }
             starScoring.setFrame(starScoring.getFrame() + 1);
         }
+
+        canvas.setCameraPos(canvas.getWidth() / 2f, canvas.getHeight() / 2f);
+
     }
 
     public void exitScreen() {
@@ -219,14 +222,12 @@ public class LevelCompleteMode extends MenuMode {
     }
 
     public void draw() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        float height = canvas.getHeight();
+        float width = canvas.getWidth();
 
         canvas.clear();
         canvas.begin();
 
-        float height = canvas.getHeight();
-        float width = canvas.getWidth();
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
@@ -235,8 +236,6 @@ public class LevelCompleteMode extends MenuMode {
                 20);
 
         super.drawGoToSettings();
-
-        canvas.setCameraPos(width / 2, height / 2);
 
         canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
 

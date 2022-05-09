@@ -162,7 +162,7 @@ public class DialogueMode {
     private void drawVisual(Texture texture, float cx, float cy) {
         float Y_OFFSET = 395f;
         float X_OFFSET = 410f;
-        canvas.draw(texture, Color.WHITE,
+        canvas.drawFg(texture, Color.WHITE,
                 texture.getWidth() / 2f, texture.getHeight() / 2f,
                 cx - canvas.getWidth() / 2f + X_OFFSET * scale.x, cy - Y_OFFSET * scale.y,
                 0, scale.x * KEY_WIDTH, scale.y * KEY_WIDTH);

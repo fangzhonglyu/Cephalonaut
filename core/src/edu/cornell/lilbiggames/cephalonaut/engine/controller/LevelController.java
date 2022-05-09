@@ -73,27 +73,6 @@ public class LevelController implements ContactListener {
                 cephalonautController.removeGrapple(grapple);
             }
         }
-
-//        if (object.getClass() == LevelElement.class) {
-//            switch (((LevelElement) object).getElement()) {
-//                case BLACK_HOLE:
-//                    attract(object);
-//                    break;
-//                case FLYING_METEOR:
-////						updateFlyingMeteor((LevelElement) object);
-//                    break;
-//                case BOOST_PAD:
-//                    boost((LEBoostPad) object);
-//                    break;
-//                case DOOR:
-//                    if (((LevelElement) object).getActivated()) {
-//                        openDoor((LevelElement) object);
-//                    }
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
     }
 
     /** Force from cephalonaut attracted to obj */

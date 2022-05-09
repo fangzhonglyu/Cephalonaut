@@ -358,24 +358,26 @@ public class GDXRoot extends Game implements ScreenListener {
 	}
 
 	private void performScreenTransition(Screen nextScreen){
+		alpha += fadeDirection ? 0.05 : -0.05;
+
 		if (alpha >= 1) {
+			alpha = 1;
 			if(nextScreen == startScreenMode || nextScreen == settings || nextScreen == levelCompleteMode || nextScreen == mainMenu || nextScreen == mainMenuNestedMode){
 				((MenuMode)nextScreen).setDefault();
 			}
 			setScreen(nextScreen);
 			fadeDirection = false;
-		}
-		else if (alpha <= 0 && fadeDirection == false) {
+		} else if (alpha <= 0 && !fadeDirection) {
+			alpha = 0;
 			transitioning = false;
 		}
-		alpha += fadeDirection == true ? 0.05 : -0.05;
 	}
 
 	public void render(){
 		super.render();
 		if(transitioning){
-			performScreenTransition(nextScreen);
 			canvas.drawFade(alpha);
+			performScreenTransition(nextScreen);
 		}
 
 	}
