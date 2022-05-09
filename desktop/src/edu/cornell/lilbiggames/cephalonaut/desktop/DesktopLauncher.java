@@ -12,6 +12,7 @@
  */
 package edu.cornell.lilbiggames.cephalonaut.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import edu.cornell.lilbiggames.cephalonaut.engine.GDXRoot;
@@ -38,6 +39,7 @@ public class DesktopLauncher {
 		config.height = 1080;
 		config.resizable = true;
 		config.title = "Cephalonaut";
+		config.addIcon("A-michael-still.png", Files.FileType.Internal);
 		new LwjglApplication(new GDXRoot(), config);
 	}
 }
