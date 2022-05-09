@@ -24,6 +24,9 @@ public class LevelController implements ContactListener {
 
     float closestBlackHole = Float.MAX_VALUE;
 
+    private boolean grappleOnBrokenGlass = false;
+    private boolean grappleOnGlass = false;
+
     public LevelController(ScreenListener listener, CephalonautModel cephalonaut, PlayMode playMode) {
         this.cephalonaut = cephalonaut;
         this.playMode = playMode;
@@ -72,6 +75,12 @@ public class LevelController implements ContactListener {
             if (grapple.isOut()) {
                 cephalonautController.removeGrapple(grapple);
             }
+        }
+
+        if(grappleOnBrokenGlass) {
+            GrappleModel grapple = cephalonaut.getGrapple();
+            cephalonautController.removeGrapple(grapple);
+            grappleOnBrokenGlass = false;
         }
     }
 
@@ -228,6 +237,10 @@ public class LevelController implements ContactListener {
             if (contactObject instanceof LEGlassBarrier) {
                 LEGlassBarrier glassBarrier = (LEGlassBarrier) contactObject;
                 hit(glassBarrier);
+                if(glassBarrier.isBroken() && grappleOnGlass) {
+                    grappleOnBrokenGlass = true;
+                    grappleOnGlass = false;
+                }
             }
 
         }
@@ -236,9 +249,16 @@ public class LevelController implements ContactListener {
             contactObject = getOtherBody(contact, grapple);
             if (contactObject != null && contactObject.canGrapple()) {
                 grapple.setAnchored(true);
-                SoundController.playSound(0,1);
+                SoundController.playSound(0, 1);
                 grapple.setExtensionLength(1 + cephalonaut.getPosition().dst(contactObject.getPosition()));
                 grapple.setAnchorLocation(contactObject.getName());
+            }
+        }
+        
+        if(grapple.isAnchored()) {
+            contactObject = getOtherBody(contact, grapple);
+            if(contactObject instanceof LEGlassBarrier) {
+                grappleOnGlass = true;
             }
         }
     }
