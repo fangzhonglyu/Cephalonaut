@@ -60,30 +60,6 @@
                  "y":478.356769033277
                 }, 
                 {
-                 "gid":392,
-                 "height":48,
-                 "id":9,
-                 "name":"finish",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "canGrappleOn":false,
-                             "isSensor":true,
-                             "type":"Finish"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":417.495669446773,
-                 "y":126.93569645806
-                }, 
-                {
                  "gid":399,
                  "height":16,
                  "id":10,
@@ -382,6 +358,18 @@
                  "width":31.6667,
                  "x":33.2284348970252,
                  "y":478.410357093822
+                }, 
+                {
+                 "gid":393,
+                 "height":44,
+                 "id":38,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":59,
+                 "x":391.226137863743,
+                 "y":103.694312116168
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -390,7 +378,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":38,
+ "nextobjectid":39,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

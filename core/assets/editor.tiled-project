@@ -9,6 +9,33 @@
     "objectTypesFile": "",
     "propertyTypes": [
         {
+            "id": 5,
+            "members": [
+                {
+                    "name": "cols",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "rows",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "textureNum",
+                    "type": "int",
+                    "value": -1
+                },
+                {
+                    "name": "update",
+                    "type": "float",
+                    "value": 0
+                }
+            ],
+            "name": "animation",
+            "type": "class"
+        },
+        {
             "id": 3,
             "name": "BodyType",
             "storageType": "string",

@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ShortArray;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
@@ -93,6 +95,7 @@ public class LevelElement extends SimpleObstacle {
 
     private static Texture sparksTexture, glassBarrierTexture;
     private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture,spikeTexture,spikeBallTexture,engineTexture,brokenEngineTexture;
+    private static Texture[] animationCache;
 
     public static void collectAssets(AssetDirectory assetDirectory){
         wormholeTexture = assetDirectory.getEntry("A-wormhole-filmstrip.png",Texture.class);
@@ -115,6 +118,17 @@ public class LevelElement extends SimpleObstacle {
         brokenEngineTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         glassBarrierTexture = assetDirectory.getEntry("GO-glass-filmstrip.png",Texture.class);
         glassBarrierTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        animationCache = new Texture[7];
+        animationCache[0] = assetDirectory.getEntry("A-alex.png",Texture.class);
+        animationCache[1] = assetDirectory.getEntry("A-angie.png",Texture.class);
+        animationCache[2] = assetDirectory.getEntry("A-estelle.png",Texture.class);
+        animationCache[3] = assetDirectory.getEntry("A-teddy.png",Texture.class);
+        animationCache[4] = assetDirectory.getEntry("A-matias.png",Texture.class);
+        animationCache[5] = assetDirectory.getEntry("A-oliver.png",Texture.class);
+        animationCache[6] = assetDirectory.getEntry("A-barry.png",Texture.class);
+        for(int i = 0;i<7;i++){
+            animationCache[i].setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        }
     }
 
     public static LevelElement create(Def def) {
@@ -148,6 +162,9 @@ public class LevelElement extends SimpleObstacle {
             case BROKEN_ENGINE:
                 return new LEAnimated(def,new FilmStrip(brokenEngineTexture,1,6),5,false);
             default:
+                JsonValue anim = def.properties.get("animation");
+                if(anim!=null)
+                    return new LEAnimated(def, new FilmStrip(animationCache[anim.getInt("textureNum",0)],anim.getInt("rows",1),anim.getInt("cols",1)),anim.getFloat("update",7f),false);
                 return new LevelElement(def);
         }
     }

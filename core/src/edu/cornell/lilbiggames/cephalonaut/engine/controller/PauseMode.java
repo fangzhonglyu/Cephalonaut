@@ -70,6 +70,10 @@ public class PauseMode extends MenuMode {
         } else if(selectedOption == 2){
             listener.exitScreen(this, RESTART_LEVEL_CODE);
         }
+        if (goToSettings){
+            goToSettings = false;
+            listener.exitScreen(this, MenuMode.OPTIONS_CODE);
+        }
     }
 
 
@@ -85,6 +89,8 @@ public class PauseMode extends MenuMode {
 
     @Override
     public void render(float delta) {
+        canvas.clear();
+        super.render(delta);
         SoundController.setBlackHoleSound(false,0);
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
                 (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
@@ -112,17 +118,16 @@ public class PauseMode extends MenuMode {
     }
 
     public void draw(){
-        canvas.clear();
         canvas.begin();
 
-        float height = canvas.getHeight();
-        float width = canvas.getWidth();
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
                 20,
                 20);
+
+        super.drawGoToSettings();
         super.drawOptions(options, selectedOption);
 
         canvas.end();

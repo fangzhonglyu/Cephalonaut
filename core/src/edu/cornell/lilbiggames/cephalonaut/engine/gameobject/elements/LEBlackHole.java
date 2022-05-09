@@ -1,6 +1,7 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 
@@ -20,6 +21,8 @@ public class LEBlackHole extends LevelElement {
         texture = filmStrip;
         this.filmStrip = filmStrip;
         filmStrip.setFrame(0);
+        setBodyType(BodyDef.BodyType.KinematicBody);
+        setAngularVelocity(0.1f);
     }
 
     public float getBlackHoleAttractFactor() { return blackHoleAttractFactor; }

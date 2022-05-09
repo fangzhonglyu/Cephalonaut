@@ -267,6 +267,8 @@ public class CephalonautModel extends OctopusObstacle {
 
 
 	public void refillInk() {
+		if(ink<0.9f*max_ink)
+			SoundController.playSound(10,1);
 		ink = max_ink;
 	}
 
