@@ -7,18 +7,18 @@
       "[RIGHT_CLICK] Right click to release.",
       "[SPACE] You can also press the space bar to release the grapple."]
   },
-  "level_0:checkpoint_3": {
+  "level_0:checkpoint_4": {
     "part_0": ["Welcome to the Spike Lab!",
       "Watch out for spikes, they will kill you!"]
   },
   "level_2:checkpoint_0": {
     "part_0": ["Try going fast to break the glass."]
   },
+  "level_2:checkpoint_3": {
+    "part_0": ["Move over ink packs to refill your precious ink."]
+  },
   "level_3:checkpoint_0": {
     "part_0": ["Bump or grapple buttons to open doors."]
-  },
-  "level_3:checkpoint_1": {
-    "part_0": ["Move over ink packs to refill your precious ink."]
   },
   "level_3:checkpoint_3": {
     "part_0": ["AAAAAaaahhh, get ready!"]
