@@ -107,17 +107,17 @@
         {
          "name":"music",
          "type":"int",
-         "value":3
+         "value":0
         }, 
         {
          "name":"threeStars",
          "type":"int",
-         "value":0
+         "value":5
         }, 
         {
          "name":"twoStars",
          "type":"int",
-         "value":0
+         "value":8
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
