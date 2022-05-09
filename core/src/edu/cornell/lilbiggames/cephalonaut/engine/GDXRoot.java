@@ -351,9 +351,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		super.render();
 		if(transitioning){
 			performScreenTransition(nextScreen);
-			canvas.begin();
 			canvas.drawFade(alpha);
-			canvas.end2();
 		}
 
 	}
