@@ -16,9 +16,9 @@ public class LevelLoadingScreen extends MenuMode implements Screen {
 
     private Texture background;
 
-    private final int NUM_FRAMES = 42;
-    private final int FILM_STRIP_SIZE = 15;
     private FilmStrip[] filmStrips;
+    private int numFrames;
+    private int totalFilmstripSize;
     private float frame;
     private float loadingTime;
     private float totalLoadingTime;
@@ -29,28 +29,28 @@ public class LevelLoadingScreen extends MenuMode implements Screen {
      * @param canvas   The game canvas to draw to
      * @param listener
      */
-    public LevelLoadingScreen(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, float totalLoadingTime) {
+    public LevelLoadingScreen(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, float totalLoadingTime, FilmStrip[] filmStrips, int numFrames, int totalFilmstripSize) {
         super(assets, canvas, listener);
         this.canvas = canvas;
         this.listener = listener;
         this.loadingTime = totalLoadingTime;
         this.totalLoadingTime = totalLoadingTime;
+        this.setNewFilm(filmStrips, numFrames, totalFilmstripSize);
+
 
         background = assets.getEntry( "BG-1-teal.png", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
+    }
 
-        filmStrips = new FilmStrip[NUM_FRAMES/FILM_STRIP_SIZE + 1];
-        for(int i = 0; i <= NUM_FRAMES/FILM_STRIP_SIZE; i++) {
-            Texture loadingAnimation = assets.getEntry("loadingAnimation"+(i+1), Texture.class);
-            filmStrips[i] = new FilmStrip(loadingAnimation, 1, Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1), Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1),
-                    0, 0, loadingAnimation.getWidth(), loadingAnimation.getHeight());
-        }
-
+    public void setNewFilm(FilmStrip[] filmStrips, int numFrames, int totalFilmstripSize){
+        this.numFrames = numFrames;
+        this.totalFilmstripSize = totalFilmstripSize;
+        this.filmStrips = filmStrips;
         frame = 0;
-        filmStrips[0].setFrame(0);
+        this.filmStrips[0].setFrame(0);
     }
 
     public void setLoadingTime(float time){
@@ -66,13 +66,13 @@ public class LevelLoadingScreen extends MenuMode implements Screen {
             listener.exitScreen(this,MenuMode.EXIT_LOADING_CODE);
         }
         loadingTime -= 1;
-        frame = (frame+delta*10f)%NUM_FRAMES;
+        frame = (frame+delta*10f)%numFrames;
 
-        int currentFilmStripId = (int)(frame/FILM_STRIP_SIZE);
+        int currentFilmStripId = (int)(frame/totalFilmstripSize);
 
         FilmStrip filmStrip = filmStrips[currentFilmStripId];
 
-        filmStrip.setFrame((int)frame - (int)(frame/FILM_STRIP_SIZE)*FILM_STRIP_SIZE);
+        filmStrip.setFrame((int)frame - (int)(frame/totalFilmstripSize)*totalFilmstripSize);
 
         canvas.clear();
         canvas.begin();
