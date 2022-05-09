@@ -135,8 +135,9 @@ public class MainMenuNestedMode extends MenuMode {
 
         octopusTexture = new TextureRegion(assets.getEntry( "octopus.png", Texture.class ));
         levelTexture = assets.getEntry( "level-incomplete", Texture.class );
+        levelTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         levelCompletedTexture = assets.getEntry( "level-complete-3-star", Texture.class );
-
+        levelCompletedTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         filmstrip = new FilmStrip(assets.getEntry("octopus",Texture.class), 5, 9);
         frame = 0;
         maxFrame = 4;
