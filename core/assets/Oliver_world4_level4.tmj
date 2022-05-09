@@ -816,16 +816,16 @@
                  "y":498.744160401822
                 }, 
                 {
-                 "gid":136,
-                 "height":48,
-                 "id":127,
+                 "gid":131,
+                 "height":32,
+                 "id":129,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":48,
-                 "x":859.650190114069,
-                 "y":898.524714828897
+                 "width":32,
+                 "x":875.254752851711,
+                 "y":892.045627376426
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -834,7 +834,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":128,
+ "nextobjectid":130,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -855,7 +855,7 @@
          "source":"objects.tsj"
         }, 
         {
-         "firstgid":153,
+         "firstgid":160,
          "source":"space-tiles.tsj"
         }],
  "tilewidth":16,
