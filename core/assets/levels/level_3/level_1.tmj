@@ -70,7 +70,7 @@
                          "value":
                             {
                              "canGrappleOn":false,
-                             "isSensor":false,
+                             "isSensor":true,
                              "type":"Finish"
                             }
                         }],
@@ -1169,6 +1169,16 @@
          "name":"music",
          "type":"int",
          "value":5
+        }, 
+        {
+         "name":"threeStars",
+         "type":"int",
+         "value":25
+        }, 
+        {
+         "name":"twoStars",
+         "type":"int",
+         "value":30
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
