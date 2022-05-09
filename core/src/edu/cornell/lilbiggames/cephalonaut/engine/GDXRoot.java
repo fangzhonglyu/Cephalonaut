@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.engine.parsing.LevelLoader;
 
@@ -70,6 +71,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	private Map<Integer,Integer> numCheckpointsPerLevel;
 	private Map<Integer, List<TextureRegion>> levelWinTextures;
+
+	private final int NUM_FRAMES = 42;
+	private final int FILM_STRIP_SIZE = 15;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -247,7 +251,14 @@ public class GDXRoot extends Game implements ScreenListener {
 			settings = new SettingsMode(directory, canvas, this, keyBindings);
 			credits = new CreditsScreen(directory, canvas, this);
 			levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
-			loadingScreen = new LevelLoadingScreen(directory, canvas, this,200f);
+
+			FilmStrip[] filmStrips = new FilmStrip[NUM_FRAMES/FILM_STRIP_SIZE + 1];
+			for(int i = 0; i <= NUM_FRAMES/FILM_STRIP_SIZE; i++) {
+				Texture loadingAnimation = directory.getEntry("loadingAnimation"+(i+1), Texture.class);
+				filmStrips[i] = new FilmStrip(loadingAnimation, 1, Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1), Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1),
+						0, 0, loadingAnimation.getWidth(), loadingAnimation.getHeight());
+			}
+			loadingScreen = new LevelLoadingScreen(directory, canvas, this,200f, filmStrips, NUM_FRAMES, FILM_STRIP_SIZE);
 
 			SoundController.setMusicVolume(0.5f);
 			SoundController.startMenuMusic();
@@ -303,6 +314,18 @@ public class GDXRoot extends Game implements ScreenListener {
 			levelCompleteMode.setTimer(playMode.getTimer());
 			levelCompleteMode.setTimeString(playMode.getTimeString());
 			levelCompleteMode.setStars(playMode.getTwoStars(), playMode.getThreeStars());
+			if(mainMenu.getCurLevelNumber() == 0){
+				FilmStrip alexDap = new FilmStrip(directory.getEntry("alex-dap", Texture.class), 1, 14);
+				loadingScreen.setNewFilm(new FilmStrip[]{alexDap}, 14, 14);
+			} else {
+				FilmStrip[] filmStrips = new FilmStrip[NUM_FRAMES/FILM_STRIP_SIZE + 1];
+				for(int i = 0; i <= NUM_FRAMES/FILM_STRIP_SIZE; i++) {
+					Texture loadingAnimation = directory.getEntry("loadingAnimation"+(i+1), Texture.class);
+					filmStrips[i] = new FilmStrip(loadingAnimation, 1, Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1), Math.min(FILM_STRIP_SIZE, NUM_FRAMES-FILM_STRIP_SIZE*i+1),
+							0, 0, loadingAnimation.getWidth(), loadingAnimation.getHeight());
+				}
+				loadingScreen.setNewFilm(filmStrips, NUM_FRAMES, FILM_STRIP_SIZE);
+			}
 			loadingScreenTransition(levelCompleteMode);
 		} else if (exitCode == MenuMode.NEXT_LEVEL_CODE) {
 			if(mainMenuNestedMode.getNumCompletedCheckpoints() == numCheckpointsPerLevel.get(mainMenu.getCurLevelNumber())-1){
