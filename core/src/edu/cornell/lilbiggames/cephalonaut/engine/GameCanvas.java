@@ -25,6 +25,9 @@ import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.ui.Slider;
 
+import java.sql.Time;
+import java.util.Date;
+
 /**
  * Primary view class for the game, abstracting the basic graphics calls.
  * 
@@ -79,8 +82,6 @@ public class GameCanvas {
 
 	/** ShapeRenderer for the fuel bar*/
 	private ShapeRenderer shapeRen;
-	/** ShapeRenderer for the fuel bar*/
-	private ShapeRenderer shapeRen2;
 	
 	/** Value to cache window width (if we are currently full screen) */
 	int width;
@@ -96,6 +97,16 @@ public class GameCanvas {
 	/** Cache object to handle raw textures */
 	private TextureRegion holder;
 
+	private final ShaderProgram shaderProgram;
+	private final ShaderProgram accretionShader;
+
+	private final FrameBuffer bgFrame;
+	private final FrameBuffer fgFrame;
+	private final FrameBuffer temp;
+
+	private final float[] blackHoles = new float[60];
+	private int blackHoleCount;
+
 	/**
 	 * Creates a new GameCanvas determined by the application configuration.
 	 * 
@@ -108,19 +119,32 @@ public class GameCanvas {
 		spriteBatch = new PolygonSpriteBatch();
 		debugRender = new ShapeRenderer();
 		shapeRen = new ShapeRenderer();
-//		shapeRen2 = new ShapeRenderer();
-		
+
 		// Set the projection matrix (for proper scaling)
 		camera = new OrthographicCamera(getWidth(),getHeight());
 		camera.setToOrtho(false);
 		spriteBatch.setProjectionMatrix(camera.combined);
 		debugRender.setProjectionMatrix(camera.combined);
 
+		spriteBatch.enableBlending();
+
 		// Initialize the cache objects
 		holder = new TextureRegion();
 		local  = new Affine2();
 		global = new Matrix4();
 		vertex = new Vector2();
+
+		String vertexShader = Gdx.files.internal("shaders/vertex.glsl").readString();
+		String fragmentShader = Gdx.files.internal("shaders/fragment.glsl").readString();
+		String fragmentAccretionShader = Gdx.files.internal("shaders/fragment_accretion.glsl").readString();
+
+		shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
+		accretionShader = new ShaderProgram(vertexShader, fragmentAccretionShader);
+
+		bgFrame = new FrameBuffer(Pixmap.Format.RGB888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		fgFrame = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		temp = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+
 	}
 
 	public void setCameraPos(float x, float y) {
@@ -314,6 +338,7 @@ public class GameCanvas {
 	 * weird scaling issues.
 	 */
 	 public void resize() {
+//		shaderProgram.setUniformf("u_res", getWidth(), getHeight());
 		// Resizing screws up the spriteBatch projection matrix
 		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
 		shapeRen.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
@@ -362,14 +387,43 @@ public class GameCanvas {
 		}
 		blend = state;
 	}
+
+	private void switchToSprite() {
+		if (!spriteBatch.isDrawing()) {
+			shapeRen.end();
+			fgFrame.end();
+			bgFrame.begin();
+			spriteBatch.begin();
+		}
+	}
+
+	private void switchToShape() {
+		if (!shapeRen.isDrawing()) {
+			spriteBatch.end();
+			bgFrame.end();
+			fgFrame.begin();
+		}
+	}
 	
 	/**
 	 * Clear the screen so we can start a new animation frame
 	 */
 	public void clear() {
     	// Clear the screen
+		bgFrame.end();
 		Gdx.gl.glClearColor(0.047f, 0.086f, 0.31f, 1.0f);  // Homage to the XNA years
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);		
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		Gdx.gl.glClearColor(0, 0, 0, 0);
+		bgFrame.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		bgFrame.end();
+		fgFrame.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		fgFrame.end();
+		temp.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		temp.end();
 	}
 
 	/**
@@ -412,33 +466,95 @@ public class GameCanvas {
 	 * Nothing is flushed to the graphics card until the method end() is called.
 	 */
     public void begin() {
+		blackHoleCount = 0;
+
+		Gdx.gl.glClearColor(0, 0, 0, 0);
+		fgFrame.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		fgFrame.end();
+		temp.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		temp.end();
+		bgFrame.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		bgFrame.end();
+
+		bgFrame.begin();
 		spriteBatch.setProjectionMatrix(camera.combined);
     	spriteBatch.begin();
     	shapeRen.setProjectionMatrix(camera.combined);
     	active = DrawPass.STANDARD;
     }
 
+	public void setBH(float x, float y, float radius) {
+		blackHoles[3 * blackHoleCount] = x - (camera.position.x - camera.viewportWidth / 2f);
+		blackHoles[3 * blackHoleCount + 1] = y - (camera.position.y - camera.viewportHeight / 2f);
+		blackHoles[3 * blackHoleCount + 2] = radius;
+		blackHoleCount++;
+	}
+
+	/**
+	 * Literally the jankest quick fix of my life but it's okay it'll work :)
+	 */
+	public void end2() {
+		spriteBatch.end();
+	}
+
 	/**
 	 * Ends a drawing sequence, flushing textures to the graphics card.
 	 */
     public void end() {
-    	spriteBatch.end();
-    	active = DrawPass.INACTIVE;
+		spriteBatch.flush();
+		bgFrame.end();
+
+		float x = camera.position.x - camera.viewportWidth / 2f;
+		float y = camera.position.y - camera.viewportHeight / 2f;
+
+		// Draw accretion disk from bgFrame onto temp
+		temp.begin();
+		// COMMENT FOLLOWING LINE TO DISABLE ACCRETION SHADERS:
+//		spriteBatch.setShader(accretionShader);
+//		accretionShader.setUniformf("u_radius", 16 );
+		accretionShader.setUniform3fv("u_bh", blackHoles, 0, 3 * blackHoleCount);
+		accretionShader.setUniformi("u_bh_count", blackHoleCount);
+		accretionShader.setUniformf("u_res", 1920, 1080);
+		accretionShader.setUniformf("u_time", (System.currentTimeMillis() % 1000000) / 1000f);
+
+		//		shaderProgram.setUniformMatrix("u_projTrans", spriteBatch.getProjectionMatrix());
+		spriteBatch.draw(bgFrame.getColorBufferTexture(), x, y, getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), false, true);
+		spriteBatch.flush();
+		temp.end();
+
+		// Draw black hole warping from temp onto screen
+		spriteBatch.setShader(shaderProgram);
+		shaderProgram.setUniform3fv("u_bh", blackHoles, 0, 3 * blackHoleCount);
+		shaderProgram.setUniformi("u_bh_count", blackHoleCount);
+		shaderProgram.setUniformf("u_res", 1920, 1080);
+		spriteBatch.draw(temp.getColorBufferTexture(), x, y, getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), false, true);
+
+		// Draw fgFrame onto screen
+		spriteBatch.setShader(null);
+		spriteBatch.draw(fgFrame.getColorBufferTexture(), x, y, getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), false, true);
+
+		spriteBatch.end();
+		active = DrawPass.INACTIVE;
     }
 
 	public void drawFade(float fadeOut) {
-		spriteBatch.end();
+		switchToShape();
+		fgFrame.end();
+
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.setColor(0, 0, 0,fadeOut);
 		shapeRen.rect(getCameraX() - getWidth() / 2 - 1, getCameraY() - getHeight() / 2 - 1, getWidth() + 2, getHeight() + 2);
-		shapeRen.end();
-		spriteBatch.begin();
+
+		switchToSprite();
 	}
 
 	public void drawDialogueBox(float fade) {
-		spriteBatch.end();
+		switchToShape();
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -461,7 +577,8 @@ public class GameCanvas {
 		shapeRen.rect(getCameraX() - getWidth() * .4f, getCameraY() - getHeight() / 2 , getWidth() * .8f, 300f*getHeight()/1080f);
 		shapeRen.end();
 		Gdx.gl.glLineWidth(1f);
-		spriteBatch.begin();
+
+		switchToSprite();
 	}
 
 
@@ -499,6 +616,17 @@ public class GameCanvas {
 		spriteBatch.setColor(Color.WHITE);
 		spriteBatch.draw(image, x, y, 0, 0, image.getWidth(), image.getHeight(), sx, sy, 0,
 						srcX, srcY, srcWidth, srcHeight, false, false);
+	}
+
+	public void draw(Texture image, float x, float y, float width, float height, int srcX, int srcY, int srcWidth, int srcHeight, float sx, float sy) {
+		if (active != DrawPass.STANDARD) {
+			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+			return;
+		}
+
+		spriteBatch.setColor(Color.WHITE);
+		spriteBatch.draw(image, x, y, 0, 0, width, height, sx, sy, 0,
+				srcX, srcY, srcWidth, srcHeight, false, false);
 	}
 	
 	/**
@@ -593,6 +721,22 @@ public class GameCanvas {
 		// Call the master drawing method (more efficient that base method)
 		holder.setRegion(image);
 		draw(holder,tint,ox,oy,x,y,angle,sx,sy);
+	}
+
+	public void drawFg(Texture image, Color tint, float ox, float oy,
+					 float x, float y, float angle, float sx, float sy) {
+		if (active != DrawPass.STANDARD) {
+			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+			return;
+		}
+
+		// Call the master drawing method (more efficient that base method)
+		spriteBatch.flush();
+		fgFrame.begin();
+		holder.setRegion(image);
+		draw(holder,tint,ox,oy,x,y,angle,sx,sy);
+		spriteBatch.flush();
+		bgFrame.begin();
 	}
 	
 	/**
@@ -753,7 +897,7 @@ public class GameCanvas {
 
 	public void drawSimpleFuelBar(float ink, float maxInk, float x, float y) {
 		float percent = ink / maxInk;
-		spriteBatch.end();
+		switchToShape();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 
 		float width = getWidth() / 18f;
@@ -782,47 +926,50 @@ public class GameCanvas {
 			shapeRen.rectLine(lineX, bottom, lineX, bottom + height * .7f, 3);
 		}
 
-		shapeRen.end();
-		spriteBatch.begin();
+		switchToSprite();
 	}
 
 	public void drawBlackHoleOutline(float x, float y, float radius){
-		spriteBatch.end();
+		switchToShape();
+
 		shapeRen.begin(ShapeRenderer.ShapeType.Line);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glLineWidth(4f);
 		shapeRen.setColor(Color.valueOf("ff7c2160"));
 		shapeRen.circle(x, y, radius, 200);
-		shapeRen.end();
-		spriteBatch.begin();
+
+		switchToSprite();
 	}
 
 	public void drawLevelEndGlow(float x, float y){
-		spriteBatch.end();
+		switchToShape();
+
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glLineWidth(4f);
 		shapeRen.setColor(Color.valueOf("000000FF"));
 		shapeRen.circle(x, y, 50f, 200);
-		shapeRen.end();
-		spriteBatch.begin();
+
+		switchToSprite();
 	}
 
 
 	public void drawSlider(Slider slider){
 		float x = slider.getPosition().x;
 		float y = slider.getPosition().y;
-		spriteBatch.end();
+
+		switchToShape();
+
 		shapeRen.begin(ShapeRenderer.ShapeType.Line);
 		shapeRen.setColor(slider.getColor());
 		shapeRen.rect(x - slider.getWidth()/2.0f, y, slider.getWidth(), slider.getHeight());
 		shapeRen.end();
 		shapeRen.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRen.rect(slider.getKnobPosition().x, y - slider.getHeight()/2f, slider.getKnobRadius(), 2*slider.getKnobRadius());
-		shapeRen.end();
-		spriteBatch.begin();
+
+		switchToSprite();
 	}
 
 	/**
@@ -1157,8 +1304,12 @@ public class GameCanvas {
 			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
 			return;
 		}
+		spriteBatch.flush();
+		fgFrame.begin();
 		GlyphLayout layout = new GlyphLayout(font,text);
 		font.draw(spriteBatch, layout, x, y);
+		spriteBatch.flush();
+		bgFrame.begin();
     }
 
 	/**
@@ -1195,11 +1346,15 @@ public class GameCanvas {
 			Gdx.app.error("GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
 			return;
 		}
-		
+
+		spriteBatch.flush();
+		fgFrame.begin();
 		GlyphLayout layout = new GlyphLayout(font,text);
 		float x = (getWidth()  - layout.width) / 2.0f;
 		float y = (getHeight() + layout.height) / 2.0f;
 		font.draw(spriteBatch, layout, x, y+offset);
+		spriteBatch.flush();
+		bgFrame.begin();
     }
     
 	/**

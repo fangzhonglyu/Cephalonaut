@@ -77,8 +77,6 @@ public class LevelLoadingScreen extends MenuMode implements Screen {
         canvas.clear();
         canvas.begin();
 
-        float height = canvas.getHeight();
-        float width = canvas.getWidth();
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
@@ -90,6 +88,5 @@ public class LevelLoadingScreen extends MenuMode implements Screen {
         canvas.draw(filmStrip, Color.WHITE, ox, oy,
         canvas.getWidth()/2f, canvas.getHeight()/2f, 0, 0.5f, 0.5f);
         canvas.end();
-
     }
 }
