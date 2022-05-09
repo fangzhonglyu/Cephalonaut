@@ -329,7 +329,7 @@
                         {
                          "name":"dy",
                          "type":"float",
-                         "value":10
+                         "value":8
                         }],
                  "rotation":0,
                  "type":"",
