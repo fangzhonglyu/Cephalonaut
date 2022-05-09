@@ -1,6 +1,6 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements;
 
-import com.badlogic.gdx.math.MathUtils;
+import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
@@ -35,5 +35,11 @@ public class LEBlackHole extends LevelElement {
             time = 0;
             filmStrip.setFrame((filmStrip.getFrame() + 1) % filmStrip.getSize());
         }
+    }
+
+    @Override
+    public void draw(GameCanvas canvas) {
+        super.draw(canvas);
+        canvas.setBH(getX() * drawScale.x, getY() * drawScale.y, blackHoleRange * drawScale.x);
     }
 }

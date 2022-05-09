@@ -37,7 +37,7 @@ public class DesktopLauncher {
 		config.width  = 1920;
 		config.height = 1080;
 		config.resizable = true;
-		config.title = "Cephalonaut Beta";
+		config.title = "Cephalonaut";
 		new LwjglApplication(new GDXRoot(), config);
 	}
 }

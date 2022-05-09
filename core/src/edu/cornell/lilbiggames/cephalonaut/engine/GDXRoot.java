@@ -353,7 +353,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			performScreenTransition(nextScreen);
 			canvas.begin();
 			canvas.drawFade(alpha);
-			canvas.end();
+			canvas.end2();
 		}
 
 	}
