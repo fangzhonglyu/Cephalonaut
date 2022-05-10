@@ -7,6 +7,8 @@
          "image":"BG-7-red.png",
          "name":"Image Layer 1",
          "opacity":1,
+         "parallaxx":0.5,
+         "parallaxy":0.5,
          "type":"imagelayer",
          "visible":true,
          "x":0,
