@@ -89,6 +89,7 @@ public class MenuMode implements Screen {
             if(settingsIconHitbox != null){
                 if(settingsIconHitbox.x <= x && settingsIconHitbox.x + settingsIconHitbox.width >= x && settingsIconHitbox.y >= y && settingsIconHitbox.y - settingsIconHitbox.height <= y ){
                     goToSettings = true;
+                    SoundController.playSound(6,1);
                     exitScreen();
                 }
             }

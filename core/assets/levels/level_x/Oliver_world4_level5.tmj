@@ -529,7 +529,7 @@
                  "y":335.73539140022
                 }, 
                 {
-                 "gid":186,
+                 "gid":201,
                  "height":16,
                  "id":76,
                  "name":"",
@@ -556,7 +556,7 @@
                  "y":146.808239516801
                 }, 
                 {
-                 "gid":262,
+                 "gid":277,
                  "height":16,
                  "id":78,
                  "name":"",
@@ -589,7 +589,7 @@
                  "y":1449.9910176361
                 }, 
                 {
-                 "gid":186,
+                 "gid":201,
                  "height":16,
                  "id":79,
                  "name":"",
@@ -616,7 +616,7 @@
                  "y":1391.51889737807
                 }, 
                 {
-                 "gid":262,
+                 "gid":277,
                  "height":16,
                  "id":81,
                  "name":"",
@@ -735,15 +735,15 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"tileset.tsj"
+         "source":"..\/..\/tileset.tsj"
         }, 
         {
          "firstgid":129,
-         "source":"objects.tsj"
+         "source":"..\/..\/objects.tsj"
         }, 
         {
-         "firstgid":145,
-         "source":"space-tiles.tsj"
+         "firstgid":160,
+         "source":"..\/..\/space-tiles.tsj"
         }],
  "tilewidth":16,
  "type":"map",

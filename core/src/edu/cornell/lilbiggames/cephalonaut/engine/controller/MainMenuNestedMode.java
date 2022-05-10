@@ -105,6 +105,7 @@ public class MainMenuNestedMode extends MenuMode {
             if(settingsIconHitbox != null){
                 if(settingsIconHitbox.x <= x && settingsIconHitbox.x + settingsIconHitbox.width >= x && settingsIconHitbox.y >= y && settingsIconHitbox.y - settingsIconHitbox.height <= y ){
                     goToSettings = true;
+                    SoundController.playSound(6,1);
                 }
             }
             return true;
