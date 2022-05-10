@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":4,
-         "image":"BG-2-lblue.png",
+         "image":"..\/..\/BG-6-magenta.png",
          "name":"Image Layer 1",
          "opacity":1,
          "type":"imagelayer",

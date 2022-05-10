@@ -4,9 +4,11 @@
  "layers":[
         {
          "id":3,
-         "image":"BG-2-lblue.png",
+         "image":"..\/..\/BG-6-magenta.png",
          "name":"Image Layer 1",
          "opacity":1,
+         "parallaxx":0.5,
+         "parallaxy":0.5,
          "type":"imagelayer",
          "visible":true,
          "x":0,
