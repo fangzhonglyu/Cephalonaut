@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":9,
-         "image":"..\/..\/BG-4-violet.png",
+         "image":"..\/..\/BG-1-teal.png",
          "name":"Background",
          "offsetx":-307.013352073085,
          "offsety":-121.714846815995,
@@ -12,7 +12,7 @@
          "parallaxx":0.5,
          "parallaxy":0.5,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
