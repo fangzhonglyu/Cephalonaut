@@ -45,8 +45,6 @@ public class LevelCompleteMode extends MenuMode {
 
     private AssetDirectory assets;
 
-    private Vector2 bounds, scale;
-
     private int timer;
 
     private String timeString;
@@ -236,8 +234,9 @@ public class LevelCompleteMode extends MenuMode {
                 20);
 
         super.drawGoToSettings();
+        displayFont.getData().setScale(scale.y);
 
-        canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f * scale.y);
+        canvas.drawTextCentered("LEVEL COMPLETED", displayFont, canvas.getHeight()*0.4f);
 
         int stars = 1;
         if (timer <= threeStars) {
@@ -277,7 +276,7 @@ public class LevelCompleteMode extends MenuMode {
         int seconds3 = threeStars % 60;
         String timeString3 = String.format("%02d:%02d", minutes3, seconds3);
 
-        super.drawOptions(options, selectedOption, 150);
+        super.drawOptions(options, selectedOption, (int)(150*scale.y));
 
         float x = canvas.getWidth() * 0.40f + canvas.getCameraX() - 120 * scale.x;
         float y = canvas.getHeight() * 0.47f + canvas.getCameraY() - 5 * scale.y;
