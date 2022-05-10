@@ -163,6 +163,7 @@ public class SettingsMode extends MenuMode {
             if(Gdx.input.isKeyJustPressed(currentKey)) {
                 keyBindings.put(options[selectedOption], currentKey);
                 keybindingMode = false;
+                SoundController.playSound(6,1);
             }
         } else {
             if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
@@ -179,7 +180,7 @@ public class SettingsMode extends MenuMode {
             } else {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                     keybindingMode = true;
-
+                    SoundController.playSound(6,1);
                     //keyBindings.put(options[selectedOption], currentKey);
                 }
             }
