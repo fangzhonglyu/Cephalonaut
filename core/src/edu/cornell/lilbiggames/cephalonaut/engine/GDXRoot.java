@@ -314,7 +314,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			levelCompleteMode.setTimer(playMode.getTimer());
 			levelCompleteMode.setTimeString(playMode.getTimeString());
 			levelCompleteMode.setStars(playMode.getTwoStars(), playMode.getThreeStars());
-			if(mainMenu.getCurLevelNumber() == 0){
+			if(mainMenu.getCurLevelNumber() == 0 && playMode.getCheckpoint().equals("checkpoint_6")){
 				FilmStrip alexDap = new FilmStrip(directory.getEntry("alex-dap", Texture.class), 1, 14);
 				loadingScreen.setNewFilm(new FilmStrip[]{alexDap}, 14, 14);
 			} else {
