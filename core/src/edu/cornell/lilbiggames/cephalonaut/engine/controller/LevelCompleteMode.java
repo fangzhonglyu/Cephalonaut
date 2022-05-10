@@ -237,7 +237,7 @@ public class LevelCompleteMode extends MenuMode {
 
         super.drawGoToSettings();
 
-        canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f);
+        canvas.drawTextCentered("LEVEL COMPLETED", displayFont, 300f * scale.y);
 
         int stars = 1;
         if (timer <= threeStars) {
@@ -250,12 +250,12 @@ public class LevelCompleteMode extends MenuMode {
             if (stars == 3) {
                 canvas.draw(starScoring, Color.WHITE,
                         starScoring.getFwidth() / 2f, starScoring.getFheight() / 2f,
-                        width / 2f - 130 + 130 * i, height / 2f + 150,
+                        width / 2f - 130 * scale.x + scale.x * (130 * i), height / 2f + scale.y * 150,
                         0, 0.5f * scale.x, 0.5f * scale.y);
             } else {
                 canvas.draw(starStill, Color.WHITE,
                         starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
-                        width / 2f - 130 + 130 * i, height / 2f + 150,
+                        width / 2f - 130 * scale.x + scale.x * (130 * i), height / 2f + scale.y * 150,
                         0, 0.5f * scale.x, 0.5f * scale.y);
             }
         }
@@ -263,7 +263,7 @@ public class LevelCompleteMode extends MenuMode {
         for (int i = 0; i < 3 - stars; i++) {
             canvas.draw(starFrame, Color.WHITE,
                     starFrame.getWidth() / 2f, starFrame.getHeight() / 2f,
-                    width / 2f + 130 - 130 * i, height / 2f + 150,
+                    width / 2f + 130 * scale.x - scale.x * (130 * i), height / 2f + scale.y * 150,
                     0, 0.5f * scale.x, 0.5f * scale.y);
         }
 
@@ -279,24 +279,24 @@ public class LevelCompleteMode extends MenuMode {
 
         super.drawOptions(options, selectedOption, 150);
 
-        float x = canvas.getWidth() * 0.40f + canvas.getCameraX() - 120;
-        float y = canvas.getHeight() * 0.47f + canvas.getCameraY() - 5;
+        float x = canvas.getWidth() * 0.40f + canvas.getCameraX() - 120 * scale.x;
+        float y = canvas.getHeight() * 0.47f + canvas.getCameraY() - 5 * scale.y;
         for (int i = 0; i < 3; i++) {
                 canvas.draw(starStill, Color.WHITE,
                         starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
-                        x + 50 * i, y,
+                        x + scale.x * (50 * i), y,
                         0, 0.2f * scale.x, 0.2f * scale.y);
                 if (i > 0) {
                     canvas.draw(starStill, Color.WHITE,
                             starStill.getFwidth() / 2f, starStill.getFheight() / 2f,
-                            x + 50 * i, height - 90,
+                            x + scale.x * (50 * i), y - 60 * scale.y,
                             0, 0.2f * scale.x, 0.2f * scale.y);
                 }
         }
 
-        displayFont.getData().setScale(0.5f);
-        canvas.drawTextTopRight(timeString3, displayFont, -20, -5);
-        canvas.drawTextTopRight(timeString2, displayFont, -20, 55);
+        displayFont.getData().setScale(0.5f * Math.min(scale.x, scale.y));
+        canvas.drawTextTopRight(timeString3, displayFont, (int) (-20 * scale.x), (int) (-5 * scale.y));
+        canvas.drawTextTopRight(timeString2, displayFont, (int) (-20 * scale.x), (int) (55 * scale.y));
         displayFont.getData().setScale(1f);
 
         canvas.end();
