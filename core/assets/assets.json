@@ -169,8 +169,7 @@
     "level_6:checkpoint_0": "levels/level_6/level_0.tmj",
     "level_6:checkpoint_1": "levels/level_6/level_1.tmj",
     "level_6:checkpoint_2": "levels/level_6/level_2.tmj",
-    "level_6:checkpoint_3": "levels/level_6/level_3.tmj",
-    "level_6:checkpoint_4": "levels/level_x/demo_level.tmj"
+    "level_6:checkpoint_3": "levels/level_6/level_3.tmj"
   },
   "music": {
     "level0": "music/CephalonautLevel1RoughMix1.mp3",
