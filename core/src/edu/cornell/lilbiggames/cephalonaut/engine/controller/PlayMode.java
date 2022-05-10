@@ -60,6 +60,7 @@ public class PlayMode extends WorldController implements Screen {
 
     /** Current level name */
     private String level;
+
     private String checkpoint;
 
     private float deathRotationCount;
@@ -277,6 +278,10 @@ public class PlayMode extends WorldController implements Screen {
 
     public int getTimer() {
         return timer;
+    }
+
+    public String getCheckpoint() {
+        return checkpoint;
     }
 
     /**
