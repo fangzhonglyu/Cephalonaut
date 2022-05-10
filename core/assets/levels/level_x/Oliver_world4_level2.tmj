@@ -7,8 +7,6 @@
          "image":"BG-7-red.png",
          "name":"Image Layer 1",
          "opacity":1,
-         "repeatx":true,
-         "repeaty":true,
          "type":"imagelayer",
          "visible":true,
          "x":0,
@@ -3547,15 +3545,15 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"tileset.tsj"
+         "source":"..\/..\/tileset.tsj"
         }, 
         {
          "firstgid":129,
-         "source":"objects.tsj"
+         "source":"..\/..\/objects.tsj"
         }, 
         {
          "firstgid":160,
-         "source":"space-tiles.tsj"
+         "source":"..\/..\/space-tiles.tsj"
         }],
  "tilewidth":16,
  "type":"map",

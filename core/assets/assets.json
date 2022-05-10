@@ -133,7 +133,6 @@
     "tile-tileset": "tileset.tsj",
     "object-tileset": "objects.tsj",
     "space-tileset": "space-tiles.tsj",
-    "wormhole_test": "wormhole_test.tmj",
     "level_0:checkpoint_0": "levels/level_0/level_0.tmj",
     "level_0:checkpoint_1": "levels/level_0/level_1.tmj",
     "level_0:checkpoint_2": "levels/level_0/level_2.tmj",

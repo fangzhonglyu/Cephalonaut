@@ -9,10 +9,8 @@
          "opacity":1,
          "parallaxx":0.5,
          "parallaxy":0.5,
-         "repeatx":true,
-         "repeaty":true,
          "type":"imagelayer",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -975,8 +973,8 @@
                  "type":"",
                  "visible":true,
                  "width":15,
-                 "x":205.640334799248,
-                 "y":660.640880662493
+                 "x":232.82992036405,
+                 "y":1395.58361774744
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1018,11 +1016,11 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"tileset.tsj"
+         "source":"..\/..\/tileset.tsj"
         }, 
         {
          "firstgid":129,
-         "source":"objects.tsj"
+         "source":"..\/..\/objects.tsj"
         }],
  "tilewidth":16,
  "type":"map",
