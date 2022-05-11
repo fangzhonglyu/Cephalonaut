@@ -345,9 +345,6 @@ public class GDXRoot extends Game implements ScreenListener {
 			startScreenTransition(postLoadingScreen);
 		} else if (exitCode == MenuMode.EXIT_SETTINGS_CODE){
 			if(prevScreen != null) {
-				if(prevScreen instanceof MenuMode){
-					((MenuMode)prevScreen).setDefault();
-				}
 				startScreenTransition(prevScreen);
 			} else {
 				startScreenMode.setDefault();
@@ -373,7 +370,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		if (alpha >= 1) {
 			alpha = 1;
-			if(nextScreen == startScreenMode || nextScreen == settings || nextScreen == levelCompleteMode || nextScreen == mainMenu || nextScreen == mainMenuNestedMode){
+			if(nextScreen instanceof MenuMode){
 				((MenuMode)nextScreen).setDefault();
 			}
 			setScreen(nextScreen);

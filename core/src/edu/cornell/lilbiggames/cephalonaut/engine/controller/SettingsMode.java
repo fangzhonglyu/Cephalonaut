@@ -58,6 +58,7 @@ public class SettingsMode extends MenuMode {
     private boolean prevExit;
 
     Rectangle[] bindingsHitBoxes;
+    Rectangle[] optionsHitBoxes;
 
 
     private InputAdapter settingsInput = new InputAdapter() {
@@ -98,9 +99,9 @@ public class SettingsMode extends MenuMode {
         @Override
         public boolean mouseMoved(int x, int screenY){
             int y = canvas.getHeight() - screenY;
-            if(bindingsHitBoxes != null && bindingsHitBoxes[0] != null){
-                for(int i = 0; i < bindingsHitBoxes.length; i++){
-                    Rectangle rect = bindingsHitBoxes[i];
+            if(optionsHitBoxes != null && optionsHitBoxes[0] != null){
+                for(int i = 0; i < optionsHitBoxes.length; i++){
+                    Rectangle rect = optionsHitBoxes[i];
                     if(rect.x <= x && rect.x + rect.width >= x && rect.y >= y && rect.y - rect.height <= y ){
                         if(i != selectedOption) keybindingMode = false;
                         selectedOption = i;
@@ -145,6 +146,7 @@ public class SettingsMode extends MenuMode {
         fxVolume = DEFAULT_VOLUME;
         options = keyBindings.keySet().toArray(new String[0]);
         bindingsHitBoxes = new Rectangle[keyBindings.size()];
+        optionsHitBoxes = new Rectangle[keyBindings.size()];
 
         background = assets.getEntry( "BG-1-teal.png", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -259,8 +261,11 @@ public class SettingsMode extends MenuMode {
             if(i == selectedOption) displayFont.setColor(YELLOW);
             if(i == selectedOption && keybindingMode) canvas.drawText("<Enter Key>", displayFont, 0.7f*width, textHeight);
             else canvas.drawText(Input.Keys.toString(keyBindings.get(binding)), displayFont, 0.75f * width, textHeight);
-            bindingsHitBoxes[i] = new Rectangle(0.75f*width, textHeight + displayFont.getLineHeight()/2f,100f*scale.x, displayFont.getLineHeight());
             displayFont.setColor(Color.ORANGE);
+
+            bindingsHitBoxes[i] = new Rectangle(0.75f*width, textHeight + displayFont.getLineHeight()/2f,100f*scale.x, displayFont.getLineHeight());
+            optionsHitBoxes[i] = new Rectangle(0, textHeight + displayFont.getLineHeight()/2f, canvas.getWidth(), displayFont.getLineHeight());
+
             i++;
         }
 
