@@ -64,7 +64,7 @@
                         {
                          "name":"ink",
                          "type":"float",
-                         "value":1
+                         "value":0.75
                         }],
                  "rotation":0,
                  "type":"",
@@ -92,7 +92,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":206,
+ "nextobjectid":207,
  "orientation":"orthogonal",
  "properties":[
         {

@@ -12,7 +12,7 @@
          "parallaxx":0.5,
          "parallaxy":0.5,
          "type":"imagelayer",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -38,6 +38,12 @@
                  "height":32,
                  "id":246,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"ink",
+                         "type":"float",
+                         "value":0.75
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -64,7 +70,7 @@
          "y":0
         }],
  "nextlayerid":30,
- "nextobjectid":248,
+ "nextobjectid":249,
  "orientation":"orthogonal",
  "properties":[
         {
