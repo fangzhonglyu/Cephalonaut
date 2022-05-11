@@ -235,7 +235,7 @@ public class LevelCompleteMode extends MenuMode {
                 20);
 
         super.drawGoToSettings();
-        displayFont.getData().setScale(scale.y);
+        displayFont.getData().setScale(Math.min(scale.x,scale.y));
 
         canvas.drawTextCentered("LEVEL COMPLETED", displayFont, canvas.getHeight()*0.4f);
 
