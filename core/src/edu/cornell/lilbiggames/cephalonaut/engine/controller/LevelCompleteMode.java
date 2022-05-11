@@ -179,6 +179,7 @@ public class LevelCompleteMode extends MenuMode {
     public void exitScreen() {
         if (goToSettings){
             goToSettings = false;
+            choiceMade = true;
             listener.exitScreen(this, MenuMode.OPTIONS_CODE);
         }
 
