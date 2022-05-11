@@ -270,7 +270,6 @@ public class GDXRoot extends Game implements ScreenListener {
 		SoundController.setBlackHoleSound(false,1);
 		SoundController.setInkSound(false);
 		if(exitCode == MenuMode.START_CODE){
-			PlayMode.resetMusic();
 			startScreenTransition(mainMenu);
 		} else if(exitCode == MenuMode.OPTIONS_CODE){
 			prevScreen = screen;
@@ -285,7 +284,6 @@ public class GDXRoot extends Game implements ScreenListener {
 			selectLevel();
 		} else if (exitCode == MenuMode.EXIT_LEVEL_CODE) {
 			SoundController.startMenuMusic();
-			PlayMode.resetMusic();
 			playMode.pause();
 			SoundController.setPlaying(false);
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);

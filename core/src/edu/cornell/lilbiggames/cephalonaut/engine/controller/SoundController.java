@@ -40,6 +40,8 @@ public class SoundController {
     /** volume of the music */
     private static float sfxVolume = .3f;
 
+    private static int currTrack;
+
     /** Gather assets. NEEDS TO BE CALLED BEFORE USE*/
     public synchronized static void gatherSoundAssets(AssetDirectory directory) {
         for (int i = 0; i < MENU_MUSIC_INDEX; i++) {
@@ -156,8 +158,11 @@ public class SoundController {
             playBGM(level);
             return;
         }
-        fadeOutBGM();
-        playBGMDelay(level, 1.2f);
+        if(currTrack != level) {
+            fadeOutBGM();
+            playBGMDelay(level, 1.2f);
+        }
+        currTrack = level;
     }
 
     /**
