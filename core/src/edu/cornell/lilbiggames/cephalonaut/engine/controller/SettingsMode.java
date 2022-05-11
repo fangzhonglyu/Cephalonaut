@@ -16,6 +16,7 @@ import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
+import java.awt.*;
 import java.util.Map;
 
 public class SettingsMode extends MenuMode {
@@ -206,7 +207,7 @@ public class SettingsMode extends MenuMode {
                 SoundController.playSound(4,1);
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
                     (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())) {
-                listener.exitScreen(this, RETURN_TO_START_CODE);
+                listener.exitScreen(this, MenuMode.EXIT_SETTINGS_CODE);
             } else {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                     keybindingMode = true;
