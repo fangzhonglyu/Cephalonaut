@@ -87,6 +87,7 @@ public class SettingsMode extends MenuMode {
                 for(int i = 0; i < bindingsHitBoxes.length; i++){
                     Rectangle rect = bindingsHitBoxes[i];
                     if(rect.x <= x && rect.x + rect.width >= x && rect.y >= y && rect.y - rect.height <= y ){
+                        SoundController.playSound(6,1);
                         selectedOption = i;
                         keybindingMode = true;
                     }
@@ -103,7 +104,10 @@ public class SettingsMode extends MenuMode {
                 for(int i = 0; i < optionsHitBoxes.length; i++){
                     Rectangle rect = optionsHitBoxes[i];
                     if(rect.x <= x && rect.x + rect.width >= x && rect.y >= y && rect.y - rect.height <= y ){
-                        if(i != selectedOption) keybindingMode = false;
+                        if (i != selectedOption) {
+                            SoundController.playSound(4, 1);
+                            keybindingMode = false;
+                        }
                         selectedOption = i;
                     }
                 }
