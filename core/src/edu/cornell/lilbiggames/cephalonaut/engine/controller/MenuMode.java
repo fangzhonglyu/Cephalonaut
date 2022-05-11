@@ -28,6 +28,7 @@ public class MenuMode implements Screen {
     public static final int NEXT_LEVEL_CODE = 53;
     public static final int EXIT_LOADING_CODE = 61;
     public static final int DONE_LOADING_ASSETS = 71;
+    public static final int EXIT_SETTINGS_CODE = 81;
 
     protected final Color YELLOW = new Color(255.0f/256.0f, 232.0f/256.0f, 132.0f/256.0f, 1.0f);
 

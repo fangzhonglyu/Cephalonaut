@@ -16,6 +16,7 @@ import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
+import java.awt.*;
 import java.util.Map;
 
 public class SettingsMode extends MenuMode {
@@ -56,6 +57,9 @@ public class SettingsMode extends MenuMode {
     private boolean prevDown;
     private boolean prevExit;
 
+    Rectangle[] bindingsHitBoxes;
+    Rectangle[] optionsHitBoxes;
+
 
     private InputAdapter settingsInput = new InputAdapter() {
         @Override
@@ -65,8 +69,9 @@ public class SettingsMode extends MenuMode {
         }
 
         @Override
-        public boolean touchDown (int x, int y, int pointer, int button) {
-            startPosition = new Vector2(x,getCanvas().getHeight()-y);
+        public boolean touchDown (int x, int screenY, int pointer, int button) {
+            startPosition = new Vector2(x,getCanvas().getHeight()-screenY);
+            float y = startPosition.y;
             dragging = true;
             if(musicVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
                 musicVolumeSlider.movedX(startPosition.x);
@@ -76,6 +81,36 @@ public class SettingsMode extends MenuMode {
             if(fxVolumeSlider.inKnobBounds(startPosition.x, startPosition.y)){
                 fxVolumeSlider.movedX(startPosition.x);
                 fxVolume = fxVolumeSlider.getValue();
+            }
+
+            if(bindingsHitBoxes != null  && bindingsHitBoxes[0] != null){
+                for(int i = 0; i < bindingsHitBoxes.length; i++){
+                    Rectangle rect = bindingsHitBoxes[i];
+                    if(rect.x <= x && rect.x + rect.width >= x && rect.y >= y && rect.y - rect.height <= y ){
+                        SoundController.playSound(6,1);
+                        selectedOption = i;
+                        keybindingMode = true;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean mouseMoved(int x, int screenY){
+            int y = canvas.getHeight() - screenY;
+            if(optionsHitBoxes != null && optionsHitBoxes[0] != null){
+                for(int i = 0; i < optionsHitBoxes.length; i++){
+                    Rectangle rect = optionsHitBoxes[i];
+                    if(rect.x <= x && rect.x + rect.width >= x && rect.y >= y && rect.y - rect.height <= y ){
+                        if (i != selectedOption) {
+                            SoundController.playSound(4, 1);
+                            keybindingMode = false;
+                        }
+                        selectedOption = i;
+                    }
+                }
             }
             return true;
         }
@@ -114,6 +149,8 @@ public class SettingsMode extends MenuMode {
         musicVolume = DEFAULT_VOLUME;
         fxVolume = DEFAULT_VOLUME;
         options = keyBindings.keySet().toArray(new String[0]);
+        bindingsHitBoxes = new Rectangle[keyBindings.size()];
+        optionsHitBoxes = new Rectangle[keyBindings.size()];
 
         background = assets.getEntry( "BG-1-teal.png", Texture.class );
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -176,12 +213,11 @@ public class SettingsMode extends MenuMode {
                 SoundController.playSound(4,1);
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
                     (xbox != null && xbox.isConnected() && xbox.getB() && prevExit != xbox.getB())) {
-                listener.exitScreen(this, RETURN_TO_START_CODE);
+                listener.exitScreen(this, MenuMode.EXIT_SETTINGS_CODE);
             } else {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                     keybindingMode = true;
                     SoundController.playSound(6,1);
-                    //keyBindings.put(options[selectedOption], currentKey);
                 }
             }
             if(xbox != null && xbox.isConnected()) {
@@ -230,6 +266,10 @@ public class SettingsMode extends MenuMode {
             if(i == selectedOption && keybindingMode) canvas.drawText("<Enter Key>", displayFont, 0.7f*width, textHeight);
             else canvas.drawText(Input.Keys.toString(keyBindings.get(binding)), displayFont, 0.75f * width, textHeight);
             displayFont.setColor(Color.ORANGE);
+
+            bindingsHitBoxes[i] = new Rectangle(0.75f*width, textHeight + displayFont.getLineHeight()/2f,100f*scale.x, displayFont.getLineHeight());
+            optionsHitBoxes[i] = new Rectangle(0, textHeight + displayFont.getLineHeight()/2f, canvas.getWidth(), displayFont.getLineHeight());
+
             i++;
         }
 

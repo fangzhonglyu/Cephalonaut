@@ -19,7 +19,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.*;
-import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
 import java.util.ArrayList;
@@ -68,6 +67,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private boolean transitioning;
 	private Screen nextScreen;
 	private Screen postLoadingScreen;
+	private Screen prevScreen;
 
 	private Map<Integer,Integer> numCheckpointsPerLevel;
 	private Map<Integer, List<TextureRegion>> levelWinTextures;
@@ -270,9 +270,9 @@ public class GDXRoot extends Game implements ScreenListener {
 		SoundController.setBlackHoleSound(false,1);
 		SoundController.setInkSound(false);
 		if(exitCode == MenuMode.START_CODE){
-			PlayMode.resetMusic();
 			startScreenTransition(mainMenu);
 		} else if(exitCode == MenuMode.OPTIONS_CODE){
+			prevScreen = screen;
 			settings.setDefault();
 			startScreenTransition(settings);
 		} else if(exitCode == MenuMode.CREDITS_CODE){
@@ -284,7 +284,6 @@ public class GDXRoot extends Game implements ScreenListener {
 			selectLevel();
 		} else if (exitCode == MenuMode.EXIT_LEVEL_CODE) {
 			SoundController.startMenuMusic();
-			PlayMode.resetMusic();
 			playMode.pause();
 			SoundController.setPlaying(false);
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
@@ -342,6 +341,13 @@ public class GDXRoot extends Game implements ScreenListener {
 			startScreenTransition(startScreenMode);
 		} else if(exitCode == MenuMode.EXIT_LOADING_CODE){
 			startScreenTransition(postLoadingScreen);
+		} else if (exitCode == MenuMode.EXIT_SETTINGS_CODE){
+			if(prevScreen != null) {
+				startScreenTransition(prevScreen);
+			} else {
+				startScreenMode.setDefault();
+				startScreenTransition(startScreenMode);
+			}
 		}
 	}
 
@@ -362,7 +368,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		if (alpha >= 1) {
 			alpha = 1;
-			if(nextScreen == startScreenMode || nextScreen == settings || nextScreen == levelCompleteMode || nextScreen == mainMenu || nextScreen == mainMenuNestedMode){
+			if(nextScreen instanceof MenuMode){
 				((MenuMode)nextScreen).setDefault();
 			}
 			setScreen(nextScreen);

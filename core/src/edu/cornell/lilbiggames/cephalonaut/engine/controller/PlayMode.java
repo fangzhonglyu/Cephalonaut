@@ -85,7 +85,6 @@ public class PlayMode extends WorldController implements Screen {
     private DialogueMode dialogueMode;
     private boolean paused;
     private float dialogueFade;
-    private static int prev_music;
 
     private int twoStars, threeStars;
 
@@ -197,10 +196,7 @@ public class PlayMode extends WorldController implements Screen {
         GrappleModel grapple = cephalonaut.getGrapple();
         grapple.reset();
         // TODO: Switch track to a map property based off Tiled
-        if(prev_music != levelDef.music) {
-            SoundController.switchTrack(levelDef.music);
-        }
-        prev_music = levelDef.music;
+        SoundController.switchTrack(levelDef.music);
         deathRotationCount = 0;
         cephalonaut.setDeathScale(1);
         cephalonaut.setHasMoved(false);
@@ -314,11 +310,6 @@ public class PlayMode extends WorldController implements Screen {
         }
         cephalonaut.setInking(false);
     }
-
-    public static void resetMusic() {
-        prev_music = -1;
-    }
-
 
     private boolean isDialogueMode(float dt) {
         if(paused) {
