@@ -21,10 +21,7 @@ import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.*;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
@@ -75,6 +72,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private final int NUM_FRAMES = 42;
 	private final int FILM_STRIP_SIZE = 15;
 
+	private Gamestate state;
+
 	/**
 	 * Creates a new game from the configuration settings.
 	 *
@@ -83,6 +82,25 @@ public class GDXRoot extends Game implements ScreenListener {
 	 */
 	public GDXRoot() {
 
+	}
+
+	private void initializeGamestate() {
+		JsonValue gamestate = directory.getEntry("gamestate", JsonValue.class);
+		state = new Gamestate();
+		JsonValue star_arr = gamestate.get("stars");
+		Iterator<JsonValue> itr = star_arr.iterator();
+		int i = 0;
+		while(itr.hasNext()) {
+			int[] world = itr.next().asIntArray();
+			state.stars[i] = world;
+			i++;
+		}
+//		while(game_itr.hasNext()) {
+//			JsonValue level_obj = game_itr.next();
+//			String level_str = level_obj.toString();
+//			System.out.println(level_str);
+//			//state.setStars(level_str, level_obj.asInt());
+//		}
 	}
 
 	private void initializeCheckpointsMap(){
@@ -147,6 +165,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		mainMenuNestedMode.setLevel(curLevel);
 		mainMenuNestedMode.setNumCheckpoints(numCheckpointsPerLevel.get(curLevel));
 		mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
+		mainMenuNestedMode.readGamestate(state);
 	}
 
 	private void completeCheckpoint(){
@@ -234,6 +253,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			SoundController.gatherSoundAssets(directory);
 
 			initializeCheckpointsMap();
+			initializeGamestate();
 			initializeKeybindings();
 			initializeDialogue();
 			populateWinTextures();
@@ -250,7 +270,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			pauseMode = new PauseMode(directory, canvas, this);
 			settings = new SettingsMode(directory, canvas, this, keyBindings);
 			credits = new CreditsScreen(directory, canvas, this);
-			levelCompleteMode = new LevelCompleteMode(directory, canvas, this);
+			levelCompleteMode = new LevelCompleteMode(directory, canvas, this, state);
 
 			FilmStrip[] filmStrips = new FilmStrip[NUM_FRAMES/FILM_STRIP_SIZE + 1];
 			for(int i = 0; i <= NUM_FRAMES/FILM_STRIP_SIZE; i++) {
@@ -313,6 +333,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			levelCompleteMode.setTimer(playMode.getTimer());
 			levelCompleteMode.setTimeString(playMode.getTimeString());
 			levelCompleteMode.setStars(playMode.getTwoStars(), playMode.getThreeStars());
+			levelCompleteMode.setLevelIdentifier(playMode.getLevelIdentifier());
 			if(mainMenu.getCurLevelNumber() == 0 && playMode.getCheckpoint().equals("checkpoint_6")){
 				FilmStrip alexDap = new FilmStrip(directory.getEntry("alex-dap", Texture.class), 1, 14);
 				loadingScreen.setNewFilm(new FilmStrip[]{alexDap}, 14, 14);

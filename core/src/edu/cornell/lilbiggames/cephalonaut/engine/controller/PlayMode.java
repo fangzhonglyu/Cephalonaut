@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.GameObject;
@@ -93,6 +94,8 @@ public class PlayMode extends WorldController implements Screen {
     private int [][] sparkleX;
     private int [][] sparkleY;
 
+    private JsonValue gamestate;
+
     /**
      * Creates and initialize a new instance of the sandbox
      */
@@ -130,12 +133,18 @@ public class PlayMode extends WorldController implements Screen {
         }
         sparkleX = new int[NUM_SPARKLES][NUM_SPARKLES];
         sparkleY = new int[NUM_SPARKLES][NUM_SPARKLES];
+
     }
 
     public void nextDialogue(int part) {
         dialogueMode.nextDialogue(part);
         paused = true;
         dialogueFade = 0;
+    }
+
+    public String getLevelIdentifier()
+    {
+        return level + ":" + checkpoint;
     }
 
     public void setObjectMap(Map<Integer, LevelElement> objectMap) {

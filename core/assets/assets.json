@@ -130,6 +130,7 @@
     "dialogue": "dialogue.json",
     "keybindings": "keybindings.json",
     "worldCheckpoints": "worldCheckpoints.json",
+    "gamestate": "gamestate.json",
     "tile-tileset": "tileset.tsj",
     "object-tileset": "objects.tsj",
     "space-tileset": "space-tiles.tsj",

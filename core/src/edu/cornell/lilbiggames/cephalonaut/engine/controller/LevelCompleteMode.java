@@ -1,5 +1,6 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -10,8 +11,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.engine.Gamestate;
 import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
@@ -57,6 +60,8 @@ public class LevelCompleteMode extends MenuMode {
     private boolean choiceMade;
 
     private int twoStars, threeStars;
+    private String identifier;
+    private Gamestate gamestate;
 
     /**
      * Creates a MainMenuMode with the default size and position.
@@ -64,7 +69,7 @@ public class LevelCompleteMode extends MenuMode {
      * @param assets    The asset directory to use
      * @param canvas 	The game canvas to draw to
      */
-    public LevelCompleteMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
+    public LevelCompleteMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, Gamestate state){
         super(assets, canvas, listener);
         this.assets = assets;
         this.canvas  = canvas;
@@ -91,11 +96,16 @@ public class LevelCompleteMode extends MenuMode {
             xbox = null;
         }
         choiceMade = false;
+
+        identifier = "";
+        gamestate = state;
+
     }
 
     @Override
     public void show() {
-
+        setState();
+        gamestate.save();
     }
 
     @Override
@@ -111,6 +121,10 @@ public class LevelCompleteMode extends MenuMode {
         canvas.setCameraPos(0.5f * width,0.5f * height);
     }
 
+    public void setLevelIdentifier(String id) {
+        identifier = id;
+    }
+
     public void setSelectedOption(int option) {
         selectedOption = option;
     }
@@ -124,6 +138,16 @@ public class LevelCompleteMode extends MenuMode {
     public void setStars(int twoStars, int threeStars) {
         this.twoStars = twoStars <= 1 ? Integer.MAX_VALUE : twoStars;
         this.threeStars = threeStars <= 1 ? Integer.MAX_VALUE : threeStars;
+    }
+
+    private void setState() {
+        if (timer <= threeStars) {
+            gamestate.setStars(identifier, 3);
+        } else if (timer <= twoStars) {
+            gamestate.setStars(identifier, 2);
+        } else {
+            gamestate.setStars(identifier, 1);
+        }
     }
 
     public void resetFrame() {
@@ -193,6 +217,7 @@ public class LevelCompleteMode extends MenuMode {
             }
             choiceMade = true;
         }
+
     }
 
     @Override

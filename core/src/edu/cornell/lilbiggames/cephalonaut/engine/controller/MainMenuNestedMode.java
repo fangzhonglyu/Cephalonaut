@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.engine.Gamestate;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
@@ -52,7 +53,7 @@ public class MainMenuNestedMode extends MenuMode {
 
     private TextureRegion octopusTexture;
     private Texture levelTexture;
-    private Texture levelCompletedTexture;
+    private Texture levelCompletedTexture_3,levelCompletedTexture_0, levelCompletedTexture_1, levelCompletedTexture_2;
 
     private Rectangle[] checkpointHitBoxes;
     private int completedCheckpoints;
@@ -71,6 +72,8 @@ public class MainMenuNestedMode extends MenuMode {
     private Texture[] silhouettes;
 
     private Map<Integer, List<TextureRegion>> winTextures;
+
+    private Gamestate gamestate;
 
     protected InputAdapter menuNestedInput = new InputAdapter() {
         public boolean mouseMoved (int x, int screenY) {
@@ -97,7 +100,9 @@ public class MainMenuNestedMode extends MenuMode {
                     if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
                         completedCheckpoints = i;
                         SoundController.playSound(6,1);
-                        levelSelected = true;
+                        if(!levelIsLocked((completedCheckpoints+1)%checkpoints)) {
+                            levelSelected = true;
+                        }
                     }
                 }
             }
@@ -137,8 +142,20 @@ public class MainMenuNestedMode extends MenuMode {
         octopusTexture = new TextureRegion(assets.getEntry( "octopus.png", Texture.class ));
         levelTexture = assets.getEntry( "level-incomplete", Texture.class );
         levelTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        levelCompletedTexture = assets.getEntry( "level-complete-3-star", Texture.class );
-        levelCompletedTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        levelCompletedTexture_0 = assets.getEntry( "level-incomplete", Texture.class );
+        levelCompletedTexture_0.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        levelCompletedTexture_1 = assets.getEntry( "level-complete-1-star", Texture.class );
+        levelCompletedTexture_1.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        levelCompletedTexture_2 = assets.getEntry( "level-complete-2-star", Texture.class );
+        levelCompletedTexture_2.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+
+        levelCompletedTexture_3 = assets.getEntry( "level-complete-3-star", Texture.class );
+        levelCompletedTexture_3.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
         filmstrip = new FilmStrip(assets.getEntry("octopus",Texture.class), 5, 9);
         frame = 0;
         maxFrame = 4;
@@ -159,6 +176,32 @@ public class MainMenuNestedMode extends MenuMode {
         } else {
             xbox = null;
         }
+    }
+
+    // TODO
+    // TEMP FUNCTION THAT CAN BE REPLACED FOR SHOWING STAR COUNT
+    private void printStarForLevel(int checkpoint) {
+        System.out.println(curLevel + ":" + (checkpoint - 1) + ":" +getStarForLevel(checkpoint));
+    }
+
+    private int getStarForLevel(int checkpoint) {
+        if(checkpoint - 1 < 0 || checkpoint - 1 > gamestate.stars[0].length) {
+            return 0;
+        }
+        return gamestate.stars[curLevel][checkpoint-1];
+    }
+
+
+    private boolean levelIsLocked(int checkpoint) {
+        printStarForLevel(checkpoint);
+        return checkpoint != 1 && getStarForLevel(checkpoint - 1) == 0;
+    }
+
+
+
+
+    public void readGamestate(Gamestate state) {
+       gamestate = state;
     }
 
     public void setBackground() {
@@ -190,7 +233,9 @@ public class MainMenuNestedMode extends MenuMode {
         frame = (frame+delta*5f)%maxFrame;
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
                 (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
-            levelSelected = true;
+            if(!levelIsLocked((completedCheckpoints+1)%checkpoints)) {
+                levelSelected = true;
+            }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
                 (xbox != null && xbox.isConnected() && xbox.getLeftX() > 0.6f && prevRight != xbox.getLeftX() > 0.6f)){
             completedCheckpoints = (completedCheckpoints+1)%checkpoints;
@@ -278,6 +323,9 @@ public class MainMenuNestedMode extends MenuMode {
         for(int i = 0; i < checkpoints; i++) {
 
             float imageScale = scale.x*((0.5f*3f*levelTexture.getWidth())/(winTexturesCurLevel.get(i).getRegionWidth()));
+
+            int star = getStarForLevel(i + 1);
+            Texture levelCompletedTexture = star == 0 ? levelCompletedTexture_0 : star == 1 ? levelCompletedTexture_1 : star == 2 ? levelCompletedTexture_2 : levelCompletedTexture_3;
 
             if (i < completedCheckpoints) {
                 canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
