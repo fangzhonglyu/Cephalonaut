@@ -150,3 +150,6 @@ out/
 
 # Misc.
 core/resources
+
+# Gamestate
+core/assets/gamestate.json
