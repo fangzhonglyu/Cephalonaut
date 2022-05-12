@@ -1,26 +1,20 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
-import edu.cornell.lilbiggames.cephalonaut.engine.Gamestate;
+import edu.cornell.lilbiggames.cephalonaut.engine.GameState;
 import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
-import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.*;
 
 public class LevelCompleteMode extends MenuMode {
 
@@ -46,8 +40,6 @@ public class LevelCompleteMode extends MenuMode {
     /** Reference to the game canvas */
     protected GameCanvas canvas;
 
-    private AssetDirectory assets;
-
     private int timer;
 
     private String timeString;
@@ -61,7 +53,7 @@ public class LevelCompleteMode extends MenuMode {
 
     private int twoStars, threeStars;
     private String identifier;
-    private Gamestate gamestate;
+    private GameState gamestate;
 
     /**
      * Creates a MainMenuMode with the default size and position.
@@ -69,9 +61,8 @@ public class LevelCompleteMode extends MenuMode {
      * @param assets    The asset directory to use
      * @param canvas 	The game canvas to draw to
      */
-    public LevelCompleteMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, Gamestate state){
+    public LevelCompleteMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, GameState state){
         super(assets, canvas, listener);
-        this.assets = assets;
         this.canvas  = canvas;
         this.listener = listener;
         this.scale = new Vector2(1,1);
@@ -95,17 +86,15 @@ public class LevelCompleteMode extends MenuMode {
         } else {
             xbox = null;
         }
-        choiceMade = false;
 
+        choiceMade = false;
         identifier = "";
         gamestate = state;
-
     }
 
     @Override
     public void show() {
         setState();
-        gamestate.save();
     }
 
     @Override

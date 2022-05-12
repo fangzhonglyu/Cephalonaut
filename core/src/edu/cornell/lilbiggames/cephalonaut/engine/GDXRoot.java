@@ -72,7 +72,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private final int NUM_FRAMES = 42;
 	private final int FILM_STRIP_SIZE = 15;
 
-	private Gamestate state;
+	private GameState state;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -84,10 +84,10 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	}
 
-	private void initializeGamestate() {
-		JsonValue gamestate = directory.getEntry("gamestate", JsonValue.class);
-		state = new Gamestate();
-		JsonValue star_arr = gamestate.get("stars");
+	private void initializeGameState() {
+		JsonValue gameState = directory.getEntry("gamestate", JsonValue.class);
+		state = new GameState();
+		JsonValue star_arr = gameState.get("stars");
 		Iterator<JsonValue> itr = star_arr.iterator();
 		int i = 0;
 		while(itr.hasNext()) {
@@ -95,12 +95,6 @@ public class GDXRoot extends Game implements ScreenListener {
 			state.stars[i] = world;
 			i++;
 		}
-//		while(game_itr.hasNext()) {
-//			JsonValue level_obj = game_itr.next();
-//			String level_str = level_obj.toString();
-//			System.out.println(level_str);
-//			//state.setStars(level_str, level_obj.asInt());
-//		}
 	}
 
 	private void initializeCheckpointsMap(){
@@ -165,7 +159,6 @@ public class GDXRoot extends Game implements ScreenListener {
 		mainMenuNestedMode.setLevel(curLevel);
 		mainMenuNestedMode.setNumCheckpoints(numCheckpointsPerLevel.get(curLevel));
 		mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
-		mainMenuNestedMode.setGameState(state);
 	}
 
 	private void completeCheckpoint(){
@@ -253,7 +246,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			SoundController.gatherSoundAssets(directory);
 
 			initializeCheckpointsMap();
-			initializeGamestate();
+			initializeGameState();
 			initializeKeybindings();
 			initializeDialogue();
 			populateWinTextures();
@@ -262,7 +255,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 			// Initialize the game world
 			mainMenu = new MainMenuMode(directory, canvas, this);
-			mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, numCheckpointsPerLevel.get(0),0, 0, this, levelWinTextures);
+			mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, numCheckpointsPerLevel.get(0),0, 0, this, levelWinTextures, state);
 			startScreenMode = new StartScreenMode(directory, canvas, this);
 
 			LevelElement.gatherAssets(directory);
@@ -286,7 +279,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		}
 
 		Gdx.input.setInputProcessor(new InputAdapter());
-		//
+
 		SoundController.setBlackHoleSound(false,1);
 		SoundController.setInkSound(false);
 		if(exitCode == MenuMode.START_CODE){

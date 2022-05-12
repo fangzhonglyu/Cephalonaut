@@ -3,7 +3,6 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,19 +12,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
-import edu.cornell.lilbiggames.cephalonaut.engine.Gamestate;
+import edu.cornell.lilbiggames.cephalonaut.engine.GameState;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
 
-import javax.print.attribute.HashPrintServiceAttributeSet;
-
 import java.util.List;
 import java.util.Map;
-
-import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.CHECKPOINT_SELECTED_CODE;
-import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.NESTED_MENU_EXIT_CODE;
 
 public class MainMenuNestedMode extends MenuMode {
 
@@ -73,7 +67,7 @@ public class MainMenuNestedMode extends MenuMode {
 
     private Map<Integer, List<TextureRegion>> winTextures;
 
-    private Gamestate gamestate;
+    private GameState gamestate;
 
     private final boolean UNLOCKED_MODE = false;
 
@@ -102,7 +96,7 @@ public class MainMenuNestedMode extends MenuMode {
                     if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
                         completedCheckpoints = i;
                         SoundController.playSound(6,1);
-                        if(!levelIsLocked(i)) {
+                        if(levelIsUnlocked(i)) {
                             levelSelected = true;
                         }
                     }
@@ -125,7 +119,7 @@ public class MainMenuNestedMode extends MenuMode {
      * @param assets    The asset directory to use
      * @param canvas 	The game canvas to draw to
      */
-    public MainMenuNestedMode(AssetDirectory assets, GameCanvas canvas, int checkpoints, int completedCheckpoints, int curLevel, ScreenListener listener, Map<Integer, List<TextureRegion>> winTextures){
+    public MainMenuNestedMode(AssetDirectory assets, GameCanvas canvas, int checkpoints, int completedCheckpoints, int curLevel, ScreenListener listener, Map<Integer, List<TextureRegion>> winTextures, GameState state){
         super(assets, canvas, listener);
         this.canvas  = canvas;
         this.listener = listener;
@@ -161,6 +155,8 @@ public class MainMenuNestedMode extends MenuMode {
         frame = 0;
         maxFrame = 4;
 
+        gamestate = state;
+
         populateIcons();
     }
 
@@ -191,14 +187,8 @@ public class MainMenuNestedMode extends MenuMode {
     }
 
 
-    private boolean levelIsLocked(int checkpoint) {
-        printStarForLevel(checkpoint);
-        return !UNLOCKED_MODE && checkpoint != 0 && getStarForLevel(checkpoint-1) <= 0;
-    }
-
-
-    public void setGameState(Gamestate state) {
-       gamestate = state;
+    private boolean levelIsUnlocked(int checkpoint) {
+        return UNLOCKED_MODE || checkpoint == 0 || getStarForLevel(checkpoint-1) > 0;
     }
 
     public void setBackground() {
@@ -229,7 +219,7 @@ public class MainMenuNestedMode extends MenuMode {
         frame = (frame+delta*5f)%maxFrame;
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
                 (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
-            if(!levelIsLocked(completedCheckpoints)) {
+            if(levelIsUnlocked(completedCheckpoints)) {
                 levelSelected = true;
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
@@ -319,16 +309,24 @@ public class MainMenuNestedMode extends MenuMode {
         for(int i = 0; i < checkpoints; i++) {
 
             float imageScale = scale.x*((0.5f*3f*levelTexture.getWidth())/(winTexturesCurLevel.get(i).getRegionWidth()));
+            int level_stars = getStarForLevel(i);
+            Texture levelCompletedTexture =
+                    level_stars == 0 ? levelCompletedTexture_0
+                    : level_stars == 1 ? levelCompletedTexture_1
+                    : level_stars == 2 ? levelCompletedTexture_2
+                    : levelCompletedTexture_3;
 
-            int star = getStarForLevel(i);
-            Texture levelCompletedTexture = star == 0 ? levelCompletedTexture_0 : star == 1 ? levelCompletedTexture_1 : star == 2 ? levelCompletedTexture_2 : levelCompletedTexture_3;
+            Color WHITE_SELECTED =  new Color(1,1,1, completedCheckpoints == i ? .8f : 1f);
 
-            if (star > 0) {
-                canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
+            if (level_stars > 0) {
+                canvas.draw(levelCompletedTexture, WHITE_SELECTED, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
                 canvas.draw(winTexturesCurLevel.get(i), Color.WHITE, winTexturesCurLevel.get(i).getRegionWidth()/2, 0, i * diff + start, height/2, 0, imageScale, imageScale);
+            } else if(levelIsUnlocked(i)) {
+                canvas.draw(levelTexture, WHITE_SELECTED, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
+                canvas.draw(winTexturesCurLevel.get(i),  new Color(0,0,0, completedCheckpoints == i ? .8f : 1f), winTexturesCurLevel.get(i).getRegionWidth()/2, 0, i * diff + start, height/2, 0, imageScale, imageScale);
             } else {
-                canvas.draw(levelTexture, Color.WHITE, levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
-                canvas.draw(winTexturesCurLevel.get(i), Color.BLACK, winTexturesCurLevel.get(i).getRegionWidth()/2, 0, i * diff + start, height/2, 0, imageScale, imageScale);
+                canvas.draw(levelTexture, new Color(1,1,1, .5f), levelTexture.getWidth()/2, levelTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
+                canvas.draw(winTexturesCurLevel.get(i),  new Color(0,0,0, .5f), winTexturesCurLevel.get(i).getRegionWidth()/2, 0, i * diff + start, height/2, 0, imageScale, imageScale);
             }
 
             checkpointHitBoxes[i] = new Rectangle(i*diff+start - scale.x*3f * levelTexture.getWidth()/2f,canvas.getHeight() / 2, scale.x*3f * levelTexture.getWidth(), scale.x*3f * levelTexture.getHeight());
