@@ -165,7 +165,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		mainMenuNestedMode.setLevel(curLevel);
 		mainMenuNestedMode.setNumCheckpoints(numCheckpointsPerLevel.get(curLevel));
 		mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
-		mainMenuNestedMode.readGamestate(state);
+		mainMenuNestedMode.setGameState(state);
 	}
 
 	private void completeCheckpoint(){

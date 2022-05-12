@@ -94,8 +94,6 @@ public class PlayMode extends WorldController implements Screen {
     private int [][] sparkleX;
     private int [][] sparkleY;
 
-    private JsonValue gamestate;
-
     /**
      * Creates and initialize a new instance of the sandbox
      */

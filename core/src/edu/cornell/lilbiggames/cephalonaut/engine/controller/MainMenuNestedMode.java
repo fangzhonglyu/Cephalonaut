@@ -75,6 +75,8 @@ public class MainMenuNestedMode extends MenuMode {
 
     private Gamestate gamestate;
 
+    private final boolean UNLOCKED_MODE = false;
+
     protected InputAdapter menuNestedInput = new InputAdapter() {
         public boolean mouseMoved (int x, int screenY) {
             float y = canvas.getHeight() - screenY;
@@ -100,7 +102,7 @@ public class MainMenuNestedMode extends MenuMode {
                     if (hitBox.x <= x && hitBox.x + hitBox.width >= x && hitBox.y <= y && hitBox.y + hitBox.height >= y ){
                         completedCheckpoints = i;
                         SoundController.playSound(6,1);
-                        if(!levelIsLocked((completedCheckpoints+1)%checkpoints)) {
+                        if(!levelIsLocked(i)) {
                             levelSelected = true;
                         }
                     }
@@ -152,7 +154,6 @@ public class MainMenuNestedMode extends MenuMode {
         levelCompletedTexture_2 = assets.getEntry( "level-complete-2-star", Texture.class );
         levelCompletedTexture_2.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-
         levelCompletedTexture_3 = assets.getEntry( "level-complete-3-star", Texture.class );
         levelCompletedTexture_3.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
@@ -178,29 +179,25 @@ public class MainMenuNestedMode extends MenuMode {
         }
     }
 
-    // TODO
-    // TEMP FUNCTION THAT CAN BE REPLACED FOR SHOWING STAR COUNT
     private void printStarForLevel(int checkpoint) {
-        System.out.println(curLevel + ":" + (checkpoint - 1) + ":" +getStarForLevel(checkpoint));
+        System.out.println(curLevel + ":" + (checkpoint) + ":" +getStarForLevel(checkpoint));
     }
 
     private int getStarForLevel(int checkpoint) {
-        if(checkpoint - 1 < 0 || checkpoint - 1 > gamestate.stars[0].length) {
-            return 0;
+        if(checkpoint < 0 || checkpoint >= gamestate.stars[0].length) {
+            return -1;
         }
-        return gamestate.stars[curLevel][checkpoint-1];
+        return gamestate.stars[curLevel][checkpoint];
     }
 
 
     private boolean levelIsLocked(int checkpoint) {
         printStarForLevel(checkpoint);
-        return checkpoint != 1 && getStarForLevel(checkpoint - 1) == 0;
+        return !UNLOCKED_MODE && checkpoint != 0 && getStarForLevel(checkpoint-1) <= 0;
     }
 
 
-
-
-    public void readGamestate(Gamestate state) {
+    public void setGameState(Gamestate state) {
        gamestate = state;
     }
 
@@ -210,7 +207,6 @@ public class MainMenuNestedMode extends MenuMode {
 
     @Override
     public void show() {
-
     }
 
     @Override
@@ -233,7 +229,7 @@ public class MainMenuNestedMode extends MenuMode {
         frame = (frame+delta*5f)%maxFrame;
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
                 (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())){
-            if(!levelIsLocked((completedCheckpoints+1)%checkpoints)) {
+            if(!levelIsLocked(completedCheckpoints)) {
                 levelSelected = true;
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D) ||
@@ -324,10 +320,10 @@ public class MainMenuNestedMode extends MenuMode {
 
             float imageScale = scale.x*((0.5f*3f*levelTexture.getWidth())/(winTexturesCurLevel.get(i).getRegionWidth()));
 
-            int star = getStarForLevel(i + 1);
+            int star = getStarForLevel(i);
             Texture levelCompletedTexture = star == 0 ? levelCompletedTexture_0 : star == 1 ? levelCompletedTexture_1 : star == 2 ? levelCompletedTexture_2 : levelCompletedTexture_3;
 
-            if (i < completedCheckpoints) {
+            if (star > 0) {
                 canvas.draw(levelCompletedTexture, Color.WHITE, levelCompletedTexture.getWidth()/2, levelCompletedTexture.getHeight()/2, i * diff + start, height/2, 0, scale.x*3f, scale.y*3f);
                 canvas.draw(winTexturesCurLevel.get(i), Color.WHITE, winTexturesCurLevel.get(i).getRegionWidth()/2, 0, i * diff + start, height/2, 0, imageScale, imageScale);
             } else {
