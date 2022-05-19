@@ -69,7 +69,6 @@ public class MainMenuMode extends MenuMode {
                    shouldAnimate = false;
                 } else {
                    shouldAnimate = true;
-                   frame = 0;
                 }
             }
 
