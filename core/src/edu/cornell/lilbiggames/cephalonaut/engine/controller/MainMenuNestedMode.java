@@ -69,7 +69,7 @@ public class MainMenuNestedMode extends MenuMode {
 
     private GameState gamestate;
 
-    private final boolean UNLOCKED_MODE = false;
+    private final boolean UNLOCKED_MODE = true;
 
     protected InputAdapter menuNestedInput = new InputAdapter() {
         public boolean mouseMoved (int x, int screenY) {
@@ -146,7 +146,10 @@ public class MainMenuNestedMode extends MenuMode {
         this.winTextures = winTextures;
 
         this.curLevel = curLevel;
-        background = assets.getEntry( "BG-1-teal.png", Texture.class);
+
+        //background = assets.getEntry( back, Texture.class);
+        //setBackground();
+        background = assets.getEntry( "BG-" + (curLevel + 1), Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.assets = assets;
 
@@ -287,6 +290,7 @@ public class MainMenuNestedMode extends MenuMode {
             checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 3f * levelTexture.getWidth(), 3f * levelTexture.getHeight());
         }
         Gdx.input.setInputProcessor(menuNestedInput);
+        setBackground();
     }
 
     public void setNumCheckpoints(int checkpoints){
@@ -312,12 +316,13 @@ public class MainMenuNestedMode extends MenuMode {
 
 
         List<TextureRegion> winTexturesCurLevel = winTextures.get(curLevel);
+        float bgImageScale = Math.max(scale.x*canvas.getWidth()/ background.getWidth(), scale.y*canvas.getHeight()/ background.getHeight());
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
-                0, 0, background.getWidth() * 10, background.getHeight() * 10,
-                20,
-                20);
+                0, 0, background.getWidth(), background.getHeight(),
+                bgImageScale,
+                bgImageScale);
         float diff = scale.x * 200;
         float start = width/2 - diff * ((checkpoints-1)/2f);
 
@@ -356,7 +361,7 @@ public class MainMenuNestedMode extends MenuMode {
                 0, scale.x*2f, scale.y*2f);
 
         displayFont.setColor(YELLOW);
-        displayFont.getData().setScale(0.6f);
+        displayFont.getData().setScale(0.6f*scale.x);
         canvas.drawText("WORLD " + (curLevel+1), displayFont, width*0.2f, height*0.9f);
         displayFont.setColor(Color.WHITE);
         super.drawBackSettings();

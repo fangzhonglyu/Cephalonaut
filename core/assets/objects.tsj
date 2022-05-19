@@ -8,7 +8,7 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":25,
+ "tilecount":26,
  "tiledversion":"1.8.2",
  "tileheight":96,
  "tiles":[
@@ -66,7 +66,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1686,7 +1685,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1764,6 +1762,84 @@
                      "update":7
                     }
                 }, 
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":31,
+         "image":"telescope.png",
+         "imageheight":32,
+         "imagewidth":32,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":6,
+                             "y":0.181818181818182
+                            }, 
+                            {
+                             "x":18.7272727272727,
+                             "y":8.54545454545455
+                            }, 
+                            {
+                             "x":18.7272727272727,
+                             "y":20
+                            }, 
+                            {
+                             "x":6,
+                             "y":29.2727272727273
+                            }, 
+                            {
+                             "x":-0.90909090909091,
+                             "y":29.2727272727273
+                            }, 
+                            {
+                             "x":-9.27272727272727,
+                             "y":24
+                            }, 
+                            {
+                             "x":-12.9090909090909,
+                             "y":18.9090909090909
+                            }, 
+                            {
+                             "x":-12.5454545454545,
+                             "y":8.54545454545455
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":12.9090909090909,
+                     "y":0.363636363636364
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
                 {
                  "name":"body",
                  "propertytype":"GameObject",
