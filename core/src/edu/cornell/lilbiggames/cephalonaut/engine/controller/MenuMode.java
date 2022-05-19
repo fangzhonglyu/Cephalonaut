@@ -137,7 +137,7 @@ public class MenuMode implements Screen {
         this.assets = assets;
 
         settingsIcon = assets.getEntry("settings-icon", Texture.class);
-        backIcon =  assets.getEntry("arrowLeft", Texture.class);
+        backIcon =  assets.getEntry("backArrow", Texture.class);
     }
 
     @Override
@@ -218,24 +218,24 @@ public class MenuMode implements Screen {
         canvas.draw(backIcon, Color.WHITE,
                 backIcon.getWidth() / 2f, backIcon.getHeight() / 2f,
                 canvas.getWidth()*0.05f, canvas.getHeight()*0.9f,
-                0, scale.x*0.03f, scale.y*0.03f);
+                0, scale.x*0.04f, scale.y*0.04f);
 
-        backIconHitbox = new Rectangle(canvas.getWidth()*0.05f-scale.x*backIcon.getWidth()/2*0.03f,canvas.getHeight()*0.9f+scale.y*backIcon.getHeight()/2*0.03f,scale.x*backIcon.getWidth()*0.03f,scale.y*backIcon.getHeight()*0.03f);
+        backIconHitbox = new Rectangle(canvas.getWidth()*0.05f-scale.x*backIcon.getWidth()/2*0.04f,canvas.getHeight()*0.9f+scale.y*backIcon.getHeight()/2*0.04f,scale.x*backIcon.getWidth()*0.04f,scale.y*backIcon.getHeight()*0.04f);
     }
 
     public void drawBackSettings(){
         canvas.draw(backIcon, Color.WHITE,
                 backIcon.getWidth() / 2f, backIcon.getHeight() / 2f,
                 canvas.getWidth()*0.05f, canvas.getHeight()*0.9f,
-                0, scale.x*0.03f, scale.y*0.03f);
+                0, scale.x*0.04f, scale.y*0.04f);
 
-        float settingsX = canvas.getWidth()*0.03f + 0.2f*scale.x*0.03f*backIcon.getWidth() + scale.x*settingsIcon.getWidth()/2*0.1f + 100*scale.x;
+        float settingsX = canvas.getWidth()*0.04f + 0.2f*scale.x*0.04f*backIcon.getWidth() + scale.x*settingsIcon.getWidth()/2*0.1f + 100*scale.x;
         canvas.draw(settingsIcon, Color.WHITE,
                 settingsIcon.getWidth() / 2f, settingsIcon.getHeight() / 2f,
                 settingsX, canvas.getHeight()*0.9f,
                 0, scale.x*0.1f, scale.y*0.1f);
 
-        backIconHitbox = new Rectangle(canvas.getWidth()*0.05f-scale.x*backIcon.getWidth()/2*0.03f,canvas.getHeight()*0.9f+scale.y*backIcon.getHeight()/2*0.03f,scale.x*backIcon.getWidth()*0.03f,scale.y*backIcon.getHeight()*0.03f);
+        backIconHitbox = new Rectangle(canvas.getWidth()*0.05f-scale.x*backIcon.getWidth()/2*0.04f,canvas.getHeight()*0.9f+scale.y*backIcon.getHeight()/2*0.04f,scale.x*backIcon.getWidth()*0.04f,scale.y*backIcon.getHeight()*0.04f);
         settingsIconHitbox = new Rectangle(settingsX-scale.x*settingsIcon.getWidth()/2*0.1f,canvas.getHeight()*0.9f+scale.y*settingsIcon.getHeight()/2*0.1f,scale.x*settingsIcon.getWidth()*0.1f,scale.y*settingsIcon.getHeight()*0.1f);
     }
 
