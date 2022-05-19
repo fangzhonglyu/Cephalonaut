@@ -145,8 +145,8 @@ public class GameCanvas {
 	}
 
 	public void setCameraPos(float x, float y) {
-		camera.position.x = x;
-		camera.position.y = y;
+		camera.position.x = (int)x;
+		camera.position.y = (int)y;
 		camera.update();
 	}
 
@@ -176,6 +176,8 @@ public class GameCanvas {
 		} else {
 			camera.position.y = y;
 		}
+		camera.position.x = (int)camera.position.x;
+		camera.position.y = (int)camera.position.y;
 		camera.update();
 	}
 
@@ -948,7 +950,7 @@ public class GameCanvas {
 
 		// Draw lines
 		shapeRen.setColor(Color.BLACK);
-		final float INK_PER_LINE = .5f;
+		final float INK_PER_LINE = .25f;
 		for (int i = 1; i < maxInk / INK_PER_LINE; i++) {
 			float lineX = left + INK_PER_LINE / maxInk * width * i;
 			shapeRen.rectLine(lineX, bottom, lineX, bottom + height * .7f, 3);

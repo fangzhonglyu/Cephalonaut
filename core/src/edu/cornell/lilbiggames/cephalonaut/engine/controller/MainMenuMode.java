@@ -3,7 +3,6 @@ package edu.cornell.lilbiggames.cephalonaut.engine.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,8 +15,6 @@ import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
 import edu.cornell.lilbiggames.cephalonaut.util.XBoxController;
-
-import static edu.cornell.lilbiggames.cephalonaut.engine.controller.MenuMode.LEVEL_SELECTED_CODE;
 
 public class MainMenuMode extends MenuMode {
     private static final int DEFAULT_LEVEL = 0;
@@ -69,7 +66,6 @@ public class MainMenuMode extends MenuMode {
                    shouldAnimate = false;
                 } else {
                    shouldAnimate = true;
-                   frame = 0;
                 }
             }
 
@@ -104,6 +100,14 @@ public class MainMenuMode extends MenuMode {
                 if(settingsIconHitbox.x <= x && settingsIconHitbox.x + settingsIconHitbox.width >= x && settingsIconHitbox.y >= y && settingsIconHitbox.y - settingsIconHitbox.height <= y ){
                     goToSettings = true;
                     SoundController.playSound(6,1);
+                }
+            }
+
+            if(backIconHitbox != null){
+                if(backIconHitbox.x <= x && backIconHitbox.x + backIconHitbox.width >= x && backIconHitbox.y >= y && backIconHitbox.y - backIconHitbox.height <= y ){
+                    goBack = true;
+                    SoundController.playSound(6,1);
+                    exitScreen();
                 }
             }
 
@@ -168,6 +172,9 @@ public class MainMenuMode extends MenuMode {
         } else if (goToSettings){
             goToSettings = false;
             listener.exitScreen(this, MenuMode.OPTIONS_CODE);
+        } else if (goBack){
+            goBack = false;
+            listener.exitScreen(this, MenuMode.GO_BACK_CODE);
         } else {
             update(delta);
             draw();
@@ -295,7 +302,7 @@ public class MainMenuMode extends MenuMode {
         left = new Rectangle(width/5f - 0.1f*leftArrow.getWidth()/2f, height/2-textHeight+100f + 0.1f*scale.x* leftArrow.getHeight()/2f, 0.1f*leftArrow.getWidth(), 0.1f*leftArrow.getHeight());
         right = new Rectangle(width - width/5f - 0.1f*rightArrow.getWidth()/2f, height/2-textHeight+100f + 0.1f*scale.x* rightArrow.getHeight()/2f, 0.1f*rightArrow.getWidth(), 0.1f*rightArrow.getHeight());
 
-        super.drawGoToSettings();
+        super.drawBackSettings();
         canvas.end();
     }
 }

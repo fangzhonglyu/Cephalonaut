@@ -12,7 +12,7 @@
          "parallaxx":0.5,
          "parallaxy":0.5,
          "type":"imagelayer",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -92,7 +92,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":207,
+ "nextobjectid":208,
  "orientation":"orthogonal",
  "properties":[
         {

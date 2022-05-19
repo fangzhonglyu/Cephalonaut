@@ -446,8 +446,8 @@ public class LevelLoader {
                             float y = (levelElementDef.y + levelElementDef.height/2 + .2f);
                             levelElementDef2.x = x;
                             levelElementDef2.y = y;
-                            levelElementDef2.width = .3f;
-                            levelElementDef2.height = .3f;
+                            levelElementDef2.width = .4f;
+                            levelElementDef2.height = .4f;
 
                             levelElementDef2.vx = 0;
                             levelElementDef2.vy = 0;

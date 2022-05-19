@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
@@ -29,6 +28,7 @@ public class MenuMode implements Screen {
     public static final int EXIT_LOADING_CODE = 61;
     public static final int DONE_LOADING_ASSETS = 71;
     public static final int EXIT_SETTINGS_CODE = 81;
+    public static final int GO_BACK_CODE = 91;
 
     protected final Color YELLOW = new Color(255.0f/256.0f, 232.0f/256.0f, 132.0f/256.0f, 1.0f);
 
@@ -44,6 +44,10 @@ public class MenuMode implements Screen {
     private Texture settingsIcon;
     protected Rectangle settingsIconHitbox;
     protected boolean goToSettings;
+
+    private Texture backIcon;
+    protected Rectangle backIconHitbox;
+    protected boolean goBack;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -94,6 +98,14 @@ public class MenuMode implements Screen {
                     exitScreen();
                 }
             }
+
+            if(backIconHitbox != null){
+                if(backIconHitbox.x <= x && backIconHitbox.x + backIconHitbox.width >= x && backIconHitbox.y >= y && backIconHitbox.y - backIconHitbox.height <= y ){
+                    goBack = true;
+                    SoundController.playSound(6,1);
+                    exitScreen();
+                }
+            }
             return true;
         }
     };
@@ -125,6 +137,7 @@ public class MenuMode implements Screen {
         this.assets = assets;
 
         settingsIcon = assets.getEntry("settings-icon", Texture.class);
+        backIcon =  assets.getEntry("arrowLeft", Texture.class);
     }
 
     @Override
@@ -201,11 +214,37 @@ public class MenuMode implements Screen {
 
     }
 
+    public void drawGoBack(){
+        canvas.draw(backIcon, Color.WHITE,
+                backIcon.getWidth() / 2f, backIcon.getHeight() / 2f,
+                canvas.getWidth()*0.05f, canvas.getHeight()*0.9f,
+                0, scale.x*0.03f, scale.y*0.03f);
+
+        backIconHitbox = new Rectangle(canvas.getWidth()*0.05f-scale.x*backIcon.getWidth()/2*0.03f,canvas.getHeight()*0.9f+scale.y*backIcon.getHeight()/2*0.03f,scale.x*backIcon.getWidth()*0.03f,scale.y*backIcon.getHeight()*0.03f);
+    }
+
+    public void drawBackSettings(){
+        canvas.draw(backIcon, Color.WHITE,
+                backIcon.getWidth() / 2f, backIcon.getHeight() / 2f,
+                canvas.getWidth()*0.05f, canvas.getHeight()*0.9f,
+                0, scale.x*0.03f, scale.y*0.03f);
+
+        float settingsX = canvas.getWidth()*0.03f + 0.2f*scale.x*0.03f*backIcon.getWidth() + scale.x*settingsIcon.getWidth()/2*0.1f + 100*scale.x;
+        canvas.draw(settingsIcon, Color.WHITE,
+                settingsIcon.getWidth() / 2f, settingsIcon.getHeight() / 2f,
+                settingsX, canvas.getHeight()*0.9f,
+                0, scale.x*0.1f, scale.y*0.1f);
+
+        backIconHitbox = new Rectangle(canvas.getWidth()*0.05f-scale.x*backIcon.getWidth()/2*0.03f,canvas.getHeight()*0.9f+scale.y*backIcon.getHeight()/2*0.03f,scale.x*backIcon.getWidth()*0.03f,scale.y*backIcon.getHeight()*0.03f);
+        settingsIconHitbox = new Rectangle(settingsX-scale.x*settingsIcon.getWidth()/2*0.1f,canvas.getHeight()*0.9f+scale.y*settingsIcon.getHeight()/2*0.1f,scale.x*settingsIcon.getWidth()*0.1f,scale.y*settingsIcon.getHeight()*0.1f);
+    }
+
     public void drawGoToSettings(){
         canvas.draw(settingsIcon, Color.WHITE,
                 settingsIcon.getWidth() / 2f, settingsIcon.getHeight() / 2f,
                 canvas.getWidth()*0.1f, canvas.getHeight()*0.9f,
                 0, scale.x*0.1f, scale.y*0.1f);
+
         settingsIconHitbox = new Rectangle(canvas.getWidth()*0.1f-scale.x*settingsIcon.getWidth()/2*0.1f,canvas.getHeight()*0.9f+scale.y*settingsIcon.getHeight()/2*0.1f,scale.x*settingsIcon.getWidth()*0.1f,scale.y*settingsIcon.getHeight()*0.1f);
     }
 

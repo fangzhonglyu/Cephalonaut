@@ -69,7 +69,7 @@ public class MainMenuNestedMode extends MenuMode {
 
     private GameState gamestate;
 
-    private final boolean UNLOCKED_MODE = false;
+    private final boolean UNLOCKED_MODE = true;
 
     protected InputAdapter menuNestedInput = new InputAdapter() {
         public boolean mouseMoved (int x, int screenY) {
@@ -109,9 +109,24 @@ public class MainMenuNestedMode extends MenuMode {
                     SoundController.playSound(6,1);
                 }
             }
+
+            if(backIconHitbox != null){
+                if(backIconHitbox.x <= x && backIconHitbox.x + backIconHitbox.width >= x && backIconHitbox.y >= y && backIconHitbox.y - backIconHitbox.height <= y ){
+                    goBack = true;
+                    SoundController.playSound(6,1);
+                    exitScreen();
+                }
+            }
+
             return true;
         }
     };
+
+    public void exitScreen(){
+        if(goBack){
+            listener.exitScreen(this, MenuMode.GO_BACK_CODE);
+        }
+    }
 
     /**
      * Creates a MainMenuMode with the default size and position.
@@ -344,7 +359,7 @@ public class MainMenuNestedMode extends MenuMode {
         displayFont.getData().setScale(0.6f);
         canvas.drawText("WORLD " + (curLevel+1), displayFont, width*0.2f, height*0.9f);
         displayFont.setColor(Color.WHITE);
-        super.drawGoToSettings();
+        super.drawBackSettings();
 
         canvas.end();
     }

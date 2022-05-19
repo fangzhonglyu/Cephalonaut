@@ -74,6 +74,17 @@ public class CreditsScreen extends MenuMode implements Screen {
 
     }
 
+    public void setDefault(){
+        super.setDefault();
+        Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
+    }
+
+    public void exitScreen(){
+        if(goBack){
+            listener.exitScreen(this, MenuMode.GO_BACK_CODE);
+        }
+    }
+
     @Override
     public void render(float v) {
         InputController inputController = InputController.getInstance();
@@ -93,7 +104,9 @@ public class CreditsScreen extends MenuMode implements Screen {
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
                 20,
-                20);        displayFont.getData().setScale(0.4f);
+                20);
+
+        displayFont.getData().setScale(0.4f*scale.x);
 
         float startX = canvas.getWidth()/2-scale.x*(100+20)*4;
         float yOdd = canvas.getHeight()  - canvas.getHeight()/3;
@@ -112,6 +125,8 @@ public class CreditsScreen extends MenuMode implements Screen {
                 canvas.drawText(credits[i].roles[j], displayFont, (startX+scale.x*(100+20)*i), y - 20f - (j+1)*1.2f*displayFont.getLineHeight());
             }
         }
+        drawGoBack();
+
         canvas.end();
     }
 
