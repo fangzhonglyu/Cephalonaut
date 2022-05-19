@@ -65,6 +65,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private Screen nextScreen;
 	private Screen postLoadingScreen;
 	private Screen prevScreen;
+	private Screen backScreen;
 
 	private Map<Integer,Integer> numCheckpointsPerLevel;
 	private Map<Integer, List<TextureRegion>> levelWinTextures;
@@ -286,15 +287,20 @@ public class GDXRoot extends Game implements ScreenListener {
 		SoundController.setInkSound(false);
 		if(exitCode == MenuMode.START_CODE){
 			startScreenTransition(mainMenu);
+			setBackScreen(mainMenu);
 		} else if(exitCode == MenuMode.OPTIONS_CODE){
 			prevScreen = screen;
+			backScreen = screen;
 			settings.setDefault();
 			startScreenTransition(settings);
 		} else if(exitCode == MenuMode.CREDITS_CODE){
 			startScreenTransition(credits);
+			credits.setDefault();
+			setBackScreen(credits);
 		} else if(exitCode == MenuMode.LEVEL_SELECTED_CODE){
 			initializeCheckpointSelect();
 			startScreenTransition(mainMenuNestedMode);
+			setBackScreen(mainMenuNestedMode);
 		} else if(exitCode == MenuMode.CHECKPOINT_SELECTED_CODE) {
 			selectLevel();
 		} else if (exitCode == MenuMode.EXIT_LEVEL_CODE) {
@@ -307,6 +313,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			startScreenTransition(mainMenuNestedMode);
 		} else if(exitCode == MenuMode.NESTED_MENU_EXIT_CODE){
 			startScreenTransition(mainMenu);
+			setBackScreen(mainMenu);
 		} else if(exitCode == PlayMode.EXIT_LEVEL){
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			pauseMode.setDefault();
@@ -364,6 +371,28 @@ public class GDXRoot extends Game implements ScreenListener {
 				startScreenMode.setDefault();
 				startScreenTransition(startScreenMode);
 			}
+		} else if (exitCode == MenuMode.GO_BACK_CODE){
+			if(backScreen != null) {
+				startScreenTransition(backScreen);
+				((MenuMode)backScreen).setDefault();
+				setBackScreen(backScreen);
+			} else {
+				startScreenMode.setDefault();
+				startScreenTransition(startScreenMode);
+			}
+		}
+		prevScreen = screen;
+	}
+
+	private void setBackScreen(Screen screen){
+		if(screen instanceof CreditsScreen){
+			backScreen = startScreenMode;
+		} else if(screen instanceof MainMenuNestedMode){
+			backScreen = mainMenu;
+		} else if (screen instanceof MainMenuMode){
+			backScreen = startScreenMode;
+		} else if(screen instanceof CreditsScreen){
+			backScreen = startScreenMode;
 		}
 	}
 

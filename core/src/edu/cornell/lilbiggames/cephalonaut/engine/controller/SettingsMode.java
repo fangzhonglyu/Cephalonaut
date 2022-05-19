@@ -94,6 +94,14 @@ public class SettingsMode extends MenuMode {
                 }
             }
 
+            if(backIconHitbox != null){
+                if(backIconHitbox.x <= x && backIconHitbox.x + backIconHitbox.width >= x && backIconHitbox.y >= y && backIconHitbox.y - backIconHitbox.height <= y ){
+                    goBack = true;
+                    SoundController.playSound(6,1);
+                    exitScreen();
+                }
+            }
+
             return true;
         }
 
@@ -191,6 +199,12 @@ public class SettingsMode extends MenuMode {
     public void setDefault(){
         super.setDefault();
         Gdx.input.setInputProcessor(settingsInput); selectedOption = 0;
+    }
+
+    public void exitScreen(){
+        if(goBack){
+            listener.exitScreen(this, MenuMode.GO_BACK_CODE);
+        }
     }
 
     @Override
@@ -296,6 +310,8 @@ public class SettingsMode extends MenuMode {
         fxVolumeSlider.updatePosition(width*0.7f, start - sliderHeight/2);
         fxVolumeSlider.updateSize(width/4f, sliderHeight, scale.x*KNOB_RADIUS);
         fxVolumeSlider.draw();
+
+        drawGoBack();
         canvas.end();
     }
 
