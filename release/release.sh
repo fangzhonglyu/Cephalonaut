@@ -24,10 +24,7 @@ else
 	java -jar $packr --platform mac --jdk $openjdk_mac --executable "cephalonaut" --classpath ../out/artifacts/cephalonaut_jar/cephalonaut.jar --mainclass edu.cornell.lilbiggames.cephalonaut.desktop.DesktopLauncher --vmargs Xmx8g --output out/cephalonaut.app --icon icon.icns
 	
 	cd out
-	
-	# Not sure if this is needed
-	chmod +x cephalonaut.app/Contents/MacOS/cephalonaut
-	
+
 	zip cephalonaut-win.zip cephalonaut
 	zip cephalonaut-mac.zip cephalonaut.app
 fi
