@@ -102,6 +102,8 @@ public class LevelLoader {
                 return LevelElement.Element.BOOST_PAD;
             case "Button":
                 return LevelElement.Element.BUTTON;
+            case "BigButton":
+                return LevelElement.Element.BIG_BUTTON;
             case "Door":
                 return LevelElement.Element.DOOR;
             case "Finish":
