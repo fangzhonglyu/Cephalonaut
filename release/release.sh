@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/bin/sh
 
 packr=bin/packr.jar
 openjdk_win=bin/openjdk_windows.zip
@@ -15,12 +15,9 @@ fi
 mkdir out
 rm -rf out/*
 
-! command -v PowerShell > /dev/null
-on_windows=$?
-
 java -jar $packr --platform windows64 --jdk $openjdk_win --executable "cephalonaut" --classpath ../out/artifacts/cephalonaut_jar/cephalonaut.jar --mainclass edu.cornell.lilbiggames.cephalonaut.desktop.DesktopLauncher --vmargs Xmx8g --output out/cephalonaut
 
-if [ $on_windows ]
+if command -v PowerShell > /dev/null
 then
 	powershell Compress-Archive out/cephalonaut out/cephalonaut-win.zip
 else
