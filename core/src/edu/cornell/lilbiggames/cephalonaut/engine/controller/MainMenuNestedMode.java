@@ -69,7 +69,7 @@ public class MainMenuNestedMode extends MenuMode {
 
     private GameState gamestate;
 
-    private final boolean UNLOCKED_MODE = false;
+    private final boolean UNLOCKED_MODE = true;
 
     protected InputAdapter menuNestedInput = new InputAdapter() {
         public boolean mouseMoved (int x, int screenY) {
