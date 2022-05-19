@@ -69,6 +69,7 @@ public class GrappleModel extends WheelObstacle {
         pixmap.setColor(Color.valueOf("ff9947"));
         pixmap.fillRectangle(0,0,pixDiameter , pixDiameter);
         texture = (new Texture(pixmap));
+        pixmap.dispose();
         origin.set(pixDiameter / 2f, pixDiameter / 2f);
         texture.setFilter(Texture.TextureFilter.Nearest,Texture.TextureFilter.Nearest);
 

@@ -150,4 +150,4 @@ out/
 
 # Misc.
 core/resources
-core/assets/gamestate.json
+**/gamestate.json
