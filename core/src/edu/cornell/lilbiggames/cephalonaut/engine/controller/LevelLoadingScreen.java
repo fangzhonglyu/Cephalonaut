@@ -13,6 +13,7 @@ public class LevelLoadingScreen extends MenuMode implements Screen {
     private GameCanvas canvas;
     private ScreenListener listener;
 
+    private AssetDirectory assets;
 
     private Texture background;
 
@@ -22,6 +23,8 @@ public class LevelLoadingScreen extends MenuMode implements Screen {
     private float frame;
     private float loadingTime;
     private float totalLoadingTime;
+    private int curLevel;
+
     /**
      * Creates a MainMenuMode with the default size and position.
      *
@@ -35,6 +38,8 @@ public class LevelLoadingScreen extends MenuMode implements Screen {
         this.listener = listener;
         this.loadingTime = totalLoadingTime;
         this.totalLoadingTime = totalLoadingTime;
+        this.assets = assets;
+        this.curLevel = 0;
         this.setNewFilm(filmStrips, numFrames, totalFilmstripSize);
 
 
@@ -58,6 +63,19 @@ public class LevelLoadingScreen extends MenuMode implements Screen {
         loadingTime = time;
     }
 
+    public void setDefault(){
+        setBackground();
+        setLoadingTime(100);
+    }
+
+    public void setCurLevel(int level){
+        this.curLevel = level;
+    }
+
+    public void setBackground() {
+        background = assets.getEntry( "BG-" + (curLevel + 1), Texture.class);
+    }
+
     public void render(float delta){
         SoundController.setBlackHoleSound(false,1);
         SoundController.setInkSound(false);
@@ -77,12 +95,13 @@ public class LevelLoadingScreen extends MenuMode implements Screen {
         canvas.clear();
         canvas.begin();
 
+        float bgImageScale = Math.max(scale.x*canvas.getWidth()/ background.getWidth(), scale.y*canvas.getHeight()/ background.getHeight());
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
-                0, 0, background.getWidth() * 10, background.getHeight() * 10,
-                20,
-                20);
+                0, 0, background.getWidth(), background.getHeight(),
+                bgImageScale,
+                bgImageScale);
         float ox = 0.5f * filmStrip.getRegionWidth();
         float oy = 0.5f * filmStrip.getRegionHeight();
         canvas.draw(filmStrip, Color.WHITE, ox, oy,
