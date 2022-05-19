@@ -145,8 +145,8 @@ public class GameCanvas {
 	}
 
 	public void setCameraPos(float x, float y) {
-		camera.position.x = (int)x;
-		camera.position.y = (int)y;
+		camera.position.x = Math.round(x);
+		camera.position.y = Math.round(y);
 		camera.update();
 	}
 
@@ -176,8 +176,8 @@ public class GameCanvas {
 		} else {
 			camera.position.y = y;
 		}
-		camera.position.x = (int)camera.position.x;
-		camera.position.y = (int)camera.position.y;
+		camera.position.x = Math.round(x);
+		camera.position.y = Math.round(y);
 		camera.update();
 	}
 

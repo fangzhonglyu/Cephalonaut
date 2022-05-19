@@ -221,7 +221,8 @@ public class LevelController implements ContactListener {
             if (contactObject instanceof LETrigger) {
                 LETrigger trigger = (LETrigger) contactObject;
                 LETriggerable target = (LETriggerable) playMode.getObject(trigger.getTarget());
-                target.setActivated(trigger.isActivated());
+                if(target!=null)
+                    target.setActivated(trigger.isActivated());
             }
 
             if (contactObject instanceof LEWormHole) {
