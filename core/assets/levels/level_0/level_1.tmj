@@ -632,6 +632,28 @@
                  "width":16,
                  "x":52,
                  "y":596
+                }, 
+                {
+                 "gid":284,
+                 "height":8.7308,
+                 "id":496,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"body",
+                         "propertytype":"GameObject",
+                         "type":"class",
+                         "value":
+                            {
+
+                            }
+                        }],
+                 "rotation":270,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":193.69668569029,
+                 "y":360.025550983543
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -640,7 +662,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":493,
+ "nextobjectid":498,
  "orientation":"orthogonal",
  "properties":[
         {
