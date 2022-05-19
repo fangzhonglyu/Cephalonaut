@@ -398,7 +398,8 @@ public class GDXRoot extends Game implements ScreenListener {
 
 	private void loadingScreenTransition(Screen nextScreen){
 		postLoadingScreen = nextScreen;
-		loadingScreen.setLoadingTime(100);
+		loadingScreen.setCurLevel(mainMenu.getCurLevelNumber());
+		loadingScreen.setDefault();
 		startScreenTransition(loadingScreen);
 	}
 
