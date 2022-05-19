@@ -40,6 +40,8 @@ public class LevelCompleteMode extends MenuMode {
     /** Reference to the game canvas */
     protected GameCanvas canvas;
 
+    private AssetDirectory assets;
+
     private int timer;
 
     private String timeString;
@@ -51,6 +53,7 @@ public class LevelCompleteMode extends MenuMode {
     private boolean prevSelect;
     private boolean choiceMade;
 
+    private int curLevel;
     private int twoStars, threeStars;
     private String identifier;
     private GameState gamestate;
@@ -67,6 +70,7 @@ public class LevelCompleteMode extends MenuMode {
         this.listener = listener;
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
+        this.assets = assets;
         displayFont = assets.getEntry("retro", BitmapFont.class);
 
         frame = 0;
@@ -76,7 +80,7 @@ public class LevelCompleteMode extends MenuMode {
         starScoring.setFrame(0);
         starStill.setFrame(19);
 
-        background = assets.getEntry( "BG-1-teal.png", Texture.class);
+        background = assets.getEntry( "BG-" + (curLevel + 1), Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         selectedOption = 0;
@@ -108,6 +112,10 @@ public class LevelCompleteMode extends MenuMode {
         scale.x = canvas.getWidth() / bounds.x;
         scale.y = scale.x;
         canvas.setCameraPos(0.5f * width,0.5f * height);
+    }
+
+    public void setLevel(int level) {
+        curLevel = level;
     }
 
     public void setLevelIdentifier(String id) {
@@ -145,10 +153,15 @@ public class LevelCompleteMode extends MenuMode {
 
     public void resetChoiceMade() { choiceMade = false; }
 
+    public void setBackground() {
+        background = assets.getEntry( "BG-" + (curLevel + 1), Texture.class);
+    }
+
     public void setDefault(){
         super.setDefault();
         choiceMade = false;
         Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
+        setBackground();
     }
 
     private void update(float delta){
@@ -242,12 +255,13 @@ public class LevelCompleteMode extends MenuMode {
         canvas.clear();
         canvas.begin();
 
+        float bgImageScale = Math.max(scale.x*canvas.getWidth()/ background.getWidth(), scale.y*canvas.getHeight()/ background.getHeight());
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
-                0, 0, background.getWidth() * 10, background.getHeight() * 10,
-                20,
-                20);
+                0, 0, background.getWidth(), background.getHeight(),
+                bgImageScale,
+                bgImageScale);
 
         super.drawGoToSettings();
         displayFont.getData().setScale(Math.min(scale.x,scale.y));
