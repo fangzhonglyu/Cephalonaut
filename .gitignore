@@ -149,5 +149,5 @@ out/
 *.tiled-session
 
 # Misc.
-core/resources
-**/gamestate.json
+/core/resources
+gamestate.json

@@ -8,7 +8,7 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":26,
+ "tilecount":28,
  "tiledversion":"1.8.2",
  "tileheight":96,
  "tiles":[
@@ -1782,7 +1782,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1850,6 +1849,95 @@
                      "isSensor":true,
                      "type":"Finish"
                     }
+                }]
+        }, 
+        {
+         "id":33,
+         "image":"Arrow.png",
+         "imageheight":10,
+         "imagewidth":16,
+         "properties":[
+                {
+                 "name":"animation",
+                 "propertytype":"animation",
+                 "type":"class",
+                 "value":
+                    {
+                     "cols":2,
+                     "rows":1,
+                     "textureNum":7,
+                     "update":3
+                    }
+                }, 
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false
+                    }
+                }]
+        }, 
+        {
+         "id":34,
+         "image":"big-button1.png",
+         "imageheight":28,
+         "imagewidth":15,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0,
+                             "y":28
+                            }, 
+                            {
+                             "x":13.3333333333333,
+                             "y":22
+                            }, 
+                            {
+                             "x":12.6666666666667,
+                             "y":5
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":0,
+                     "y":0
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "type":"BigButton"
+                    }
+                }, 
+                {
+                 "name":"target",
+                 "type":"object",
+                 "value":0
                 }]
         }],
  "tilewidth":59,

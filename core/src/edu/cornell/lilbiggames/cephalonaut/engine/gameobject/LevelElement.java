@@ -43,7 +43,8 @@ public class LevelElement extends SimpleObstacle {
         DIALOGUE_TRIGGER,
         SPARKLE,
         ENGINE,
-        BROKEN_ENGINE
+        BROKEN_ENGINE,
+        BIG_BUTTON
     }
 
     /** Type of element **/
@@ -96,6 +97,7 @@ public class LevelElement extends SimpleObstacle {
     private static Texture sparksTexture, glassBarrierTexture,inkPackTexture;
     private static Texture wormholeTexture,blackHoleTexture,electricSpiketexture,boostPadTexture,spikeTexture,spikeBallTexture,engineTexture,brokenEngineTexture;
     private static Texture[] animationCache;
+    private static Texture bigButtonTrigger;
 
     public static void collectAssets(AssetDirectory assetDirectory){
         wormholeTexture = assetDirectory.getEntry("A-wormhole-filmstrip.png",Texture.class);
@@ -120,7 +122,9 @@ public class LevelElement extends SimpleObstacle {
         glassBarrierTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         inkPackTexture = assetDirectory.getEntry("inkPack-film.png",Texture.class);
         inkPackTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        animationCache = new Texture[7];
+        bigButtonTrigger = assetDirectory.getEntry("big-button2.png",Texture.class);
+        bigButtonTrigger.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        animationCache = new Texture[8];
         animationCache[0] = assetDirectory.getEntry("A-alex.png",Texture.class);
         animationCache[1] = assetDirectory.getEntry("A-angie.png",Texture.class);
         animationCache[2] = assetDirectory.getEntry("A-estelle.png",Texture.class);
@@ -128,7 +132,8 @@ public class LevelElement extends SimpleObstacle {
         animationCache[4] = assetDirectory.getEntry("A-matias.png",Texture.class);
         animationCache[5] = assetDirectory.getEntry("A-oliver.png",Texture.class);
         animationCache[6] = assetDirectory.getEntry("A-barry.png",Texture.class);
-        for(int i = 0;i<7;i++){
+        animationCache[7] = assetDirectory.getEntry("Arrow-sheet.png",Texture.class);
+        for(int i = 0;i<8;i++){
             animationCache[i].setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         }
     }
@@ -143,6 +148,8 @@ public class LevelElement extends SimpleObstacle {
                 return new LETriggerable(def);
             case BUTTON:
                 return new LETrigger(def);
+            case BIG_BUTTON:
+                return new LETrigger(def,new FilmStrip(bigButtonTrigger,1,1));
             case WORMHOLE:
                 return new LEWormHole(def, new FilmStrip(wormholeTexture,1,24));
             case GLASS_BARRIER:
