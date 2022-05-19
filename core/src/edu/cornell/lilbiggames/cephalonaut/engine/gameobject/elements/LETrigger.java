@@ -1,6 +1,7 @@
 package edu.cornell.lilbiggames.cephalonaut.engine.gameobject.elements;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import edu.cornell.lilbiggames.cephalonaut.engine.controller.SoundController;
 import edu.cornell.lilbiggames.cephalonaut.engine.gameobject.LevelElement;
@@ -21,6 +22,14 @@ public class LETrigger extends LevelElement {
         assert target >= 0;
         originalTexture = getTexture();
         this.triggerTexture = def.triggerTexture;
+    }
+
+    public LETrigger(Def def, TextureRegion trigger) {
+        super(def);
+        target = def.properties.getInt("target", -1);
+        assert target >= 0;
+        originalTexture = getTexture();
+        this.triggerTexture = trigger;
     }
 
     public int getTarget() { return target; }

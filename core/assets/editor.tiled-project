@@ -123,7 +123,8 @@
                 "Refill",
                 "Dialogue Trigger",
                 "Engine",
-                "BrokenEngine"
+                "BrokenEngine",
+                "BigButton"
             ],
             "valuesAsFlags": false
         }
