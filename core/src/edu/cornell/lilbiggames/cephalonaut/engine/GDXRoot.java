@@ -295,6 +295,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			startScreenTransition(settings);
 		} else if(exitCode == MenuMode.CREDITS_CODE){
 			startScreenTransition(credits);
+			credits.setDefault();
 			setBackScreen(credits);
 		} else if(exitCode == MenuMode.LEVEL_SELECTED_CODE){
 			initializeCheckpointSelect();
@@ -373,6 +374,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		} else if (exitCode == MenuMode.GO_BACK_CODE){
 			if(backScreen != null) {
 				startScreenTransition(backScreen);
+				((MenuMode)backScreen).setDefault();
 				setBackScreen(backScreen);
 			} else {
 				startScreenMode.setDefault();
@@ -388,6 +390,8 @@ public class GDXRoot extends Game implements ScreenListener {
 		} else if(screen instanceof MainMenuNestedMode){
 			backScreen = mainMenu;
 		} else if (screen instanceof MainMenuMode){
+			backScreen = startScreenMode;
+		} else if(screen instanceof CreditsScreen){
 			backScreen = startScreenMode;
 		}
 	}

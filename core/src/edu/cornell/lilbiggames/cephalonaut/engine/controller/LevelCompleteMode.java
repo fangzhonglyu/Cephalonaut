@@ -147,6 +147,7 @@ public class LevelCompleteMode extends MenuMode {
 
     public void setDefault(){
         super.setDefault();
+        choiceMade = false;
         Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
     }
 
