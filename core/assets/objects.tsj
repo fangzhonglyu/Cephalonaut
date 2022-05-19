@@ -8,7 +8,7 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":26,
+ "tilecount":27,
  "tiledversion":"1.8.2",
  "tileheight":96,
  "tiles":[
@@ -1849,6 +1849,34 @@
                      "canGrappleOn":false,
                      "isSensor":true,
                      "type":"Finish"
+                    }
+                }]
+        }, 
+        {
+         "id":33,
+         "image":"Arrow.png",
+         "imageheight":10,
+         "imagewidth":16,
+         "properties":[
+                {
+                 "name":"animation",
+                 "propertytype":"animation",
+                 "type":"class",
+                 "value":
+                    {
+                     "cols":2,
+                     "rows":1,
+                     "textureNum":7,
+                     "update":3
+                    }
+                }, 
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false
                     }
                 }]
         }],
