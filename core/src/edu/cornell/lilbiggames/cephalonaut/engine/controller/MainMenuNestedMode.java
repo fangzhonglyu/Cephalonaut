@@ -361,7 +361,7 @@ public class MainMenuNestedMode extends MenuMode {
                 0, scale.x*2f, scale.y*2f);
 
         displayFont.setColor(YELLOW);
-        displayFont.getData().setScale(0.6f);
+        displayFont.getData().setScale(0.6f*scale.x);
         canvas.drawText("WORLD " + (curLevel+1), displayFont, width*0.2f, height*0.9f);
         displayFont.setColor(Color.WHITE);
         super.drawBackSettings();
