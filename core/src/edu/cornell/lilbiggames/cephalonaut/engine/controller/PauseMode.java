@@ -139,8 +139,8 @@ public class PauseMode extends MenuMode {
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
-                bgImageScale,
-                bgImageScale);
+                20,
+                20);
 
         super.drawGoToSettings();
         super.drawOptions(options, selectedOption);
