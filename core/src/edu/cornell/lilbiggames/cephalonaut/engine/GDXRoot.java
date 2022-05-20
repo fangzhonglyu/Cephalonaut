@@ -134,6 +134,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		keyBindings.put("thrust", Input.Keys.valueOf(bindings.getString("thrust","W")));
 		keyBindings.put("rotate-counterclockwise", Input.Keys.valueOf(bindings.getString("rotate-counterclockwise","A")));
 		keyBindings.put("rotate-clockwise", Input.Keys.valueOf(bindings.getString("rotate-clockwise","D")));
+		keyBindings.put("ungrapple", Input.Keys.valueOf(bindings.getString("ungrapple","Space")));
 	}
 
 
