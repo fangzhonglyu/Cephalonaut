@@ -7,11 +7,13 @@
   "level_0:checkpoint_1": {
     "part_0": ["[LEFT_CLICK] Left click your mouse to grapple.",
       "[RIGHT_CLICK] Right click to release.",
-      "[SPACE] You can also press the space bar to release the grapple."]
+      "[SPACE] You can also press the space bar to release the grapple.",
+      "yellow arrows are indicators of where you might want to grapple",
+      "but you can grapple anywhere"]
   },
   "level_0:checkpoint_2": {
     "part_0": ["Move over ink packs to refill your precious ink.",
-      "Don't forget to grapple!"]
+      "Don't forget to grapple!",]
   },
   "level_0:checkpoint_4": {
     "part_0": ["Welcome to the Spike Lab!",

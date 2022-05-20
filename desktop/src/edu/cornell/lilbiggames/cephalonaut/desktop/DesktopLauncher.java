@@ -40,6 +40,9 @@ public class DesktopLauncher {
 		config.resizable = true;
 		config.title = "Cephalonaut";
 		config.addIcon("A-michael-still.png", Files.FileType.Internal);
+//		config.vSyncEnabled = false;
+		config.foregroundFPS = 60;
+		config.useHDPI = true;
 		new LwjglApplication(new GDXRoot(), config);
 	}
 }

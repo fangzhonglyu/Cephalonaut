@@ -365,6 +365,14 @@ public class PlayMode extends WorldController implements Screen {
             }
         }
 
+        if (input.didReset()) {
+            if(cephalonaut.isAlive()) {
+                cephalonaut.setAlive(false);
+            } else {
+                reset();
+            }
+        }
+
         if (input.didExit()) {
             if (listener != null) {
                 exiting = true;

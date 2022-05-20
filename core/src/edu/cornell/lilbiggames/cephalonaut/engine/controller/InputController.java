@@ -80,6 +80,7 @@ public class InputController {
 		keyBindings.put("thrust",Input.Keys.valueOf("W"));
 		keyBindings.put("rotate-counterclockwise",Input.Keys.valueOf("A"));
 		keyBindings.put("rotate-clockwise",Input.Keys.valueOf("D"));
+		keyBindings.put("ungrapple",Input.Keys.valueOf("Space"));
 	}
 
 	/**
@@ -312,7 +313,7 @@ public class InputController {
 		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
 		secondaryPressed = (secondary && secondaryPressed) || (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT));
 		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE));
-		tertiaryPressed = (secondary && tertiaryPressed) || (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) ||
+		tertiaryPressed = (secondary && tertiaryPressed) || (Gdx.input.isKeyJustPressed(keyBindings.get("ungrapple"))) ||
 				(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT));
 
 		// Directional controls
