@@ -19,6 +19,7 @@ public class LEInkPack extends LevelElement {
 
     public void trigger(){
         frame = 6;
+        this.markRemoved(true);
     }
 
     @Override

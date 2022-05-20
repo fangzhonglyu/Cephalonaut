@@ -146,6 +146,7 @@ public class MainMenuNestedMode extends MenuMode {
         this.winTextures = winTextures;
 
         this.curLevel = curLevel;
+        this.assets = assets;
 
         this.assets = assets;
         setBackground();

@@ -55,6 +55,8 @@ public class LevelCompleteMode extends MenuMode {
     private String identifier;
     private GameState gamestate;
 
+    private AssetDirectory assets;
+
     /**
      * Creates a MainMenuMode with the default size and position.
      *
@@ -67,6 +69,7 @@ public class LevelCompleteMode extends MenuMode {
         this.listener = listener;
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
+        this.assets = assets;
         displayFont = assets.getEntry("retro", BitmapFont.class);
 
         frame = 0;
@@ -149,6 +152,15 @@ public class LevelCompleteMode extends MenuMode {
         super.setDefault();
         choiceMade = false;
         Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
+        setBackground();
+    }
+
+    private int parseWorld(String identifier) {
+        return Integer.parseInt(identifier.substring(identifier.indexOf('_') + 1, identifier.indexOf(':')));
+    }
+
+    public void setBackground() {
+        background = assets.getEntry( "BG-" + (parseWorld(identifier) + 1), Texture.class);
     }
 
     private void update(float delta){
@@ -242,12 +254,13 @@ public class LevelCompleteMode extends MenuMode {
         canvas.clear();
         canvas.begin();
 
+        float bgImageScale = Math.max(scale.x*canvas.getWidth()/ background.getWidth(), scale.y*canvas.getHeight()/ background.getHeight());
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
-                0, 0, background.getWidth() * 10, background.getHeight() * 10,
-                20,
-                20);
+                0, 0, background.getWidth(), background.getHeight(),
+                bgImageScale,
+                bgImageScale);
 
         super.drawGoToSettings();
         displayFont.getData().setScale(Math.min(scale.x,scale.y));
