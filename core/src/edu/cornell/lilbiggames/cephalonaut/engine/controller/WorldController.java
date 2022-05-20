@@ -359,9 +359,9 @@ public abstract class WorldController implements Screen {
 		}
 
 		// Handle resets
-		if (input.didReset()) {
-			reset();
-		}
+//		if (input.didReset()) {
+//			reset();
+//		}
 
 		if (listener == null) {
 			return true;
