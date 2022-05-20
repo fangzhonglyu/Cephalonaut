@@ -104,6 +104,12 @@
                  "height":32,
                  "id":5,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"ink",
+                         "type":"float",
+                         "value":1.5
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,

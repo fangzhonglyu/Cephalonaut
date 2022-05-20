@@ -36,6 +36,12 @@
                  "height":31.9471674092936,
                  "id":1,
                  "name":"start",
+                 "properties":[
+                        {
+                         "name":"ink",
+                         "type":"float",
+                         "value":2.5
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
