@@ -161,6 +161,7 @@ public class LevelCompleteMode extends MenuMode {
 
     public void setBackground() {
         background = assets.getEntry( "BG-" + (parseWorld(identifier) + 1), Texture.class);
+        background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
     }
 
     private void update(float delta){
