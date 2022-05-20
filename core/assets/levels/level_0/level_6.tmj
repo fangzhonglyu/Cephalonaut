@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":9,
-         "image":"..\/..\/BG-1-teal.png",
+         "image":"..\/..\/BG-2-lblue.png",
          "name":"Background",
          "offsetx":16,
          "offsety":-22.1599159188293,
@@ -232,18 +232,6 @@
                  "y":442.196872935477
                 }, 
                 {
-                 "gid":414,
-                 "height":32,
-                 "id":228,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":48,
-                 "y":112
-                }, 
-                {
                  "gid":401,
                  "height":32,
                  "id":229,
@@ -254,6 +242,18 @@
                  "width":32,
                  "x":242,
                  "y":290
+                }, 
+                {
+                 "gid":408,
+                 "height":40,
+                 "id":230,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":48,
+                 "y":112
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -262,7 +262,7 @@
          "y":0
         }],
  "nextlayerid":30,
- "nextobjectid":230,
+ "nextobjectid":231,
  "orientation":"orthogonal",
  "properties":[
         {
