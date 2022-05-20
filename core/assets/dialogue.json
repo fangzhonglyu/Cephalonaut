@@ -1,6 +1,8 @@
 {
   "level_0:checkpoint_0": {
-    "part_0": ["Hi my name is michael the octopus!", "[W] press W to thrust.", "[AD] press A to rotate left and D to rotate right."]
+    "part_0": ["Hi my name is michael the octopus!",
+      "[W] press W to thrust.",
+      "[AD] press A to rotate left and D to rotate right."]
   },
   "level_0:checkpoint_1": {
     "part_0": ["[LEFT_CLICK] Left click your mouse to grapple.",
@@ -8,7 +10,8 @@
       "[SPACE] You can also press the space bar to release the grapple."]
   },
   "level_0:checkpoint_2": {
-    "part_0": ["Don't forget to grapple!"]
+    "part_0": ["Move over ink packs to refill your precious ink.",
+      "Don't forget to grapple!"]
   },
   "level_0:checkpoint_4": {
     "part_0": ["Welcome to the Spike Lab!",
@@ -17,13 +20,10 @@
   "level_2:checkpoint_0": {
     "part_0": ["Try going fast to break the glass."]
   },
-  "level_2:checkpoint_3": {
-    "part_0": ["Move over ink packs to refill your precious ink."]
-  },
   "level_3:checkpoint_0": {
     "part_0": ["Bump or grapple buttons to open doors."]
   },
-  "level_3:checkpoint_3": {
+  "level_3:checkpoint_4": {
     "part_0": ["AAAAAaaahhh, get ready!"]
   },
   "level_4:checkpoint_0": {

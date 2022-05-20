@@ -146,12 +146,10 @@ public class MainMenuNestedMode extends MenuMode {
         this.winTextures = winTextures;
 
         this.curLevel = curLevel;
-
-        //background = assets.getEntry( back, Texture.class);
-        //setBackground();
-        background = assets.getEntry( "BG-" + (curLevel + 1), Texture.class);
-        background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.assets = assets;
+
+        setBackground();
+        background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         octopusTexture = new TextureRegion(assets.getEntry( "octopus.png", Texture.class ));
         levelTexture = assets.getEntry( "level-incomplete", Texture.class );
