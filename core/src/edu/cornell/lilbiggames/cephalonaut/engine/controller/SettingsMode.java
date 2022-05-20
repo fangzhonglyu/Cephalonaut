@@ -287,7 +287,7 @@ public class SettingsMode extends MenuMode {
             i++;
         }
 
-        start = start - 2f*displayFont.getLineHeight()*i;
+        start = start - 1.75f*displayFont.getLineHeight()*i;
 
         displayFont.getData().setScale(0.7f*scale.x);
         displayFont.setColor(Color.ORANGE);
