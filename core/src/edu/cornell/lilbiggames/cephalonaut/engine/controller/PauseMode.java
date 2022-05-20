@@ -26,8 +26,12 @@ public class PauseMode extends MenuMode {
 
     private int selectedOption;
 
+    private int level;
+
     /** Reference to the game canvas */
     protected GameCanvas canvas;
+
+    AssetDirectory assets;
 
     XBoxController xbox;
     private boolean prevUp;
@@ -37,6 +41,7 @@ public class PauseMode extends MenuMode {
 
     public PauseMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
         super(assets, canvas, listener);
+        this.assets = assets;
         this.canvas = canvas;
         this.listener = listener;
         background = assets.getEntry( "BG-1-teal.png", Texture.class );
@@ -55,9 +60,20 @@ public class PauseMode extends MenuMode {
         }
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setBackground() {
+        background = assets.getEntry( "BG-" + (level + 1), Texture.class);
+        background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+    }
+
     public void setDefault(){
-        Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
+        Gdx.input.setInputProcessor(menuInput);
+        selectedOption = 0;
         super.setDefault();
+        setBackground();
     }
 
     @Override
@@ -74,7 +90,6 @@ public class PauseMode extends MenuMode {
             listener.exitScreen(this, MenuMode.OPTIONS_CODE);
         }
     }
-
 
     @Override
     public void optionSelected(int i){
@@ -119,12 +134,13 @@ public class PauseMode extends MenuMode {
     public void draw(){
         canvas.begin();
 
+        float bgImageScale = Math.max(scale.x*canvas.getWidth()/ background.getWidth(), scale.y*canvas.getHeight()/ background.getHeight());
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
                 0, 0, background.getWidth() * 10, background.getHeight() * 10,
-                20,
-                20);
+                bgImageScale,
+                bgImageScale);
 
         super.drawGoToSettings();
         super.drawOptions(options, selectedOption);

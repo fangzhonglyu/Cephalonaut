@@ -317,6 +317,8 @@ public class GDXRoot extends Game implements ScreenListener {
 			setBackScreen(mainMenu);
 		} else if(exitCode == PlayMode.EXIT_LEVEL){
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
+			int curLevel = mainMenu.getCurLevelNumber();
+			pauseMode.setLevel(curLevel);
 			pauseMode.setDefault();
 			startScreenTransition(pauseMode);
 		} else if (exitCode == MenuMode.RESTART_LEVEL_CODE) {

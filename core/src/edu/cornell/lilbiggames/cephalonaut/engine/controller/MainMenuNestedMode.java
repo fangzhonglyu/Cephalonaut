@@ -321,8 +321,9 @@ public class MainMenuNestedMode extends MenuMode {
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
                 0, 0, background.getWidth()*10, background.getHeight()*10,
-                20,
-                20);
+                bgImageScale,
+                bgImageScale);
+
         float diff = scale.x * 200;
         float start = width/2 - diff * ((checkpoints-1)/2f);
 
