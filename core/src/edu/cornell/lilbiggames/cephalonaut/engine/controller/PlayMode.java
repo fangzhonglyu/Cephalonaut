@@ -30,6 +30,11 @@ public class PlayMode extends WorldController implements Screen {
     /** For knowing we have exited a level */
     public static int EXIT_LEVEL = 20;
     public static int WON_LEVEL = 100;
+
+    public static int[] R = {255, 125, 140, 192, 214, 213, 255};
+    public static int[] G = {217, 213, 202, 132, 134, 96, 108};
+    public static int[] B = {194, 255, 255, 255, 255, 124, 128};
+
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
@@ -221,13 +226,9 @@ public class PlayMode extends WorldController implements Screen {
             }
         }
 
-        int minY = 0;
-        if (level.equals("level_3") && checkpoint.equals("checkpoint_0")) {
-            minY = -((int) (bounds.getHeight() + 1));
-        }
         for (int i = 0; i < NUM_SPARKLES; i++) {
             for (int j = 0; j < NUM_SPARKLES; j++) {
-                sparkleY[i][j] = ThreadLocalRandom.current().nextInt(minY, ((int) (bounds.getHeight() + 1)));
+                sparkleY[i][j] = ThreadLocalRandom.current().nextInt(0, ((int) (bounds.getHeight() + 1)));
             }
         }
     }
@@ -447,6 +448,12 @@ public class PlayMode extends WorldController implements Screen {
         }
     }
 
+    public int levelToInt() {
+        String s = level;
+        String[] tokens = s.split("_");
+        return Integer.parseInt(tokens[tokens.length - 1]);
+    }
+
     /**
      * Draw the physics objects together with foreground and background
      *
@@ -471,11 +478,13 @@ public class PlayMode extends WorldController implements Screen {
             }
             if (obj instanceof ImageObject) {
                 Vector2 parallaxFactor = ((ImageObject) obj).getParallaxFactor();
+                int idx = levelToInt();
+                Color tint = new Color(R[idx], G[idx], B[idx], 1);
                 float offsetX = canvas.getCameraX() * parallaxFactor.x;
                 float offsetY = canvas.getCameraY() * parallaxFactor.y;
                 for (int i = 0; i < NUM_SPARKLES; i++) {
                     for (int j = 0; j < NUM_SPARKLES; j++) {
-                        canvas.draw(sparkles[i], Color.GRAY,
+                        canvas.draw(sparkles[i], tint,
                                 sparkles[i].getFwidth() / 2f, sparkles[i].getFheight() / 2f,
                                 scale.x * sparkleX[i][j] + offsetX, scale.y * sparkleY[i][j] + offsetY,
                                 0, 0.1f * scale.x, 0.1f * scale.y);
