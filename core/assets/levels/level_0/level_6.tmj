@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":9,
-         "image":"..\/..\/BG-1-teal.png",
+         "image":"..\/..\/BG-2-lblue.png",
          "name":"Background",
          "offsetx":16,
          "offsety":-22.1599159188293,
@@ -69,18 +69,6 @@
          "id":25,
          "name":"Object Layer 1",
          "objects":[
-                {
-                 "gid":400,
-                 "height":32,
-                 "id":210,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":243.778816893045,
-                 "y":296.561122244489
-                }, 
                 {
                  "gid":400,
                  "height":32,
@@ -244,14 +232,26 @@
                  "y":442.196872935477
                 }, 
                 {
-                 "gid":414,
+                 "gid":401,
                  "height":32,
-                 "id":228,
+                 "id":229,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
+                 "x":242,
+                 "y":290
+                }, 
+                {
+                 "gid":408,
+                 "height":40,
+                 "id":230,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
                  "x":48,
                  "y":112
                 }],
@@ -262,7 +262,7 @@
          "y":0
         }],
  "nextlayerid":30,
- "nextobjectid":229,
+ "nextobjectid":231,
  "orientation":"orthogonal",
  "properties":[
         {

@@ -15,10 +15,6 @@
     "part_0": ["Move over ink packs to refill your precious ink.",
       "Don't forget to grapple!",]
   },
-  "level_0:checkpoint_4": {
-    "part_0": ["Welcome to the Spike Lab!",
-      "Watch out for spikes, they will kill you!"]
-  },
   "level_2:checkpoint_0": {
     "part_0": ["Try going fast to break the glass."]
   },

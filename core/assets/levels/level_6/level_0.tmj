@@ -488,29 +488,6 @@
                  "y":469.600168173218
                 }, 
                 {
-                 "gid":398,
-                 "height":16,
-                 "id":305,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "restitution":2.5,
-                             "type":"Wall"
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":50.7256672288918,
-                 "x":766.547739524424,
-                 "y":1468.4623474551
-                }, 
-                {
                  "gid":391,
                  "height":32,
                  "id":306,
@@ -1451,6 +1428,18 @@
                  "width":59,
                  "x":756.987109095249,
                  "y":70.9376939603724
+                }, 
+                {
+                 "gid":394,
+                 "height":24,
+                 "id":377,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":779.333333333333,
+                 "y":1461.33333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1459,7 +1448,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":377,
+ "nextobjectid":378,
  "orientation":"orthogonal",
  "properties":[
         {

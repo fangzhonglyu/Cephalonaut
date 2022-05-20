@@ -80,6 +80,7 @@ public class InputController {
 		keyBindings.put("thrust",Input.Keys.valueOf("W"));
 		keyBindings.put("rotate-counterclockwise",Input.Keys.valueOf("A"));
 		keyBindings.put("rotate-clockwise",Input.Keys.valueOf("D"));
+		keyBindings.put("ungrapple",Input.Keys.valueOf("Space"));
 	}
 
 	/**

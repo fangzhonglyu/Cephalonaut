@@ -105,14 +105,14 @@ public class StartScreenMode extends MenuMode {
         canvas.clear();
         canvas.begin();
 
-        float height = canvas.getHeight();
-        float width = canvas.getWidth();
+        int height = canvas.getHeight();
+        int width = canvas.getWidth();
         canvas.draw(background,
-                0.5f*canvas.getWidth()-canvas.getCameraX(),
-                0.5f*canvas.getHeight()-canvas.getCameraY(),
-                0, 0, background.getWidth() * 10, background.getHeight() * 10,
-                20,
-                20);
+                canvas.getWidth() / 2f - canvas.getCameraX(),
+                canvas.getHeight() / 2f - canvas.getCameraY(),
+                width, height,0, 0,
+                background.getWidth() * 2, background.getWidth() * 2 * height / width,
+                1, 1);
 
         displayFont.getData().setScale(scale.y);
         displayFont.setColor(Color.ORANGE);

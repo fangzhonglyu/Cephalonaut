@@ -249,18 +249,17 @@ public class LevelCompleteMode extends MenuMode {
     }
 
     public void draw() {
-        float height = canvas.getHeight();
-        float width = canvas.getWidth();
-
         canvas.clear();
         canvas.begin();
 
+        int width = canvas.getWidth();
+        int height = canvas.getHeight();
         canvas.draw(background,
-                0.5f*canvas.getWidth()-canvas.getCameraX(),
-                0.5f*canvas.getHeight()-canvas.getCameraY(),
-                0, 0, background.getWidth() * 10, background.getHeight() * 10,
-                20,
-                20);
+                canvas.getWidth() / 2f - canvas.getCameraX(),
+                canvas.getHeight() / 2f - canvas.getCameraY(),
+                width, height,0, 0,
+                background.getWidth() * 2, background.getWidth() * 2 * height / width,
+                1, 1);
 
         super.drawGoToSettings();
         displayFont.getData().setScale(Math.min(scale.x,scale.y));

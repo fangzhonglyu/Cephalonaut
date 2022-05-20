@@ -136,7 +136,7 @@
                         {
                          "name":"ink",
                          "type":"float",
-                         "value":10
+                         "value":3
                         }],
                  "rotation":0,
                  "type":"",
@@ -329,6 +329,30 @@
                  "width":22.1818181818181,
                  "x":480.454545454545,
                  "y":216.727272727273
+                }, 
+                {
+                 "gid":394,
+                 "height":24,
+                 "id":213,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":452.305802674626,
+                 "y":317.031280491305
+                }, 
+                {
+                 "gid":394,
+                 "height":24,
+                 "id":214,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":47.3606152786547,
+                 "y":481.595362451931
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -337,7 +361,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":213,
+ "nextobjectid":215,
  "orientation":"orthogonal",
  "properties":[
         {
