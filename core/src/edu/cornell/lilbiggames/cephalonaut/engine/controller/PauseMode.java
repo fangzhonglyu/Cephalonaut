@@ -26,6 +26,8 @@ public class PauseMode extends MenuMode {
 
     private int selectedOption;
 
+    private int level;
+
     /** Reference to the game canvas */
     protected GameCanvas canvas;
 
@@ -41,6 +43,7 @@ public class PauseMode extends MenuMode {
 
     public PauseMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
         super(assets, canvas, listener);
+        this.assets = assets;
         this.canvas = canvas;
         this.listener = listener;
         background = assets.getEntry( "BG-1-teal.png", Texture.class );
@@ -62,13 +65,13 @@ public class PauseMode extends MenuMode {
         }
     }
 
-    public void setCurLevel(int level){
+    public void setLevel(int level) {
         this.curLevel = level;
     }
 
-
     public void setDefault(){
-        Gdx.input.setInputProcessor(menuInput); selectedOption = 0;
+        Gdx.input.setInputProcessor(menuInput);
+        selectedOption = 0;
         super.setDefault();
         setBackground();
     }
@@ -93,7 +96,6 @@ public class PauseMode extends MenuMode {
             listener.exitScreen(this, MenuMode.OPTIONS_CODE);
         }
     }
-
 
     @Override
     public void optionSelected(int i){
@@ -138,6 +140,7 @@ public class PauseMode extends MenuMode {
     public void draw(){
         canvas.begin();
 
+        float bgImageScale = Math.max(scale.x*canvas.getWidth()/ background.getWidth(), scale.y*canvas.getHeight()/ background.getHeight());
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),

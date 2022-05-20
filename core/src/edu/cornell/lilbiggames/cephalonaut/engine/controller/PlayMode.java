@@ -340,6 +340,19 @@ public class PlayMode extends WorldController implements Screen {
         return false;
     }
 
+//    public boolean preUpdate(float dt) {
+//        super.preUpdate(dt);
+//        System.out.println("gottem");
+//        InputController input = InputController.getInstance();
+//        input.readInput(bounds, scale);
+//
+//        if (input.didReset()) {
+//            cephalonaut.setAlive(false);
+//        }
+//
+//        return true;
+//    }
+
     /**
      * The core gameplay loop of this world.
      *
@@ -366,6 +379,10 @@ public class PlayMode extends WorldController implements Screen {
                 timer += 1;
                 timeCount = 0;
             }
+        }
+
+        if (input.didReset()) {
+            cephalonaut.setAlive(false);
         }
 
         if (input.didExit()) {
