@@ -31,10 +31,6 @@ public class PlayMode extends WorldController implements Screen {
     public static int EXIT_LEVEL = 20;
     public static int WON_LEVEL = 100;
 
-    public static int[] R = {255, 125, 140, 192, 214, 213, 255};
-    public static int[] G = {217, 213, 202, 132, 134, 96, 108};
-    public static int[] B = {194, 255, 255, 255, 255, 124, 128};
-
     /** Player model */
     private CephalonautModel cephalonaut;
     private TextureRegion octopusTexture;
@@ -129,9 +125,9 @@ public class PlayMode extends WorldController implements Screen {
         sparkles = new FilmStrip[NUM_SPARKLES];
         for (int i = 0; i < NUM_SPARKLES; i++) {
             if (i < 2 * (NUM_SPARKLES / 3)) {
-                sparkles[i] = new FilmStrip(this.loader.getAssetDirectory().getEntry("bg:Mstar", Texture.class), 1, 11);
+                sparkles[i] = new FilmStrip(this.loader.getAssetDirectory().getEntry("bg:Mstar" + levelToInt(), Texture.class), 1, 11);
             } else {
-                sparkles[i] = new FilmStrip(this.loader.getAssetDirectory().getEntry("bg:Sstar", Texture.class), 1, 11);
+                sparkles[i] = new FilmStrip(this.loader.getAssetDirectory().getEntry("bg:Sstar" + levelToInt(), Texture.class), 1, 11);
             }
         }
         sparkleX = new int[NUM_SPARKLES][NUM_SPARKLES];
@@ -451,7 +447,7 @@ public class PlayMode extends WorldController implements Screen {
     public int levelToInt() {
         String s = level;
         String[] tokens = s.split("_");
-        return Integer.parseInt(tokens[tokens.length - 1]);
+        return Integer.parseInt(tokens[tokens.length - 1]) + 1;
     }
 
     /**
@@ -479,12 +475,11 @@ public class PlayMode extends WorldController implements Screen {
             if (obj instanceof ImageObject) {
                 Vector2 parallaxFactor = ((ImageObject) obj).getParallaxFactor();
                 int idx = levelToInt();
-                Color tint = new Color(R[idx], G[idx], B[idx], 1);
                 float offsetX = canvas.getCameraX() * parallaxFactor.x;
                 float offsetY = canvas.getCameraY() * parallaxFactor.y;
                 for (int i = 0; i < NUM_SPARKLES; i++) {
                     for (int j = 0; j < NUM_SPARKLES; j++) {
-                        canvas.draw(sparkles[i], tint,
+                        canvas.draw(sparkles[i], Color.WHITE,
                                 sparkles[i].getFwidth() / 2f, sparkles[i].getFheight() / 2f,
                                 scale.x * sparkleX[i][j] + offsetX, scale.y * sparkleY[i][j] + offsetY,
                                 0, 0.1f * scale.x, 0.1f * scale.y);
