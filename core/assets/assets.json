@@ -131,7 +131,15 @@
     "SPACE-key": "UI-space-key.png",
     "white-arrow": "UI-arrow-white.png",
     "banner": "banner.png",
-    "settings-icon": "UI-settings.png"
+    "settings-icon": "UI-settings.png",
+    "TS-A.png": "TS-A.png",
+    "TS-W.png": "TS-W.png",
+    "TS-D.png": "TS-D.png",
+    "TS-R.png": "TS-R.png",
+    "TS-ESC.png": "TS-ESC.png",
+    "TS-left-click.png": "TS-left-click.png",
+    "TS-space.png": "TS-space.png",
+    "TS-right-click.png": "TS-right-click.png"
   },
   "jsons": {
     "dialogue": "dialogue.json",
