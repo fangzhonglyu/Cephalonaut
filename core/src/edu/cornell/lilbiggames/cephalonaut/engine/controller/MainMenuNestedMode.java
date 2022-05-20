@@ -147,11 +147,8 @@ public class MainMenuNestedMode extends MenuMode {
 
         this.curLevel = curLevel;
 
-        //background = assets.getEntry( back, Texture.class);
-        //setBackground();
-        background = assets.getEntry( "BG-" + (curLevel + 1), Texture.class);
-        background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.assets = assets;
+        setBackground();
 
         octopusTexture = new TextureRegion(assets.getEntry( "octopus.png", Texture.class ));
         levelTexture = assets.getEntry( "level-incomplete", Texture.class );
@@ -210,7 +207,8 @@ public class MainMenuNestedMode extends MenuMode {
     }
 
     public void setBackground() {
-        background = assets.getEntry( "BG-" + (curLevel + 1), Texture.class);
+        background = assets.getEntry( "BG-" + (curLevel+1), Texture.class);
+        background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
     }
 
     @Override
@@ -282,6 +280,7 @@ public class MainMenuNestedMode extends MenuMode {
     }
 
     public void setDefault() {
+        setBackground();
         populateIcons();
         checkpointHitBoxes = new Rectangle[checkpoints];
         float diff = scale.x * 200;
@@ -290,7 +289,6 @@ public class MainMenuNestedMode extends MenuMode {
             checkpointHitBoxes[i] = new Rectangle(i*diff+start,canvas.getHeight() / 2, 3f * levelTexture.getWidth(), 3f * levelTexture.getHeight());
         }
         Gdx.input.setInputProcessor(menuNestedInput);
-        setBackground();
     }
 
     public void setNumCheckpoints(int checkpoints){
@@ -317,12 +315,13 @@ public class MainMenuNestedMode extends MenuMode {
 
         List<TextureRegion> winTexturesCurLevel = winTextures.get(curLevel);
         float bgImageScale = Math.max(scale.x*canvas.getWidth()/ background.getWidth(), scale.y*canvas.getHeight()/ background.getHeight());
+
         canvas.draw(background,
                 0.5f*canvas.getWidth()-canvas.getCameraX(),
                 0.5f*canvas.getHeight()-canvas.getCameraY(),
-                0, 0, background.getWidth(), background.getHeight(),
-                bgImageScale,
-                bgImageScale);
+                0, 0, background.getWidth()*10, background.getHeight()*10,
+                20,
+                20);
         float diff = scale.x * 200;
         float start = width/2 - diff * ((checkpoints-1)/2f);
 

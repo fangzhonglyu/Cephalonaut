@@ -158,6 +158,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private void initializeCheckpointSelect(){
 		int curLevel = mainMenu.getCurLevelNumber();
 		mainMenuNestedMode.setLevel(curLevel);
+		mainMenuNestedMode.setDefault();
 		mainMenuNestedMode.setNumCheckpoints(numCheckpointsPerLevel.get(curLevel));
 		mainMenuNestedMode.setNumCompletedCheckpoints(numCheckpointsCompleted.get(curLevel));
 	}
