@@ -8,7 +8,7 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":36,
+ "tilecount":38,
  "tiledversion":"1.8.2",
  "tileheight":96,
  "tiles":[
@@ -2074,8 +2074,108 @@
                      "isSensor":true
                     }
                 }]
+        }, 
+        {
+         "id":43,
+         "image":"ty-star.png",
+         "imageheight":5,
+         "imagewidth":5,
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"SparkleEnd"
+                    }
+                }]
+        }, 
+        {
+         "id":44,
+         "image":"UI-star.png",
+         "imageheight":64,
+         "imagewidth":64,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":-5.57088285229202,
+                             "y":13.2640067911715
+                            }, 
+                            {
+                             "x":-19.6307300509338,
+                             "y":14.5904074702886
+                            }, 
+                            {
+                             "x":-9.28480475382003,
+                             "y":22.8140916808149
+                            }, 
+                            {
+                             "x":-13.2640067911715,
+                             "y":36.6086587436333
+                            }, 
+                            {
+                             "x":0,
+                             "y":28.1196943972835
+                            }, 
+                            {
+                             "x":12.998726655348,
+                             "y":36.8739388794567
+                            }, 
+                            {
+                             "x":9.55008488964346,
+                             "y":22.8140916808149
+                            }, 
+                            {
+                             "x":19.3654499151104,
+                             "y":15.1209677419355
+                            }, 
+                            {
+                             "x":5.57088285229202,
+                             "y":14.0598471986418
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":31.8336162988115,
+                     "y":13.5292869269949
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true,
+                     "type":"Finish"
+                    }
+                }]
         }],
- "tilewidth":59,
+ "tilewidth":64,
  "type":"tileset",
  "version":"1.8"
 }

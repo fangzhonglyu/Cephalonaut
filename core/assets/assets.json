@@ -67,6 +67,8 @@
     "bg:Lstar": "BG-Lstars.png",
     "bg:Mstar": "BG-Mstars.png",
     "bg:Sstar": "BG-Sstars.png",
+    "ty-star.png": "ty-star.png",
+    "UI-star.png": "UI-star.png",
     "replayicon": "replay.png",
     "nexticon": "arrowRight.png",
     "UI-target-sparkle.png": "UI-target-sparkle.png",
@@ -190,11 +192,13 @@
     "level_5:checkpoint_4": "levels/level_5/level_2.tmj",
     "level_5:checkpoint_5": "levels/level_5/level_5.tmj",
     "level_5:checkpoint_6": "levels/level_5/level_4.tmj",
-    "level_6:checkpoint_0": "levels/level_6/level_0.tmj",
-    "level_6:checkpoint_1": "levels/level_6/level_1.tmj",
-    "level_6:checkpoint_2": "levels/level_6/level_2.tmj",
-    "level_6:checkpoint_3": "levels/level_6/level_3.tmj",
-    "level_6:checkpoint_4": "levels/level_6/level_6.tmj"
+    "level_6:checkpoint_0": "levels/level_6/level_5.tmj",
+    "level_6:checkpoint_1": "levels/level_6/level_0.tmj",
+    "level_6:checkpoint_2": "levels/level_6/level_1.tmj",
+    "level_6:checkpoint_3": "levels/level_6/level_2.tmj",
+    "level_6:checkpoint_4": "levels/level_6/level_4.tmj",
+    "level_6:checkpoint_5": "levels/level_6/level_3.tmj",
+    "level_6:checkpoint_6": "levels/level_6/level_6.tmj"
   },
   "music": {
     "level0": "music/Level1GOLDEN.mp3",

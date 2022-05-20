@@ -42,6 +42,7 @@ public class LevelElement extends SimpleObstacle {
         REFILL,
         DIALOGUE_TRIGGER,
         SPARKLE,
+        SPARKLEEND,
         ENGINE,
         BROKEN_ENGINE,
         BIG_BUTTON
@@ -164,6 +165,8 @@ public class LevelElement extends SimpleObstacle {
                 return new LEAnimated(def,new FilmStrip(spikeTexture,1,9),7, false);
             case SPARKLE:
                 return new LEAnimated(def,new FilmStrip(sparksTexture,1,6),5, true);
+            case SPARKLEEND:
+                return new LEAnimated(def,new FilmStrip(sparksTexture,1,6),4, false);
             case SPIKEBALL:
                 return new LEAnimated(def,new FilmStrip(spikeBallTexture,1,7),7, false);
             case ENGINE:
