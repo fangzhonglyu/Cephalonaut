@@ -8,7 +8,7 @@
  "margin":0,
  "name":"objects",
  "spacing":0,
- "tilecount":28,
+ "tilecount":36,
  "tiledversion":"1.8.2",
  "tileheight":96,
  "tiles":[
@@ -1887,7 +1887,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1938,6 +1937,142 @@
                  "name":"target",
                  "type":"object",
                  "value":0
+                }]
+        }, 
+        {
+         "id":35,
+         "image":"TS-W.png",
+         "imageheight":8,
+         "imagewidth":8,
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true
+                    }
+                }]
+        }, 
+        {
+         "id":36,
+         "image":"TS-space.png",
+         "imageheight":8,
+         "imagewidth":32,
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true
+                    }
+                }]
+        }, 
+        {
+         "id":37,
+         "image":"TS-right-click.png",
+         "imageheight":12,
+         "imagewidth":8,
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true
+                    }
+                }]
+        }, 
+        {
+         "id":38,
+         "image":"TS-R.png",
+         "imageheight":8,
+         "imagewidth":8,
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true
+                    }
+                }]
+        }, 
+        {
+         "id":39,
+         "image":"TS-left-click.png",
+         "imageheight":12,
+         "imagewidth":8,
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true
+                    }
+                }]
+        }, 
+        {
+         "id":40,
+         "image":"TS-ESC.png",
+         "imageheight":8,
+         "imagewidth":16,
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true
+                    }
+                }]
+        }, 
+        {
+         "id":41,
+         "image":"TS-D.png",
+         "imageheight":8,
+         "imagewidth":8,
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true
+                    }
+                }]
+        }, 
+        {
+         "id":42,
+         "image":"TS-A.png",
+         "imageheight":8,
+         "imagewidth":8,
+         "properties":[
+                {
+                 "name":"body",
+                 "propertytype":"GameObject",
+                 "type":"class",
+                 "value":
+                    {
+                     "canGrappleOn":false,
+                     "isSensor":true
+                    }
                 }]
         }],
  "tilewidth":59,

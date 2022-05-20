@@ -176,8 +176,8 @@ public class GameCanvas {
 		} else {
 			camera.position.y = y;
 		}
-		camera.position.x = Math.round(x);
-		camera.position.y = Math.round(y);
+		camera.position.x = Math.round(camera.position.x);
+		camera.position.y = Math.round(camera.position.y);
 		camera.update();
 	}
 
