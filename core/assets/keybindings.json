@@ -1,5 +1,6 @@
 {
   "thrust": "W",
   "rotate-counterclockwise": "A",
-  "rotate-clockwise": "D"
+  "rotate-clockwise": "D",
+  "ungrapple": "Space"
 }
