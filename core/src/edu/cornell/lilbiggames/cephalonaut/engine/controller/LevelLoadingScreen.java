@@ -73,7 +73,9 @@ public class LevelLoadingScreen extends MenuMode implements Screen {
     }
 
     public void setBackground() {
+
         background = assets.getEntry( "BG-" + (curLevel + 1), Texture.class);
+        background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
     }
 
     public void render(float delta){
