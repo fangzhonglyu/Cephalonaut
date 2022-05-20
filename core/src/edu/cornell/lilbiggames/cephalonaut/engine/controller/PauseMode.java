@@ -140,13 +140,14 @@ public class PauseMode extends MenuMode {
     public void draw(){
         canvas.begin();
 
-        float bgImageScale = Math.max(scale.x*canvas.getWidth()/ background.getWidth(), scale.y*canvas.getHeight()/ background.getHeight());
+        int width = canvas.getWidth();
+        int height = canvas.getHeight();
         canvas.draw(background,
-                0.5f*canvas.getWidth()-canvas.getCameraX(),
-                0.5f*canvas.getHeight()-canvas.getCameraY(),
-                0, 0, background.getWidth() * 10, background.getHeight() * 10,
-                20,
-                20);
+                canvas.getWidth() / 2f - canvas.getCameraX(),
+                canvas.getHeight() / 2f - canvas.getCameraY(),
+                width, height,0, 0,
+                background.getWidth() * 2, background.getWidth() * 2 * height / width,
+                1, 1);
 
         super.drawGoToSettings();
         super.drawOptions(options, selectedOption);
