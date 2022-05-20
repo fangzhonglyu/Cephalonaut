@@ -4385,7 +4385,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -5095,90 +5094,10 @@
         }, 
         {
          "id":183,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "id":2,
-             "name":"",
-             "objects":[
-                    {
-                     "height":0,
-                     "id":1,
-                     "name":"",
-                     "polygon":[
-                            {
-                             "x":0,
-                             "y":0
-                            }, 
-                            {
-                             "x":-0.0625,
-                             "y":9
-                            }, 
-                            {
-                             "x":16.0625,
-                             "y":9
-                            }, 
-                            {
-                             "x":15.9375,
-                             "y":-0.0625
-                            }],
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":0,
-                     "x":0.0625,
-                     "y":2.9375
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            },
          "type":"Background"
         }, 
         {
          "id":184,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "id":2,
-             "name":"",
-             "objects":[
-                    {
-                     "height":0,
-                     "id":1,
-                     "name":"",
-                     "polygon":[
-                            {
-                             "x":0,
-                             "y":0
-                            }, 
-                            {
-                             "x":0.125,
-                             "y":16
-                            }, 
-                            {
-                             "x":9.125,
-                             "y":15.9375
-                            }, 
-                            {
-                             "x":9.125,
-                             "y":-0.0625
-                            }],
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":0,
-                     "x":2.875,
-                     "y":-0.0625
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            },
          "type":"Background"
         }, 
         {
@@ -5530,7 +5449,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -5585,7 +5503,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -6118,7 +6035,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -6173,7 +6089,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -6664,7 +6579,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -6715,7 +6629,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -6762,7 +6675,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {

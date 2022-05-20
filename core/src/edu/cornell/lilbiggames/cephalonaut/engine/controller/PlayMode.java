@@ -368,6 +368,7 @@ public class PlayMode extends WorldController implements Screen {
         if (input.didReset()) {
             if(cephalonaut.isAlive()) {
                 cephalonaut.setAlive(false);
+                SoundController.playSound(11,1.5f);
             } else {
                 reset();
             }
@@ -440,6 +441,8 @@ public class PlayMode extends WorldController implements Screen {
         float bound_factor = cephalonaut.getHeight();
         if(cephalonaut.getX() < -bound_factor ||  cephalonaut.getX() >= bounds.getWidth() + bound_factor
                 || cephalonaut.getY() < -bound_factor|| cephalonaut.getY() >= bounds.getHeight() + bound_factor) {
+            if(cephalonaut.isAlive())
+                SoundController.playSound(11,2f);
             cephalonaut.setAlive(false);
         }
     }

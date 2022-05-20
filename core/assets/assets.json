@@ -248,7 +248,9 @@
     "electricDeath": "ElectricityDeathSound.mp3",
     "buttonSound": "ButtonPushSound.mp3",
     "DoorOpenSound": "DoorOpenSound.mp3",
-    "healthPack": "healthPack.mp3"
+    "healthPack": "healthPack.mp3",
+    "death": "DeathSound1.mp3",
+    "blackholeDeath": "DeathBlackHoleSound.mp3"
   },
   "fonts": {
     "retro": {

@@ -38,7 +38,7 @@ public class SoundController {
     private static float musicVolume;
 
     /** volume of the music */
-    private static float sfxVolume = .3f;
+    private static float sfxVolume = .5f;
 
     private static int currTrack;
 
@@ -60,6 +60,8 @@ public class SoundController {
         soundCache[8] = directory.getEntry("buttonSound",Sound.class);
         soundCache[9] = directory.getEntry("DoorOpenSound",Sound.class);
         soundCache[10] = directory.getEntry("healthPack",Sound.class);
+        soundCache[11] = directory.getEntry("death",Sound.class);
+        soundCache[12] = directory.getEntry("blackholeDeath",Sound.class);
         blackHoleSound = directory.getEntry("blackhole",Sound.class);
         //TODO load the sound effects into the cache
     }
@@ -87,10 +89,10 @@ public class SoundController {
         }
         if (!blackHolePlaying && sound) {
             blackHolePlaying = true;
-            blackHoleID = blackHoleSound.loop(sfxVolume*volume*2f);
+            blackHoleID = blackHoleSound.loop(sfxVolume*volume*1.5f);
         }
         if (blackHolePlaying && sound){
-            blackHoleSound.setVolume(blackHoleID,volume*sfxVolume*2f);
+            blackHoleSound.setVolume(blackHoleID,volume*sfxVolume*1.5f);
         }
     }
 

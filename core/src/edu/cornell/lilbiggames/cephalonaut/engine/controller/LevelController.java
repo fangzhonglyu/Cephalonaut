@@ -175,9 +175,13 @@ public class LevelController implements ContactListener {
 
                 ((LevelElement) contactObject).setInContact(true);
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKE)||((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE)||((LevelElement) contactObject).getElement().equals(LevelElement.Element.SPIKEBALL)) {
+                    if(cephalonaut.isAlive()) {
+                        if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE))
+                            SoundController.playSound(7, 1);
+                        else
+                            SoundController.playSound(11, 1.5f);
+                    }
                     cephalonaut.setAlive(false);
-                    if(((LevelElement) contactObject).getElement().equals(LevelElement.Element.ESPIKE))
-                        SoundController.playSound(7,1);
                 }
                 if (((LevelElement) contactObject).getElement().equals(LevelElement.Element.REFILL)) {
                     if(cephalonaut.getInk()<0.9f)
@@ -215,6 +219,8 @@ public class LevelController implements ContactListener {
             }
 
             if (contactObject instanceof LEBlackHole) {
+                if(cephalonaut.isAlive())
+                    SoundController.playSound(12,1);
                 cephalonaut.setAlive(false);
             }
 
