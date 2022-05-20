@@ -31,13 +31,15 @@ public class PauseMode extends MenuMode {
     /** Reference to the game canvas */
     protected GameCanvas canvas;
 
-    AssetDirectory assets;
+    private AssetDirectory assets;
 
     XBoxController xbox;
     private boolean prevUp;
     private boolean prevDown;
     private boolean prevExit;
     private boolean prevSelect;
+
+    private int curLevel;
 
     public PauseMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
         super(assets, canvas, listener);
@@ -49,7 +51,10 @@ public class PauseMode extends MenuMode {
 
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
+        this.assets = assets;
         displayFont = assets.getEntry("retro", BitmapFont.class);
+
+        this.curLevel = 0;
 
         selectedOption = 0; //default is resume
         Array<XBoxController> controllers = Controllers.get().getXBoxControllers();
@@ -61,12 +66,7 @@ public class PauseMode extends MenuMode {
     }
 
     public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public void setBackground() {
-        background = assets.getEntry( "BG-" + (level + 1), Texture.class);
-        background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        this.curLevel = level;
     }
 
     public void setDefault(){
@@ -74,6 +74,12 @@ public class PauseMode extends MenuMode {
         selectedOption = 0;
         super.setDefault();
         setBackground();
+    }
+
+    public void setBackground() {
+        background = assets.getEntry( "BG-" + (curLevel+1), Texture.class);
+        background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
 
     @Override
