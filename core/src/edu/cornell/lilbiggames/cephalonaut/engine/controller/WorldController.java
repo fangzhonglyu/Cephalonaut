@@ -405,7 +405,7 @@ public abstract class WorldController implements Screen {
 		}
 		
 		// Turn the physics engine crank.
-		world.step(dt,WORLD_VELOC,WORLD_POSIT);
+		world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
 
 		// Garbage collect the deleted objects.
 		// Note how we use the linked list nodes to delete O(1) in place.

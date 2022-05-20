@@ -124,7 +124,8 @@
                 "Dialogue Trigger",
                 "Engine",
                 "BrokenEngine",
-                "BigButton"
+                "BigButton",
+                "SparkleEnd"
             ],
             "valuesAsFlags": false
         }

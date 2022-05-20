@@ -128,6 +128,10 @@ public class LevelLoader {
                 return LevelElement.Element.ENGINE;
             case "BrokenEngine":
                 return LevelElement.Element.BROKEN_ENGINE;
+            case "Sparkle":
+                return LevelElement.Element.SPARKLE;
+            case "SparkleEnd":
+                return LevelElement.Element.SPARKLEEND;
             default:
                 System.out.printf("WARNING: Unknown LevelElement type '%s'\n", element);
                 return LevelElement.Element.WALL;
