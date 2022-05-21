@@ -261,7 +261,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			// Initialize the game world
 			mainMenu = new MainMenuMode(directory, canvas, this);
 			mainMenuNestedMode = new MainMenuNestedMode(directory, canvas, numCheckpointsPerLevel.get(0),0, 0, this, levelWinTextures, state);
-			startScreenMode = new StartScreenMode(directory, canvas, this);
+			startScreenMode = new StartScreenMode(directory, canvas, this, state);
 
 			LevelElement.gatherAssets(directory);
 

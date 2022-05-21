@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.lilbiggames.cephalonaut.assets.AssetDirectory;
 import edu.cornell.lilbiggames.cephalonaut.engine.GameCanvas;
+import edu.cornell.lilbiggames.cephalonaut.engine.GameState;
 import edu.cornell.lilbiggames.cephalonaut.util.Controllers;
 import edu.cornell.lilbiggames.cephalonaut.util.FilmStrip;
 import edu.cornell.lilbiggames.cephalonaut.util.ScreenListener;
@@ -27,6 +28,8 @@ public class StartScreenMode extends MenuMode {
     private Texture background;
     private FilmStrip banner;
     private float frame;
+    private int resetDataCount;
+    private boolean resetDataMode;
 
     private String[] options = {"START", "OPTIONS", "CREDITS" };
 
@@ -40,9 +43,10 @@ public class StartScreenMode extends MenuMode {
     private boolean prevDown;
     private boolean prevExit;
     private boolean prevSelect;
+    private GameState gameState;
 
 
-    public StartScreenMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener){
+    public StartScreenMode(AssetDirectory assets, GameCanvas canvas, ScreenListener listener, GameState gameState){
         super(assets, canvas, listener);
         this.canvas = canvas;
         this.listener = listener;
@@ -51,6 +55,7 @@ public class StartScreenMode extends MenuMode {
         banner = new FilmStrip(assets.getEntry( "banner-filmstrip", Texture.class),1,7);
         frame = 0;
         banner.setFrame(0);
+        this.gameState = gameState;
 
         this.scale = new Vector2(1,1);
         this.bounds = canvas.getSize().cpy();
@@ -63,6 +68,8 @@ public class StartScreenMode extends MenuMode {
         } else {
             xbox = null;
         }
+        resetDataCount = 0;
+        resetDataMode = false;
     }
 
     public void setDefault(){
@@ -80,19 +87,39 @@ public class StartScreenMode extends MenuMode {
         frame = (frame+10f*delta)%7;
         banner.setFrame((int)frame);
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
-                (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())) {
-            SoundController.playSound(6,1);
-            exitScreen();
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
-                (xbox != null && xbox.isConnected() && xbox.getLeftY() < -0.6f && prevUp != xbox.getLeftY() < -0.6f)){
-            selectedOption = selectedOption == 0 ? options.length-1 : selectedOption-1;
-            SoundController.playSound(4,1);
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
-                (xbox != null && xbox.isConnected() && xbox.getLeftY() > 0.6f && prevDown != xbox.getLeftY() > 0.6f)){
-            selectedOption = (selectedOption+1)%options.length;
-            SoundController.playSound(4,1);
+        if(resetDataMode){
+            if (Gdx.input.isKeyJustPressed(Input.Keys.Y) || (xbox != null && xbox.isConnected() && xbox.getA())) {
+                gameState.clearSave();
+                resetDataMode = false;
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || (xbox != null && xbox.isConnected() && xbox.getB())) {
+                resetDataMode = false;
+            }
+        } else {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+                    (xbox != null && xbox.isConnected() && xbox.getA() && prevSelect != xbox.getA())) {
+                SoundController.playSound(6, 1);
+                exitScreen();
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W) ||
+                    (xbox != null && xbox.isConnected() && xbox.getLeftY() < -0.6f && prevUp != xbox.getLeftY() < -0.6f)) {
+                selectedOption = selectedOption == 0 ? options.length - 1 : selectedOption - 1;
+                SoundController.playSound(4, 1);
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S) ||
+                    (xbox != null && xbox.isConnected() && xbox.getLeftY() > 0.6f && prevDown != xbox.getLeftY() > 0.6f)) {
+                selectedOption = (selectedOption + 1) % options.length;
+                SoundController.playSound(4, 1);
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.R) || (xbox != null && xbox.isConnected() && xbox.getBack())) {
+                resetDataCount++;
+            } else {
+                resetDataCount = 0;
+            }
+
+            if (resetDataCount >= 150) {
+                resetDataMode = true;
+            }
         }
+
         if(xbox != null && xbox.isConnected()) {
             prevUp = xbox.getLeftY() < -0.6f;
             prevDown = xbox.getLeftY() > 0.6f;
@@ -118,7 +145,11 @@ public class StartScreenMode extends MenuMode {
         displayFont.setColor(Color.ORANGE);
         float start = (options.length*displayFont.getLineHeight())/2 - scale.y*80f;
         canvas.draw(banner, Color.WHITE, width/2 - scale.x*2.5f*banner.getRegionWidth()/2, height/2+start, scale.x*2.5f*banner.getRegionWidth(), scale.y*2.5f*banner.getRegionHeight());
-        super.drawOptions(options, selectedOption, (int)(scale.y*80));
+        if(resetDataMode) {
+            canvas.drawTextCentered("RESET DATA?  Y/N", displayFont, -(height / 3));
+        } else {
+            super.drawOptions(options, selectedOption, (int)(scale.y*80));
+        }
 
         canvas.end();
     }

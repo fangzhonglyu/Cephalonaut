@@ -46,4 +46,10 @@ public class GameState {
             System.out.println("Failed to save game state. \n" + e);
         }
     }
+
+    public void clearSave() {
+        stars = new int[7][10];
+        stars[6][9] = 1;
+        save();
+    }
 }
