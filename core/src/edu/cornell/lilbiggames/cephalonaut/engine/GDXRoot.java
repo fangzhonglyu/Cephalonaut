@@ -131,7 +131,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	private void initializeKeybindings(){
 		JsonValue bindings = directory.getEntry("keybindings", JsonValue.class);
 		keyBindings = new HashMap<>();
-		keyBindings.put("thrust", Input.Keys.valueOf(bindings.getString("thrust","W")));
+		keyBindings.put("ink", Input.Keys.valueOf(bindings.getString("ink","W")));
 		keyBindings.put("rotate-counterclockwise", Input.Keys.valueOf(bindings.getString("rotate-counterclockwise","A")));
 		keyBindings.put("rotate-clockwise", Input.Keys.valueOf(bindings.getString("rotate-clockwise","D")));
 		keyBindings.put("ungrapple", Input.Keys.valueOf(bindings.getString("ungrapple","Space")));

@@ -77,7 +77,7 @@ public class InputController {
 	XBoxController xbox;
 
 	private void setDefaultBindings(){
-		keyBindings.put("thrust",Input.Keys.valueOf("W"));
+		keyBindings.put("ink",Input.Keys.valueOf("W"));
 		keyBindings.put("rotate-counterclockwise",Input.Keys.valueOf("A"));
 		keyBindings.put("rotate-clockwise",Input.Keys.valueOf("D"));
 		keyBindings.put("ungrapple",Input.Keys.valueOf("Space"));
@@ -326,7 +326,7 @@ public class InputController {
 		}
 
 		thrusterApplied = (secondary ? thrusterApplied : false);
-		thrusterApplied = thrusterApplied || Gdx.input.isKeyPressed((keyBindings.get("thrust")));
+		thrusterApplied = thrusterApplied || Gdx.input.isKeyPressed((keyBindings.get("ink")));
 
 		// Mouse results
 		crosshair.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
