@@ -28,6 +28,7 @@ public class LevelCompleteMode extends MenuMode {
     private Texture background;
 
     private String[] options = {"NEXT LEVEL", "REPLAY LEVEL", "LEVEL SELECT" };
+    private String[] worldCompleteOptions = {"REPLAY LEVEL", "LEVEL SELECT" };
 
     private int selectedOption;
 
@@ -50,6 +51,7 @@ public class LevelCompleteMode extends MenuMode {
     private boolean prevExit;
     private boolean prevSelect;
     private boolean choiceMade;
+    private boolean worldComplete;
 
     private int twoStars, threeStars;
     private String identifier;
@@ -78,6 +80,7 @@ public class LevelCompleteMode extends MenuMode {
         starFrame = assets.getEntry("ui:star", Texture.class);
         starScoring.setFrame(0);
         starStill.setFrame(19);
+        worldComplete = false;
 
         background = assets.getEntry( "BG-1-teal.png", Texture.class);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -111,6 +114,10 @@ public class LevelCompleteMode extends MenuMode {
         scale.x = canvas.getWidth() / bounds.x;
         scale.y = scale.x;
         canvas.setCameraPos(0.5f * width,0.5f * height);
+    }
+
+    public void setWorldComplete(boolean complete){
+        worldComplete = complete;
     }
 
     public void setLevelIdentifier(String id) {
@@ -211,11 +218,12 @@ public class LevelCompleteMode extends MenuMode {
         }
 
         if(!choiceMade) {
-            if (selectedOption == 0) {
+            int option = worldComplete ? selectedOption + 1 : selectedOption;
+            if (option == 0) {
                 listener.exitScreen(this, NEXT_LEVEL_CODE);
-            } else if (selectedOption == 1) {
+            } else if (option == 1) {
                 listener.exitScreen(this, RESTART_LEVEL_CODE);
-            } else if (selectedOption == 2) {
+            } else if (option == 2) {
                 listener.exitScreen(this, EXIT_LEVEL_CODE);
             }
             choiceMade = true;
@@ -264,7 +272,8 @@ public class LevelCompleteMode extends MenuMode {
         super.drawGoToSettings();
         displayFont.getData().setScale(Math.min(scale.x,scale.y));
 
-        canvas.drawTextCentered("LEVEL COMPLETED", displayFont, canvas.getHeight()*0.4f);
+        String titleText = worldComplete ? "WORLD COMPLETED" : "LEVEL COMPLETED";
+        canvas.drawTextCentered(titleText, displayFont, canvas.getHeight()*0.4f);
 
         int stars = 1;
         if (timer <= threeStars) {
@@ -304,7 +313,8 @@ public class LevelCompleteMode extends MenuMode {
         int seconds3 = threeStars % 60;
         String timeString3 = String.format("%02d:%02d", minutes3, seconds3);
 
-        super.drawOptions(options, selectedOption, (int)(150*scale.y));
+        super.drawOptions(worldComplete
+                 ? worldCompleteOptions : options, selectedOption, (int)(150*scale.y));
 
         float x = canvas.getWidth() * 0.40f + canvas.getCameraX() - 120 * scale.x;
         float y = canvas.getHeight() * 0.47f + canvas.getCameraY() - 5 * scale.y;
