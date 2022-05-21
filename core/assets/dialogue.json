@@ -13,7 +13,11 @@
   },
   "level_0:checkpoint_2": {
     "part_0": ["Move over ink packs to refill your precious ink.",
-      "Don't forget to grapple!",]
+      "Don't forget to grapple!"]
+  },
+  "level_0:checkpoint_3": {
+    "part_0": ["Use esc to pause!",
+      "You can also restart by pressing R! Double tap to quick restart!"]
   },
   "level_2:checkpoint_0": {
     "part_0": ["Try going fast to break the glass."]
