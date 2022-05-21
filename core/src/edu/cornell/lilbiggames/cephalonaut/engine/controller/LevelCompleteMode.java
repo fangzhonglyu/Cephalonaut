@@ -218,12 +218,11 @@ public class LevelCompleteMode extends MenuMode {
         }
 
         if(!choiceMade) {
-            int option = worldComplete ? selectedOption + 1 : selectedOption;
-            if (option == 0) {
+            if (selectedOption == 0) {
                 listener.exitScreen(this, NEXT_LEVEL_CODE);
-            } else if (option == 1) {
+            } else if (selectedOption == 1) {
                 listener.exitScreen(this, RESTART_LEVEL_CODE);
-            } else if (option == 2) {
+            } else if (selectedOption == 2) {
                 listener.exitScreen(this, EXIT_LEVEL_CODE);
             }
             choiceMade = true;
@@ -313,8 +312,7 @@ public class LevelCompleteMode extends MenuMode {
         int seconds3 = threeStars % 60;
         String timeString3 = String.format("%02d:%02d", minutes3, seconds3);
 
-        super.drawOptions(worldComplete
-                 ? worldCompleteOptions : options, selectedOption, (int)(150*scale.y));
+        super.drawOptions(options, selectedOption, (int)(150*scale.y));
 
         float x = canvas.getWidth() * 0.40f + canvas.getCameraX() - 120 * scale.x;
         float y = canvas.getHeight() * 0.47f + canvas.getCameraY() - 5 * scale.y;
