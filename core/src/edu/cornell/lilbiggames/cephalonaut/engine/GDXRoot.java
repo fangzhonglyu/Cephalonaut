@@ -312,6 +312,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			canvas.setCameraPos(canvas.getWidth()/2, canvas.getHeight()/2);
 			int curLevel = mainMenu.getCurLevelNumber();
 			mainMenuNestedMode.setLevel(curLevel);
+			setBackScreen(mainMenuNestedMode);
 			startScreenTransition(mainMenuNestedMode);
 		} else if(exitCode == MenuMode.NESTED_MENU_EXIT_CODE){
 			startScreenTransition(mainMenu);
