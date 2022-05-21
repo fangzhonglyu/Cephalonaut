@@ -249,33 +249,6 @@
                  "y":223.78582237225
                 }, 
                 {
-                 "gid":42,
-                 "height":60.2323361657548,
-                 "id":10,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"body",
-                         "propertytype":"GameObject",
-                         "type":"class",
-                         "value":
-                            {
-                             "type":"Button"
-                            }
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"object",
-                         "value":9
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":27.6400884646723,
-                 "x":109.144628099174,
-                 "y":275.870096612734
-                }, 
-                {
                  "gid":391,
                  "height":32,
                  "id":11,
@@ -415,6 +388,24 @@
                  "width":29.0478407635898,
                  "x":33.2004423233617,
                  "y":463.011290885811
+                }, 
+                {
+                 "gid":419,
+                 "height":28,
+                 "id":19,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"target",
+                         "type":"object",
+                         "value":9
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":15,
+                 "x":111.627450980392,
+                 "y":262.039215686274
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -423,7 +414,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":19,
+ "nextobjectid":20,
  "orientation":"orthogonal",
  "properties":[
         {

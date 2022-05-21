@@ -1072,7 +1072,7 @@
                         {
                          "name":"ink",
                          "type":"float",
-                         "value":3
+                         "value":1.5
                         }],
                  "rotation":0,
                  "type":"",
