@@ -457,7 +457,7 @@
                  "y":340.168819018071
                 }, 
                 {
-                 "gid":213,
+                 "gid":215,
                  "height":77.5924004453605,
                  "id":64,
                  "name":"",
@@ -484,7 +484,7 @@
                  "y":809.996457080071
                 }, 
                 {
-                 "gid":282,
+                 "gid":284,
                  "height":78.7686,
                  "id":69,
                  "name":"",
@@ -506,7 +506,7 @@
                  "y":269.737641968519
                 }, 
                 {
-                 "gid":282,
+                 "gid":284,
                  "height":78.7686,
                  "id":70,
                  "name":"",
@@ -528,7 +528,7 @@
                  "y":269.737641968519
                 }, 
                 {
-                 "gid":282,
+                 "gid":284,
                  "height":78.7686,
                  "id":72,
                  "name":"",
@@ -586,7 +586,7 @@
                  "y":334.16518652469
                 }, 
                 {
-                 "gid":283,
+                 "gid":285,
                  "height":47.5644111264548,
                  "id":134,
                  "name":"",
@@ -1069,6 +1069,16 @@
          "name":"music",
          "type":"int",
          "value":6
+        }, 
+        {
+         "name":"threeStars",
+         "type":"int",
+         "value":18
+        }, 
+        {
+         "name":"twoStars",
+         "type":"int",
+         "value":30
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
@@ -1083,7 +1093,7 @@
          "source":"..\/..\/objects.tsj"
         }, 
         {
-         "firstgid":172,
+         "firstgid":174,
          "source":"..\/..\/space-tiles.tsj"
         }],
  "tilewidth":16,

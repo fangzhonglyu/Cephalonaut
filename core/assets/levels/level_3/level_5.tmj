@@ -509,12 +509,12 @@
         {
          "name":"threeStars",
          "type":"int",
-         "value":12
+         "value":30
         }, 
         {
          "name":"twoStars",
          "type":"int",
-         "value":17
+         "value":42
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

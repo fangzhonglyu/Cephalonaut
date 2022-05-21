@@ -737,6 +737,16 @@
          "name":"music",
          "type":"int",
          "value":6
+        }, 
+        {
+         "name":"threeStars",
+         "type":"int",
+         "value":22
+        }, 
+        {
+         "name":"twoStars",
+         "type":"int",
+         "value":32
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
@@ -751,7 +761,7 @@
          "source":"..\/..\/objects.tsj"
         }, 
         {
-         "firstgid":172,
+         "firstgid":174,
          "source":"..\/..\/space-tiles.tsj"
         }],
  "tilewidth":16,

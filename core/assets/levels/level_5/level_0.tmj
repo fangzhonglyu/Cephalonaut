@@ -430,6 +430,16 @@
          "name":"music",
          "type":"int",
          "value":6
+        }, 
+        {
+         "name":"threeStars",
+         "type":"int",
+         "value":10
+        }, 
+        {
+         "name":"twoStars",
+         "type":"int",
+         "value":20
         }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",

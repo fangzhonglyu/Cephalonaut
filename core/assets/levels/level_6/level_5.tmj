@@ -7,8 +7,6 @@
          "image":"..\/..\/BG-7-red.png",
          "name":"Image Layer 1",
          "opacity":1,
-         "repeatx":true,
-         "repeaty":true,
          "type":"imagelayer",
          "visible":false,
          "x":0,
@@ -577,6 +575,22 @@
  "nextlayerid":4,
  "nextobjectid":107,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"music",
+         "type":"int",
+         "value":0
+        }, 
+        {
+         "name":"threeStars",
+         "type":"int",
+         "value":15
+        }, 
+        {
+         "name":"twoStars",
+         "type":"int",
+         "value":30
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
  "tileheight":16,
