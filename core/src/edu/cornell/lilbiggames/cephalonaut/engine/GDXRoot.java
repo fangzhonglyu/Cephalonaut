@@ -341,10 +341,14 @@ public class GDXRoot extends Game implements ScreenListener {
 			levelCompleteMode.setTimeString(playMode.getTimeString());
 			levelCompleteMode.setStars(playMode.getTwoStars(), playMode.getThreeStars());
 			levelCompleteMode.setLevelIdentifier(playMode.getLevelIdentifier());
-			if((playMode.getCheckpoint().equals(("checkpoint_"+((numCheckpointsPerLevel.get(mainMenu.getCurLevelNumber()))-1))) && mainMenu.getCurLevelNumber()!=6) || (mainMenu.getCurLevelNumber()==6 && playMode.getCheckpoint().equals("checkpoint_5"))){
-				FilmStrip alexDap = new FilmStrip(directory.getEntry("dap-level"+(mainMenu
+			if(mainMenu.getCurLevelNumber()==6 && playMode.getCheckpoint().equals(("checkpoint_6"))){
+				FilmStrip dap = new FilmStrip(directory.getEntry("game-end-animation", Texture.class), 1, 9);
+				loadingScreen.setNewFilm(new FilmStrip[]{dap}, 9, 9);
+				levelCompleteMode.setWorldComplete(true);
+			} else if(playMode.getCheckpoint().equals(("checkpoint_"+((numCheckpointsPerLevel.get(mainMenu.getCurLevelNumber()))-1))) || (mainMenu.getCurLevelNumber()==6 && playMode.getCheckpoint().equals("checkpoint_5"))){
+				FilmStrip dap = new FilmStrip(directory.getEntry("dap-level"+(mainMenu
 						.getCurLevelNumber()+1), Texture.class), 1, 12);
-				loadingScreen.setNewFilm(new FilmStrip[]{alexDap}, 12, 12);
+				loadingScreen.setNewFilm(new FilmStrip[]{dap}, 12, 12);
 				levelCompleteMode.setWorldComplete(true);
 			} else {
 				levelCompleteMode.setWorldComplete(false);
