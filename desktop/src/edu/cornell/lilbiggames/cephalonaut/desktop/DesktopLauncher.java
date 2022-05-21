@@ -42,7 +42,7 @@ public class DesktopLauncher {
 		config.addIcon("A-michael-still.png", Files.FileType.Internal);
 //		config.vSyncEnabled = false;
 		config.foregroundFPS = 60;
-		config.useHDPI = false;
+		config.useHDPI = true;
 		new LwjglApplication(new GDXRoot(), config);
 	}
 }

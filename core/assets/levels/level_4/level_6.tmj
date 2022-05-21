@@ -208,6 +208,11 @@
  "orientation":"orthogonal",
  "properties":[
         {
+         "name":"music",
+         "type":"int",
+         "value":12
+        }, 
+        {
          "name":"threeStars",
          "type":"int",
          "value":6

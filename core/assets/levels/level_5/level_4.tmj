@@ -854,7 +854,7 @@
         {
          "name":"music",
          "type":"int",
-         "value":6
+         "value":17
         }, 
         {
          "name":"threeStars",

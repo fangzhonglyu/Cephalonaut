@@ -355,6 +355,11 @@
  "orientation":"orthogonal",
  "properties":[
         {
+         "name":"music",
+         "type":"int",
+         "value":5
+        }, 
+        {
          "name":"threeStars",
          "type":"int",
          "value":10

@@ -420,7 +420,7 @@
         {
          "name":"music",
          "type":"int",
-         "value":0
+         "value":19
         }, 
         {
          "name":"threeStars",
